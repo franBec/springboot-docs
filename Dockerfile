@@ -1,13 +1,16 @@
 # Stage 1 - Build the application
 FROM node:18-alpine AS builder
 
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 WORKDIR /app
 
-# Copy package files
+# Copy package files and pnpm lockfile
 COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies using pnpm
+RUN pnpm install --frozen-lockfile
 
 # Copy all files
 COPY . .
@@ -24,8 +27,5 @@ COPY --from=builder /app/build /usr/share/nginx/html
 # Copy Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
 EXPOSE 80
-
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
