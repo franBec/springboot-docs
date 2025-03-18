@@ -4,16 +4,16 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm ci
+RUN pnpm ci
 
 # Copy all files
 COPY . .
 
 # Build the project
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2 - Serve the application
 FROM nginx:1.25-alpine
