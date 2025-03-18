@@ -1,0 +1,8 @@
+{
+  "label": "Spring Boot In A Nutshell",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "If you’ve ever tried baking a cake from scratch, you know it involves measuring flour, cracking eggs, and mixing ingredients—all before you even turn on the oven. Traditional Java development can feel similarly tedious. Enter Spring Boot, the pre-mixed batter of the coding world. Let’s break down what it is and why developers love it."
+  }
+}
