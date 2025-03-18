@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Pollito Opinion on Spring Boot Development',
+  title: 'Pollito\'s Opinion on Spring Boot Development',
   tagline: 'Everything I wish someone has told me when I got into my first Spring Boot project',
   favicon: 'img/favicon.ico',
 
