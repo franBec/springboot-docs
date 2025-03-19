@@ -7,7 +7,7 @@ sidebar_position: 4
 ## Packages & the Main Class Rule
 Packages are Java’s way of grouping related classes (like folders).
 
-**Critical Rule**: Your main class (annotated with @SpringBootApplication) defines the root package.
+**Critical Rule**: Your main class (annotated with `@SpringBootApplication`) defines the root package.
 
 * All other packages you create must be subpackages of this root (e.g., if your main class is in `com.your.app`, create `com.your.app.controllers`, not `com.controllers`).
 * **Why?** Spring Boot automatically scans classes in the root package and its subpackages. Classes outside won’t be detected unless explicitly configured.
