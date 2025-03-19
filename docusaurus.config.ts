@@ -67,7 +67,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Made by <🐤/> with Docusaurus and ❤️`,
+      copyright: `Made by &lt;🐤/&gt; with Docusaurus and ❤️`,
     },
     prism: {
       theme: prismThemes.github,
