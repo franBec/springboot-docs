@@ -4,20 +4,13 @@ sidebar_position: 2
 
 # How Spring Boot Simplifies Development
 
-You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
+Spring Boot isn’t a replacement for Spring—it’s a supercharged extension that removes the grunt work. Here’s how it makes life easier:
 
-Docusaurus has **much more to offer**!
+* **Convention Over Configuration**: Predefined defaults for dependencies, project structure, and settings. No more XML hell!
+* **Embedded Servers**: Pack a [Tomcat](https://tomcat.apache.org/), [Jetty](https://jetty.org/index.html), or [Undertow](https://undertow.io/) server directly into your app. Just run the JAR—no external setup needed.
+* **Starter Dependencies**: Need security, database access, or web capabilities? Add spring-boot-starter-web or spring-boot-starter-data-jpa, and Spring Boot auto-configures the essentials.
+* **Autoconfiguration**: Detects libraries in your classpath and sets up sensible defaults.
+* **Production-Ready Tools**: Built-in metrics, health checks, and environment management via [Spring Actuator](https://github.com/spring-projects/spring-boot/tree/v3.4.2/spring-boot-project/spring-boot-actuator).
 
-Have **5 more minutes**? Take a look at **[versioning](../tutorial-extras/manage-docs-versions.md)** and **[i18n](../tutorial-extras/translate-your-site.md)**.
+In short, Spring Boot lets you focus on writing business logic instead of wrestling with infrastructure.
 
-Anything **unclear** or **buggy** in this tutorial? [Please report it!](https://github.com/facebook/docusaurus/discussions/4610)
-
-## What's next?
-
-- Read the [official documentation](https://docusaurus.io/)
-- Modify your site configuration with [`docusaurus.config.js`](https://docusaurus.io/docs/api/docusaurus-config)
-- Add navbar and footer items with [`themeConfig`](https://docusaurus.io/docs/api/themes/configuration)
-- Add a custom [Design and Layout](https://docusaurus.io/docs/styling-layout)
-- Add a [search bar](https://docusaurus.io/docs/search)
-- Find inspirations in the [Docusaurus showcase](https://docusaurus.io/showcase)
-- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support)
