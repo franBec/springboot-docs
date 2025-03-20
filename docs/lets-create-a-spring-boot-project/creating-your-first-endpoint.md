@@ -4,20 +4,183 @@ sidebar_position: 5
 
 # Creating Your First Endpoint
 
-You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
+Finally, let’s get our hands dirty. We’ll create a simple endpoint that returns a user: when we visit [http://localhost:8080/users](http://localhost:8080/users), we should get something like this:
 
-Docusaurus has **much more to offer**!
+![users.png](img/users.png)
 
-Have **5 more minutes**? Take a look at **[versioning](../tutorial-extras/manage-docs-versions.md)** and **[i18n](../tutorial-extras/translate-your-site.md)**.
+## Step 0: Initialize Git
 
-Anything **unclear** or **buggy** in this tutorial? [Please report it!](https://github.com/facebook/docusaurus/discussions/4610)
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+```
 
-## What's next?
+## Step 1: Add a formatter (Spotless)
 
-- Read the [official documentation](https://docusaurus.io/)
-- Modify your site configuration with [`docusaurus.config.js`](https://docusaurus.io/docs/api/docusaurus-config)
-- Add navbar and footer items with [`themeConfig`](https://docusaurus.io/docs/api/themes/configuration)
-- Add a custom [Design and Layout](https://docusaurus.io/docs/styling-layout)
-- Add a [search bar](https://docusaurus.io/docs/search)
-- Find inspirations in the [Docusaurus showcase](https://docusaurus.io/showcase)
-- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support)
+* In your build.gradle, **add the plugin** in the plugins section (usually at the start of the file):
+
+    ```gradle
+    id 'com.diffplug.spotless' version '6.25.0'
+    ```
+
+* **Configure** Spotless at the bottom of build.gradle, the following is my personal preference:
+
+    ```gradle
+    spotless {
+        java {
+            target 'src/*/java/**/*.java'
+            googleJavaFormat()
+            removeUnusedImports()
+            cleanthat()
+            formatAnnotations()
+        }
+        groovyGradle {
+            target '*.gradle'
+            greclipse()
+        }
+    }
+    ```
+  For further info about configurations, check [Spotless GItHub repository](https://github.com/diffplug/spotless).
+
+* **Auto-format on every build**, by adding a new task:
+
+    ```gradle
+    tasks.named("build") {
+        dependsOn 'spotlessApply'
+        dependsOn 'spotlessGroovyGradleApply'
+    }
+    ```
+
+* Now that everything is set up, **run the Build Task**.
+* Save the changes made so far:
+
+    ```bash
+    git add .
+    git commit -m "spotless"
+    ```
+
+## Step 2: Create the User Model
+
+A **model** is a blueprint for your data — it defines the structure of the information your application handles. In this case, a User with id, name, username, and email.
+
+In `src/main/java/com/dev/pollito/users_manager/model`, create `User.java`.
+
+```java
+package dev.pollito.users_manager.model;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
+@Builder
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class User {
+  Long id;
+  String name;
+  String username;
+  String email;
+}
+```
+
+* In projects I’ve worked before I’ve found this folder “model” under the folder controller, service, utils, or even named dto (referring to the [DTO pattern](https://www.baeldung.com/java-dto-pattern)).
+  * Don’t worry much about it, later down the road we will find a way to automatically generate this kind of classes and we will not have to write them (unless needed).
+* **We’ll use Lombok to avoid boilerplate code**. Lombok automatically generates repetitive Java code at compile time.
+  * If your IDE doesn’t have the Lombok plugin installed, you’ll see compilation errors. Check [Optimizing IntelliJ IDEA with Plugins](/lets-create-a-spring-boot-project/lets-talk-about-ides#optimizing-intellij-idea-with-plugins) to find how to add the Lombok plugin.
+
+## Step 3: Create the UserService
+
+### Create the Interface
+
+In `src/main/java/dev/pollito/users_manager/service`, create `UserService.java`.
+
+```java
+package dev.pollito.users_manager.service;
+
+import dev.pollito.users_manager.model.User;
+import java.util.List;
+
+public interface UserService {
+  List<User> getUsers();
+}
+```
+
+### Create the Implementation
+
+In `src/main/java/dev/pollito/users_manager/service/impl`, create `UserServiceImpl.java`.
+
+```java
+package dev.pollito.users_manager.service.impl;
+
+import dev.pollito.users_manager.model.User;
+import dev.pollito.users_manager.service.UserService;
+import java.util.List;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+  private static final User USER_1 =
+      User.builder()
+          .id(1L)
+          .name("Leanne Graham")
+          .username("Bret")
+          .email("Sincere@april.biz")
+          .build();
+
+  @Override
+  public List<User> getUsers() {
+    return List.of(USER_1);
+  }
+}
+```
+
+* At the moment we are going to return a hardcoded user.
+* `@Service` tells Spring: "Here is an implementation of `UserService`"
+* `@Override` indicates that the method `public List<User> getUsers()` fulfills the interface’s "contract"
+
+## Step 4: Create the UserController
+
+In `src/main/java/dev/pollito/users_manager/controller`, create `UserController.java`.
+
+```java
+package dev.pollito.users_manager.controller;
+
+import dev.pollito.users_manager.model.User;
+import dev.pollito.users_manager.service.UserService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+public class UserController {
+  private final UserService userService;
+
+  @GetMapping("/users")
+  public List<User> getUsers() {
+    return userService.getUsers();
+  }
+}
+```
+
+Notice that we declare the interface UserService, and not the implementation UserServiceImpl.
+
+* The Controller doesn’t care how `UserService` works—it just wants the users list.
+* Spring Boot will look for implementations of `UserService`, will find only one (`UserServiceImpl.java`), and will call the `getUsers()` method.
+
+## Run The Application
+
+Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users).
+
+![users.png](img/users.png)
+
+Congratulations! Your Spring Boot app is up, running, and exposing an endpoint. As always, commit the progress so far
+
+```bash
+git add .
+git commit -m "/users returns hardcoded user"
+```
