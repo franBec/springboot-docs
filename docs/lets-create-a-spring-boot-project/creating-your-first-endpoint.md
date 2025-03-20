@@ -85,8 +85,8 @@ public class User {
 }
 ```
 
-* In projects I’ve worked before I’ve found this folder “model” under the folder controller, service, utils, or even named dto (referring to the [DTO pattern](https://www.baeldung.com/java-dto-pattern)).
-  * Don’t worry much about it, later down the road we will find a way to automatically generate this kind of classes and we will not have to write them (unless needed).
+* I’ve found this folder “model” under the folder controller, service, utils, or even named dto (referring to the [DTO pattern](https://www.baeldung.com/java-dto-pattern)).
+  * Don’t worry much about it, later down the road we will find a way to automatically generate this kind of classes, and we will not have to write them (unless needed).
 * **We’ll use Lombok to avoid boilerplate code**. Lombok automatically generates repetitive Java code at compile time.
   * If your IDE doesn’t have the Lombok plugin installed, you’ll see compilation errors. Check [Optimizing IntelliJ IDEA with Plugins](/lets-create-a-spring-boot-project/lets-talk-about-ides#optimizing-intellij-idea-with-plugins) to find how to add the Lombok plugin.
 
