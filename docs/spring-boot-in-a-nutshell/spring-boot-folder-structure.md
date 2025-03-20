@@ -39,7 +39,7 @@ your-project/
 * `static/` and `templates/`, empty by default. Used for web assets:
   * `static/`: Serve images, CSS, JS directly.
   * `templates/`: Server-rendered HTML (if using [Thymeleaf](https://www.thymeleaf.org/), [Mustache](https://www.baeldung.com/spring-boot-mustache), etc.).
-* `pom.xml` (Maven) or `build.gradle` (Gradle): Defines dependencies and plugins. More about this in the Maven vs Gradle section).
+* `pom.xml` (Maven) or `build.gradle` (Gradle): Defines dependencies and plugins (More about this in the [Maven vs Gradle section](/lets-create-a-spring-boot-project/spring-initializr#project-maven-vs-gradle)).
 * `test/`: Preconfigured for JUnit tests (More about this in the [Unit Testing section](/category/unit-testing)). It has a skeleton test class `DemoApplicationTests.java` verifies the app context loads.
 
 ## Organizing new code
