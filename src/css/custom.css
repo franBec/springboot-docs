@@ -44,3 +44,15 @@
   width: 100%;
   height: 100%;
 }
+
+.image-container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  margin: 1rem 0; /* Adds some spacing around the image */
+}
+
+.image-container img {
+  width: 144px; /* Ensures the image renders at its native width */
+  height: 144px; /* Ensures the image renders at its native height */
+}
