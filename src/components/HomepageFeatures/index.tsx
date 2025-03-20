@@ -12,7 +12,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
     {
         title: 'Real-World Insights',
-        Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+        Svg: require('@site/static/img/undraw_programming_65t2.svg').default,
         description: (
             <>
                 Learn from practical experiences and real challenges in Spring Boot projects. No fluff—just the honest truth about what works.
@@ -20,8 +20,8 @@ const FeatureList: FeatureItem[] = [
         ),
     },
     {
-        title: 'No-Nonsense Approach',
-        Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+        title: 'Direct Approach',
+        Svg: require('@site/static/img/undraw_sorting-thoughts_w6dr.svg').default,
         description: (
             <>
                 Skip the over-complicated jargon. Focus on clear, actionable advice that helps you jump into coding without drowning in theory.
@@ -30,7 +30,7 @@ const FeatureList: FeatureItem[] = [
     },
     {
         title: 'Opinionated Guidance',
-        Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+        Svg: require('@site/static/img/undraw_tourist-map_bczs.svg').default,
         description: (
             <>
                 Discover a developer’s take on Spring Boot—where practical experience meets honest critique. It’s not about memorizing every detail, but solving real problems.
