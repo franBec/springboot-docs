@@ -47,7 +47,19 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
     * You can find more information about the different possible configurations in the [OpenAPI Generator Gradle Plugin GitHub page](https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin).
     * It is **important** to make sure that input spec is pointing to the desired OpenAPI Specification yaml file.
 
-4. **Generate code on compilation**, by adding a new task:
+4. **Add the sourceSets configuration** in your `build.gradle`. This tells Gradle where to find the generated Java sources. Place the following code immediately below the `plugins` section in your `build.gradle`:
+
+   ```gradle
+   sourceSets {
+       main {
+           java {
+               srcDir(layout.buildDirectory.dir("generated/sources/openapi/src/main/java"))
+           }
+       }
+   }
+   ```
+
+5. **Generate code on compilation**, by adding a new task:
 
     ```gradle
     tasks.named('compileJava') {
@@ -55,6 +67,6 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
     }
     ```
 
-5. Now that everything is set up, **run the Build Task**. When the task finishes, If you check the `build\generated\sources\openapi` folder, you’ll find the representation of the OpenAPI Specification (our contract) in Java code, ready to be used.
+6. Now that everything is set up, **run the Build Task**. When the task finishes, If you check the `build\generated\sources\openapi` folder, you’ll find the representation of the OpenAPI Specification (our contract) in Java code, ready to be used.
 
     ![build.png](img/build.png)
