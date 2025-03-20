@@ -38,11 +38,10 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
     navbar: {
       logo: {
         alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        src: 'img/reshot-icon-chicken-NWQYV8H9BM.svg',
       },
       items: [],
     },
