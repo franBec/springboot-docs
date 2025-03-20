@@ -4,20 +4,23 @@ sidebar_position: 1
 
 # What is a Contract?
 
-You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
+In the [Design by contract wikipedia article](https://en.wikipedia.org/wiki/Design_by_contract), we can find the following affirmation:
 
-Docusaurus has **much more to offer**!
+![design-by-contract.png](img/design-by-contract.png)
 
-Have **5 more minutes**? Take a look at **[versioning](../tutorial-extras/manage-docs-versions.md)** and **[i18n](../tutorial-extras/translate-your-site.md)**.
+> […] software designers should define formal, precise and verifiable interface specifications for software components, which extend the ordinary definition of abstract data types with preconditions, postconditions and invariants.
 
-Anything **unclear** or **buggy** in this tutorial? [Please report it!](https://github.com/facebook/docusaurus/discussions/4610)
+From that, I made my own adaptation of the Contract-Driven Development philosophy for microservices architecture:
 
-## What's next?
+> Microservices must comply with a contract, which defines inputs, outputs, and errors.
 
-- Read the [official documentation](https://docusaurus.io/)
-- Modify your site configuration with [`docusaurus.config.js`](https://docusaurus.io/docs/api/docusaurus-config)
-- Add navbar and footer items with [`themeConfig`](https://docusaurus.io/docs/api/themes/configuration)
-- Add a custom [Design and Layout](https://docusaurus.io/docs/styling-layout)
-- Add a [search bar](https://docusaurus.io/docs/search)
-- Find inspirations in the [Docusaurus showcase](https://docusaurus.io/showcase)
-- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support)
+So, **what is a contract?** Is a **set of assertions** containing the following information:
+
+* **Valid input values**, and their meaning.
+* **Valid return values**, and their meaning.
+* **Error values that can occur**, and their meaning.
+
+In a Contract there are two parties:
+
+* **Consumer**: provides the input values and waits for the return.
+* **Provider**: waits for the input values and provides the return.
