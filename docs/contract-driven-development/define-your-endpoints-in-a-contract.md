@@ -37,7 +37,7 @@ We want to create the following endpoints:
 * `/users` will return a list of users.
 * `/users/{id}` will return the user with a matching id.
 
-**An OpenAPI Specification complies with the definition of contract** I gave before: Is a set of assertions containing **valid input values**, and their meaning, **valid return values**, and their meaning, and **error values that can occur**, and their meaning.
+An [OpenAPI Specification](https://swagger.io/specification/) complies with the definition of contract I gave before: Is a set of assertions containing **valid input values**, and their meaning, **valid return values**, and their meaning, and **error values that can occur**, and their meaning.
 
 An OpenAPI Specification that would represent the desired behaviour would look something like this:
 
@@ -282,3 +282,5 @@ For better visualization you can copy-paste the yaml file into [Swagger Editor](
 You should be able to see something like this:
 
 ![preview-browser.png](img/preview-browser.png)
+
+We have the endpoint documentation done.
