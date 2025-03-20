@@ -10,8 +10,8 @@ const config: Config = {
   url: 'https://springboot.pollito.tech',
   baseUrl: '/',
 
-  organizationName: 'franBec', // Usually your GitHub org/user name.
-  projectName: 'spring-docs', // Usually your repo name.
+  organizationName: 'franBec',
+  projectName: 'spring-docs',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -50,20 +50,29 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'More',
+          title: 'About',
+          items: [
+            {
+              label: 'Author',
+              to: '/'
+            },
+            {
+              label: 'Special Thanks',
+              to: '/'
+            }
+          ]
+        },
+        {
+          title: 'Get in touch',
           items: [
             {
               label: 'Blog',
               to: 'https://pollito.dev/',
             },
             {
-              label: 'Linkedin',
+              label: 'LinkedIn',
               to: 'https://www.linkedin.com/in/franco-becvort/'
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/franBec',
-            },
+            }
           ],
         },
       ],
