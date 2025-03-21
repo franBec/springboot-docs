@@ -32,7 +32,7 @@ What About Other IDEs?
 
 My personal recommendation: download [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) (not sponsored, sadly).
 
-## Optimizing IntelliJ IDEA with Plugins
+## Optimizing IntelliJ IDEA With Plugins
 
 Before coding, let’s remove some IDE clutter and distractions.
 

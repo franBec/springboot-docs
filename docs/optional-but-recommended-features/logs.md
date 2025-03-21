@@ -69,7 +69,7 @@ Rebuild the application. Then go to [http://localhost:8080/users](http://localho
 2025-03-10T11:44:23.697Z  INFO 16164 --- [users_manager] [nio-8080-exec-1] d.p.users_manager.aspect.LogAspect       : [UserController.getUsers()] Response: [User(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)]
 ```
 
-## What does the IntelliJ IDEA suggestion “Insert ‘@NotNull’ on parameter” mean?
+## What Does The IntelliJ IDEA Suggestion “Insert ‘@NotNull’ on parameter” Mean?
 
 If you’re using IntelliJ IDEA, you would notice that in the class we just created you are being suggested the following:
 

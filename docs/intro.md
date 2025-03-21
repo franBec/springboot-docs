@@ -25,13 +25,13 @@ This document is everything I wish someone had answered me. If you:
 
 You will notice that sometimes I put external link references. Feel free to check them to get a more in depth explanation of that specific concept, but be careful of not going into [information overload](https://www.interaction-design.org/literature/article/information-overload-why-it-matters-and-how-to-combat-it).
 
-## Do I Need to Master All of Spring?
+## Do I Need To Master All Of Spring?
 
-Short answer: No.
+Short answer: **No**.
 
 [Spring Framework](https://spring.io/projects/spring-framework) is like a sprawling toolkit with 20 different hammers. Spring Boot, however, hands you the right hammer for the job upfront. You don’t need to memorize every annotation or XML configuration. Most projects require just a fraction of Spring’s features, and Boot’s “starter” dependencies and autoconfiguration do the heavy lifting. Think of it as coding with training wheels—except the training wheels also write half your [boilerplate](https://aws.amazon.com/what-is/boilerplate-code/).
 
-## Is It Even Worth Learning in 2025?
+## Is It Even Worth Learning In 2025?
 
 According to the [2024 Stack Overflow Developer Survey](https://survey.stackoverflow.co/2024/technology#most-popular-technologies-webframe), Spring Boot sits at 12.7% adoption, trailing behind giants like [Express.js](https://expressjs.com/) (17.8%) and [ASP.NET Core](http://ASP.NET) (16.9%). Does this mean it’s outdated? Absolutely not. Here’s why it’s still a powerhouse:
 

@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Run the Application
+# Run The Application
 
 1. **Open IntelliJ IDEA** → File → Open → Select the unzipped project folder.
 2. **First-Time JDK Setup** (if prompted):

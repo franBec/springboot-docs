@@ -16,7 +16,7 @@ git add .
 git commit -m "Initial commit"
 ```
 
-## Step 1: Add a formatter (Spotless)
+## Step 1: Add A Formatter (Spotless)
 
 * In your build.gradle, **add the plugin** in the plugins section (usually at the start of the file):
 
@@ -60,7 +60,7 @@ git commit -m "Initial commit"
     git commit -m "spotless"
     ```
 
-## Step 2: Create the User Model
+## Step 2: Create The User Model
 
 A **model** is a blueprint for your data — it defines the structure of the information your application handles. In this case, a User with id, name, username, and email.
 
@@ -88,11 +88,11 @@ public class User {
 * I’ve found this folder “model” under the folder controller, service, utils, or even named dto (referring to the [DTO pattern](https://www.baeldung.com/java-dto-pattern)).
   * Don’t worry much about it, later down the road we will find a way to automatically generate this kind of classes, and we will not have to write them (unless needed).
 * **We’ll use Lombok to avoid boilerplate code**. Lombok automatically generates repetitive Java code at compile time.
-  * If your IDE doesn’t have the Lombok plugin installed, you’ll see compilation errors. Check [Optimizing IntelliJ IDEA with Plugins](/lets-create-a-spring-boot-project/lets-talk-about-ides#optimizing-intellij-idea-with-plugins) to find how to add the Lombok plugin.
+  * If your IDE doesn’t have the Lombok plugin installed, you’ll see compilation errors. Check [Optimizing IntelliJ IDEA With Plugins](/lets-create-a-spring-boot-project/lets-talk-about-ides#optimizing-intellij-idea-with-plugins) to find how to add the Lombok plugin.
 
-## Step 3: Create the UserService
+## Step 3: Create The UserService
 
-### Create the Interface
+### Create The Interface
 
 In `src/main/java/dev/pollito/users_manager/service`, create `UserService.java`.
 
@@ -107,7 +107,7 @@ public interface UserService {
 }
 ```
 
-### Create the Implementation
+### Create The Implementation
 
 In `src/main/java/dev/pollito/users_manager/service/impl`, create `UserServiceImpl.java`.
 
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
 * `@Service` tells Spring: "Here is an implementation of `UserService`"
 * `@Override` indicates that the method `public List<User> getUsers()` fulfills the interface’s "contract"
 
-## Step 4: Create the UserController
+## Step 4: Create The UserController
 
 In `src/main/java/dev/pollito/users_manager/controller`, create `UserController.java`.
 

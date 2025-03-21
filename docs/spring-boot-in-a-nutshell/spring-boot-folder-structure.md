@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Spring Boot Folder Structure
 
-## Packages & the Main Class Rule
+## Packages & The Main Class Rule
 Packages are Java’s way of grouping related classes (like folders).
 
 **Critical Rule**: Your main class (annotated with `@SpringBootApplication`) defines the root package.
@@ -42,7 +42,7 @@ your-project/
 * `pom.xml` (Maven) or `build.gradle` (Gradle): Defines dependencies and plugins (More about this in the [Maven vs Gradle section](/lets-create-a-spring-boot-project/spring-initializr#project-maven-vs-gradle)).
 * `test/`: Preconfigured for JUnit tests (More about this in the [Unit Testing section](/category/unit-testing)). It has a skeleton test class `DemoApplicationTests.java` verifies the app context loads.
 
-## Organizing new code
+## Organizing New Code
 
 How do we organize new code? There are three approaches…
 

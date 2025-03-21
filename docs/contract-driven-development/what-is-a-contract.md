@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# What is a Contract?
+# What Is A Contract?
 
 In the [Design by contract wikipedia article](https://en.wikipedia.org/wiki/Design_by_contract), we can find the following affirmation:
 
