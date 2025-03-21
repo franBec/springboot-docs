@@ -14,7 +14,7 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
     id 'org.openapi.generator' version '7.12.0'
     ```
 
-2. We need [Swagger Core Jakarta](https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core-jakarta), [JsonNullable Jackson Module](https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable), and [Spring Boot Starter Validation](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation) dependencies. In your `build.gradle`, **add the dependency** in the `dependencies` section:
+2. We need [Swagger Core Jakarta](https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core-jakarta), [JsonNullable Jackson Module](https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable), and [Spring Boot Starter Validation](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation) dependencies. In your `build.gradle`, **add the dependencies** in the `dependencies` section:
 
     ```gradle
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.28'
@@ -22,11 +22,11 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     ```
 
-3. **Configure** the openapi-generator at the bottom of build.gradle:
+3. **Configure** the openapi-generator at the bottom of `build.gradle`:
 
     ```gradle
     openApiGenerate {
-        apiPackage = "${group}.${project.name}.api".toString()
+        apiPackage = "${project.group}.${project.name}.api".toString()
         configOptions = [
             interfaceOnly: "true",
             skipOperationExample: "true",
@@ -39,13 +39,13 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
         generateModelDocumentation = false
         generatorName = "spring"
         inputSpec = "$rootDir/src/main/resources/openapi/users_manager.yaml".toString()
-        modelPackage = "${group}.${project.name}.model".toString()
+        modelPackage = "${project.group}.${project.name}.model".toString()
         outputDir = layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString()
     }
     ```
 
     * You can find more information about the different possible configurations in the [OpenAPI Generator Gradle Plugin GitHub page](https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin).
-    * It is **important** to make sure that input spec is pointing to the desired OpenAPI Specification yaml file.
+    * It is **important** to make sure that `inputspec` is pointing to the desired OpenAPI Specification yaml file.
 
 4. **Add the sourceSets configuration** in your `build.gradle`. This tells Gradle where to find the generated Java sources. Place the following code immediately below the `plugins` section in your `build.gradle`:
 

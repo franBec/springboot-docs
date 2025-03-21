@@ -18,13 +18,13 @@ git commit -m "Initial commit"
 
 ## Step 1: Add A Formatter (Spotless)
 
-* In your build.gradle, **add the plugin** in the plugins section (usually at the start of the file):
+* In your `build.gradle`, **add the plugin** in the plugins section (usually at the start of the file):
 
     ```gradle
     id 'com.diffplug.spotless' version '6.25.0'
     ```
 
-* **Configure** Spotless at the bottom of build.gradle, the following is my personal preference:
+* **Configure** Spotless at the bottom of `build.gradle`, the following is my personal preference:
 
     ```gradle
     spotless {
