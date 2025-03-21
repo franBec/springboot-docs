@@ -76,7 +76,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Made by &lt;🐤/&gt; with Docusaurus and ❤️`,
+      copyright: `Copyright © ${new Date().getFullYear()} Franco Exequiel Becvort. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
