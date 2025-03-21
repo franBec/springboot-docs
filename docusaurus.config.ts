@@ -75,6 +75,19 @@ const config: Config = {
             }
           ],
         },
+        {
+          title: 'Licenses',
+          items: [
+            {
+              label: 'Code License',
+              to: '/'
+            },
+            {
+              label: 'Content License',
+              to: '/'
+            }
+          ]
+        }
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Franco Exequiel Becvort. Built with Docusaurus.`,
     },
