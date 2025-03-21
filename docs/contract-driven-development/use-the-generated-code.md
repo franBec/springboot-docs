@@ -14,33 +14,6 @@ That is because the openapi-generator plugin already created a `User` class at t
 
 * **We want to use the generated class instead**, so delete the class (and the whole `model` package) we created by hand.
 
-## Fix Whatever Broke
-
-The openapi-generator generated `User` has a slightly different way of implementing the [Builder design pattern](https://refactoring.guru/design-patterns/builder/typescript/example) compared to the one we crated before using lombok. This replacement breaks `UserServiceImpl` hardcoded `User`, but it is a really simple fix.
-
-* Before fix:
-
-    ```java
-    private static final User USER_1 =
-      User.builder()
-          .id(1L)
-          .name("Leanne Graham")
-          .username("Bret")
-          .email("Sincere@april.biz")
-          .build();
-    ```
-
-* After fix:
-
-    ```java
-    private static final User USER_1 =
-      new User()
-          .id(1L)
-          .name("Leanne Graham")
-          .username("Bret")
-          .email("Sincere@april.biz");
-    ```
-
 ## Implement The Generated API Interface
 
 Right now the `controller` looks like this:
@@ -145,9 +118,89 @@ Right-click the main class → Run. Then go to [http://localhost:8080/users](htt
 
 ![501NotImplemented.png](img/501NotImplemented.png)
 
-## Now What?
+Let's return a hardcoded list of Users once again.
 
-You may be thinking:
+## Rewrite The Service
 
-> OK nice, but how can I return a user again?
+Considering that the `service` is only returning a hardcoded user, I consider best to delete its content and redo it.
 
+1. Rewrite the `UserService` interface that resembles what the `controller` gives and expects:
+
+    ```java
+    package dev.pollito.users_manager.service;
+    
+    import dev.pollito.users_manager.model.User;
+    import dev.pollito.users_manager.model.Users;
+    import java.util.List;
+    
+    public interface UserService {
+      Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort);
+    
+      User findById(Long id);
+    }
+    ```
+
+2. Rewrite the interface implementation `UserServiceImpl` with some hardcoded logic:
+
+    ```java
+    package dev.pollito.users_manager.service.impl;
+    
+    import dev.pollito.users_manager.model.User;
+    import dev.pollito.users_manager.model.Users;
+    import dev.pollito.users_manager.service.UserService;
+    import java.util.List;
+    import org.springframework.stereotype.Service;
+    
+    @Service
+    public class UserServiceImpl implements UserService {
+    
+      private static final User USER_1 =
+          new User().id(1L).name("Leanne Graham").username("Bret").email("Sincere@april.biz");
+    
+      @Override
+      public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort) {
+        return new Users().content(List.of(USER_1));
+      }
+    
+      @Override
+      public User findById(Long id) {
+        return USER_1;
+      }
+    }
+    ```
+
+3. In `UserController`, call the `UserService` methods:
+
+    ```java
+    package dev.pollito.users_manager.controller;
+    
+    import dev.pollito.users_manager.api.UsersApi;
+    import dev.pollito.users_manager.model.User;
+    import dev.pollito.users_manager.model.Users;
+    import dev.pollito.users_manager.service.UserService;
+    import java.util.List;
+    import lombok.RequiredArgsConstructor;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.RestController;
+    
+    @RestController
+    @RequiredArgsConstructor
+    public class UserController implements UsersApi {
+      private final UserService userService;
+    
+      @Override
+      public ResponseEntity<Users> findAll(
+          Integer pageNumber, Integer pageSize, List<String> pageSort) {
+        return ResponseEntity.ok(userService.findAll(pageNumber, pageSize, pageSort));
+      }
+    
+      @Override
+      public ResponseEntity<User> findById(Long id) {
+        return ResponseEntity.ok(userService.findById(id));
+      }
+    }
+    ```
+
+Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users). You should get once again the list with the hardcoded user.
+
+![response.png](img/response.png)
