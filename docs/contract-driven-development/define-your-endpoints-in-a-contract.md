@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Define Your Endpoints In a Contract (aka OpenAPI Specification)
+# Define Your Endpoints In a Contract
 
 Given a User with the following structure:
 

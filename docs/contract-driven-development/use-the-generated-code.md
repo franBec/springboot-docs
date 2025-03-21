@@ -124,7 +124,7 @@ Let's return a hardcoded list of Users once again.
 
 Considering that the `service` is only returning a hardcoded user, I consider best to delete its content and redo it.
 
-1. Rewrite the `UserService` interface that resembles what the `controller` gives and expects:
+1. Rewrite the `UserService` interface so it resembles what the `controller` gives and expects:
 
     ```java
     package dev.pollito.users_manager.service;
