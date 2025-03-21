@@ -204,3 +204,10 @@ Considering that the `service` is only returning a hardcoded user, I consider be
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users). You should get once again the list with the hardcoded user.
 
 ![response.png](img/response.png)
+
+As always, commit the progress so far.
+
+```bash
+git add .
+git commit -m "generated spring code from an openapi specification"
+```
