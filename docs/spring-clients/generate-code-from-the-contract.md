@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Generate Code From The Contract
 
-1. We are going to be using feign. We need [Spring Cloud Starter OpenFeign](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign), [Feign OkHttp](https://mvnrepository.com/artifact/io.github.openfeign/feign-okhttp), [Feign Jackson](https://mvnrepository.com/artifact/io.github.openfeign/feign-jackson), and [Feign Gson](https://mvnrepository.com/artifact/io.github.openfeign/feign-gson) dependencies. In your `build.gradle`, **add the dependencies** in the `dependencies` section:
+1. We are going to be using [FeignClient](https://docs.spring.io/spring-cloud-openfeign/docs/current/reference/html/). We need [Spring Cloud Starter OpenFeign](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign), [Feign OkHttp](https://mvnrepository.com/artifact/io.github.openfeign/feign-okhttp), [Feign Jackson](https://mvnrepository.com/artifact/io.github.openfeign/feign-jackson), and [Feign Gson](https://mvnrepository.com/artifact/io.github.openfeign/feign-gson) dependencies. In your `build.gradle`, **add the dependencies** in the `dependencies` section:
 
     ```gradle
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.1'
