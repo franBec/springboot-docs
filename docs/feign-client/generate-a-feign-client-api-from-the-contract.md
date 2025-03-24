@@ -6,7 +6,7 @@ sidebar_position: 3
 
 1. We are going to be using [FeignClient](https://docs.spring.io/spring-cloud-openfeign/docs/current/reference/html/). We need [Spring Cloud Starter OpenFeign](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign), [Feign OkHttp](https://mvnrepository.com/artifact/io.github.openfeign/feign-okhttp), [Feign Jackson](https://mvnrepository.com/artifact/io.github.openfeign/feign-jackson), and [Feign Gson](https://mvnrepository.com/artifact/io.github.openfeign/feign-gson) dependencies. In your `build.gradle`, **add the dependencies** in the `dependencies` section:
 
-    ```gradle
+    ```groovy
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.1'
     implementation 'io.github.openfeign:feign-okhttp:13.5'
     implementation 'io.github.openfeign:feign-jackson:13.5'
@@ -15,7 +15,7 @@ sidebar_position: 3
 
 2. **Configure** a new openapi-generator task at the bottom of `build.gradle`:
 
-    ```gradle
+    ```groovy
     tasks.register("openApiGenerateFeign_jsonplaceholder", GenerateTask) {
         apiPackage = "com.typicode.jsonplaceholder.api".toString()
         configOptions = [
@@ -44,7 +44,7 @@ sidebar_position: 3
 
 3. Ensure `compileJava` now depends on both OpenAPI generation tasks:
 
-    ```gradle
+    ```groovy
     tasks.named('compileJava') {
         dependsOn 'openApiGenerate', 'openApiGenerateFeign_jsonplaceholder'
     }

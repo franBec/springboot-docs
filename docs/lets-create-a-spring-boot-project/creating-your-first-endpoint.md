@@ -20,13 +20,13 @@ git commit -m "Initial commit"
 
 * In your `build.gradle`, **add the plugin** in the plugins section (usually at the start of the file):
 
-    ```gradle
+    ```groovy
     id 'com.diffplug.spotless' version '6.25.0'
     ```
 
 * **Configure** Spotless at the bottom of `build.gradle`, the following is my personal preference:
 
-    ```gradle
+    ```groovy
     spotless {
         java {
             target 'src/*/java/**/*.java'
@@ -45,7 +45,7 @@ git commit -m "Initial commit"
 
 * **Auto-format on every build**, by adding a new task:
 
-    ```gradle
+    ```groovy
     tasks.named("build") {
         dependsOn 'spotlessApply'
         dependsOn 'spotlessGroovyGradleApply'

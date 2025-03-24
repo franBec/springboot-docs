@@ -10,13 +10,13 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
 
 1. In your `build.gradle`, **add the plugin** in the `plugins section` (usually at the start of the file):
 
-    ```gradle
+    ```groovy
     id 'org.openapi.generator' version '7.12.0'
     ```
 
 2. We need [Swagger Core Jakarta](https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core-jakarta), [JsonNullable Jackson Module](https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable), and [Spring Boot Starter Validation](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation) dependencies. In your `build.gradle`, **add the dependencies** in the `dependencies` section:
 
-    ```gradle
+    ```groovy
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.28'
     implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -24,7 +24,7 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
 
 3. **Configure** the openapi-generator at the bottom of `build.gradle`:
 
-    ```gradle
+    ```groovy
     openApiGenerate {
         apiPackage = "${project.group}.${project.name}.api".toString()
         configOptions = [
@@ -49,7 +49,7 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
 
 4. **Add the sourceSets configuration** in your `build.gradle`. This tells Gradle where to find the generated Java sources. Place the following code immediately below the `plugins` section in your `build.gradle`:
 
-   ```gradle
+   ```groovy
    sourceSets {
        main {
            java {
@@ -61,7 +61,7 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
 
 5. **Generate code on compilation**, by adding a new task:
 
-    ```gradle
+    ```groovy
     tasks.named('compileJava') {
         dependsOn 'openApiGenerate'
     }

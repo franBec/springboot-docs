@@ -179,7 +179,7 @@ If by now you haven’t renamed `src/main/resources/application.properties`, ren
 
 Then, add the url of the outside source we are integrating. The end result should look something like this:
 
-```yml
+```yaml
 jsonplaceholder:
   baseUrl: https://jsonplaceholder.typicode.com/
 spring:

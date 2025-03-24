@@ -21,7 +21,7 @@ An aspect is a piece of code with a specific task—in this case, logging—that
 
 1. We need the [aspectjtools](https://mvnrepository.com/artifact/org.aspectj/aspectjtools) dependency. In your `build.gradle`, **add the dependency** in the `dependencies` section:
     
-   ```gradle
+   ```groovy
     implementation 'org.aspectj:aspectjtools:1.9.22.1'
     ```
    
@@ -89,7 +89,7 @@ When accepting the suggestion, we are going to be notified about a new dependenc
 
 Sometimes the IDE behaves weird and doesn’t add the dependency in the  build.gradle dependencies section. Go check if you can find the following
 
-```gradle
+```groovy
 implementation 'org.jetbrains:annotations:26.0.2'
 ```
 
@@ -105,7 +105,7 @@ Imagine this application has many endpoints, and also has many users making requ
 
 We need the micrometer dependencies. In your `build.gradle`, **add the dependencies** in the `dependencies` section:
 
-```gradle
+```groovy
 implementation 'io.micrometer:micrometer-observation:1.14.4'
 implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.3'
 ```
