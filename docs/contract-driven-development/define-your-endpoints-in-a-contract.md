@@ -231,10 +231,6 @@ components:
           $ref: '#/components/schemas/Address'
         company:
           $ref: '#/components/schemas/Company'
-        creationTime:
-          description: Creation time in ISO 8601 format
-          example: "2023-11-01T08:30:00"
-          type: string
         email:
           description: User email
           example: "Sincere@april.biz"
