@@ -203,7 +203,7 @@ public class ControllerAdvice {
 }
 ```
 
-As always, commit the progress so far.
+Commit the progress so far.
 
 ```bash
 git add .

@@ -178,7 +178,7 @@ Right-click the main class → Run. Then go to [http://localhost:8080/users](htt
 
 ![users.png](img/users.png)
 
-Congratulations! Your Spring Boot app is up, running, and exposing an endpoint. As always, commit the progress so far.
+Congratulations! Your Spring Boot app is up, running, and exposing an endpoint. Commit the progress so far.
 
 ```bash
 git add .

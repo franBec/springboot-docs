@@ -266,8 +266,8 @@ public class JsonPlaceholderApiConfig {
 ### Important Considerations
 
 * `basePackages` should be pointing to the package where the generated Feign API client was generated:
-  * In build.gradle, we indicated `apiPackage = "com.typicode.jsonplaceholder.api".toString()`, so basePackages value should be `com.typicode.jsonplaceholder.api`.
-* Set the .errorDecoder to the ErrorDecoder class we created in [3. Create an Error Decoder implementation](/feign-client/configure-the-generated-feign-client-api#3-create-an-error-decoder-implementation).
+  * In `build.gradle`, we indicated `apiPackage = "com.typicode.jsonplaceholder.api".toString()`, so basePackages value should be `com.typicode.jsonplaceholder.api`.
+* Set the `.errorDecoder` to the `ErrorDecoder` class we created in [3. Create an Error Decoder implementation](/feign-client/configure-the-generated-feign-client-api#3-create-an-error-decoder-implementation).
   * The `@Bean` return type, the `.logger Slf4jLogger` class, and the `.target` class should be the desired Feign API client.
 
 ## 7. Create A New Aspect Pointcut
@@ -315,4 +315,11 @@ public class LogAspect {
     log.info("[{}] Response: {}", joinPoint.getSignature().toShortString(), result);
   }
 }
+```
+
+Commit the progress so far.
+
+```bash
+git add .
+git commit -m "generated feign client api from an openapi specification"
 ```

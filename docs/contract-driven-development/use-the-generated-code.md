@@ -205,7 +205,7 @@ Right-click the main class → Run. Then go to [http://localhost:8080/users](htt
 
 ![response.png](img/response.png)
 
-As always, commit the progress so far.
+Commit the progress so far.
 
 ```bash
 git add .

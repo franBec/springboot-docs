@@ -226,7 +226,7 @@ If we visit an uri that doesn't exist (like [http://localhost:8080/asdasd](http:
 2025-03-14T12:53:52.497Z  INFO 30172 --- [users_manager] [nio-8080-exec-1] [29233a50dd093491acbeaf0fb8020f2a-e8a3e4ad035bfbac] d.p.users_manager.filter.LogFilter       : <<<< Response Status: 404
 ```
 
-As always, commit the progress so far.
+Commit the progress so far.
 
 ```bash
 git add .
