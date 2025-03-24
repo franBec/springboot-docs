@@ -145,7 +145,7 @@ Take into consideration that [caching has many pitfalls](https://medium.com/@sin
       private final UserMapper userMapper;
     
       @Override
-      public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort) {
+      public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort, String q) {
         return new Users().content(userMapper.map(userApi.getUsers()));
       }
     
@@ -168,3 +168,10 @@ Right-click the main class → Run. Then go to [http://localhost:8080/users](htt
 Repeat the request. The cache will come into play, and you should find a much quicker response time: It went from 1014ms down to 13ms, a 98.7% speed increase.
 
 ![cache.png](img/cache.png)
+
+Commit the progress so far.
+
+```bash
+git add .
+git commit -m "cache"
+```

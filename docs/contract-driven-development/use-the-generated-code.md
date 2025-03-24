@@ -205,6 +205,82 @@ Right-click the main class → Run. Then go to [http://localhost:8080/users](htt
 
 ![response.png](img/response.png)
 
+## Add A ConstraintViolationException Handler
+
+Back in [Generate Code From The Contract](/contract-driven-development/generate-code-from-the-contract) we added the dependency [Swagger Core Jakarta](https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core-jakarta). That give us access to handle `ConstraintViolationException`.
+
+In `src/main/java/dev/pollito/users_manager/controller/advice/ControllerAdvice.java`, add a `@ExceptionHandler(ConstraintViolationException.class)` handler.
+
+```java
+package dev.pollito.users_manager.controller.advice;
+
+import io.opentelemetry.api.trace.Span;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
+
+import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+@RestControllerAdvice
+@Slf4j
+public class ControllerAdvice {
+
+  @NotNull private static ProblemDetail problemDetail(@NotNull Exception e, HttpStatus status) {
+    String exceptionSimpleName = e.getClass().getSimpleName();
+    log.error("{} being handled", exceptionSimpleName, e);
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, e.getLocalizedMessage());
+    problemDetail.setTitle(exceptionSimpleName);
+    problemDetail.setProperty("timestamp", DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
+    problemDetail.setProperty("trace", Span.current().getSpanContext().getTraceId());
+    return problemDetail;
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ProblemDetail handle(@NotNull Exception e) {
+    return problemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ProblemDetail handle(@NotNull NoResourceFoundException e) {
+    return problemDetail(e, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ProblemDetail handle(@NotNull MethodArgumentTypeMismatchException e) {
+    return problemDetail(e, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NoSuchElementException.class)
+  public ProblemDetail handle(@NotNull NoSuchElementException e) {
+    return problemDetail(e, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ProblemDetail handle(@NotNull ConstraintViolationException e) {
+    return problemDetail(e, HttpStatus.BAD_REQUEST);
+  }
+```
+
+Right-click the main class → Run. Then go to a URL with an invalid query param, like [http://localhost:8080/users?pageSize=-1](http://localhost:8080/users?pageSize=-1). You should get the following response:
+
+![ConstraintViolationException.png](img/ConstraintViolationException.png)
+
+### Why Is Detail Message In Spanish
+
+Spring Boot automatically uses the Accept-Language header from the HTTP request to determine the response language. If your browser sends `Accept-Language: es` (my case here), Spring's exception messages (e.g., validation errors) are localized to Spanish using message bundles.
+
+![lang.png](img/lang.png)
+
+* The exception messages must have translations in your application’s message bundles (`messages.properties`, `messages_es.properties`, etc.). If no translation exists for the requested language, Spring falls back to the default language (usually English).
+
 Commit the progress so far.
 
 ```bash

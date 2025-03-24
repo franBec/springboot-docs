@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
   private final UserApi userApi;
 
   @Override
-  public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort) {
+  public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort, String q) {
     return new Users().content(userApi.getUsers());
   }
 
@@ -128,7 +128,7 @@ Mappers are a [“choose your own adventure”](https://www.baeldung.com/java-pe
       private final UserMapper userMapper;
     
       @Override
-      public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort) {
+      public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort, String q) {
         return new Users().content(userMapper.map(userApi.getUsers()));
       }
     
