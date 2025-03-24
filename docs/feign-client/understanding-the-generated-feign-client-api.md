@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-# Understanding The Generated Code
+# Understanding The Generated Feign Client API
 
-The [openapi-generator plugin](https://github.com/OpenAPITools/openapi-generator) produces a structured Java implementation containing:
+The [openapi-generator plugin](https://github.com/OpenAPITools/openapi-generator) produced a structured Java implementation containing:
 
 - **Client Interfaces**: Feign client declarations matching your API endpoints
 - **Data Models**: POJOs representing request/response schemas from your OpenAPI spec
