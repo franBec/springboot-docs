@@ -1,0 +1,8 @@
+{
+  "label": "Licenses",
+  "position": 13,
+  "link": {
+    "type": "generated-index",
+    "description": "Code and content licenses. The boring but important stuff."
+  }
+}

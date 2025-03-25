@@ -54,11 +54,11 @@ const config: Config = {
           items: [
             {
               label: 'Author',
-              to: '/'
+              to: '/about/about-the-author'
             },
             {
               label: 'Special Thanks',
-              to: '/'
+              to: '/about/special-thanks'
             }
           ]
         },
@@ -80,11 +80,11 @@ const config: Config = {
           items: [
             {
               label: 'Code License',
-              to: '/'
+              to: '/licenses/code-license'
             },
             {
               label: 'Content License',
-              to: '/'
+              to: '/licenses/content-license'
             }
           ]
         }

@@ -103,7 +103,9 @@ public class UserServiceImpl implements UserService {
     List<com.typicode.jsonplaceholder.model.User> result = new ArrayList<>(users);
 
     List<String> criteria =
-        (pageSort == null || pageSort.isEmpty()) ? Collections.singletonList("id:asc") : pageSort;
+        (Objects.isNull(pageSort) || pageSort.isEmpty())
+            ? Collections.singletonList("id:asc")
+            : pageSort;
 
     Comparator<com.typicode.jsonplaceholder.model.User> comparator = null;
 
@@ -112,7 +114,7 @@ public class UserServiceImpl implements UserService {
       String field = parts[0].trim().toLowerCase();
       Comparator<com.typicode.jsonplaceholder.model.User> current = getUserComparator(parts, field);
 
-      if (comparator == null) {
+      if (Objects.isNull(comparator)) {
         comparator = current;
       } else {
         comparator = comparator.thenComparing(current);
