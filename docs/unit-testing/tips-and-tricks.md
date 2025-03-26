@@ -6,7 +6,7 @@ sidebar_position: 3
 
 ## Testing Frameworks
 
-We're primarily using JUnit 5 in our examples, but it's worth knowing about alternatives:
+We're going to be using JUnit 5, but it's worth knowing about alternatives:
 
 - [JUnit 5](https://junit.org/junit5/): The latest version with improved features like nested tests, parameterized tests, and better extension model.
 - [JUnit 4](https://junit.org/junit4/): Still widely used in legacy projects.
