@@ -56,13 +56,15 @@ public class UserServiceImpl implements UserService {
   public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort, String q) {
     List<com.typicode.jsonplaceholder.model.User> users = userApi.getUsers();
 
+    List<com.typicode.jsonplaceholder.model.User> filteredUsers = filterUsersByQ(users, q);
+    List<com.typicode.jsonplaceholder.model.User> sortedUsers = sortUsers(filteredUsers, pageSort);
+    List<com.typicode.jsonplaceholder.model.User> paginatedUsers =
+        applyPagination(sortedUsers, pageNumber, pageSize);
+
     return new Users()
-        .content(
-            userMapper.map(
-                applyPagination(
-                    sortUsers(filterUsersByQ(users, q), pageSort), pageNumber, pageSize)))
+        .content(userMapper.map(paginatedUsers))
         .pageable(new Pageable().pageNumber(pageNumber).pageSize(pageSize))
-        .totalElements(users.size());
+        .totalElements(filteredUsers.size());
   }
 
   @Override
@@ -163,7 +165,7 @@ public class UserServiceImpl implements UserService {
     int fromIndex = Math.min(pageNumber * pageSize, total);
     int toIndex = Math.min(fromIndex + pageSize, total);
 
-    return users.subList(fromIndex, toIndex);
+    return new ArrayList<>(users).subList(fromIndex, toIndex);
   }
 }
 ```
