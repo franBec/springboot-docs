@@ -398,3 +398,10 @@ This test class is the most comprehensive test suite that verifies your business
 * Ensures error handling works correctly (throws `NoSuchElementException` for non-existent users).
 * Uses a spy on the `MapStruct` mapper to use real mapping functionality while mocking other dependencies.
 * Reuses test data from a separate `MockData` class.
+
+Commit the progress so far.
+
+```bash
+git add .
+git commit -m "unit tests"
+```

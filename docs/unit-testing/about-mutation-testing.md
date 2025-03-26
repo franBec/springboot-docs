@@ -47,3 +47,10 @@ To get this metric, we need the [Solidsoft Pitest Gradle Plugin](https://mvnrepo
 
    ![pit-report-path.png](img/pit-report-path.png)
    ![report.png](img/report.png)
+
+Commit the progress so far.
+
+```bash
+git add .
+git commit -m "pitest"
+```
