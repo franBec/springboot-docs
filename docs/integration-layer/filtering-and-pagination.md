@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
     return current;
   }
 
-  private @NotNull List<com.typicode.jsonplaceholder.model.User> applyPagination(
+  private static @NotNull List<com.typicode.jsonplaceholder.model.User> applyPagination(
       @NotNull List<com.typicode.jsonplaceholder.model.User> users,
       Integer pageNumber,
       Integer pageSize) {

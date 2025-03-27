@@ -1,187 +1,12 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Let's Connect To A Database
 
 Instead of getting the users data from an outside source, we are going to get it from an in-memory database.
 
-## Clean Up
-
-If you are coming from previous documents, you need to do some cleaning before continuing. Follow these steps.
-
-1. In `src/main/java/dev/pollito/users_manager/aspect/LogAspect.java`, delete everything related to `com.typicode.jsonplaceholder.api`. After cleanup, it should look like this:
-
-    ```java
-    package dev.pollito.users_manager.aspect;
-    
-    import java.util.Arrays;
-    import lombok.extern.slf4j.Slf4j;
-    import org.aspectj.lang.JoinPoint;
-    import org.aspectj.lang.annotation.AfterReturning;
-    import org.aspectj.lang.annotation.Aspect;
-    import org.aspectj.lang.annotation.Before;
-    import org.aspectj.lang.annotation.Pointcut;
-    import org.jetbrains.annotations.NotNull;
-    import org.springframework.stereotype.Component;
-    
-    @Aspect
-    @Component
-    @Slf4j
-    public class LogAspect {
-    
-      @Pointcut("execution(public * dev.pollito.users_manager.controller..*.*(..))")
-      public void controllerPublicMethodsPointcut() {}
-    
-      @Before("controllerPublicMethodsPointcut()")
-      public void logBefore(@NotNull JoinPoint joinPoint) {
-        log.info(
-            "[{}] Args: {}",
-            joinPoint.getSignature().toShortString(),
-            Arrays.toString(joinPoint.getArgs()));
-      }
-    
-      @AfterReturning(pointcut = "controllerPublicMethodsPointcut()", returning = "result")
-      public void logAfterReturning(@NotNull JoinPoint joinPoint, Object result) {
-        log.info("[{}] Response: {}", joinPoint.getSignature().toShortString(), result);
-      }
-    } 
-    ```
-
-2. In `src/main/java/dev/pollito/users_manager/controller/advice/ControllerAdvice.java`, delete the `@ExceptionHandler(JsonPlaceholderException.class)` handler. After cleanup, it should look like this:
-
-    ```java
-    package dev.pollito.users_manager.controller.advice;
-    
-    import io.opentelemetry.api.trace.Span;
-    import jakarta.validation.ConstraintViolationException;
-    import java.time.Instant;
-    import java.time.format.DateTimeFormatter;
-    import java.util.NoSuchElementException;
-    import lombok.extern.slf4j.Slf4j;
-    import org.jetbrains.annotations.NotNull;
-    import org.springframework.http.HttpStatus;
-    import org.springframework.http.ProblemDetail;
-    import org.springframework.web.bind.annotation.ExceptionHandler;
-    import org.springframework.web.bind.annotation.RestControllerAdvice;
-    import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-    import org.springframework.web.servlet.resource.NoResourceFoundException;
-    
-    @RestControllerAdvice
-    @Slf4j
-    public class ControllerAdvice {
-    
-      @NotNull private static ProblemDetail problemDetail(@NotNull Exception e, HttpStatus status) {
-        String exceptionSimpleName = e.getClass().getSimpleName();
-        log.error("{} being handled", exceptionSimpleName, e);
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, e.getLocalizedMessage());
-        problemDetail.setTitle(exceptionSimpleName);
-        problemDetail.setProperty("timestamp", DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
-        problemDetail.setProperty("trace", Span.current().getSpanContext().getTraceId());
-        return problemDetail;
-      }
-    
-      @ExceptionHandler(Exception.class)
-      public ProblemDetail handle(@NotNull Exception e) {
-        return problemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-    
-      @ExceptionHandler(NoResourceFoundException.class)
-      public ProblemDetail handle(@NotNull NoResourceFoundException e) {
-        return problemDetail(e, HttpStatus.NOT_FOUND);
-      }
-    
-      @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-      public ProblemDetail handle(@NotNull MethodArgumentTypeMismatchException e) {
-        return problemDetail(e, HttpStatus.BAD_REQUEST);
-      }
-    
-      @ExceptionHandler(NoSuchElementException.class)
-      public ProblemDetail handle(@NotNull NoSuchElementException e) {
-        return problemDetail(e, HttpStatus.NOT_FOUND);
-      }
-    
-      @ExceptionHandler(ConstraintViolationException.class)
-      public ProblemDetail handle(@NotNull ConstraintViolationException e) {
-        return problemDetail(e, HttpStatus.BAD_REQUEST);
-      }
-    }
-    ```
-
-3. In `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`, remove all business logic. After cleanup, it should look like this:
-
-    ```java
-    package dev.pollito.users_manager.service.impl;
-    
-    import dev.pollito.users_manager.model.User;
-    import dev.pollito.users_manager.model.Users;
-    import dev.pollito.users_manager.service.UserService;
-    import java.util.*;
-    import lombok.RequiredArgsConstructor;
-    import org.springframework.stereotype.Service;
-    
-    @Service
-    @RequiredArgsConstructor
-    public class UserServiceImpl implements UserService {
-    
-      @Override
-      public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort, String q) {
-        return null;
-      }
-    
-      @Override
-      public User findById(Long id) {
-        return null;
-      }
-    }
-    ```
-
-4. In `src/main/resources/application.yml`, delete everything related to `jsonplaceholder`. After cleanup, it should look like this:
-
-    ```yaml
-    spring:
-      application:
-        name: users_manager
-    ```
-
-5. In `build.gradle`, delete:
-
-   * These dependencies:
-
-       ```groovy
-       implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.1'
-       implementation 'io.github.openfeign:feign-okhttp:13.5'
-       implementation 'io.github.openfeign:feign-jackson:13.5'
-       implementation 'io.github.openfeign:feign-gson:13.5'
-       implementation 'org.springframework.boot:spring-boot-starter-cache'
-       implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
-       ```
-
-   * The task `openApiGenerateFeign_jsonplaceholder`.
-     * And sure the task `compileJava` doesn't depend anymore on that task.
-   
-6. Delete these files:
-
-   * `src/main/java/dev/pollito/users_manager/api/config/JsonPlaceholderApiConfig.java`
-   * `src/main/java/dev/pollito/users_manager/config/properties/JsonPlaceholderConfigProperties.java`
-   * `src/main/java/dev/pollito/users_manager/config/CacheConfig.java`
-   * `src/main/java/dev/pollito/users_manager/errordecoder/JsonPlaceholderErrorDecoder.java`
-   * `src/main/java/dev/pollito/users_manager/exception/JsonPlaceholderException.java`
-   * `src/main/java/dev/pollito/users_manager/mapper/UserMapper.java`
-   * `src/main/java/dev/pollito/users_manager/service/impl/UserApiCacheServiceImpl.java`
-   * `src/main/java/dev/pollito/users_manager/service/UserApiCacheService.java`
-   * `src/test/java/dev/pollito/users_manager/service/impl/UserApiCacheServiceImplTest.java`
-   * `src/test/java/dev/pollito/users_manager/service/impl/UserServiceImplTest.java`
-   * `src/test/java/dev/pollito/users_manager/MockData.java`
-
-Commit the progress so far.
-
-```bash
-git add .
-git commit -m "cleaned up integration layer logic"
-```
-
-## Add dependencies
+## Add Dependencies
 
 We are going to be using [H2 Database Engine](https://mvnrepository.com/artifact/com.h2database/h2) and [Spring Boot Starter Data JPA](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa). In your `build.gradle`, add the dependencies in the `dependencies` section:
 
@@ -190,6 +15,147 @@ runtimeOnly 'com.h2database:h2:2.3.232'
 implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 ```
 
+## Add A PropertyReferenceException Handler
+
+The dependency [Spring Boot Starter Data JPA](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa) give us access to handle `PropertyReferenceException`.
+
+In `src/main/java/dev/pollito/users_manager/controller/advice/ControllerAdvice.java`, add a `@ExceptionHandler(PropertyReferenceException.class)` handler.
+
+```java
+package dev.pollito.users_manager.controller.advice;
+
+import io.opentelemetry.api.trace.Span;
+import jakarta.validation.ConstraintViolationException;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.mapping.PropertyReferenceException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+@RestControllerAdvice
+@Slf4j
+public class ControllerAdvice {
+
+  @NotNull private static ProblemDetail problemDetail(@NotNull Exception e, HttpStatus status) {
+    String exceptionSimpleName = e.getClass().getSimpleName();
+    log.error("{} being handled", exceptionSimpleName, e);
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, e.getLocalizedMessage());
+    problemDetail.setTitle(exceptionSimpleName);
+    problemDetail.setProperty("timestamp", DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
+    problemDetail.setProperty("trace", Span.current().getSpanContext().getTraceId());
+    return problemDetail;
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ProblemDetail handle(@NotNull Exception e) {
+    return problemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ProblemDetail handle(@NotNull NoResourceFoundException e) {
+    return problemDetail(e, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ProblemDetail handle(@NotNull MethodArgumentTypeMismatchException e) {
+    return problemDetail(e, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NoSuchElementException.class)
+  public ProblemDetail handle(@NotNull NoSuchElementException e) {
+    return problemDetail(e, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ProblemDetail handle(@NotNull ConstraintViolationException e) {
+    return problemDetail(e, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(PropertyReferenceException.class)
+  public ProblemDetail handle(@NotNull PropertyReferenceException e) {
+    return problemDetail(e, HttpStatus.BAD_REQUEST);
+  }
+}
+```
+
+Also add a unit test in `src/test/java/dev/pollito/users_manager/controller/advice/ControllerAdviceTest.java`.
+
+```java
+package dev.pollito.users_manager.controller.advice;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+
+import jakarta.validation.ConstraintViolationException;
+import java.util.NoSuchElementException;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.mapping.PropertyReferenceException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+@ExtendWith(MockitoExtension.class)
+class ControllerAdviceTest {
+  @InjectMocks ControllerAdvice controllerAdvice;
+
+  private static void problemDetailAssertions(
+      @NotNull ProblemDetail response, @NotNull Exception e, @NotNull HttpStatus httpStatus) {
+    assertEquals(httpStatus.value(), response.getStatus());
+    assertEquals(e.getClass().getSimpleName(), response.getTitle());
+    assertNotNull(response.getProperties());
+    assertNotNull(response.getProperties().get("timestamp"));
+    assertNotNull(response.getProperties().get("trace"));
+  }
+
+  @Test
+  void whenNoResourceFoundExceptionThenReturnProblemDetail() {
+    NoResourceFoundException e = mock(NoResourceFoundException.class);
+    problemDetailAssertions(controllerAdvice.handle(e), e, HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  void whenNoSuchElementExceptionThenReturnProblemDetail() {
+    NoSuchElementException e = mock(NoSuchElementException.class);
+    problemDetailAssertions(controllerAdvice.handle(e), e, HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  void whenMethodArgumentTypeMismatchExceptionThenReturnProblemDetail() {
+    MethodArgumentTypeMismatchException e = mock(MethodArgumentTypeMismatchException.class);
+    problemDetailAssertions(controllerAdvice.handle(e), e, HttpStatus.BAD_REQUEST);
+  }
+
+  @Test
+  void whenConstraintViolationExceptionThenReturnProblemDetail() {
+    ConstraintViolationException e = mock(ConstraintViolationException.class);
+    problemDetailAssertions(controllerAdvice.handle(e), e, HttpStatus.BAD_REQUEST);
+  }
+
+  @Test
+  void whenExceptionThenReturnProblemDetail() {
+    Exception e = mock(Exception.class);
+    problemDetailAssertions(controllerAdvice.handle(e), e, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @Test
+  void whenPropertyReferenceExceptionThenReturnProblemDetail() {
+    PropertyReferenceException e = mock(PropertyReferenceException.class);
+    problemDetailAssertions(controllerAdvice.handle(e), e, HttpStatus.BAD_REQUEST);
+  }
+}
+```
 ## About Entities
 
 ### Why I Don't Recommend Generating Entities Classes
@@ -510,4 +476,245 @@ INSERT INTO users (name, creation_time, username, email, phone, website, address
 
 ## Add H2 Properties in application.yml
 
-WIP
+In `src/main/resources/application.yml`, we need to add some properties to make H2 work. After adding, it should look like this:
+
+```yaml
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+spring:
+  application:
+    name: users_manager
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS PUBLIC
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  h2:
+    console.enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+```
+
+## Create A JpaRepository
+
+In `src/main/java/dev/pollito/users_manager/repository`, create `UserRepository.java`.
+
+```java
+package dev.pollito.users_manager.repository;
+
+import dev.pollito.users_manager.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+  @Query(
+      "SELECT u FROM User u "
+          + "WHERE (:q IS NULL OR "
+          + "LOWER(u.name) LIKE LOWER(CONCAT('%', :q, '%')) OR "
+          + "LOWER(u.username) LIKE LOWER(CONCAT('%', :q, '%')) OR "
+          + "LOWER(u.email) LIKE LOWER(CONCAT('%', :q, '%')))")
+  Page<User> findAllByQueryContainingIgnoreCase(Pageable pageable, @Param("q") String q);
+}
+```
+
+### What is the @Query annotation?
+
+Sometimes, you need a more specific or complex search than what `JpaRepository` can figure out from just a method name.
+
+* The `@Query` annotation is like giving your assistant very specific, custom instructions written in a database-like language ([JPQL](https://www.baeldung.com/spring-data-jpa-query), which looks a lot like SQL).
+* You're telling Spring exactly how you want it to find the data, rather than letting it guess.
+
+### What does this method findAllByQueryContainingIgnoreCase do?
+
+* You give it two things:
+  * `pageRequest`: Tells it which page of results you want and how many results per page. (More on Page below).
+  * `q`: This is your search keyword (like "john", "admin", or "example.com").
+* The method then uses the custom instructions from the `@Query` to:
+  * Look through all the User records in your database.
+  * Check if the search keyword q appears anywhere within the user's name, username, or email.
+  * It ignores whether the letters are uppercase or lowercase (so searching for "john" will find "John", "JOHN", "john", etc.).
+* If you don't provide a search keyword (q is null or empty), it will just return all users (matching the `:q IS NULL` part).
+* Finally, it returns the found users, organized into the requested page.
+
+### What is Page?
+
+Think of `Page` like a single page of search results on Google or Amazon. It doesn't contain all possible results, just a smaller chunk (e.g., 20 users).
+
+A `Page` object holds two main things:
+
+1. The actual **list of User objects** for the current page you asked for.
+2. Extra **information about the pagination**, such as:
+   * How many users matched the search in total?
+   * How many pages are there in total?
+   * What page number is this one?
+   * Is there a next page available?
+   * Is there a previous page available?
+
+## Create a Mapper
+
+In `src/main/java/dev/pollito/users_manager/mapper`, create `UserMapper.java`.
+
+```java
+package dev.pollito.users_manager.mapper;
+
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
+import dev.pollito.users_manager.model.User;
+import dev.pollito.users_manager.model.Users;
+import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
+
+@Mapper(componentModel = SPRING)
+public interface UserMapper {
+  User map(dev.pollito.users_manager.entity.User user);
+
+  Users map(Page<dev.pollito.users_manager.entity.User> userPage);
+}
+```
+
+## Create A Utility Class For Mapping Request Query Param Logic Into Page Logic
+
+In `src/main/java/dev/pollito/users_manager/util`, create `PageUtil.java`.
+
+```java
+package dev.pollito.users_manager.util;
+
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+public class PageUtil {
+  private PageUtil() {}
+
+  public static @NotNull Pageable createPageable(int page, int size, @NotNull List<String> sort) {
+    Sort combinedSort = Sort.unsorted();
+    boolean hasIdSort = false;
+
+    for (String sortField : sort) {
+      String[] sortParams = sortField.split(":");
+      Sort.Direction direction =
+          (sortParams.length > 1 && "desc".equalsIgnoreCase(sortParams[1]))
+              ? Sort.Direction.DESC
+              : Sort.Direction.ASC;
+
+      if ("id".equalsIgnoreCase(sortParams[0])) {
+        hasIdSort = true;
+      }
+
+      combinedSort = combinedSort.and(Sort.by(direction, sortParams[0]));
+    }
+
+    if (!hasIdSort) {
+      combinedSort = combinedSort.and(Sort.by(Sort.Direction.ASC, "id"));
+    }
+
+    return PageRequest.of(page, size, combinedSort);
+  }
+}
+```
+
+## Write Service Logic
+
+In `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`, rewrite the business logic to get the users' data from `UserRepository`. It should look something like this:
+
+```java
+package dev.pollito.users_manager.service.impl;
+
+import static dev.pollito.users_manager.util.PageUtil.createPageable;
+
+import dev.pollito.users_manager.mapper.UserMapper;
+import dev.pollito.users_manager.model.User;
+import dev.pollito.users_manager.model.Users;
+import dev.pollito.users_manager.repository.UserRepository;
+import dev.pollito.users_manager.service.UserService;
+import java.util.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+
+  private final UserRepository userRepository;
+  private final UserMapper userMapper;
+
+  @Override
+  public Users findAll(Integer pageNumber, Integer pageSize, List<String> pageSort, String q) {
+    return userMapper.map(
+        userRepository.findAllByQueryContainingIgnoreCase(
+            createPageable(pageNumber, pageSize, pageSort), q));
+  }
+
+  @Override
+  public User findById(Long id) {
+    return userMapper.map(userRepository.findById(id).orElseThrow());
+  }
+}
+```
+
+Compared to getting the users' data from an outside source with Feign Client API, this service implementation is much cleaner, cause all the pagination and sorting are now the `repository` responsibility.
+
+Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users). Everything should be working exactly the same.
+
+## Do Some Testing
+
+Let's write back tests on `UserServiceImpl`. In `src/test/java/dev/pollito/users_manager/service/impl`, create `UserServiceImplTest.java`.
+
+```java
+package dev.pollito.users_manager.service.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
+
+import dev.pollito.users_manager.entity.User;
+import dev.pollito.users_manager.mapper.UserMapper;
+import dev.pollito.users_manager.repository.UserRepository;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+@ExtendWith(MockitoExtension.class)
+class UserServiceImplTest {
+  @InjectMocks private UserServiceImpl userService;
+  @Mock private UserRepository userRepository;
+
+  @SuppressWarnings("unused")
+  @Spy
+  private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+
+  @Test
+  void whenFindAllThenReturnUsers() {
+    when(userRepository.findAllByQueryContainingIgnoreCase(any(Pageable.class), anyString()))
+        .thenReturn((new PageImpl<>(List.of(), PageRequest.of(0, 10), 0)));
+    assertNotNull(userService.findAll(0, 1, Collections.emptyList(), ""));
+  }
+
+  @Test
+  void whenGetUserThenReturnUser() {
+    when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+    assertNotNull(userService.findById(1L));
+  }
+}
+```
