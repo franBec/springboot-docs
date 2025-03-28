@@ -2,6 +2,8 @@
 sidebar_position: 2
 ---
 
+import YouTube from '@site/src/components/YouTube';
+
 # Docker
 
 If you've been doing software development for a bit, you've likely seen this logo:
@@ -14,12 +16,12 @@ If you've been doing software development for a bit, you've likely seen this log
 
 Think of Docker as creating a complete, self-contained box that has everything your application needs to run:
 
-- The application itself.
-- All libraries and dependencies.
-- Runtime environment.
-- Configuration.
+* The application itself.
+* All libraries and dependencies.
+* Runtime environment.
+* Configuration.
 
-This "box" (called a container) can then be moved and run consistently on any system that supports Docker - from a developer's laptop to a test environment to a production server.
+This "box" (called a container) can then be moved and run consistently on any system that supports Docker * from a developer's laptop to a test environment to a production server.
 
 ## Why Dockerize Spring Boot Applications?
 
@@ -105,9 +107,9 @@ While building and testing Docker images locally is the ideal scenario, in many 
 
 Getting Docker running smoothly on your development machine isn't always straightforward:
 
-- **Windows users** may face compatibility issues with WSL (Windows Subsystem for Linux), Hyper-V requirements, or performance concerns.
-- **macOS users** need to work with Docker Desktop, which consumes significant system resources and has licensing requirements for larger organizations.
-- **Linux users** have the most native experience but still need proper permissions and configuration.
+* **Windows users** may face compatibility issues with WSL (Windows Subsystem for Linux), Hyper-V requirements, or performance concerns.
+* **macOS users** need to work with Docker Desktop, which consumes significant system resources and has licensing requirements for larger organizations.
+* **Linux users** have the most native experience but still need proper permissions and configuration.
 
 These setup hurdles can distract from your primary job: writing code.
 
@@ -115,9 +117,9 @@ These setup hurdles can distract from your primary job: writing code.
 
 Most established projects already have CI/CD pipelines configured:
 
-- When you push code to the repository, automated processes build, test, and deploy your changes.
-- Development and test environments are automatically updated with your changes.
-- Build logs and deployment results are available through your CI/CD platform (Jenkins, GitHub Actions, GitLab CI, etc.).
+* When you push code to the repository, automated processes build, test, and deploy your changes.
+* Development and test environments are automatically updated with your changes.
+* Build logs and deployment results are available through your CI/CD platform (Jenkins, GitHub Actions, GitLab CI, etc.).
 
 In these cases, it's often more efficient to:
 
@@ -127,3 +129,17 @@ In these cases, it's often more efficient to:
 4. Check the deployed application in the development environment.
 
 This approach lets you focus on code quality while specialized pipeline tools handle the build process in consistent, controlled environments purpose-built for that task.
+
+## Why Every Developer Should Understand Docker Basics
+
+- **Troubleshoot deployment issues** by understanding container logs and behaviors.
+- **Collaborate effectively** with DevOps teams using shared terminology.
+- **Create consistent environments** across development and production.
+- **Write more portable code** that doesn't rely on specific machine configurations.
+- **Advance your career** with a skill now considered fundamental in modern development.
+
+Understanding Docker helps bridge the gap between "it works on my machine" and "it works everywhere" – essential knowledge in today's containerized world.
+
+## Recommended Learning Resource
+
+<YouTube id="zJ6WbK9zFpI" />
