@@ -718,3 +718,10 @@ class UserServiceImplTest {
   }
 }
 ```
+
+Commit the progress so far.
+
+```bash
+git add .
+git commit -m "persistence layer"
+```
