@@ -6,6 +6,9 @@ sidebar_position: 2
 
 If you've been doing software development for a bit, you've likely seen this logo:
 
+<div className="image-container">
+  <img src="/img/docker.png" alt="Docker Logo" width="174" height="146" />
+</div>
 
 [Docker](https://www.docker.com/) is like a standard shipping container for software. Just as shipping containers revolutionized global trade by providing a standard way to transport goods regardless of content, Docker provides a standard way to package and run software regardless of the underlying infrastructure.
 
