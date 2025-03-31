@@ -18,7 +18,7 @@ Here’s how most Spring Boot projects are organized:
 A request flow starts with `Controller` → `Service`:
 
 * If you’re fetching data from a database, then `Repository` → `Database`.
-* if you’re fetching data from an outside source, then `API Client` → `External API`. 
+* If you’re fetching data from an outside source, then `API Client` → `External API`. 
 
 ## Where Do These Names Come From?
 
@@ -29,11 +29,11 @@ These layer names (`Controller`, `Service`, `Repository`) are rooted in:
   * [Layered Architecture](https://www.oreilly.com/library/view/software-architecture-patterns/9781491971437/ch01.html): A standard way to isolate concerns (presentation vs. business vs. data).
 * **Spring’s Evolution**:
   * Early [Java EE](https://www.geeksforgeeks.org/java-enterprise-edition/) apps used similar layers (like DAOs for data access), which Spring formalized with annotations like `@Controller`, `@Service`, `@Repository`.
-* **The names aren’t unique to Spring**—they reflect industry-wide best practices for clean code.]
+* **The names aren’t unique to Spring**—they reflect industry-wide best practices for clean code.
 
 ## Is It Mandatory?
 
-No. **Spring doesn’t enforce these names or layers**. You could write everything in a single class named PizzaManager.java with spaghetti code.
+No. **Spring doesn’t enforce these names or layers**. You could write everything in a single class named `PizzaManager.java` with spaghetti code.
 
 But these conventions solve real problems:
 
@@ -49,9 +49,9 @@ But these conventions solve real problems:
 
 ## Common Practices & Pitfalls
 
-* **One Service Per Controller**: A controller shouldn’t orchestrate 5 services. If it does, your business logic is probably scattered.
-* **Layers Are Optional**: No database? Skip the persistence layer. No external APIs? Skip integration. Start simple.
-* **Don’t Let Layers Bleed**:
+* **One service per controller**: A controller shouldn’t orchestrate 5 services. If it does, your business logic is probably scattered.
+* **Layers are optional**: No database? Skip the persistence layer. No external APIs? Skip integration. Start simple.
+* **Don’t let layers bleed**:
   * **Bad**: Controllers doing business logic, Repositories making API calls.
   * **Good**: Each layer has a single responsibility.
-* **Service-to-Service Calls Are Allowed**: Services can call other services (but avoid [circular dependencies](https://www.baeldung.com/circular-dependencies-in-spring)!).
+* **Service-to-Service calls are allowed**: Services can call other services (but avoid [circular dependencies](https://www.baeldung.com/circular-dependencies-in-spring)!).
