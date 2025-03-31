@@ -12,7 +12,11 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+
+    "write-translations:es": "docusaurus write-translations --locale es",
+    "start:es": "docusaurus start --locale es",
+    "build:es": "docusaurus build --locale es"
   },
   "dependencies": {
     "@docusaurus/core": "3.7.0",

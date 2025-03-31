@@ -1,0 +1,94 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Spring Boot In A Nutshell": {
+    "message": "Spring Boot In A Nutshell",
+    "description": "The label for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Spring Boot In A Nutshell.link.generated-index.description": {
+    "message": "If you’ve ever tried baking a cake from scratch, you know it involves measuring flour, cracking eggs, and mixing ingredients—all before you even turn on the oven. Traditional Java development can feel similarly tedious. Enter Spring Boot, the pre-mixed batter of the coding world. Let’s break down what it is and why developers love it.",
+    "description": "The generated-index page description for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project": {
+    "message": "Let’s Create A Spring Boot Project",
+    "description": "The label for category Let’s Create A Spring Boot Project in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project.link.generated-index.description": {
+    "message": "Starting a Spring Boot project is like ordering a pizza—you pick your toppings (dependencies), crust (settings), and let the oven (Spring Initializr) handle the rest. No coding required yet! Here’s how to spin up a project in seconds.",
+    "description": "The generated-index page description for category Let’s Create A Spring Boot Project in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Optional But Recommended Features": {
+    "message": "Optional But Recommended Features",
+    "description": "The label for category Optional But Recommended Features in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Optional But Recommended Features.link.generated-index.description": {
+    "message": "These are things that you may or may not find in projects you are going to come across, but are nice to have.",
+    "description": "The generated-index page description for category Optional But Recommended Features in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Contract-Driven Development": {
+    "message": "Contract-Driven Development",
+    "description": "The label for category Contract-Driven Development in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Contract-Driven Development.link.generated-index.description": {
+    "message": "Usually when developing, we make our endpoint first, then we write documentation in an OpenAPI Specification. The problem appears later, when somebody else modifies the endpoint and now the documentation doesn’t reflect it. This can go unnoticed. Worse than no documentation, is wrong documentation. What if we wrote documentation first, and the code is generated from it? Let me introduce you to Contract-Driven Development.",
+    "description": "The generated-index page description for category Contract-Driven Development in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Integration Layer": {
+    "message": "Integration Layer",
+    "description": "The label for category Integration Layer in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Integration Layer.link.generated-index.description": {
+    "message": "In modern backend development, services often need to communicate with external web services using HTTP. Whether your service needs to integrate with third-party platforms, microservices, or legacy systems, the web client becomes a critical component of your application’s architecture.",
+    "description": "The generated-index page description for category Integration Layer in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Unit Testing": {
+    "message": "Unit Testing",
+    "description": "The label for category Unit Testing in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Unit Testing.link.generated-index.description": {
+    "message": "Unit testing is the practice of testing individual pieces (units) of your code in isolation to verify they work correctly. Think of it like checking each ingredient before cooking a meal, rather than just tasting the final dish and trying to figure out what went wrong.",
+    "description": "The generated-index page description for category Unit Testing in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Persistence Layer": {
+    "message": "Persistence Layer",
+    "description": "The label for category Persistence Layer in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Persistence Layer.link.generated-index.description": {
+    "message": "Up until now, we have been getting the users data from an outside source. But what if we had the data in our own database?",
+    "description": "The generated-index page description for category Persistence Layer in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Deployment": {
+    "message": "Deployment",
+    "description": "The label for category Deployment in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Deployment.link.generated-index.description": {
+    "message": "Shipping code is more than just writing it. Learn how to package, configure, and run your Spring Boot application reliably in different environments like dev, test, and prod using tools like Docker and Spring Profiles.",
+    "description": "The generated-index page description for category Deployment in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Real Talk Time": {
+    "message": "Real Talk Time",
+    "description": "The label for category Real Talk Time in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Real Talk Time.link.generated-index.description": {
+    "message": "Embarking on a programming journey is exhilarating, but the tech industry’s landscape is riddled with pitfalls that can derail even the most promising projects. Few people are going to tell you this, but reality is working in Big Tech is bad. Let’s dissect common challenges, systemic issues and work mentalities.",
+    "description": "The generated-index page description for category Real Talk Time in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.About": {
+    "message": "About",
+    "description": "The label for category About in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.About.link.generated-index.description": {
+    "message": "About the author of this page (Pollito) and special thanks.",
+    "description": "The generated-index page description for category About in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Licenses": {
+    "message": "Licenses",
+    "description": "The label for category Licenses in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Licenses.link.generated-index.description": {
+    "message": "Code and content licenses. The boring but important stuff.",
+    "description": "The generated-index page description for category Licenses in sidebar tutorialSidebar"
+  }
+}

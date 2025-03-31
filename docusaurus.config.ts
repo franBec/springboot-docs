@@ -18,7 +18,7 @@ const config: Config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'es'],
   },
 
   presets: [
@@ -44,7 +44,12 @@ const config: Config = {
         alt: 'My Site Logo',
         src: 'img/reshot-icon-chicken-NWQYV8H9BM.svg',
       },
-      items: [],
+      items: [
+        {
+          type: 'localeDropdown',
+          position: 'right',
+        },
+      ],
     },
     footer: {
       style: 'dark',
