@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 import YouTube from '@site/src/components/YouTube';
@@ -72,7 +72,7 @@ Nonetheless, if you are joining a team that already have their own `Dockerfile` 
 
 ### Understanding The Multi-Stage Build
 
-This `Dockerfile` uses what's called a "multi-stage build":
+This `Dockerfile` uses what's called a [multi-stage build](https://docs.docker.com/build/building/multi-stage/):
 
 **Build Stage**. This first stage is like a workshop where we build our application:
 
