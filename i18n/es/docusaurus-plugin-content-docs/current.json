@@ -4,11 +4,11 @@
     "description": "The label for version current"
   },
   "sidebar.tutorialSidebar.category.Spring Boot In A Nutshell": {
-    "message": "Spring Boot In A Nutshell",
+    "message": "Spring Boot En Pocas Palabras",
     "description": "The label for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Spring Boot In A Nutshell.link.generated-index.description": {
-    "message": "If you’ve ever tried baking a cake from scratch, you know it involves measuring flour, cracking eggs, and mixing ingredients—all before you even turn on the oven. Traditional Java development can feel similarly tedious. Enter Spring Boot, the pre-mixed batter of the coding world. Let’s break down what it is and why developers love it.",
+    "message": "Si alguna vez has intentado hornear un pastel desde cero, sabes que implica medir la harina, romper huevos y mezclar los ingredientes, todo antes de siquiera encender el horno. El desarrollo tradicional en Java puede resultar igual de tedioso. Descubre Spring Boot, la premezcla del mundo de la programación. Analicemos qué es y por qué a los desarrolladores les encanta.",
     "description": "The generated-index page description for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project": {

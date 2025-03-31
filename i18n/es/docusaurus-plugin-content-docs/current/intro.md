@@ -12,7 +12,7 @@ En 21 de junio de 2022, escribí en el grupo de WhatsApp de la Universidad:
 
 > Pregunta rápida: ¿verdad vale la pena aprender Java Spring?
 
-![WhatsAppImage2025-02-27.jpeg](/img/WhatsAppImage2025-02-27.jpeg)
+![WhatsAppImage2025-02-27.jpeg](../../../../static/img/WhatsAppImage2025-02-27.jpeg)
 
 Incluso cometí un typo, lol.
 
