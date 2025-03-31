@@ -68,7 +68,7 @@ COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 ```
 
-Nonetheless, if you are joining a team that already have their own `Dockerfile` defined, is best to avoid touching it unless necessary.
+Nonetheless, if you are joining a team that already have their own `Dockerfile` defined, is best to avoid modifications unless necessary.
 
 ### Understanding The Multi-Stage Build
 
@@ -141,5 +141,7 @@ This approach lets you focus on code quality while specialized pipeline tools ha
 Understanding Docker helps bridge the gap between "it works on my machine" and "it works everywhere" – essential knowledge in today's containerized world.
 
 ## Recommended Learning Resource
+
+**I really recommend** KodeKloud's video "Learn Docker in 2 Hours - A Full Tutorial (2025)".
 
 <YouTube id="zJ6WbK9zFpI" />
