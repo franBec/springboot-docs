@@ -2,20 +2,20 @@
 sidebar_position: 3
 ---
 
-# Estructura De Carpetas De Spring Boot
+# Estructura de Carpetas en Spring Boot
 
-## Paquetes Y La Regla De La Clase Principal
+## Paquetes y la Regla de la Clase Principal
 
-Los paquetes son la forma en que Java agrupa clases relacionadas (como carpetas).
+Los paquetes son la forma de Java de agrupar clases relacionadas (como si fueran carpetas).
 
-**Regla crítica**: La clase principal (anotada con `@SpringBootApplication`) define el paquete raíz.
+**Regla crítica**: Tu clase principal (anotada con `@SpringBootApplication`) define el paquete raíz.
 
-* Todos los demás paquetes que cree deben ser subpaquetes de esta raíz (por ejemplo, si su clase principal está en `com.your.app`, cree `com.your.app.controllers`, no `com.controllers`).
-* **¿Por qué?** Spring Boot escanea automáticamente las clases del paquete raíz y sus subpaquetes. Las clases externas no se detectarán a menos que se configuren explícitamente.
+* Todos los demás paquetes que crees deben ser sub paquetes de esta raíz (por ejemplo, si tu clase principal está en `com.your.app`, crea `com.your.app.controllers`, no `com.controllers`).
+* **¿Por qué?** Spring Boot escanea automáticamente las clases en el paquete raíz y sus sub paquetes. Las clases que queden afuera no se detectarán a menos que las configures explícitamente.
 
-## Estructura Predeterminada Del Proyecto
+## Estructura Default del Proyecto
 
-Al generar un proyecto Spring Boot (más información sobre cómo generar un proyecto en la sección [Spring Initializr](/lets-create-a-spring-boot-project/spring-initializr)), se obtiene una estructura estandarizada de carpetas y archivos.
+Cuando generas un proyecto Spring Boot (más sobre cómo generarlo en la sección de [Spring Initializr](/lets-create-a-spring-boot-project/spring-initializr)), obtienes una estructura estandarizada de carpetas y archivos.
 
 ```log
 your-project/  
@@ -27,23 +27,23 @@ your-project/
 │   │   └── resources/  
 │   │       ├── static/
 │   │       ├── templates/
-│   │       └── application.properties (or application.yml)
+│   │       └── application.properties (o application.yml)
 │   └── test/  
 │       └── java/com/example/demo/  
 ├── .gitignore
-├── pom.xml (or build.gradle)
+├── pom.xml (o build.gradle)
 └── HELP.md
 ```
 
-* `DemoApplication.java`: El punto de entrada de tu aplicación. Anotado con `@SpringBootApplication` para habilitar la [autoconfiguración](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html).
-* `application.properties` (o `application.yml`): Archivo de configuración central para las URL de la base de datos, los puertos del servidor, el registro, etc.
-* `static/` y `templates/`, vacíos por defecto. Se usan para recursos web:
-  * `static/`: Sirve imágenes, CSS y JS directamente.
-  * `templates/`: HTML renderizado por el servidor (si se usa [Thymeleaf](https://www.thymeleaf.org/), [Mustache](https://www.baeldung.com/spring-boot-mustache), etc.).
-* `pom.xml` (Maven) o `build.gradle` (Gradle): Define dependencias y complementos (más información en la sección [Maven vs. Gradle](/lets-create-a-spring-boot-project/spring-initializr#project-maven-vs-gradle)).
-* `test/`: Preconfigurado para pruebas JUnit (más información en la sección [Pruebas unitarias](/category/unit-testing)). Incluye una clase de prueba básica, `DemoApplicationTests.java`, que verifica la carga del contexto de la aplicación.
+* `DemoApplication.java`: El punto de entrada de tu app. Anotada con `@SpringBootApplication` para habilitar la [autoconfiguración](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html).
+* `application.properties` (o `application.yml`): Archivo central de configuración para URLs de bases de datos, puertos del servidor, logging, etc.
+* `static/` y `templates/`, vienen vacíos por defecto. Se usan para assets web:
+  * `static/`: Sirve imágenes, CSS, JS directamente.
+  * `templates/`: HTML renderizado por el servidor (si usas [Thymeleaf](https://www.thymeleaf.org/), [Mustache](https://www.baeldung.com/spring-boot-mustache), etc.).
+* `pom.xml` (Maven) o `build.gradle` (Gradle): Define dependencias y plugins (más de esto en la sección de [Maven vs. Gradle](/lets-create-a-spring-boot-project/spring-initializr#project-maven-vs-gradle)).
+* `test/`: Preconfigurado para tests con JUnit (más sobre esto en la sección de [Pruebas unitarias](/category/unit-testing)). Incluye una clase esqueleto de prueba `DemoApplicationTests.java`, que verifica que el contexto de la app se carga.
 
-## Organización Del Nuevo Código
+## Organizando el Nuevo Código
 
 ¿Cómo organizamos el nuevo código? Hay tres enfoques…
 
@@ -62,10 +62,10 @@ src/main/java/com.your.app
     └── ProductRepository.java
 ```
 
-* **Ventajas**: Sencillo para proyectos pequeños. Es fácil encontrar todos los controladores/servicios de un vistazo.
-* **Desventajas**: A medida que la aplicación crece, navegar entre más de 10 capas para una sola función (por ejemplo, "Usuario") se vuelve tedioso.
+* **Pros**: Simple para proyectos pequeños. Es fácil encontrar todos los controllers/servicios de un vistazo.
+* **Contras**:  A medida que la aplicación crece, navegar entre 10+ capas para una sola función (por ejemplo, "User") se vuelve tedioso.
 
-### Por Característica (Enfoque Moderno)
+### Por Funcionalidad (Enfoque Moderno)
 
 ```log
 src/main/java/com.your.app  
@@ -79,19 +79,20 @@ src/main/java/com.your.app
     └── ProductRepository.java
 ```
 
-* **Ventajas**: Todo el código de una función reside en un solo lugar. Escalabilidad mejorada. Fomenta la modularidad.
-* **Desventajas**: Riesgo de duplicación de lógica común (p. ej., utilidades compartidas).
+* **Pros**: Todo el código para una funcionalidad vive en un solo lugar. Escala mejor. Fomenta la modularidad.
+* **Contras**: Existe el riesgo de duplicar lógica común (por ejemplo, utilidades compartidas).
 
-### Enfoque Híbrido (Mezcla De Ambos)
+### Enfoque Híbrido (Combinando Ambos)
 
 ```log
 src/main/java/com.your.app  
-├── shared          <-- Common utilities, exceptions, configs  
-├── user            <-- Feature package (controller/service/repo inside)  
+├── shared          <-- Utilidades comunes, excepciones, configuraciones
+├── user            <-- FPaquete de funcionalidad (controller/service/repo dentro)  
 └── product
 ```
 
-## Puntos Clave
-* Aunque **no hay una respuesta correcta**, todos los proyectos en los que trabajé siguieron el enfoque tradicional "por capas".
-* **Consistencia > Perfección**: Acuerda una estructura con tu equipo y apégate a ella. Refactoriza más adelante si es necesario.
-* **No te opongas a los valores predeterminados a menos que tengas una razón específica**: Spring Boot se basa en esta jerarquía y cualquier desarrollador de Spring puede navegar tu proyecto al instante.
+## Conclusiones Clave
+
+* Aunque **no hay una respuesta correcta**, en cada proyecto en el que he trabajado he seguido el enfoque tradicional “por capa”.
+* **Consistencia > Perfección**: Acorda con tu equipo una estructura y manténganla. Refactoriza más tarde si es necesario.
+* **No te enfrentes a los defaults a menos que tengas una razón específica**: Spring Boot depende de esta jerarquía y cualquier desarrollador de Spring puede navegar tu proyecto al instante.
