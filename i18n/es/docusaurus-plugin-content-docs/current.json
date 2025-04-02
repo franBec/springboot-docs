@@ -12,11 +12,11 @@
     "description": "The generated-index page description for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project": {
-    "message": "Let’s Create A Spring Boot Project",
+    "message": "Creemos un proyecto Spring Boot",
     "description": "The label for category Let’s Create A Spring Boot Project in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project.link.generated-index.description": {
-    "message": "Starting a Spring Boot project is like ordering a pizza—you pick your toppings (dependencies), crust (settings), and let the oven (Spring Initializr) handle the rest. No coding required yet! Here’s how to spin up a project in seconds.",
+    "message": "Iniciar un proyecto de Spring Boot es como pedir una pizza: eliges los ingredientes (dependencias), la base (configuración) y dejas que el horno (Spring Initializr) se encargue del resto. ¡Todavía no necesitas programar! Aquí te explico cómo iniciar un proyecto en segundos.",
     "description": "The generated-index page description for category Let’s Create A Spring Boot Project in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Optional But Recommended Features": {

@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Spring Initializr
 
-Head to [Spring Initializr](https://start.spring.io/), the official Spring Boot project generator (shoutout to [Bootify](https://bootify.io/), interesting alternative).
+Head to [Spring Initializr](https://start.spring.io/), the official Spring Boot project generator (honorable mention to [Bootify](https://bootify.io/), interesting alternative).
 
 You’ll see a form, don’t panic—we’ll decode each option.
 
@@ -15,14 +15,14 @@ You’ll see a form, don’t panic—we’ll decode each option.
 Think of these as your project’s managers. They:
 
 * Download libraries/dependencies.
-* Define steps (compile code, run tests, build JAR files).
+* Define steps (compile code, run tests, build `JAR` files).
 * Keep project structure standard and organized.
 
-| Aspect        | Maven                                | Gradle                                             |
-|---------------|--------------------------------------|----------------------------------------------------|
-| Configuration | Uses XML (structured with `<tags>`). | Uses Kotlin/Groovy (code-like syntax).             |
-| Flexibility   | Strict, standardized conventions.    | Highly customizable (supports logic like if-else). |
-| Use Cases     | Legacy or enterprise Java projects.  | Android apps, modern Java/Kotlin projects.         |
+| Aspect        | Maven                               | Gradle                                              |
+|---------------|-------------------------------------|-----------------------------------------------------|
+| Configuration | Uses XML (structured with `<tags>`) | Uses Kotlin/Groovy (code-like syntax)               |
+| Flexibility   | Strict, standardized conventions    | Highly customizable (supports logic like `if-else`) |
+| Use Cases     | Legacy or enterprise Java projects  | Android apps, modern Java/Kotlin projects           |
 
 ### Which One To Choose?
 
@@ -55,28 +55,28 @@ When selecting a Spring Boot version you’ll encounter three types of labels:
 
 ## Project Metadata
 
-The Project Metadata section defines your project’s identity and structure. Here’s a breakdown of each field and its recommended conventions:
+The **Project Metadata** section defines your project’s identity and structure. Here’s a breakdown of each field and its recommended conventions:
 
-| Field        | What It Means                                                              | Recommended Structure/Standard                          | Example                                        |
-|--------------|----------------------------------------------------------------------------|---------------------------------------------------------|------------------------------------------------|
-| Group        | Identifies your organization/team                                          | Use reverse domain name notation. Avoid generic terms.  | `com.acme`                                     |
-| Artifact     | The project’s name                                                         | Use lowercase letters and hyphens for multi-word names. | `inventory-service`                            |
-| Name         | Human-readable display name                                                | Use spaces/capitalization for readability.              | Inventory Management                           |
-| Description  | Brief summary of the project’s purpose. Added to `pom.xml`/`build.gradle`. | Keep concise (1–2 sentences) and specific.              | Microservice for tracking warehouse inventory. |
-| Package Name | Root Java package for source code                                          | Derived from Group + Artifact (hyphens removed).        | `com.acme.inventoryservice`                    |
+| Field        | What It Means                                                             | Recommended Structure/Standard                         | Example                                       |
+|--------------|---------------------------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------|
+| Group        | Identifies your organization/team                                         | Use reverse domain name notation. Avoid generic terms  | `com.acme`                                    |
+| Artifact     | The project’s name                                                        | Use lowercase letters and hyphens for multi-word names | `inventory-service`                           |
+| Name         | Human-readable display name                                               | Use spaces/capitalization for readability              | Inventory Management                          |
+| Description  | Brief summary of the project’s purpose. Added to `pom.xml`/`build.gradle` | Keep concise (1–2 sentences) and specific              | Microservice for tracking warehouse inventory |
+| Package Name | Root Java package for source code                                         | Derived from Group + Artifact (hyphens removed)        | `com.acme.inventoryservice`                   |
 
 **Personal preference:** I like to use underscore ( _ ) in the artifact name. There’s no rule against it, it's just not common. But I feel it helps to keep consistency, cause Spring Initializr will replace the hyphen with underscore in some folders.
 
-## Packaging: JAR vs. WAR
+## Packaging: JAR vs WAR
 
-Packaging determines how your application is bundled into a single, shareable file, enabling it to run smoothly on any system without complex setup.
+**Packaging** determines how your application is bundled into a single, shareable file, enabling it to run smoothly on any system without complex setup.
 
-| Format | Best For                                                                                                                                                          | Key Difference                                                                                      |
-|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| JAR    | Modern Spring Boot apps, microservices, cloud deployments.                                                                                                        | Contains embedded server (e.g., [Tomcat](https://tomcat.apache.org/)) for self-contained execution. |
-| WAR    | Legacy apps or deployments to external servers (e.g., traditional Tomcat, [JBoss](https://www.redhat.com/en/technologies/jboss-middleware/application-platform)). | Requires a separate server to run; no embedded server included.                                     |
+| Format | Best For                                                                                                                                                         | Key Difference                                                                                     |
+|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| `JAR`  | Modern Spring Boot apps, microservices, cloud deployments                                                                                                        | Contains embedded server (e.g., [Tomcat](https://tomcat.apache.org/)) for self-contained execution |
+| `WAR`  | Legacy apps or deployments to external servers (e.g., traditional Tomcat, [JBoss](https://www.redhat.com/en/technologies/jboss-middleware/application-platform)) | Requires a separate server to run; no embedded server included                                     |
 
-**Use JAR unless you’re bound to legacy infrastructure**. JAR is the default in Spring Boot. Spring Boot’s embedded server makes JAR the lightweight, hassle-free choice for most projects today.
+**Use JAR unless you’re bound to legacy infrastructure**. `JAR` is the default in Spring Boot. Spring Boot’s embedded server makes `JAR` the lightweight, hassle-free choice for most projects today.
 
 ## Java Version
 
@@ -88,13 +88,13 @@ Packaging determines how your application is bundled into a single, shareable fi
 
 Dependencies are pre-built libraries that add specific features to your app (like tools in a toolbox). For now, we’ll use the ones you’ll need in 90% of real-world Spring projects:
 
-| Dependency                                                                                                                                                           | Category              | Why You Need It                                                                  |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|----------------------------------------------------------------------------------|
-| [Lombok](https://projectlombok.org/)                                                                                                                                 | Developer Tools       | Reduces repetitive code (e.g., getters/setters) with simple annotations.         |
-| [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#actuator)                                                       | Operations/Monitoring | Adds health checks, metrics, and management endpoints for your app.              |
-| [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#using.devtools)                                                 | Developer Tools       | Speeds up development with auto-restarts, LiveReload, and debug-friendly config. |
-| [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#appendix.configuration-metadata.annotation-processor) | Developer Tools       | Enables code-completion for custom `application.properties`/`yml` settings.      |
-| [Spring Web](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#web)                                                                      | Web                   | Build REST APIs with Spring MVC + embedded Tomcat server.                        |
+| Dependency                                                                                                                                                           | Category              | Why You Need It                                                                 |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|---------------------------------------------------------------------------------|
+| [Lombok](https://projectlombok.org/)                                                                                                                                 | Developer Tools       | Reduces repetitive code (e.g., getters/setters) with simple annotations         |
+| [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#actuator)                                                       | Operations/Monitoring | Adds health checks, metrics, and management endpoints for your app              |
+| [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#using.devtools)                                                 | Developer Tools       | Speeds up development with auto-restarts, LiveReload, and debug-friendly config |
+| [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#appendix.configuration-metadata.annotation-processor) | Developer Tools       | Enables code-completion for custom `application.properties`/`yml` settings      |
+| [Spring Web](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#web)                                                                      | Web                   | Build REST APIs with Spring MVC + embedded Tomcat server                        |
 
 ## Generate
 
@@ -104,7 +104,7 @@ In this screenshot down below, I’m creating the **Users Manager application th
 
 ![generating-project.png](img/generating-project.png)
 
-What’s Inside the zip?
+What’s inside the zip?
 
 * A standard project structure (folders for code, tests, configs).
 * Preconfigured `pom.xml` (Maven) or `build.gradle` (Gradle).
