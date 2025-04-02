@@ -21,7 +21,7 @@ This document is everything I wish someone had answered me. If you:
 * Want to learn Spring Boot without drowning in jargon or legacy XML tutorials,
 * Prefer doing to theory (we’ll code fast and explain faster),
 
-… you’re in the right place. I won’t explain bean lifecycles, thread pools, or any of those things, because for 90% of practical scenarios, you won’t need that—this isn’t a Spring Boot encyclopedia. It’s a guide for devs who want to jump quickly into a codebase and ship code.
+… You’re in the right place. I won’t explain bean lifecycles, thread pools, or any of those things, because for 90% of practical scenarios, you won’t need that—this isn’t a Spring Boot encyclopedia. It’s a guide for devs who want to jump quickly into a codebase and ship code.
 
 You will notice that sometimes I put external link references. Feel free to check them to get a more in depth explanation of that specific concept, but be careful of not going into [information overload](https://www.interaction-design.org/literature/article/information-overload-why-it-matters-and-how-to-combat-it).
 
