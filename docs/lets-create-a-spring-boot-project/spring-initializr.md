@@ -65,7 +65,7 @@ The **Project Metadata** section defines your project’s identity and structure
 | Description  | Brief summary of the project’s purpose. Added to `pom.xml`/`build.gradle` | Keep concise (1–2 sentences) and specific              | Microservice for tracking warehouse inventory |
 | Package Name | Root Java package for source code                                         | Derived from Group + Artifact (hyphens removed)        | `com.acme.inventoryservice`                   |
 
-**Personal preference:** I like to use underscore ( _ ) in the artifact name. There’s no rule against it, it's just not common. But I feel it helps to keep consistency, cause Spring Initializr will replace the hyphen with underscore in some folders.
+**Personal preference**: I like to use underscore ( _ ) in the artifact name. There’s no rule against it, it's just not common. But I feel it helps to keep consistency, cause Spring Initializr will replace the hyphen with underscore in some folders.
 
 ## Packaging: JAR vs WAR
 

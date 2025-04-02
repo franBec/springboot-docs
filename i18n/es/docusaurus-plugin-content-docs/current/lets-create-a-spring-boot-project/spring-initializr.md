@@ -4,111 +4,111 @@ sidebar_position: 1
 
 # Spring Initializr
 
-Visita [Spring Initializr](https://start.spring.io/), el generador oficial de proyectos Spring Boot (mención honorífica a [Bootify](https://bootify.io/), una alternativa interesante).
+Ve a [Spring Initializr](https://start.spring.io/), el generador oficial de proyectos Spring Boot (mención honorífica a [Bootify](https://bootify.io/), una alternativa interesante).
 
-Verás un formulario, pero no te preocupes. Vamos a desmenuzar cada opción.
+Vas a ver un formulario, pero tranquilo—vamos a decodificar cada opción.
 
 ![spring-initializr.png](img/spring-initializr.png)
 
 ## Proyecto: Maven vs Gradle
 
-Piensa en estos como los gestores de tu proyecto. Ellos se encargan de:
+Pensá en estos como los managers de tu proyecto. Ellos:
 
-* Descargar librerías/dependencias.
-* Definir pasos (compilar código, correr tests, generar archivos `JAR`).
-* Mantener la estructura del proyecto organizada y estandarizada.
+* Descargan las librerías/dependencias.
+* Definen los pasos (compilar el código, correr tests, construir archivos `JAR`).
+* Mantienen la estructura del proyecto estándar y ordenada.
 
 | Aspecto       | Maven                                     | Gradle                                                   |
 |---------------|-------------------------------------------|----------------------------------------------------------|
-| Configuración | Usa XML (estructurado con `<tags>`)       | Usa Kotlin/Groovy (una sintaxis parecida a código)       |
-| Flexibilidad  | Estricto, con convenciones estandarizadas | Altamente personalizable (soporta lógica como `if-else`) |
-| Casos de Uso  | Proyectos Java antiguos o empresariales   | Apps Android, proyectos modernos en Java/Kotlin          |
+| Configuración | Usa XML (estructurado con `<tags>`)       | Usa Kotlin/Groovy (sintaxis parecida a código)           |
+| Flexibilidad  | Estricto, con convenciones estandarizadas | Altamente personalizable (soporta lógica tipo `if-else`) |
+| Casos de Uso  | Proyectos Java legados o empresariales    | Apps Android, proyectos modernos en Java/Kotlin          |
 
 ### ¿Cuál Elegir?
 
 ![maven-gradle-decision-tree.png](img/maven-gradle-decision-tree.png)
 
-### Por Qué No Importa Tanto
+### Por Qué No Importa
 
-Ambos harán lo siguiente:
+Ambos van a:
 
-* Descargarán las dependencias de Spring Boot de la misma manera.
-* Crearán el mismo archivo JAR ejecutable.
+* Descargar las dependencias de Spring Boot de la misma manera.
+* Crear el mismo archivo JAR ejecutable.
 
-Discutir entre Maven o Gradle es como pelearse por usar una licuadora o un procesador de alimentos – ambos hacen smoothies, solo que tienen botones distintos. Spring Initializr se encarga de toda la configuración complicada de todas formas.
+Decidir entre Maven y Gradle es como pelearse para ver si usar una licuadora o un procesador de alimentos – ambos hacen smoothies, solo que con botones distintos. Spring Initializr se encarga de toda la configuración complicada de cualquier forma.
 
-## Spring Boot Versions
+## Versiones de Spring Boot
 
-Al seleccionar una versión de Spring Boot te encontrarás con tres tipos de etiquetas:
+Al seleccionar una versión de Spring Boot te vas a topar con tres tipos de etiquetas:
 
 * **SNAPSHOT**
-  * Indica que es una compilación en desarrollo de Spring Boot.
+  * Indica una build de desarrollo de Spring Boot.
   * Estas versiones son inestables, están en constante cambio y pueden incluir características sin probar o bugs.
-  * Evítalas para producción, ya que pueden cambiar de la noche a la mañana.
+  * Evitalas para producción, ya que pueden cambiar sin previo aviso.
 * M1, M2, etc. (**Milestones**)
-  * Versiones previas que marcan hitos importantes (por ejemplo, nuevas funcionalidades) antes de una versión estable.
-  * Son más estables que las SNAPSHOT pero aún no están listas para producción. Ideales para probar temprano lo que viene.
-* Sin Marca (**Versiones Estables**)
-  * Estas son versiones estables, rigurosamente probadas y listas para producción.
+  * Versiones pre-release que marcan hitos importantes (por ejemplo, nuevas características) antes de una versión estable.
+  * Más estables que SNAPSHOT, pero aún no listas para producción. Ideales para probar características que vienen.
+* Sin Marcador (**Versiones Estables**)
+  * Estas son versiones estables, rigorosamente probadas y listas para producción.
 
-**Siempre opta por la versión estable más alta** (sin etiquetas SNAPSHOT/M) a menos que necesites funcionalidades experimentales.
+**Optá siempre por la versión estable más alta** (sin etiquetas SNAPSHOT/M) a menos que necesites características experimentales.
 
-## Project Metadata
+## Metadatos del Proyecto
 
-La sección **Project Metadata** define la identidad y la estructura de tu proyecto. Aquí tienes un desglose de cada campo y las convenciones recomendadas:
+La sección de **Metadatos del Proyecto** define la identidad y la estructura de tu proyecto. Acá te explico cada campo y sus convenciones recomendadas:
 
-| Campo        | Qué Significa                                                                  | Estructura/Estándar Recomendado                                       | Ejemplo                                             |
-|--------------|--------------------------------------------------------------------------------|-----------------------------------------------------------------------|-----------------------------------------------------|
-| Group        | Identifica a tu organización/equipo                                            | Usa notación de nombre de dominio invertido. Evita términos genéricos | `com.acme`                                          |
-| Artifact     | El nombre del proyecto                                                         | Usa letras minúsculas y guiones para nombres compuestos               | `inventory-service`                                 |
-| Name         | Nombre para mostrar de forma amigable                                          | Usa espacios y mayúsculas para que sea legible                        | Inventory Management                                |
-| Description  | Resumen breve del propósito del proyecto. Se agrega a `pom.xml`/`build.gradle` | Sé breve (1–2 oraciones) y específico                                 | Microservicio para gestionar inventario del almacén |
-| Package Name | Paquete raíz de Java para el código fuente                                     | Se deriva de Group + Artifact (quitando los guiones)                  | `com.acme.inventoryservice`                         |
+| Campo        | Qué Significa                                                                  | Estructura/Estándar Recomendado                                 | Ejemplo                                               |
+|--------------|--------------------------------------------------------------------------------|-----------------------------------------------------------------|-------------------------------------------------------|
+| Group        | Identifica a tu organización/equipo                                            | Usá la notación de dominio invertido. Evitá términos genéricos  | `com.acme`                                            |
+| Artifact     | El nombre del proyecto                                                         | Usá letras minúsculas y guiones para nombres de varias palabras | `inventory-service`                                   |
+| Name         | Nombre a mostrar, legible para humanos                                         | Usá espacios y mayúsculas para mejor lectura                    | Inventory Management                                  |
+| Description  | Resumen breve del propósito del proyecto. Se agrega a `pom.xml`/`build.gradle` | Mantenelo conciso (1–2 oraciones) y específico                  | Microservicio para gestionar el inventario de almacén |
+| Package Name | Paquete raíz de Java para el código fuente                                     | Derivado de Group + Artifact (sin guiones)                      | `com.acme.inventoryservice`                           |
 
-**Preferencia personal:** A mí me gusta usar el guion bajo ( _ ) en el nombre del artifact. No hay regla en contra, solo que no es lo habitual. Pero siento que ayuda a mantener la consistencia, ya que Spring Initializr reemplazará el guion con guion bajo en algunas carpetas.
+**Preferencia personal**: A mí me gusta usar el guion bajo ( _ ) en el nombre del artifact. No hay regla en contra, solo que no es común. Pero yo siento que ayuda a mantener la consistencia, ya que Spring Initializr va a reemplazar el guion por un guion bajo en algunas carpetas.
 
 ## Packaging: JAR vs WAR
 
-El **Packaging** determina cómo se agrupa tu aplicación en un único archivo compartible, permitiendo que se ejecute sin complicaciones en cualquier sistema sin necesidad de una configuración compleja.
+El **Packaging** determina cómo se empaca tu aplicación en un solo archivo compartible, permitiendo que corra sin problemas en cualquier sistema sin necesidad de configuraciones complicadas.
 
-| Formato | Ideal Para                                                                                                                                                                  | Diferencia Clave                                                                                             |
-|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `JAR`   | Apps modernas de Spring Boot, microservicios, despliegues en la nube                                                                                                        | Contiene un servidor embebido (por ejemplo, [Tomcat](https://tomcat.apache.org/)) para su ejecución autónoma |
-| `WAR`   | Apps antiguas o despliegues en servidores externos (por ejemplo, Tomcat tradicional, [JBoss](https://www.redhat.com/en/technologies/jboss-middleware/application-platform)) | Requiere un servidor aparte para trabajar; no incluye servidor embebido                                      |
+| Formato | Ideal para                                                                                                                                                                 | Principales Diferencias                                                                                    |
+|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| `JAR`   | Apps modernas de Spring Boot, microservicios, despliegues en la nube                                                                                                       | Contiene servidor embebido (por ejemplo, [Tomcat](https://tomcat.apache.org/)) para una ejecución autónoma |
+| `WAR`   | Apps legadas o despliegues en servidores externos (por ejemplo, Tomcat tradicional, [JBoss](https://www.redhat.com/en/technologies/jboss-middleware/application-platform)) | Requiere un servidor separado para ejecutarse; no incluye servidor embebido                                |
 
-**Usa JAR a menos que estés atado a infraestructuras antiguas**. `JAR` es el formato por defecto en Spring Boot. El servidor embebido de Spring Boot hace que `JAR` sea la opción liviana y sin complicaciones para la mayoría de los proyectos actuales.
+**Usá JAR a menos que estés atado a una infraestructura legada**. JAR es el default en Spring Boot. El servidor embebido de Spring Boot hace de JAR la opción liviana y sin complicaciones para la mayoría de los proyectos de hoy.
 
-## Java Version
+## Versión de Java
 
-* Quédate con la versión que usa tu equipo.
-  * Si tu equipo está usando una versión antigua y sin soporte, elige la versión más baja que ofrece Spring Initializr.
-* Si no tienes claro cuál elegir, [elige la última LTS](https://www.oracle.com/java/technologies/java-se-support-roadmap.html)—es la opción ideal.
+* Quedate con la que usa tu equipo.
+  * Si el equipo está usando una versión antigua sin soporte, elegí la versión mínima que Spring Initializr ofrezca.
+* Si no estás seguro, [elegí la última LTS](https://www.oracle.com/java/technologies/java-se-support-roadmap.html)—es el punto ideal.
 
 ## Dependencias
 
-Las dependencias son librerías preconstruidas que añaden funciones específicas a tu app (como herramientas en una caja de herramientas). Por ahora, usaremos las que necesitarás en el 90% de los proyectos Spring en el mundo real:
+Las dependencias son librerías preconstruidas que le agregan funciones específicas a tu app (como herramientas en una caja de herramientas). Por ahora, usaremos las que vas a necesitar en el 90% de los proyectos Spring reales:
 
-| Dependencia                                                                                                                                                          | Categoría                         | Por Qué La Necesitas                                                                                       |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------|------------------------------------------------------------------------------------------------------------|
-| [Lombok](https://projectlombok.org/)                                                                                                                                 | Herramientas para Desarrolladores | Reduce el código repetitivo (por ejemplo, getters/setters) con anotaciones simples                         |
-| [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#actuator)                                                       | Operaciones/Monitoreo             | Añade chequeos de salud, métricas y endpoints de administración para tu app                                |
-| [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#using.devtools)                                                 | Herramientas para Desarrolladores | Acelera el desarrollo con reinicios automáticos, LiveReload y configuraciones amigables para depuración    |
-| [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#appendix.configuration-metadata.annotation-processor) | Herramientas para Desarrolladores | Permite la autocompletación de código en configuraciones personalizadas de `application.properties`/`yml`. |
-| [Spring Web](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#web)                                                                      | Web                               | Permite crear APIs REST con Spring MVC + un servidor Tomcat embebido                                       |
+| Dependencia                                                                                                                                                          | Categoría             | Por Qué La Necesitás                                                                                      |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|-----------------------------------------------------------------------------------------------------------|
+| [Lombok](https://projectlombok.org/)                                                                                                                                 | Herramientas para Dev | Reduce el código repetitivo (por ejemplo, getters/setters) con anotaciones simples                        |
+| [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#actuator)                                                       | Operaciones/Monitoreo | Agrega health checks, métricas y endpoints de gestión para tu app                                         |
+| [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#using.devtools)                                                 | Herramientas para Dev | Acelera el desarrollo con auto-restarts, LiveReload y configuraciones amigables para debug                |
+| [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#appendix.configuration-metadata.annotation-processor) | Herramientas para Dev | Habilita la autocompletar de código para configuraciones personalizadas en `application.properties`/`yml` |
+| [Spring Web](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#web)                                                                      | Web                   | Construye APIs REST con Spring MVC + servidor Tomcat embebido                                             |
 
 ## Generar
 
-Una vez que hayas configurado tu app de Spring Boot, presiona el botón Generate (o Ctrl + Enter). Spring Initializr empaquetará tu proyecto en un archivo .zip.
+Una vez que hayas configurado tu app con Spring Boot, dale al botón Generate (o Ctrl + Enter). Spring Initializr empaquetará tu proyecto en un archivo .zip.
 
-En la captura de pantalla de abajo, estoy creando la **aplicación Users Manager que desarrollaremos durante el resto de esta guía**.
+En la siguiente captura, estoy creando la **aplicación Users Manager que vamos a desarrollar durante el resto de esta guía**.
 
 ![generating-project.png](img/generating-project.png)
 
-¿Qué hay dentro del zip?
+¿Qué tiene adentro el zip?
 
-* Una estructura de proyecto estándar (carpetas para el código, tests, configuraciones).
-* Un `pom.xml` preconfigurado (para Maven) o `build.gradle` (para Gradle).
-* Un archivo inicial `application.properties`.
+* Una estructura estándar de proyecto (carpetas para código, tests, configuraciones).
+* `pom.xml` preconfigurado (si elegiste Maven) o `build.gradle` (si elegiste Gradle).
+* Un archivo starter `application.properties`.
 * La clase principal (`*Application.java`) para ejecutar tu app.
 
-No te preocupes por los detalles todavía – ¡descomprimiremos y exploraremos todo juntos en los siguientes pasos!
+¡No te preocupes por los detalles todavía – vamos a descomprimir y explorar todo juntos en los próximos pasos!
