@@ -2,56 +2,56 @@
 sidebar_position: 2
 ---
 
-# Capas De Spring Boot
+# Capas de Spring Boot
 
-Así es como se organizan la mayoría de los proyectos de Spring Boot:
+Así es como la mayoría de los proyectos con Spring Boot están organizados:
 
 ![layers.png](img/layers.png)
 
-| Capa                                  | Responsabilidad                                                                         |
-|---------------------------------------|-----------------------------------------------------------------------------------------|
-| Capa de Presentación (`Controllers`)  | Maneja solicitudes HTTP (enrutamiento, validación de entrada), devuelve respuestas HTTP |
-| Capa de Negocio (`Services`)          | Contiene la lógica central de la aplicación (cálculos, flujos de trabajo)               |
-| Capa de Persistencia (`Repositories`) | Gestiona las interacciones de la base de datos                                          |
-| Capa de Integración (`API Clients`)   | Se comunica con API externas                                                            |
+| Capa                                  | Responsabilidad                                                                               |
+|---------------------------------------|-----------------------------------------------------------------------------------------------|
+| Capa de Presentación (`Controllers`)  | Maneja las peticiones HTTP (enrutamiento, validación de entradas), y devuelve respuestas HTTP |
+| Capa de Negocio (`Services`)          | Contiene la lógica central de la app (cálculos, flujos de trabajo)                            |
+| Capa de Persistencia (`Repositories`) | Administra las interacciones con la base de datos                                             |
+| Capa de Integración (`API Clients`)   | Se comunica con APIs externas                                                                 |
 
-El flujo de una solicitud comienza con `Controller` → `Service`:
+El flujo de una petición parte de un `Controller` → `Service`:
 
-* Si está obteniendo datos de una base de datos, entonces `Repository` → `Database`.
-* Si está obteniendo datos de una fuente externa, entonces `API Client` → `External API`. 
+* Si estás buscando datos en una base de datos, entonces `Repository` → `Database`.
+* Si estás buscando datos de una fuente externa, entonces `API Client` → `External API`.
 
 ## ¿De Dónde Vienen Estos Nombres?
 
-Estos nombres de capas (`Controller`, `Service`, `Repository`) tienen sus origenes en:
+Estos nombres de capas (`Controller`, `Service`, `Repository`) vienen de:
 
 * **Patrones de Diseño:**
-  * [MVC (Modelo-Vista-Controlador)](https://www.freecodecamp.org/news/model-view-architecture/): Un patrón con décadas de antigüedad para separar la presentación, la lógica y los datos.
-  * [Arquitectura en Capas](https://www.oreilly.com/library/view/software-architecture-patterns/9781491971437/ch01.html): Una forma estándar de aislar las preocupaciones (presentación vs. negocio vs. datos).
+  * [MVC (Model-View-Controller)](https://www.freecodecamp.org/news/model-view-architecture/): Un patrón de hace décadas para separar la presentación, la lógica y los datos.
+  * [Arquitectura en Capas](https://www.oreilly.com/library/view/software-architecture-patterns/9781491971437/ch01.html): Una forma estándar de aislar preocupaciones (presentación vs. negocio vs. datos).
 * **La evolución de Spring**:
-  * Las primeras aplicaciones [Java EE](https://www.geeksforgeeks.org/java-enterprise-edition/) usaban capas similares (como DAO para acceso a datos), que Spring formalizó con anotaciones como `@Controller`, `@Service`, `@Repository`.
-* **Los nombres no son exclusivos de Spring**; reflejan las mejores prácticas de toda la industria para un código limpio.
+  * Las primeras aplicaciones [Java EE](https://www.geeksforgeeks.org/java-enterprise-edition/) usaban capas parecidas (como los DAOs para el acceso a datos), que Spring formalizó con anotaciones como `@Controller`, `@Service`, `@Repository`.
+* **Los nombres no son exclusivos de Spring**: reflejan las mejores prácticas de la industria para lograr un código limpio.
 
 ## ¿Es Obligatorio?
 
-No. **Spring no impone estos nombres ni capas**. Podrías escribir todo en una sola clase llamada `PizzaManager.java` con código espagueti.
+No. **Spring no impone estos nombres o capas**. Podrías escribir todo en una sola clase llamada `PizzaManager.java` llena de código enredado.
 
 Pero estas convenciones resuelven problemas reales:
 
-* **Legibilidad**: Los desarrolladores comprenden al instante una clase llamada `UserService` frente a `TaxCalculatorUtil`.
-* **Herramientas**: Anotaciones como `@Repository` permiten que Spring gestione automáticamente las excepciones de la base de datos.
-* **Alineación del equipo**: Los nuevos empleados (o futuro tú) pierden menos tiempo descifrando una estructura a medida.
+* **Legibilidad**: Los desarrolladores entienden al toque una clase llamada `UserService` en vez de `TaxCalculatorUtil`.
+* **Herramientas**: Anotaciones como `@Repository` permiten que Spring maneje automáticamente las excepciones de base de datos.
+* **Alineación del equipo**: Los nuevos integrantes (o tu "yo" del futuro) pierden menos tiempo descifrando una estructura personalizada.
 
-## Cuando Romper Las Reglas
+## Cuándo Flexionar las Reglas
 
-* **Los proyectos pequeños pueden combinar capas** (p. ej., una clase `PaymentProcessor` que actúa como capa de servicio y de integración).
-* **Las aplicaciones no HTTP** (p. ej., [trabajos por lotes](https://www.ibm.com/think/topics/batch-jobs)) pueden omitir los controladores por completo.
-* **Si su equipo usa términos diferentes** (p. ej., `DataManager` en lugar de `Repository`), la coherencia es más importante que el nombre en sí.
+* **Proyectos pequeños pueden combinar capas** (por ejemplo, una clase `PaymentProcessor` que actúa como servicio y como capa de integración).
+* **Aplicaciones que no usan HTTP** (por ejemplo, [trabajos batch](https://www.ibm.com/think/topics/batch-jobs)) pueden omitir completamente los controllers.
+* **Si tu equipo usa otros términos** (por ejemplo, `DataManager` en lugar de `Repository`), lo importante es la consistencia más que el nombre en sí.
 
 ## Prácticas y Errores Comunes
 
-* **Un servicio por controlador**: Un controlador no debería orquestar 5 servicios. Si lo hace, su lógica de negocio probablemente esté dispersa.
-* **Las capas son opcionales**: ¿No hay base de datos? Omite la capa de persistencia. ¿No hay API externas? Omite la integración. Empieza por lo simple.
-* **Evita la extensión de capas**:
-  * **Malo**: Los controladores realizando lógica de negocio, los repositorios realizando llamadas a la API.
-  * **Bueno**: Cada capa tiene una única responsabilidad.
-* **Se permiten las llamadas de servicio a servicio**: Los servicios pueden llamar a otros servicios (¡pero evita las [dependencias circulares](https://www.baeldung.com/circular-dependencies-in-spring)!).
+* **Un servicio por controlador**: Un controlador no debería orquestar 5 servicios. Si lo hace, probablemente tu lógica de negocio está dispersa.
+* **Las capas son opcionales**: ¿No tienes base de datos? Omite la capa de persistencia. ¿No hay APIs externas? Omite la capa de integración. Empieza simple.
+* **No dejes que las capas se mezclen**:
+  * **Malo**: Controllers haciendo lógica de negocio, Repositories haciendo llamadas a APIs.
+  * **Bueno**: Cada capa tiene una responsabilidad única.
+* **Se permiten llamadas de servicio a servicio**: Los servicios pueden llamarse entre ellos (¡pero evita [dependencias circulares](https://www.baeldung.com/circular-dependencies-in-spring)!).
