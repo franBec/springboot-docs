@@ -73,7 +73,9 @@ Rebuild the application. Then go to [http://localhost:8080/users](http://localho
 
 If you’re using IntelliJ IDEA, you would notice that in the class we just created you are being suggested the following:
 
-![notnull.png](img/notnull.png)
+<div>
+  <img src={require('@site/static/img/optional-but-recommended-features/notnull.png').default} alt="notnull" />
+</div>
 
 This annotation indicates that the parameter should not be null when the method is called. It helps in avoiding `NullPointerException` and improves code readability and safety by explicitly specifying that null values are not allowed.
 
@@ -85,7 +87,9 @@ It is not mandatory to add the `@NotNull` annotation, but it is highly recommend
 
 When accepting the suggestion, we are going to be notified about a new dependency being added. Just accept.
 
-![notnull-dependency.png](img/notnull-dependency.png)
+<div>
+  <img src={require('@site/static/img/optional-but-recommended-features/notnull-dependency.png').default} alt="notnull dependency" />
+</div>
 
 Sometimes the IDE behaves weird and doesn’t add the dependency in the  build.gradle dependencies section. Go check if you can find the following
 
@@ -123,11 +127,15 @@ Now **each log has a unique identifier**. If this project for some reason intera
 
 When talking about Spring Boot layers, I used this drawing:
 
-![layers.png](img/layers.png)
+<div>
+  <img src={require('@site/static/img/spring-boot-in-a-nutshell/layers.png').default} alt="layers" />
+</div>
 
 But what if I tell you there’s something in the Spring Boot App that goes before the Presentation Layer? These are **Filters**.
 
-![filters.png](img/filters.png)
+<div>
+  <img src={require('@site/static/img/optional-but-recommended-features/filters.png').default} alt="filters" />
+</div>
 
 A Filter acts like a checkpoint for every incoming request and outgoing response, even before they reach your controllers or after they leave. Think of it as a gatekeeper that can observe—and optionally modify—the raw flow of data between the client and your application.
 

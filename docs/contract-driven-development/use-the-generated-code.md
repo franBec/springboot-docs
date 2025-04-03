@@ -8,7 +8,9 @@ sidebar_position: 5
 
 If we go to `src/main/java/dev/pollito/users_manager/model/User.java`, we will find the following error:
 
-![duplicated](img/duplicated.png)
+<div>
+  <img src={require('@site/static/img/contract-driven-development/duplicated.png').default} alt="duplicated" />
+</div>
 
 That is because the openapi-generator plugin already created a `User` class at the same path, but in the build folder.
 
@@ -78,7 +80,9 @@ Let's rewrite it so we implement the generated API Interface
 
 3. **Select methods to override**: If you are using IntelliJ IDEA, by pressing `CTRL+O` anywhere in the class, you'll see a popup asking which methods to override.
     
-    ![override.png](img/override.png)
+   <div>
+      <img src={require('@site/static/img/contract-driven-development/override.png').default} alt="override" />
+   </div>
     
     Select those we are interested in: `findAll` and `findById`
     
@@ -116,7 +120,9 @@ Let's rewrite it so we implement the generated API Interface
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users). You should get `501 NOT IMPLEMENTED`.
 
-![501NotImplemented.png](img/501NotImplemented.png)
+<div>
+  <img src={require('@site/static/img/contract-driven-development/501NotImplemented.png').default} alt="501 Not Implemented" />
+</div>
 
 Let's return a hardcoded list of Users once again.
 
@@ -203,7 +209,9 @@ Considering that the `service` is only returning a hardcoded user, I consider be
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users). You should get once again the list with the hardcoded user.
 
-![response.png](img/response.png)
+<div>
+  <img src={require('@site/static/img/contract-driven-development/response.png').default} alt="response" />
+</div>
 
 ## Add A ConstraintViolationException Handler
 
@@ -271,13 +279,17 @@ public class ControllerAdvice {
 
 Right-click the main class → Run. Then go to a URL with an invalid query param, like [http://localhost:8080/users?pageSize=-1](http://localhost:8080/users?pageSize=-1). You should get the following response:
 
-![ConstraintViolationException.png](img/ConstraintViolationException.png)
+<div>
+  <img src={require('@site/static/img/contract-driven-development/ConstraintViolationException.png').default} alt="ConstraintViolationException" />
+</div>
 
 ### Why Is Detail Message In Spanish
 
 Spring Boot automatically uses the Accept-Language header from the HTTP request to determine the response language. If your browser sends `Accept-Language: es` (my case here), Spring's exception messages (e.g., validation errors) are localized to Spanish using message bundles.
 
-![lang.png](img/lang.png)
+<div>
+  <img src={require('@site/static/img/contract-driven-development/lang.png').default} alt="lang" />
+</div>
 
 * The exception messages must have translations in your application’s message bundles (`messages.properties`, `messages_es.properties`, etc.). If no translation exists for the requested language, Spring falls back to the default language (usually English).
 

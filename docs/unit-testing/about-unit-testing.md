@@ -26,7 +26,9 @@ The true value of unit testing isn't immediately apparent to the author of the c
 * Imagine sketching the outline of a painting before applying any color—you define what success looks like first, then work to achieve it.
 * The process typically follows a "Red-Green-Refactor" cycle: write a failing test, implement the minimum code to make it pass, then improve the code while keeping tests green.
 
-![tdd.png](img/tdd.png)
+<div>
+  <img src={require('@site/static/img/unit-testing/tdd.png').default} alt="tdd" />
+</div>
 
 Despite its popularity in books, conferences, and technical discussions, TDD remains more theoretical than practical in many development environments. Until this day, **I have yet to witness a developer who truly commits to TDD in their daily workflow**. It's one of those practices everyone claims to value, but few consistently implement.
 

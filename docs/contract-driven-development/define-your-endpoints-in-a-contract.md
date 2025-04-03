@@ -273,10 +273,14 @@ components:
 
 For better visualization you can copy-paste the yaml file into [Swagger Editor](https://editor.swagger.io/) or use the “Show OpenAPI Preview” in IntelliJ IDEA (top right corner).
 
-![openapi-preview.png](img/openapi-preview.png)
+<div>
+  <img src={require('@site/static/img/contract-driven-development/openapi-preview.png').default} alt="openapi preview" />
+</div>
 
 You should be able to see something like this:
 
-![preview-browser.png](img/preview-browser.png)
+<div>
+  <img src={require('@site/static/img/contract-driven-development/preview-browser.png').default} alt="preview browser" />
+</div>
 
 We have the endpoint documentation done.

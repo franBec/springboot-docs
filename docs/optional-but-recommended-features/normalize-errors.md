@@ -80,7 +80,9 @@ public class ControllerAdvice {
 
 If we visit an uri that doesn't exist (like [http://localhost:8080](http://localhost:8080)), we will now get a standardized error:
 
-![standarized-error.png](img/standarized-error.png)
+<div>
+  <img src={require('@site/static/img/optional-but-recommended-features/standarized-error.png').default} alt="standarized error" />
+</div>
 
 ## Adding More Handlers
 
@@ -134,7 +136,9 @@ public class ControllerAdvice {
 
 Now when requesting to [http://localhost:8080](http://localhost:8080) we get the new expected behaviour:
 
-![expected404.png](img/expected404.png)
+<div>
+  <img src={require('@site/static/img/optional-but-recommended-features/expected404.png').default} alt="expected 404" />
+</div>
 
 ## Common Handlers You May Need
 

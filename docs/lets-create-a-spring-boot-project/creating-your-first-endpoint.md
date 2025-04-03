@@ -6,7 +6,9 @@ sidebar_position: 5
 
 Finally, let’s get our hands dirty. We’ll create a simple endpoint that returns a user: when we visit [http://localhost:8080/users](http://localhost:8080/users), we should get something like this:
 
-![users.png](img/users.png)
+<div>
+  <img src={require('@site/static/img/lets-create-a-spring-boot-project/users.png').default} alt="users" />
+</div>
 
 ## Step 0: Initialize Git
 
@@ -176,7 +178,9 @@ Notice that we declare the interface UserService, and not the implementation Use
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users).
 
-![users.png](img/users.png)
+<div>
+  <img src={require('@site/static/img/lets-create-a-spring-boot-project/users.png').default} alt="users" />
+</div>
 
 Congratulations! Your Spring Boot app is up, running, and exposing an endpoint. Commit the progress so far.
 

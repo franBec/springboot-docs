@@ -6,7 +6,9 @@ sidebar_position: 2
 
 Here’s how most Spring Boot projects are organized:
 
-![layers.png](img/layers.png)
+<div>
+  <img src={require('@site/static/img/spring-boot-in-a-nutshell/layers.png').default} alt="layers" />
+</div>
 
 | Layer                              | Responsibility                                                            |
 |------------------------------------|---------------------------------------------------------------------------|

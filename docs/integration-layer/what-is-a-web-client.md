@@ -6,7 +6,9 @@ sidebar_position: 1
 
 Let’s check once more the [Spring Boot Layers](/spring-boot-in-a-nutshell/spring-boot-layers) diagram and focus in the **Integration Layer** (yellow box lower right):
 
-![layers.png](img/layers.png)
+<div>
+  <img src={require('@site/static/img/spring-boot-in-a-nutshell/layers.png').default} alt="layers" />
+</div>
 
 A **Web Client** (ApiClient in the diagram) is a tool that handles:
 

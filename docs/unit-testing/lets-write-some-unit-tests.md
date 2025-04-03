@@ -8,19 +8,27 @@ sidebar_position: 4
 
 Go to `src/main/java/dev/pollito/users_manager/controller/UserController.java`, and do `ctrl+intro` on the name of the class. On the pop-up menu, select Create test.
 
-![create-test.png](img/create-test.png)
+<div>
+  <img src={require('@site/static/img/unit-testing/create-test.png').default} alt="create test" />
+</div>
 
 On the next pop-up menu, leave everything as default.
 
-![test-options](img/test-options.png)
+<div>
+  <img src={require('@site/static/img/unit-testing/test-options.png').default} alt="test options" />
+</div>
 
 Now you should have a new empty class created in `src/test/java/dev/pollito/users_manager/controller/UserControllerTest.java`.
 
-![empty-test.png](img/empty-test.png)
+<div>
+  <img src={require('@site/static/img/unit-testing/empty-test.png').default} alt="empty test" />
+</div>
 
 Repeat this process for `src/main/java/dev/pollito/users_manager/controller/advice/ControllerAdvice.java`, `src/main/java/dev/pollito/users_manager/service/impl/UserApiCacheServiceImpl.java`, and `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`. By the end, your test directory should look something like this:
 
-![test-directory.png](img/test-directory.png)
+<div>
+  <img src={require('@site/static/img/unit-testing/test-directory.png').default} alt="test directory" />
+</div>
 
 ## Write The Tests
 

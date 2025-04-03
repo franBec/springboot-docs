@@ -163,11 +163,15 @@ Take into consideration that [caching has many pitfalls](https://medium.com/@sin
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users).
 
-![request.png](img/request.png)
+<div>
+  <img src={require('@site/static/img/integration-layer/request.png').default} alt="request" />
+</div>
 
 Repeat the request. The cache will come into play, and you should find a much quicker response time: It went from 1014ms down to 13ms, a 98.7% speed increase.
 
-![cache.png](img/cache.png)
+<div>
+  <img src={require('@site/static/img/integration-layer/cache.png').default} alt="cache" />
+</div>
 
 Commit the progress so far.
 

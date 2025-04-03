@@ -14,7 +14,9 @@ sidebar_position: 3
 4. **Run the Application**:
    * Navigate to the main class: `src/main/java/dev/pollito/UsersManagerApplication.java`. Right-click the class → Run `UsersManagerApplication.main()`.
     
-   ![main.png](img/main.png)
+   <div>
+      <img src={require('@site/static/img/lets-create-a-spring-boot-project/main.png').default} alt="main" />
+   </div>
 
 5. **Check the Run Terminal**:
    * After a few seconds, you’ll see something similar to `Started UsersManagerApplication in 2.262 seconds (process running for 2.568)`.
@@ -23,7 +25,9 @@ sidebar_position: 3
    * Open your browser and go to [http://localhost:8080/](http://localhost:8080/).
    * You’ll see a Whitelabel Error Page – this is normal as we haven’t done any development yet.
 
-![whitelabel.png](img/whitelabel.png)
+<div>
+   <img src={require('@site/static/img/lets-create-a-spring-boot-project/whitelabel.png').default} alt="whitelabel" />
+</div>
 
 Congratulations! Your Spring Boot app is up and running – and here’s why this is a big deal:
 

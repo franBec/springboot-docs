@@ -48,7 +48,9 @@ IntelliJ IDEA provides a nice sidebar menu:
 * Look for the elephant icon 🐘 on the right edge (Gradle Toolbar).
 * Expand your-project > Tasks > build.
 
-![gradle-tasks.png](img/gradle-tasks.png)
+<div>
+   <img src={require('@site/static/img/lets-create-a-spring-boot-project/gradle-tasks.png').default} alt="gradle tasks" />
+</div>
 
 The two tasks you'll actually use are **build** (compile + test + package into JAR) and **clean** (nuclear option when weird errors happen, it deletes all build files).
 
@@ -81,7 +83,9 @@ Let’s check once more the [Spring Boot Layers](/spring-boot-in-a-nutshell/spri
 
 > How does each layer inside a Spring Boot Application communicate with each other?
 
-![dependency-injection.png.png](img/dependency-injection.png)
+<div>
+   <img src={require('@site/static/img/lets-create-a-spring-boot-project/dependency-injection.png').default} alt="dependency injection" />
+</div>
 
 The answer: **Dependency Injection**.
 
