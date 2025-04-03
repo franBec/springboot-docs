@@ -4,91 +4,91 @@
     "description": "The label for version current"
   },
   "sidebar.tutorialSidebar.category.Spring Boot In A Nutshell": {
-    "message": "Spring Boot En Pocas Palabras",
+    "message": "Spring Boot en pocas palabras",
     "description": "The label for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Spring Boot In A Nutshell.link.generated-index.description": {
-    "message": "Si alguna vez has intentado hornear un pastel desde cero, sabes que implica medir la harina, romper huevos y mezclar los ingredientes, todo antes de siquiera encender el horno. El desarrollo tradicional en Java puede resultar igual de tedioso. Descubre Spring Boot, la premezcla del mundo de la programación. Analicemos qué es y por qué a los desarrolladores les encanta.",
+    "message": "Si alguna vez intentaste hacer un pastel desde cero, sabés que hay que medir la harina, romper huevos y mezclar los ingredientes – ¡todo antes de encender el horno! El desarrollo tradicional en Java puede sentirse igual de tedioso. Ahí viene Spring Boot, la masa ya preparada del mundo del código. Vamos a ver de qué va y por qué a los desarrolladores les encanta.",
     "description": "The generated-index page description for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project": {
-    "message": "Creemos un proyecto Spring Boot",
+    "message": "¡Vamos a crear un proyecto con Spring Boot!",
     "description": "The label for category Let’s Create A Spring Boot Project in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project.link.generated-index.description": {
-    "message": "Iniciar un proyecto de Spring Boot es como pedir una pizza: eliges los ingredientes (dependencias), la base (configuración) y dejas que el horno (Spring Initializr) se encargue del resto. ¡Todavía no necesitas programar! Aquí te explico cómo iniciar un proyecto en segundos.",
+    "message": "Empezar un proyecto Spring Boot es como pedir una pizza: elegís tus ingredientes (dependencias), la masa (configuración) y dejás que el horno (Spring Initializr) se encargue del resto. ¡Todavía no hay que escribir código! Acá te muestro cómo levantar un proyecto en cuestión de segundos.",
     "description": "The generated-index page description for category Let’s Create A Spring Boot Project in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Optional But Recommended Features": {
-    "message": "Optional But Recommended Features",
+    "message": "Características opcionales, pero recomendadas",
     "description": "The label for category Optional But Recommended Features in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Optional But Recommended Features.link.generated-index.description": {
-    "message": "These are things that you may or may not find in projects you are going to come across, but are nice to have.",
+    "message": "Son cosas que quizás encontrés en algunos proyectos, pero siempre está bueno tenerlas.",
     "description": "The generated-index page description for category Optional But Recommended Features in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Contract-Driven Development": {
-    "message": "Contract-Driven Development",
+    "message": "Desarrollo basado en Contratos",
     "description": "The label for category Contract-Driven Development in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Contract-Driven Development.link.generated-index.description": {
-    "message": "Usually when developing, we make our endpoint first, then we write documentation in an OpenAPI Specification. The problem appears later, when somebody else modifies the endpoint and now the documentation doesn’t reflect it. This can go unnoticed. Worse than no documentation, is wrong documentation. What if we wrote documentation first, and the code is generated from it? Let me introduce you to Contract-Driven Development.",
+    "message": "Normalmente, al desarrollar primero armamos el endpoint y después escribimos la documentación con una Especificación OpenAPI. El problema surge cuando alguien modifica el endpoint y la documentación ya no coincide. Esto podría pasar desapercibido. Peor que no tener documentación es tenerla mal. ¿Y si primero escribimos la documentación y luego generamos el código? Te presento el Desarrollo basado en Contratos.",
     "description": "The generated-index page description for category Contract-Driven Development in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Integration Layer": {
-    "message": "Integration Layer",
+    "message": "Capa de integración",
     "description": "The label for category Integration Layer in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Integration Layer.link.generated-index.description": {
-    "message": "In modern backend development, services often need to communicate with external web services using HTTP. Whether your service needs to integrate with third-party platforms, microservices, or legacy systems, the web client becomes a critical component of your application’s architecture.",
+    "message": "En el desarrollo backend actual, los servicios suelen tener que comunicarse con web services externos vía HTTP. Si tu servicio necesita integrarse con plataformas de terceros, microservicios o sistemas legados, el cliente web se vuelve clave en la arquitectura de tu app.",
     "description": "The generated-index page description for category Integration Layer in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Unit Testing": {
-    "message": "Unit Testing",
+    "message": "Pruebas unitarias",
     "description": "The label for category Unit Testing in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Unit Testing.link.generated-index.description": {
-    "message": "Unit testing is the practice of testing individual pieces (units) of your code in isolation to verify they work correctly. Think of it like checking each ingredient before cooking a meal, rather than just tasting the final dish and trying to figure out what went wrong.",
+    "message": "Las pruebas unitarias consisten en testear partes individuales de tu código por separado para asegurarte de que funcionen bien. Es como revisar cada ingrediente antes de cocinar, en lugar de probar el plato final y adivinar qué salió mal.",
     "description": "The generated-index page description for category Unit Testing in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Persistence Layer": {
-    "message": "Persistence Layer",
+    "message": "Capa de persistencia",
     "description": "The label for category Persistence Layer in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Persistence Layer.link.generated-index.description": {
-    "message": "Up until now, we have been getting the users data from an outside source. But what if we had the data in our own database?",
+    "message": "Hasta ahora hemos obtenido los datos de los usuarios de una fuente externa. ¿Pero qué pasaría si tuviéramos esos datos en nuestra propia base de datos?",
     "description": "The generated-index page description for category Persistence Layer in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Deployment": {
-    "message": "Deployment",
+    "message": "Despliegue",
     "description": "The label for category Deployment in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Deployment.link.generated-index.description": {
-    "message": "Shipping code is more than just writing it. Learn how to package, configure, and run your Spring Boot application reliably in different environments like dev, test, and prod using tools like Docker and Spring Profiles.",
+    "message": "Entregar código es más que solo escribirlo. Aprendé a empaquetar, configurar y ejecutar tu aplicación Spring Boot de manera confiable en distintos entornos (desarrollo, pruebas y producción) usando herramientas como Docker y Spring Profiles.",
     "description": "The generated-index page description for category Deployment in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Real Talk Time": {
-    "message": "Real Talk Time",
+    "message": "Hablemos en serio",
     "description": "The label for category Real Talk Time in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Real Talk Time.link.generated-index.description": {
-    "message": "Embarking on a programming journey is exhilarating, but the tech industry’s landscape is riddled with pitfalls that can derail even the most promising projects. Few people are going to tell you this, but reality is working in Big Tech is bad. Let’s dissect common challenges, systemic issues and work mentalities.",
+    "message": "Empezar en el mundo de la programación es una adrenalina, pero el panorama tech está lleno de trampas que pueden descarrilar hasta los proyectos más prometedores. Pocas personas te lo contarán, pero la verdad es que laburar en Big Tech puede ser complicado. Desmenuzemos los desafíos comunes, los problemas sistémicos y las mentalidades laborales.",
     "description": "The generated-index page description for category Real Talk Time in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.About": {
-    "message": "About",
+    "message": "Acerca de",
     "description": "The label for category About in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.About.link.generated-index.description": {
-    "message": "About the author of this page (Pollito) and special thanks.",
+    "message": "Acerca del autor de esta página (Pollito) y agradecimientos.",
     "description": "The generated-index page description for category About in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Licenses": {
-    "message": "Licenses",
+    "message": "Licencias",
     "description": "The label for category Licenses in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Licenses.link.generated-index.description": {
-    "message": "Code and content licenses. The boring but important stuff.",
+    "message": "Licencias de código y contenido.",
     "description": "The generated-index page description for category Licenses in sidebar tutorialSidebar"
   }
 }
