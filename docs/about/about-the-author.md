@@ -6,7 +6,9 @@ sidebar_position: 1
 
 ## Franco Exequiel Becvort
 
-![img.png](img/profile.png)
+<div>
+  <img src={require('@site/static/img/about/profile.png').default} alt="profile" />
+</div>
 
 ### Professional Background
 

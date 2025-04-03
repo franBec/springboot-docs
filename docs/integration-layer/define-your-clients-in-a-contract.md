@@ -6,11 +6,15 @@ sidebar_position: 2
 
 Back in [Contract-Driven Development](/category/contract-driven-development), we used an OpenAPI specification to define the expected behaviour of our Spring Boot application when **providing** endpoints to whoever decides to use our app.
 
-![openapi-controller.png](img/openapi-controller.png)
+<div>
+  <img src={require('@site/static/img/integration-layer/openapi-controller.png').default} alt="openapi controller" />
+</div>
 
 But what if we used another OpenAPI specification to define the expected behaviour of our Spring Boot application when **integrating** an outside source?
 
-![openapi-external-sources.png](img/openapi-external-sources.png)
+<div>
+  <img src={require('@site/static/img/integration-layer/openapi-external-sources.png').default} alt="openapi external sources" />
+</div>
 
 Well, we are in luck, cause the same [openapi-generator plugin](https://github.com/OpenAPITools/openapi-generator) is capable of doing both things!
 

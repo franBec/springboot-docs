@@ -69,4 +69,6 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
 
 6. Now that everything is set up, **run the Build Task**. When the task finishes, If you check the `build\generated\sources\openapi` folder, you’ll find the representation of the OpenAPI Specification (our contract) in Java code, ready to be used.
 
-    ![build.png](img/build.png)
+   <div>
+     <img src={require('@site/static/img/contract-driven-development/build.png').default} alt="build" />
+   </div>

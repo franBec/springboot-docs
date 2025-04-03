@@ -35,7 +35,9 @@ While this might work for a tiny internal tool, it's completely inadequate for s
 
 The most common and professional way to deploy Spring Boot applications today involves automation through a [Continuous Integration/Continuous Deployment (CI/CD) pipeline](https://www.redhat.com/en/topics/devops/what-is-ci-cd), often leveraging containerization (like Docker). Here’s a typical flow triggered by a `git push` to a specific branch (e.g., `main` or `release`):
 
-![cicd.png](img/cicd.png)
+<div>
+  <img src={require('@site/static/img/deployment/cicd.png').default} alt="cicd" />
+</div>
 
 1.  **Code push:** A developer pushes code changes to the Git repository.
 2.  **Automated testing:** The pipeline automatically runs unit tests, integration tests, and potentially other quality checks (like static code analysis with [SonarQube](https://www.sonarsource.com/products/sonarqube/)). If tests fail, the pipeline stops, preventing faulty code from proceeding.

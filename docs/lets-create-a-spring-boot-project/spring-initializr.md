@@ -8,7 +8,9 @@ Head to [Spring Initializr](https://start.spring.io/), the official Spring Boot 
 
 You’ll see a form, don’t panic—we’ll decode each option.
 
-![spring-initializr.png](img/spring-initializr.png)
+<div>
+  <img src={require('@site/static/img/lets-create-a-spring-boot-project/spring-initializr.png').default} alt="spring initializr" />
+</div>
 
 ## Project: Maven vs Gradle
 
@@ -26,7 +28,9 @@ Think of these as your project’s managers. They:
 
 ### Which One To Choose?
 
-![maven-gradle-decision-tree.png](img/maven-gradle-decision-tree.png)
+<div>
+  <img src={require('@site/static/img/lets-create-a-spring-boot-project/maven-gradle-decision-tree.png').default} alt="maven gradle decision tree" />
+</div>
 
 ### Why It Doesn’t Matter
 
@@ -102,7 +106,9 @@ Once you’ve configured your Spring Boot app, hit the Generate button (or Ctrl 
 
 In this screenshot down below, I’m creating the **Users Manager application that we will develop during the rest of this guide**.
 
-![generating-project.png](img/generating-project.png)
+<div>
+  <img src={require('@site/static/img/lets-create-a-spring-boot-project/generating-project.png').default} alt="generating project" />
+</div>
 
 What’s Inside the zip?
 

@@ -14,7 +14,9 @@ Theo’s video “Build first, plan second” is the perfect starting point.
 
 That video show us the following tweet capture:
 
-![tweet-capture..png](img/tweet-capture.png)
+<div>
+  <img src={require('@site/static/img/real-talk-time/tweet-capture.png').default} alt="tweet capture" />
+</div>
 
 When teams prioritize theoretical documentation over tangible prototypes, they risk:
 

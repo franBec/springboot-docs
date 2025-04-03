@@ -11,7 +11,9 @@ Back on June 21st 2022, I wrote in the University WhatsApp group:
 
 > Quick question, is it really worth it learning Java Spring? At work, I was put into a course, and I’m too lazy
 
-![WhatsAppImage2025-02-27.jpeg](/img/WhatsAppImage2025-02-27.jpeg)
+<div className="">
+  <img src={require('@site/static/img/WhatsAppImage2025-02-27.jpeg').default} alt="WhatsAppImage2025-02-27" />
+</div>
 
 I even made a typo, lol.
 

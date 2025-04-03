@@ -6,7 +6,9 @@ sidebar_position: 1
 
 Let's check once more the Spring Boot Layers diagram and focus in the **Persistence Layer** (blue box upper right):
 
-![layers.png](img/layers.png)
+<div>
+  <img src={require('@site/static/img/spring-boot-in-a-nutshell/layers.png').default} alt="layers" />
+</div>
 
 ## Understanding the Repository Pattern
 

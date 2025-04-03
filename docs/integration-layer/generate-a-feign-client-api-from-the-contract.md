@@ -52,4 +52,6 @@ sidebar_position: 3
 
 4. Now that everything is set up, **run the Build Task**. When the task finishes, If you check the `build\generated\sources\openapi` folder, you’ll find a new `jsonplaceholder.typicode.com` folder with the representation of the OpenAPI Specification in Java code, ready to be used.
 
-    ![jsonplaceholder-folder.png](img/jsonplaceholder-folder.png)
+   <div>
+     <img src={require('@site/static/img/integration-layer/jsonplaceholder-folder.png').default} alt="jsonplaceholder folder" />
+   </div>

@@ -45,8 +45,12 @@ To get this metric, we need the [Solidsoft Pitest Gradle Plugin](https://mvnrepo
 
 4. Now that everything is set up, run the `test` Task. When the task finishes, If you check the `build/reports/pitest/index.html`, you’ll find a HTML file, that is the report. Open it and explore it.
 
-   ![pit-report-path.png](img/pit-report-path.png)
-   ![report.png](img/report.png)
+   <div>
+     <img src={require('@site/static/img/unit-testing/pit-report-path.png').default} alt="pit report path" />
+   </div>
+   <div>
+     <img src={require('@site/static/img/unit-testing/report.png').default} alt="report" />
+   </div>
 
 Commit the progress so far.
 
