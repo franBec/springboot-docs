@@ -2,47 +2,47 @@
 sidebar_position: 2
 ---
 
-# Normalize Errors Returned
+# Normaliza los Errores Devueltos
 
-## Consistency Is Important
+## La Consistencia Es Importante
 
-One of the most annoying things when consuming a microservice is that the errors it returns are not consistent. At work, I have plenty of scenarios like:
+Una de las cosas más frustrantes al consumir un microservicio es que los errores que devuelve no son consistentes. En el trabajo, he visto varios escenarios como:
 
-* `service.com/users/-1` returns:
-
-    ```json
-    {
-    "errorDescription": "User not found",
-    "cause": "BAD REQUEST"
-    }
-    ```
-
-* but `service.com/product/-1` returns:
+* `service.com/users/-1` devuelve:
 
     ```json
     {
-    "message": "not found",
-    "error": 404
+      "errorDescription": "User not found",
+      "cause": "BAD REQUEST"
     }
     ```
 
-Consistency just flew out of the window there, and it gets worse with errors inside 200OK. We don’t want to be that kind of dev: we are going to do proper error handling with [@RestControllerAdvice](https://www.bezkoder.com/spring-boot-restcontrolleradvice/) and [ProblemDetail](https://www.baeldung.com/spring-boot-return-errors-problemdetail).
+* pero `service.com/product/-1` devuelve:
 
-`@RestControllerAdvice` acts like a central "error coordinator" for your application.
+    ```json
+    {
+      "message": "not found",
+      "error": 404
+    }
+    ```
 
-* It’s a single place where you can define how all errors, exceptions, or unexpected scenarios get translated into responses.
-* Instead of scattering error-handling logic across every controller, this tool ensures every error—whether from a user lookup, product search, or internal bug—follows the same rules and format.
+La consistencia se fue por la ventana, y se complica aún más cuando aparecen errores dentro de un 200 OK. No queremos ser ese tipo de dev: vamos a hacer un manejo de errores correcto con [@RestControllerAdvice](https://www.bezkoder.com/spring-boot-restcontrolleradvice/) y [ProblemDetail](https://www.baeldung.com/spring-boot-return-errors-problemdetail).
 
-`ProblemDetail` is a standardized "error template" that structures responses in a clear, consistent way. Think of it as a pre-designed form that every error fills out:
+`@RestControllerAdvice` actúa como un "coordinador de errores" central para tu aplicación.
 
-* What type of error occurred (e.g., "user_not_found")
-* A human-readable title (e.g., "Resource Not Found")
-* The HTTP status code (e.g., 404)
-* Additional details (e.g., "User ID -1 does not exist")
+* Es un único lugar donde podés definir cómo se traducen todos los errores, excepciones o escenarios inesperados en respuestas.
+* En lugar de esparcir la lógica de manejo de errores en cada controller, esta herramienta hace que cada error —ya sea por una búsqueda de usuario, una consulta de producto o un bug interno— siga las mismas reglas y formato.
 
-Together, these tools ensure your microservice never confuses clients with mismatched error formats. Even edge cases or unanticipated errors get wrapped into the same predictable structure
+`ProblemDetail` es una "plantilla de error" estandarizada que estructura las respuestas de forma clara y consistente. Pensalo como un formulario pre-diseñado que se completa para cada error:
 
-Let’s create a `@RestControllerAdvice` class: In `src/main/java/dev/pollito/users_manager/controller/advice`, create `ControllerAdvice.java.`
+* Qué tipo de error ocurrió (por ej., "user_not_found")
+* Un título legible para humanos (por ej., "Resource Not Found")
+* El código HTTP de estado (por ej., 404)
+* Detalles adicionales (por ej., "User ID -1 does not exist")
+
+Juntos, estas herramientas garantizan que tu microservicio nunca confunda a los clientes con formatos de error distintos. Incluso los casos extremos o errores no previstos se envuelven en la misma estructura predecible.
+
+Creemos una clase con `@RestControllerAdvice`: en `src/main/java/dev/pollito/users_manager/controller/advice`, creá `ControllerAdvice.java`.
 
 ```java
 package dev.pollito.users_manager.controller.advice;
@@ -73,26 +73,26 @@ public class ControllerAdvice {
 
   @ExceptionHandler(Exception.class)
   public ProblemDetail handle(@NotNull Exception e) {
-    return buildProblemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    return problemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 ```
 
-If we visit an uri that doesn't exist (like [http://localhost:8080](http://localhost:8080)), we will now get a standardized error:
+Si visitamos una URI que no exista (como [http://localhost:8080](http://localhost:8080)), ahora vamos a recibir un error estandarizado:
 
 <div>
   <img src={require('@site/static/img/optional-but-recommended-features/standarized-error.png').default} alt="standarized error" />
 </div>
 
-## Adding More Handlers
+## Agregando Más Handlers
 
-Right now you could be thinking
+En este momento, capaz estés pensando
 
-> But No static resource should be 404 instead of 500
+> Pero No static resource debería ser 404 en lugar de 500
 
-To which I say, yes you’re totally right and I wish there was a way to implement that behaviour by default. But with this normalization of errors, everything is a 500 unless you explicitly say otherwise. I think the trade-off is worth it.
+Y a eso le digo, sí, tenés toda la razón y me gustaría que hubiera una manera de implementar ese comportamiento por defecto. Pero con esta normalización de errores, todo es 500 a menos que se especifique explícitamente lo contrario. Creo que el intercambio vale la pena.
 
-For making `No static resource` a 404, add in the `@RestControllerAdvice` class a new `@ExceptionHandler(NoResourceFoundException.class)` method. The final result looks like this:
+Para hacer que un `No static resource` sea 404, agregá en la clase `@RestControllerAdvice` un nuevo método `@ExceptionHandler(NoResourceFoundException.class)`. El resultado final se ve así:
 
 ```java
 package dev.pollito.users_manager.controller.advice;
@@ -134,25 +134,25 @@ public class ControllerAdvice {
 }
 ```
 
-Now when requesting to [http://localhost:8080](http://localhost:8080) we get the new expected behaviour:
+Ahora, al solicitar [http://localhost:8080](http://localhost:8080) obtendremos el nuevo comportamiento esperado:
 
 <div>
   <img src={require('@site/static/img/optional-but-recommended-features/expected404.png').default} alt="expected 404" />
 </div>
 
-## Common Handlers You May Need
+## Handlers Comunes Que Podrías Necesitar
 
-Here are some common exceptions that you may want to handle:
+Acá te dejo algunas excepciones comunes que quizá quieras manejar:
 
-| Exception                             | Description                                                                 | Example                                            | Notes                                    |
-|---------------------------------------|-----------------------------------------------------------------------------|----------------------------------------------------|------------------------------------------|
-| `ConstraintViolationException`        | Request parameters/fields fail validation (`@NotNull`, `@Size`, `@Pattern`) | Request body missing a required field              | Requires Jakarta EE (to be added later)  |
-| `MethodArgumentTypeMismatchException` | Request parameter cannot be converted to expected type                      | Controller expects `Integer` but receives `String` |                                          |
-| `NoResourceFoundException`            | Request accesses non-existent Spring MVC resource                           | Accessing an undefined endpoint                    |                                          |
-| `NoSuchElementException`              | `Optional.get()` called on empty `Optional`                                 | Looking for non-existent user by ID                |                                          |
-| `PropertyReferenceException`          | Invalid property used in Spring Data repository query                       | Sorting by non-existent field                      | Requires Spring Data (to be added later) |
+| Excepción                             | Descripción                                                                                    | Ejemplo                                                   | Notas                                           |
+|---------------------------------------|------------------------------------------------------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------|
+| `ConstraintViolationException`        | Los parámetros/campos de la petición fallan en la validación (`@NotNull`, `@Size`, `@Pattern`) | El body de la solicitud no tiene un campo obligatorio     | Requiere Jakarta EE (se agregará más adelante)  |
+| `MethodArgumentTypeMismatchException` | Un parámetro de la petición no puede convertirse al tipo esperado                              | El controller espera un `Integer` pero recibe un `String` |                                                 |
+| `NoResourceFoundException`            | Se intenta acceder a un recurso MVC de Spring que no existe                                    | Acceder a un endpoint indefinido                          |                                                 |
+| `NoSuchElementException`              | Se llamó a `Optional.get()` en un `Optional` vacío                                             | Buscar un usuario por ID que no existe                    |                                                 |
+| `PropertyReferenceException`          | Se usó una propiedad inválida en una consulta del repositorio Spring Data                      | Ordenar por un campo que no existe                        | Requiere Spring Data (se agregará más adelante) |
 
-The final result so far looks like this:
+El resultado final hasta ahora se ve así:
 
 ```java
 package dev.pollito.users_manager.controller.advice;
@@ -207,7 +207,7 @@ public class ControllerAdvice {
 }
 ```
 
-Commit the progress so far.
+Commiteá el progreso realizado hasta ahora.
 
 ```bash
 git add .
