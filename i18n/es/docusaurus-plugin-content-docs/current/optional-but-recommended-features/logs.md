@@ -4,29 +4,29 @@ sidebar_position: 1
 
 # Logs
 
-Considering we don’t mind printing sensitive information (keys, passwords, etc.), I’ve found useful to log:
+Considerando que no nos importa imprimir información sensible (claves, contraseñas, etc.), me pareció útil loggear:
 
-* Everything that comes in.
-* Everything that comes out.
+* Todo lo que llega.
+* Todo lo que sale.
 
-To achieve that we are going to be using:
+Para lograrlo vamos a usar:
 
-* An [Aspect](https://www.baeldung.com/spring-aop) that logs before and after execution of public controller methods.
-* [Micrometer](https://www.baeldung.com/micrometer) to enhance logs.
-* A [Filter](https://www.baeldung.com/spring-boot-add-filter) interface that logs stuff that doesn’t reach the controllers.
+* Un [Aspect](https://www.baeldung.com/spring-aop) que loggea antes y después de la ejecución de los métodos públicos de los controllers.
+* [Micrometer](https://www.baeldung.com/micrometer) para enriquecer los logs.
+* Una interfaz de [Filter](https://www.baeldung.com/spring-boot-add-filter) que loggea lo que no llega a los controllers.
 
 ## Aspect
 
-An aspect is a piece of code with a specific task—in this case, logging—that can automatically run at certain points in your application. It lets you separate common behavior from your main business logic, which simplifies the code and keeps it cleaner.
+Un aspect es una porción de código con una tarea específica —en este caso, loggear— que puede ejecutarse automáticamente en ciertos puntos de tu aplicación. Te permite separar comportamientos comunes de tu lógica de negocio principal, simplificando el código y haciéndolo más limpio.
 
-1. We need the [aspectjtools](https://mvnrepository.com/artifact/org.aspectj/aspectjtools) dependency. In your `build.gradle`, **add the dependency** in the `dependencies` section:
-    
+1. Necesitamos la dependencia [aspectjtools](https://mvnrepository.com/artifact/org.aspectj/aspectjtools). En tu `build.gradle`, **agrega la dependencia** en la sección de `dependencies`:
+
    ```groovy
     implementation 'org.aspectj:aspectjtools:1.9.22.1'
     ```
-   
-2. In `src/main/java/dev/pollito/users_manager/aspect`, create `LogAspect.java`.
-    
+
+2. En `src/main/java/dev/pollito/users_manager/aspect`, crea `LogAspect.java`.
+
    ```java
     package dev.pollito.users_manager.aspect;
     
@@ -62,91 +62,91 @@ An aspect is a piece of code with a specific task—in this case, logging—that
     }
     ```
 
-Rebuild the application. Then go to [http://localhost:8080/users](http://localhost:8080/users) and check the logs. You should find something like this:
+Reconstruí la aplicación. Luego, andá a [http://localhost:8080/users](http://localhost:8080/users) y revisá los logs. Deberías ver algo como esto:
 
 ```log
 2025-03-10T11:44:23.697Z  INFO 16164 --- [users_manager] [nio-8080-exec-1] d.p.users_manager.aspect.LogAspect       : [UserController.getUsers()] Args: []
 2025-03-10T11:44:23.697Z  INFO 16164 --- [users_manager] [nio-8080-exec-1] d.p.users_manager.aspect.LogAspect       : [UserController.getUsers()] Response: [User(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)]
 ```
 
-## What Does The IntelliJ IDEA Suggestion “Insert ‘@NotNull’ on parameter” Mean?
+## ¿Qué Significa la Sugerencia de IntelliJ IDEA “Insert ‘@NotNull’ on parameter”?
 
-If you’re using IntelliJ IDEA, you would notice that in the class we just created you are being suggested the following:
-
-<div>
-  <img src={require('@site/static/img/optional-but-recommended-features/notnull.png').default} alt="notnull" />
-</div>
-
-This annotation indicates that the parameter should not be null when the method is called. It helps in avoiding `NullPointerException` and improves code readability and safety by explicitly specifying that null values are not allowed.
-
-It is not mandatory to add the `@NotNull` annotation, but it is highly recommended:
-
-* **Code safety**: It helps prevent `NullPointerException` by explicitly specifying that the parameter should not be null.
-* **Code readability**: It makes the code more readable and self-documenting by clearly indicating that null values are not allowed.
-* **Static analysis**: Tools like IntelliJ IDEA can use this annotation to provide better static analysis, warnings, and code suggestions.
-
-When accepting the suggestion, we are going to be notified about a new dependency being added. Just accept.
+Si usás IntelliJ IDEA, notarás que en la clase que acabamos de crear te sugiere lo siguiente:
 
 <div>
-  <img src={require('@site/static/img/optional-but-recommended-features/notnull-dependency.png').default} alt="notnull dependency" />
+   <img src={require('@site/static/img/optional-but-recommended-features/notnull.png').default} alt="notnull" />
 </div>
 
-Sometimes the IDE behaves weird and doesn’t add the dependency in the  build.gradle dependencies section. Go check if you can find the following
+Esta anotación indica que el parámetro no debería ser nulo cuando se llame el método. Ayuda a prevenir `NullPointerException` y mejora la legibilidad y seguridad del código al especificar explícitamente que los valores nulos no están permitidos.
+
+No es obligatorio agregar la anotación `@NotNull`, pero se recomienda encarecidamente:
+
+* **Seguridad en el código**: Ayuda a prevenir NullPointerException al especificar explícitamente que el parámetro no debe ser nulo.
+* **Legibilidad del código**: Hace que el código sea más legible y auto-documentado al indicar claramente que no se permiten valores nulos.
+* **Análisis estático**: Herramientas como IntelliJ IDEA pueden utilizar esta anotación para ofrecer un mejor análisis estático, advertencias y sugerencias de código.
+
+Al aceptar la sugerencia, se nos notificará sobre una nueva dependencia que se agregará. Simplemente aceptá.
+
+<div>
+   <img src={require('@site/static/img/optional-but-recommended-features/notnull-dependency.png').default} alt="notnull dependency" />
+</div>
+
+A veces el IDE se porta raro y no agrega la dependencia en la sección de dependencies del build.gradle. Revisá si podés encontrar lo siguiente:
 
 ```groovy
 implementation 'org.jetbrains:annotations:26.0.2'
 ```
 
-If not, add it.
+Si no está, agregala.
 
-Rebuild the application. Then go to [http://localhost:8080/users](http://localhost:8080/users) and check the logs. Everything should be working exactly the same as before.
+Reconstruí la aplicación. Luego, andá a [http://localhost:8080/users](http://localhost:8080/users) y revisá los logs. Todo debería funcionar igual que antes.
 
 ## Micrometer
 
-Imagine this application has many endpoints, and also has many users making requests at the same time. **How are we going to be sure which logs are related to the same request**, when everything is happening at the same time (or very close enough to mix each other)?
+Imaginá que esta aplicación tiene muchos endpoints y además muchos usuarios haciendo peticiones al mismo tiempo. ¿**Cómo vamos a poder asegurarnos de que qué logs están relacionados a la misma petición**, cuando todo sucede a la vez (o casi lo mismo para que se mezclen unos con otros)?
 
-**Micrometer** enriches your logs by automatically attaching contextual information. This means that logs include details like [trace and span identifiers](https://medium.com/dzerolabs/observability-journey-understanding-logs-events-traces-and-spans-836524d63172), helping to correlate log messages with specific events and requests across your application.
+Micrometer enriquece tus logs adjuntando automáticamente información contextual. Esto significa que los logs incluirán detalles como [identificadores de trace y span](https://medium.com/dzerolabs/observability-journey-understanding-logs-events-traces-and-spans-836524d63172), ayudando a correlacionar mensajes de log con eventos y peticiones específicas a lo largo de tu aplicación.
 
-We need the micrometer dependencies. In your `build.gradle`, **add the dependencies** in the `dependencies` section:
+Necesitamos las dependencias de micrometer. En tu `build.gradle`, **agrega las dependencias** en la sección de `dependencies`:
 
 ```groovy
 implementation 'io.micrometer:micrometer-observation:1.14.4'
 implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.3'
 ```
 
-Rebuild the application. Then go to [http://localhost:8080/users](http://localhost:8080/users) and check the logs. You should find something like this:
+Reconstruí la aplicación. Luego, andá a [http://localhost:8080/users](http://localhost:8080/users) y revisá los logs. Deberías ver algo como esto:
 
 ```log
 2025-03-10T12:09:01.871Z  INFO 20224 --- [users_manager] [nio-8080-exec-3] [6eb73e82add143a3fb540ff6983c2c23-e93a7af466f261d4] d.p.users_manager.aspect.LogAspect       : [UserController.getUsers()] Args: []
 2025-03-10T12:09:01.871Z  INFO 20224 --- [users_manager] [nio-8080-exec-3] [6eb73e82add143a3fb540ff6983c2c23-e93a7af466f261d4] d.p.users_manager.aspect.LogAspect       : [UserController.getUsers()] Response: [User(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)]
 ```
 
-Now **each log has a unique identifier**. If this project for some reason interacted with other projects that also used micrometer, the identifier would propagate, making following requests going across different services even easier.
+Ahora **cada log tiene un identificador único**. Si por alguna razón este proyecto interactuara con otros proyectos que también usen Micrometer, el identificador se propagará, haciendo que seguir las peticiones a través de diferentes servicios sea aún más fácil.
 
 ## Filter
 
-When talking about Spring Boot layers, I used this drawing:
+Cuando hablamos de las capas de Spring Boot, usé este dibujo:
 
 <div>
-  <img src={require('@site/static/img/spring-boot-in-a-nutshell/layers.png').default} alt="layers" />
+   <img src={require('@site/static/img/spring-boot-in-a-nutshell/layers.png').default} alt="layers" />
 </div>
 
-But what if I tell you there’s something in the Spring Boot App that goes before the Presentation Layer? These are **Filters**.
+Pero ¿qué pasa si te digo que hay algo en la aplicación Spring Boot que va antes de la Capa de Presentación? Estos son los **Filters**.
 
 <div>
-  <img src={require('@site/static/img/optional-but-recommended-features/filters.png').default} alt="filters" />
+   <img src={require('@site/static/img/optional-but-recommended-features/filters.png').default} alt="filters" />
 </div>
 
-A Filter acts like a checkpoint for every incoming request and outgoing response, even before they reach your controllers or after they leave. Think of it as a gatekeeper that can observe—and optionally modify—the raw flow of data between the client and your application.
+Un Filter actúa como un punto de control para cada petición entrante y respuesta saliente, incluso antes de que lleguen a tus controllers o después de que se hayan ido. Pensalo como un portero que puede observar —y opcionalmente modificar— el flujo bruto de datos entre el cliente y tu aplicación.
 
-While aspects log activity around specific controller methods, **filters operate at a lower level, intercepting all HTTP traffic regardless of whether it eventually triggers controller logic**. This makes filters uniquely valuable for logging requests that never make it to your business code.
+Mientras que los aspects logean la actividad alrededor de métodos específicos del controller, **los filters operan a un nivel más bajo, interceptando todo el tráfico HTTP sin importar si eventualmente activa la lógica del controller o no**. Esto hace que los filters sean especialmente valiosos para loggear peticiones que jamás llegan a tu lógica de negocio.
 
-By integrating a custom log filter, you ensure that nothing slips through the cracks in your logs:
+Al integrar un filter de logs custom, te asegurás de que nada se escape en los logs:
 
-* Every incoming request gets timestamped, inspected, and logged at the "front door," and every outgoing response is documented on its way out.
-* This provides a complete audit trail, even for edge cases that don’t trigger your application’s core logic.
+* Cada petición entrante se marca con un timestamp, se inspecciona y se loggea en la "puerta de entrada", y cada respuesta saliente queda documentada en su camino.
+* Esto provee un rastro de auditoría completo, incluso para casos extremos que no activan la lógica central de tu aplicación.
 
-Let’s create a log filter: In `src/main/java/dev/pollito/users_manager/filter`, create `LogFilter.java`.
+Creemos un log filter: En `src/main/java/dev/pollito/users_manager/filte`r, crea `LogFilter.java`.
 
 ```java
 package dev.pollito.users_manager.filter;
@@ -213,12 +213,12 @@ public class LogFilter implements Filter {
 }
 ```
 
-Rebuild the application. Then go to [http://localhost:8080/users](http://localhost:8080/users) and check the logs. You should find something resembling this structure:
+Reconstruí la aplicación. Luego, andá a [http://localhost:8080/users](http://localhost:8080/users) y revisá los logs. Deberías ver algo con una estructura similar a esta:
 
-* `LogFilter` printing the request information such as Method, URI, Headers.
-* `LogAspect` printing the controller method and arguments.
-* `LogAspect` printing the controller method and response.
-* `LogFIlter` printing the response status.
+* `LogFilter` imprimiendo la información de la solicitud, como Método, URI, Headers.
+* `LogAspect` imprimiendo el método del controller y sus argumentos.
+* `LogAspect` imprimiendo el método del controller y la respuesta.
+* `LogFilter` imprimiendo el estado de la respuesta.
 
 ```log
 2025-03-14T12:29:36.131Z  INFO 27445 --- [users_manager] [nio-8080-exec-2] [ea1c95d66921506b9bfdf8c7d1b73765-d7cf4980f5c2d9da] d.p.users_manager.filter.LogFilter       : >>>> Method: GET; URI: /users; QueryString: null; Headers: {host: localhost:8080, connection: keep-alive, cache-control: max-age=0, sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134", sec-ch-ua-mobile: ?0, sec-ch-ua-platform: "Linux", upgrade-insecure-requests: 1, user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36, accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7, sec-fetch-site: cross-site, sec-fetch-mode: navigate, sec-fetch-user: ?1, sec-fetch-dest: document, accept-encoding: gzip, deflate, br, zstd, accept-language: es-ES,es;q=0.9,en;q=0.8}
@@ -227,14 +227,14 @@ Rebuild the application. Then go to [http://localhost:8080/users](http://localho
 2025-03-14T12:29:36.138Z  INFO 27445 --- [users_manager] [nio-8080-exec-2] [ea1c95d66921506b9bfdf8c7d1b73765-d7cf4980f5c2d9da] d.p.users_manager.filter.LogFilter       : <<<< Response Status: 200
 ```
 
-If we visit an uri that doesn't exist (like [http://localhost:8080/asdasd](http://localhost:8080/asdasd)), `LogFilter` will be the one that will let us know in the logs that this request ever happened.
+Si visitamos una URI que no exista (como [http://localhost:8080/asdasd](http://localhost:8080/asdasd)), será el LogFilter el que nos informe en los logs que esa petición sucedió.
 
 ```log
 2025-03-14T12:53:52.443Z  INFO 30172 --- [users_manager] [nio-8080-exec-1] [29233a50dd093491acbeaf0fb8020f2a-e8a3e4ad035bfbac] d.p.users_manager.filter.LogFilter       : >>>> Method: GET; URI: /asdasd; QueryString: null; Headers: {host: localhost:8080, connection: keep-alive, sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134", sec-ch-ua-mobile: ?0, sec-ch-ua-platform: "Linux", upgrade-insecure-requests: 1, user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36, accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7, sec-fetch-site: cross-site, sec-fetch-mode: navigate, sec-fetch-user: ?1, sec-fetch-dest: document, accept-encoding: gzip, deflate, br, zstd, accept-language: es-ES,es;q=0.9,en;q=0.8}
 2025-03-14T12:53:52.497Z  INFO 30172 --- [users_manager] [nio-8080-exec-1] [29233a50dd093491acbeaf0fb8020f2a-e8a3e4ad035bfbac] d.p.users_manager.filter.LogFilter       : <<<< Response Status: 404
 ```
 
-Commit the progress so far.
+Commiteá el progreso hasta ahora.
 
 ```bash
 git add .
