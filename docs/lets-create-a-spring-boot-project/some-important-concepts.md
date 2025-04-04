@@ -10,7 +10,7 @@ import YouTube from '@site/src/components/YouTube';
 
 You wouldn't build a house without a safety harness. Don't code without [version control](https://github.com/resources/articles/software-development/what-is-version-control). Here are some tips:
 
-1. **Git First, Code Second**: Always git init before writing your first line of code.
+1. **Git first, code second**: Always git init before writing your first line of code.
 2. **Console > GUI**. Tools like GitHub Desktop are great, but learn these 4 commands first:
 
     `git add ., git commit -m "save point", git push, git checkout -b`
@@ -41,7 +41,7 @@ Think of Gradle as your code's personal assistant. These "tasks" are commands th
 
 * Compile code.
 * Run tests.
-* Package your app into a JAR.
+* Package your app into a `JAR`.
 
 IntelliJ IDEA provides a nice sidebar menu:
 
@@ -52,7 +52,7 @@ IntelliJ IDEA provides a nice sidebar menu:
    <img src={require('@site/static/img/lets-create-a-spring-boot-project/gradle-tasks.png').default} alt="gradle tasks" />
 </div>
 
-The two tasks you'll actually use are **build** (compile + test + package into JAR) and **clean** (nuclear option when weird errors happen, it deletes all build files).
+The two tasks you'll actually use are **build** (compile + test + package into `JAR`) and **clean** (nuclear option when weird errors happen, it deletes all build files).
 
 * Don't memorize all the tasks - just know these 2, and when you need others, Google is your best friend.
 
