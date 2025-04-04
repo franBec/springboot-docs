@@ -13,7 +13,7 @@ Un IDE (Entorno de Desarrollo Integrado) es una herramienta que facilita el code
 Si alguna vez viste a un colega codear o navegaste por algún tutorial de Spring online, seguro ya te topaste con este logo:
 
 <div className="image-container">
-  <img src={require('@site/static/img/intelliJ-IDEA-logo.png').default} alt="IntelliJ IDEA Logo" width="144" height="144" />
+   <img src={require('@site/static/img/lets-create-a-spring-boot-project/intelliJ-IDEA-logo.png').default} alt="IntelliJ IDEA Logo" width="144" height="144" />
 </div>
 
 **IntelliJ IDEA** domina el desarrollo en Java y Spring Boot por cinco razones clave:
