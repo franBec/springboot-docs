@@ -2,33 +2,33 @@
 sidebar_position: 8
 ---
 
-# Filtering And Pagination
+# Filtrado y Paginación
 
-[Pagination](https://www.merge.dev/blog/rest-api-pagination) is a pattern that breaks large datasets into manageable chunks, controlling:
+[La paginación](https://www.merge.dev/blog/rest-api-pagination) es un patrón que divide grandes conjuntos de datos en porciones manejables, controlando:
 
-- **Resource Consumption**: Limits memory usage and database load.
-- **Response Efficiency**: Reduces payload size for faster network transfers.
-- **User Experience**: Enables predictable data navigation patterns.
+- **Consumo de recursos**: Limita el uso de memoria y la carga en la base de datos.
+- **Eficiencia de la respuesta**: Reduce el tamaño de la carga útil para transferencias de red más rápidas.
+- **Experiencia del usuario**: Permite patrones de navegación de datos predecibles.
 
-## Why Do Pagination?
+## ¿Por Qué Hacer Paginación?
 
-Why are we doing pagination when the current set of users is small (only 10 users)?
+¿Por qué implementamos paginación cuando el conjunto actual de usuarios es pequeño (solo 10 usuarios)?
 
-1. **Scales seamlessly**: Handles dataset growth without API changes.
-2. **Supports multiple clients**: Allows different consumers (web/mobile/third-party) to request optimal chunks.
-3. **Enables agile data access**: Prepares for potential UI features like dynamic table sorting.
-4. **Reduces technical debt**: Avoids costly refactoring when data outgrows memory-load approaches.
+1. **Escala sin problemas**: Maneja el aumento del conjunto de datos sin necesidad de cambiar la API.
+2. **Soporta múltiples clientes**: Permite que distintos consumidores (web/móvil/terceros) pidan porciones óptimas.
+3. **Facilita el acceso ágil a los datos**: Prepara el terreno para posibles funciones de la UI como el ordenamiento dinámico en tablas.
+4. **Reduce la deuda técnica**: Evita refactorizaciones costosas cuando los datos superan los enfoques de carga en memoria.
 
-## Implementing Filtering And Pagination
+## Implementando Filtrado y Paginación
 
-In `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`, let's implement features such as:
+En `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`, implementemos funcionalidades como:
 
-* Check if provided string `q` is part of email, name, or username.
-* Sorting criteria in the format `field:direction`.
-* Zero-based page index (0..N).
-* Size of the page to be returned.
+* Verificar si el string provisto `q` forma parte del email, nombre o username.
+* Criterios de ordenamiento en el formato `campo:dirección`.
+* Índice de página basado en cero (0..N).
+* Tamaño de la página a retornar.
 
-The end result should look something like this:
+El resultado final debería verse algo así:
 
 ```java
 package dev.pollito.users_manager.service.impl;
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
             .filter(u -> Objects.nonNull(u.getId()))
             .filter(u -> u.getId() == id.intValue())
             .findFirst()
-            .orElseThrow());
+            .orElseThrow(NoSuchElementException::new));
   }
 
   private static List<com.typicode.jsonplaceholder.model.User> filterUsersByQ(
@@ -170,23 +170,23 @@ public class UserServiceImpl implements UserService {
 }
 ```
 
-Looks quite scary, but **here is an explanation of what is going on**:
+Parece bastante intimidante, pero **acá va una explicación de lo que está pasando**:
 
-This class, `UserServiceImpl`, integrates with an external API cache service to fetch users and then processes the data by applying filtering, sorting, and pagination before mapping it to the internal model. Here’s a brief breakdown:
+Esta clase, `UserServiceImpl`, se integra con un servicio de caché del API externo para obtener usuarios y luego procesa los datos aplicando filtrado, ordenamiento y paginación antes de mapearlos al modelo interno. Acá te explico brevemente:
 
-* **Data Retrieval & Mapping**: The class leverages `UserApiCacheService` to obtain a list of users from an external API. It then uses UserMapper to convert these users into the application's internal model.
-* **Filtering**: The method `filterUsersByQ` filters the user list based on a query string (`q`). It checks if the query is present in the user's `email`, `name`, or `username` in a case-insensitive manner.
-* **Sorting**: The `sortUsers` method sorts the filtered list according to the provided sort criteria (`pageSort`). Each sort criterion follows the format `field:direction`, where fields like `name`, `username`, and `email` are prioritized, with a default sort on `id` if the field is not specified. The helper method `getUserComparator` constructs the corresponding comparator for each criterion, allowing for both ascending and descending orders.
-* **Pagination**: Finally, the `applyPagination` method slices the sorted list to return only the users for the specified page based on `pageNumber` and `pageSize`.
+* **Recuperación y Mapeo de Datos**: La clase utiliza `UserApiCacheService` para obtener una lista de usuarios desde una API externa. Luego usa `UserMapper` para convertir esos usuarios al modelo interno de la aplicación.
+* **Filtrado**: El método `filterUsersByQ` filtra la lista de usuarios basándose en una cadena de consulta (`q`). Verifica si la consulta está presente en el `email`, `nombre` o `username` del usuario de manera insensible a mayúsculas.
+* **Ordenamiento**: El método `sortUsers` ordena la lista filtrada conforme a los criterios de ordenamiento proporcionados (`pageSort`). Cada criterio de ordenamiento sigue el formato `campo:dirección`, donde se priorizan campos como `name`, `username` y `email`, con un orden por defecto basado en `id` si no se especifica.
+* **Paginación**: Finalmente, el método `applyPagination` recorta la lista ordenada para retornar solo los usuarios correspondientes a la página especificada según `pageNumber` y `pageSize`.
 
-**Overriden methods**:
+**Métodos sobrescritos**:
 
-* `findAll`: Combines filtering, sorting, and pagination to return a paged and mapped list of users wrapped in a `Users` object.
-* `findById`: Retrieves a single user by matching the provided ID.
+* `findAll`: Combina filtrado, ordenamiento y paginación para retornar una lista paginada y mapeada de usuarios envuelta en un objeto `Users`.
+* `findById`: Recupera un único usuario comparando el ID proporcionado.
 
-This structured approach ensures that clients receive only the relevant subset of user data in a consistent, ordered, and paginated format.
+Este enfoque estructurado asegura que los clientes reciban únicamente el subconjunto relevante de datos de usuarios de forma consistente, ordenada y paginada.
 
-Commit the progress so far.
+Commiteá el progreso hasta ahora.
 
 ```bash
 git add .
