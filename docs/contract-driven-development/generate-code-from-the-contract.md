@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Generate Code From The Contract
 
-If we were to write by hand these two endpoints and the needed Models (called Schemas in the OpenAPI Specification) it may not be that complicated. But imagine if it was a big project, with a few dozen endpoints and close to a hundred schemas…
+If we were to write by hand these two endpoints and the needed Models (called `Schemas` in the OpenAPI Specification) it may not be that complicated. But imagine if it was a big project, with a few dozen endpoints and close to a hundred schemas…
 
 Let’s save us some problems by using one of the greatest libraries to ever exist: [openapi-generator](https://github.com/OpenAPITools/openapi-generator).
 
@@ -45,7 +45,7 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
     ```
 
     * You can find more information about the different possible configurations in the [OpenAPI Generator Gradle Plugin GitHub page](https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin).
-    * It is **important** to make sure that `inputspec` is pointing to the desired OpenAPI Specification yaml file.
+    * It is **important** to make sure that `inputspec` is pointing to the desired OpenAPI Specification `yaml` file.
 
 4. **Add the sourceSets configuration** in your `build.gradle`. This tells Gradle where to find the generated Java sources. Place the following code immediately below the `plugins` section in your `build.gradle`:
 
