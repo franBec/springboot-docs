@@ -87,7 +87,7 @@ public class User {
 }
 ```
 
-* I’ve found this folder “model” under the folder controller, service, utils, or even named dto (referring to the [DTO pattern](https://www.baeldung.com/java-dto-pattern)).
+* I’ve found this folder “model” under the folder `controller`, `service`, `utils`, or even named `dto` (referring to the [DTO pattern](https://www.baeldung.com/java-dto-pattern)).
   * Don’t worry much about it, later down the road we will find a way to automatically generate this kind of classes, and we will not have to write them (unless needed).
 * **We’ll use Lombok to avoid boilerplate code**. Lombok automatically generates repetitive Java code at compile time.
   * If your IDE doesn’t have the Lombok plugin installed, you’ll see compilation errors. Check [Optimizing IntelliJ IDEA With Plugins](/lets-create-a-spring-boot-project/lets-talk-about-ides#optimizing-intellij-idea-with-plugins) to find how to add the Lombok plugin.
@@ -140,8 +140,8 @@ public class UserServiceImpl implements UserService {
 ```
 
 * At the moment we are going to return a hardcoded user.
-* `@Service` tells Spring: "Here is an implementation of `UserService`"
-* `@Override` indicates that the method `public List<User> getUsers()` fulfills the interface’s "contract"
+* `@Service` tells Spring: "Here is an implementation of `UserService`".
+* `@Override` indicates that the method `public List<User> getUsers()` fulfills the interface’s "contract".
 
 ## Step 4: Create The UserController
 
@@ -169,7 +169,7 @@ public class UserController {
 }
 ```
 
-Notice that we declare the interface UserService, and not the implementation UserServiceImpl.
+Notice that we declare the interface `UserService`, and not the implementation `UserServiceImpl`.
 
 * The Controller doesn’t care how `UserService` works—it just wants the users list.
 * Spring Boot will look for implementations of `UserService`, will find only one (`UserServiceImpl.java`), and will call the `getUsers()` method.
