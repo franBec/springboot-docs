@@ -31,7 +31,7 @@ In this snippet, the code directly invokes the GET request and processes the ret
 
 ## FeignClient: Declarative Approach
 
-FeignClient, on the other hand, embraces a declarative style. Instead of writing all the request-handling code manually, you define an interface annotated with details about the HTTP endpoints. Spring Cloud then automatically creates an implementation of that interface at runtime. This leads to cleaner, more maintainable code—especially as the number of external calls grows.
+FeignClient, on the other hand, embraces a declarative style. Instead of writing all the request-handling code manually, you define an interface annotated with details about the HTTP endpoints. Spring then automatically creates an implementation of that interface at runtime. This leads to cleaner, more maintainable code—especially as the number of external calls grows.
 
 ```java
 @FeignClient(name = "exampleClient", url = "https://api.example.com")
