@@ -2,11 +2,11 @@
 sidebar_position: 5
 ---
 
-# Configure The Generated Feign Client API
+# Configura el API Client Feign Generado
 
-## 1. Create A New Exception
+## 1. Crea una Nueva Excepción
 
-In `src/main/java/dev/pollito/users_manager/exception`, create `JsonPlaceholderException.java`.
+En `src/main/java/dev/pollito/users_manager/exception`, creá `JsonPlaceholderException.java`.
 
 ```java
 package exception;
@@ -21,47 +21,47 @@ public class JsonPlaceholderException extends RuntimeException {
 }
 ```
 
-There’s no need to create fields in the class, it could be empty. But here are some things that can be helpful down the road:
+No es necesario crear campos adicionales en la clase; podría estar vacía. Pero acá te dejo algunas cosas que pueden ser útiles más adelante:
 
-* **Status**: Useful when handling the exception, to do different logic based on the status of the response.
-* **An error class**:
-  * If the outside source you are integrating has a defined error structure (or even multiple), you can define it as a `Schema` in the OpenAPI specification `yaml` file, so then when building you’ll have a Java class representing that error structure.
-  * Use it when throwing the exception to map the error structure into a Java class.
+* **Status**: Sirve para manejar la excepción, para aplicar distintas lógicas basadas en el status de la respuesta.
+* **Una clase de error**:
+  * Si la fuente externa que estás integrando tiene una estructura de error definida (o incluso varias), podés definirla como un `Schema` en el archivo `yaml` de la especificación OpenAPI, para que al compilar tengas una clase Java que represente esa estructura de error.
+  * Usala cuando lancés la excepción para mapear la estructura de error en una clase Java.
 
-## 2. Handle The New Created Exception
+## 2. Maneja la Nueva Excepción Creada
 
-### What NOT To Do
+### Lo que NO se debe hacer
 
-Unless you have business logic that implies you have to do something when the REST API call fails (or another very good reason), **always let the Exception propagate**.
+A menos que tengas lógica de negocio que implique que debés hacer algo cuando falla la llamada al API REST (o alguna otra razón muy importante), **siempre dejá que la excepción se propague**.
 
-Don’t do this:
+No hagas esto:
 
 ```java
 SomeObject foo(){
   try{
-    //business code
+    //código de negocio
     Something something = someClient.getSomething();
-    //more business code and eventually return SomeObject
+    //más código de negocio y eventualmente retorna SomeObject
   }catch(Exception e){
     return null;
   }
 }
 ```
 
-For more info on why that is bad, I recommend this article on [Fast Fail exception handling](https://medium.com/@qbyteconsulting/fast-fail-exception-handling-9bba83f7cce7).
+Para más info sobre por qué eso es malo, recomiendo este artículo sobre [manejo de excepciones Fast Fail](https://medium.com/@qbyteconsulting/fast-fail-exception-handling-9bba83f7cce7).
 
-### What To Do
+### Lo que se debe hacer
 
-Let the `@RestControllerAdvice` class take care of the propagated exception.
+Dejá que la clase `@RestControllerAdvice` se encargue de manejar la excepción propagada.
 
-Once here you have two options:
+En este punto, tenés dos opciones:
 
-1. If you don’t care at all and is ok for it to be a `500 INTERNAL ERROR`, then do nothing.
-2. If you do care, handle the `Exception`.
+1. Si no te importa y está bien que sea un `500 INTERNAL ERROR`, no hagas nada.
+2. Si te importa, manejá la `Exception`.
 
-Let’s go for scenario 2.
+Vamos a optar por el escenario 2.
 
-In `src/main/java/dev/pollito/users_manager/controller/advice/ControllerAdvice.java`, add a `@ExceptionHandler(JsonPlaceholderException.class)` handler.
+En `src/main/java/dev/pollito/users_manager/controller/advice/ControllerAdvice.java`, agregá un manejador `@ExceptionHandler(JsonPlaceholderException.class)`.
 
 ```java
 package dev.pollito.users_manager.controller.advice;
@@ -125,9 +125,9 @@ public class ControllerAdvice {
 }
 ```
 
-## 3. Create an Error Decoder implementation
+## 3. Crea una Implementación de Error Decoder
 
-In `src/main/java/dev/pollito/users_manager/errordecoder`, create `JsonPlaceholderErrorDecoder.java`.
+En `src/main/java/dev/pollito/users_manager/errordecoder`, creá `JsonPlaceholderErrorDecoder.java`.
 
 ```java
 package dev.pollito.users_manager.errordecoder;
@@ -145,9 +145,9 @@ public class JsonPlaceholderErrorDecoder implements ErrorDecoder {
 }
 ```
 
-Here **you can get as creative as your business logic needs**.
+Acá **podés ser tan creativo como lo requiera la lógica de tu negocio**.
 
-Here is an example of how would it look a more complex Error Decoder implementation: The error that you get from the REST API call gets mapped into an error class that is part of an exception, so it can be used somewhere else (most probably a `@RestControllerAdvice` class).
+Acá tenés un ejemplo de cómo se vería una implementación de Error Decoder más compleja: el error que obtenés de la llamada al API REST se mapea en una clase de error que es parte de una excepción, para que pueda usarse en otro lugar (probablemente en una clase `@RestControllerAdvice`).
 
 ```java
 package dev.pollito.users_manager.errordecoder;
@@ -173,11 +173,11 @@ public class JsonPlaceholderErrorDecoder implements ErrorDecoder {
 }
 ```
 
-## 4. Add The URL Value In application.yml
+## 4. Agrega el Valor de la URL en application.yml
 
-If by now you haven’t renamed `src/main/resources/application.properties`, rename it to `src/main/resources/application.yml`.
+Si hasta ahora no renombraste `src/main/resources/application.properties`, renombralo a `src/main/resources/application.yml`.
 
-Then, add the url of the outside source we are integrating. The end result should look something like this:
+Luego, agregá la URL de la fuente externa que estamos integrando. El resultado final debería verse algo así:
 
 ```yaml
 jsonplaceholder:
@@ -187,17 +187,17 @@ spring:
     name: users_manager
 ```
 
-* It is important that the name of the root keys (in this particular example, `jsonplaceholder`) is all **lowercase**.
-  * If not, later you’ll get the error `Prefix must be in canonical form`.
-* Order in this file doesn’t matter. I like to have stuff alphabetically sorted.
+* Es importante que el nombre de las claves raíz (en este ejemplo, `jsonplaceholder`) esté en **minúsculas**.
+  * Si no, más tarde te va a dar el error `Prefix must be in canonical form`.
+* El orden en este archivo no importa. A mí me gusta tener todo ordenado alfabéticamente.
 
-## 5. Create A ConfigurationProperties Class
+## 5. Crea una Clase de ConfigurationProperties
 
-To access the url we defined in `src/main/resources/application.yml`, we are going to use a [ConfigurationProperties](https://www.baeldung.com/configuration-properties-in-spring-boot) class
+Para acceder a la URL que definimos en `src/main/resources/application.yml`, vamos a utilizar una clase [ConfigurationProperties](https://www.baeldung.com/configuration-properties-in-spring-boot).
 
-* For your information, there are more ways to access an externalized configuration property. The most common one I saw everywhere is using [the annotation @Value](https://www.baeldung.com/spring-value-annotation). I don't recommend it much cause later down the road when doing unit testing you would end up using [Reflection](https://stackoverflow.com/questions/2811141/is-it-bad-practice-to-use-reflection-in-unit-testing), which in my personal opinion is bad practice.
+* Para tu información, hay más formas de acceder a una propiedad de configuración externalizada. La más común que veo es usar [la anotación @Value](https://www.baeldung.com/spring-value-annotation). No la recomiendo mucho porque más adelante, al hacer tests unitarios, terminarías usando [Reflection](https://stackoverflow.com/questions/2811141/is-it-bad-practice-to-use-reflection-in-unit-testing), lo cual en mi opinión personal es una mala práctica.
 
-In `src/main/java/dev/pollito/config/properties`, create `JsonPlaceholderConfigProperties.java`.
+En `src/main/java/dev/pollito/config/properties`, creá `JsonPlaceholderConfigProperties.java`.
 
 ```java
 package dev.pollito.users_manager.config.properties;
@@ -214,9 +214,9 @@ public class JsonPlaceholderConfigProperties {
 }
 ```
 
-## 6. Configure The Feign Client
+## 6. Configura el Feign Client
 
-In `src/main/java/dev/pollito/api/config`, create `JsonPlaceholderApiConfig.java`.
+En `src/main/java/dev/pollito/api/config`, creá `JsonPlaceholderApiConfig.java`.
 
 ```java
 package dev.pollito.users_manager.api.config;
@@ -263,18 +263,18 @@ public class JsonPlaceholderApiConfig {
 }
 ```
 
-### Important Considerations
+### Consideraciones Importantes
 
-* `basePackages` should be pointing to the package where the generated Feign API client was generated:
-  * In `build.gradle`, we indicated `apiPackage = "com.typicode.jsonplaceholder.api".toString()`, so `basePackages` value should be `com.typicode.jsonplaceholder.api`.
-* Set the `.errorDecoder` to the `ErrorDecoder` class we created in [3. Create an Error Decoder implementation](/integration-layer/configure-the-generated-feign-client-api#3-create-an-error-decoder-implementation).
-  * The `@Bean` return type, the `.logger Slf4jLogger` class, and the `.target` class should be the desired Feign API client.
+* `basePackages` debe apuntar al paquete donde fue generado el API client Feign:
+  * En `build.gradle`, indicamos `apiPackage = "com.typicode.jsonplaceholder.api".toString()`, así que el valor de `basePackages` debería ser `com.typicode.jsonplaceholder.api`.
+* Configurá el `.errorDecoder` con la clase `ErrorDecoder` que creamos en [3. Crea una implementación de Error Decoder](/integration-layer/configure-the-generated-feign-client-api#3-crea-una-implementación-de-error-decoder).
+  * El tipo de retorno del `@Bean`, la clase `.logger Slf4jLogger`, y la clase en `.target` deben ser el API client Feign deseado.
 
-## 7. Create A New Aspect Pointcut
+## 7. Crea un Nuevo Aspect Pointcut
 
-Back in [Aspect](/optional-but-recommended-features/logs#aspect), we created an Aspect class that automatically logs at certain points in the application. Let's configure it so it also logs whatever goes in and out of the Feign API client.
+Volviendo al [Aspect](/optional-but-recommended-features/logs#aspect), creamos una clase Aspect que loggea automáticamente en ciertos puntos de la aplicación. Vamos a configurarlo para que también loggee todo lo que entra y sale del API client Feign.
 
-To do that, in `src/main/java/dev/pollito/users_manager/aspect/LogAspect.java` we are going to create a new `@Pointcut` that matches the Feign API client, and add it to the `@Before` and `@AfterReturning` methods. The end result should look something like this:
+Para eso, en `src/main/java/dev/pollito/users_manager/aspect/LogAspect.java` vamos a crear un nuevo `@Pointcut` que matchee al API client Feign, y lo agregamos a los métodos `@Before` y `@AfterReturning`. El resultado final debería quedar algo así:
 
 ```java
 package dev.pollito.users_manager.aspect;
@@ -317,7 +317,7 @@ public class LogAspect {
 }
 ```
 
-Commit the progress so far.
+Commiteá el progreso hasta ahora.
 
 ```bash
 git add .
