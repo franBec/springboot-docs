@@ -33,16 +33,14 @@ Congratulations! Your Spring Boot app is up and running – and here’s why thi
 
 **Before Spring Boot**, getting a Java app to listen on a port like 8080 required hours of manual setup:
 
-* Configuring XML files (like web.xml).
-* Deploying WAR files to an external server (e.g., Tomcat).
+* Configuring `XML` files (like `web.xml`).
+* Deploying `WAR` files to an external server (e.g., Tomcat).
 * Writing boilerplate code just to start the server.
 
 **Today, with Spring Boot**:
 
 * The embedded Tomcat server starts automatically.
-* Zero code needed – the main() method does everything.
-* No XML or manual server setup.
+* Zero code needed – the `main()` method does everything.
+* No `XML` or manual server setup.
 
 You just witnessed Spring Boot’s magic: turning what used to be a days-long chore into a 10-second task. And we haven’t even written a single line of our own code yet!
-
-Let’s turn this “error page” into a real app by adding an endpoint.
