@@ -43,7 +43,7 @@ But these conventions solve real problems:
 * **Tooling**: Annotations like `@Repository` enable Spring to auto-handle database exceptions.
 * **Team Alignment**: New hires (or future-you) waste less time deciphering a bespoke structure.
 
-## When To Bend the Rules
+## When to Bend the Rules
 
 * **Small projects might combine layers** (e.g., a `PaymentProcessor` class acting as both service and integration layer).
 * **Non-HTTP apps** (e.g., [batch jobs](https://www.ibm.com/think/topics/batch-jobs)) might skip controllers entirely.

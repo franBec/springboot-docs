@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Let's Write Some Unit Tests
 
-## Create The Test Classes
+## Create the Test Classes
 
 Go to `src/main/java/dev/pollito/users_manager/controller/UserController.java`, and do `ctrl+intro` on the name of the class. On the pop-up menu, select Create test.
 
@@ -30,7 +30,7 @@ Repeat this process for `src/main/java/dev/pollito/users_manager/controller/advi
   <img src={require('@site/static/img/unit-testing/test-directory.png').default} alt="test directory" />
 </div>
 
-## Write The Tests
+## Write the Tests
 
 There's not one correct way of writing unit tests. Here are the ones I did:
 

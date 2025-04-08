@@ -6,7 +6,7 @@ sidebar_position: 2
 
 Imagine you have a database table, like a spreadsheet used to keep track of `Products`. Each row in this spreadsheet is a specific product, and the columns represent its details (like `ProductID`, `Name`, `Price`, `Description`).
 
-## What is an Entity Class?
+## What Is an Entity Class?
 
 An **Entity** class serves as a **Java representation of a single row** within a database table
 

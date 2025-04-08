@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# About The Author
+# About the Author
 
 ## Franco Exequiel Becvort
 
@@ -42,6 +42,6 @@ This passion for education is also the foundation of my programming blog. There,
 
 These documents represent my accumulated knowledge and experience with Spring Boot development - everything I wish someone had told me when I started my journey.
 
-### Connect With Me
+### Connect with Me
 
 Feel free to reach out through [LinkedIn](https://www.linkedin.com/in/franco-becvort/) or check out my other technical content at [pollito.dev](https://pollito.dev/).

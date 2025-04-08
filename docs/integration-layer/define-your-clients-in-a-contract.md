@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Define Your Clients In A Contract
+# Define Your Clients in a Contract
 
 Back in [Contract-Driven Development](/category/contract-driven-development), we used an OpenAPI specification to define the expected behaviour of our Spring Boot application when **providing** endpoints to whoever decides to use our app.
 

@@ -2,7 +2,7 @@
 sidebar_position: 8
 ---
 
-# Filtering And Pagination
+# Filtering and Pagination
 
 [Pagination](https://www.merge.dev/blog/rest-api-pagination) is a pattern that breaks large datasets into manageable chunks, controlling:
 
@@ -19,7 +19,7 @@ Why are we doing pagination when the current set of users is small (only 10 user
 3. **Enables agile data access**: Prepares for potential UI features like dynamic table sorting.
 4. **Reduces technical debt**: Avoids costly refactoring when data outgrows memory-load approaches.
 
-## Implementing Filtering And Pagination
+## Implementing Filtering and Pagination
 
 In `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`, let's implement features such as:
 

@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Tips And Tricks
+# Tips and Tricks
 
 ## Testing Frameworks
 
@@ -52,7 +52,7 @@ void withdrawReducesBalance() {
 
 You can use comments to separate sections or simply structure your code in this order. Some teams even use descriptive method names that follow this pattern.
 
-## Common Structure Of A JUnit 5 Test With Mockito
+## Common Structure of a JUnit 5 Test with Mockito
 
 A well-structured test class follows these conventions:
 

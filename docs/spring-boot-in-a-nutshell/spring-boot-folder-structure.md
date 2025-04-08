@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Spring Boot Folder Structure
 
-## Packages & The Main Class Rule
+## Packages & the main Class Rule
 Packages are Java’s way of grouping related classes (like folders).
 
 **Critical Rule**: Your main class (annotated with `@SpringBootApplication`) defines the root package.
@@ -81,7 +81,7 @@ src/main/java/com.your.app
 * **Pros**: All code for a feature lives in one place. Scales better. Encourages modularity.
 * **Cons**: Risk of duplicating common logic (e.g., shared utilities).
 
-### Hybrid Approach (Mix both)
+### Hybrid Approach (Mix Both)
 
 ```log
 src/main/java/com.your.app  

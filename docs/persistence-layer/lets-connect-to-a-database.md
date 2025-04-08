@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Let's Connect To A Database
+# Let's Connect to a Database
 
 Instead of getting the users data from an outside source, we are going to get it from an in-memory database.
 
@@ -15,7 +15,7 @@ runtimeOnly 'com.h2database:h2:2.3.232'
 implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 ```
 
-## Add A PropertyReferenceException Handler
+## Add a PropertyReferenceException Handler
 
 The dependency [Spring Boot Starter Data JPA](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa) give us access to handle `PropertyReferenceException`.
 
@@ -170,7 +170,7 @@ Even though there is a way to generate these entities classes in the Java/JPA/Sp
 
 Relying purely on automated entity generation **is not recommended due to lower reliability**.
 
-### Create The Entities
+### Create the Entities
 
 - In `src/main/java/dev/pollito/users_manager/entity`, create `Company.java`.
 
@@ -500,7 +500,7 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
 ```
 
-## Create A JpaRepository
+## Create a JpaRepository
 
 In `src/main/java/dev/pollito/users_manager/repository`, create `UserRepository.java`.
 
@@ -525,14 +525,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 }
 ```
 
-### What is the @Query annotation?
+### What Is the @Query Annotation?
 
 Sometimes, you need a more specific or complex search than what `JpaRepository` can figure out from just a method name.
 
 * The `@Query` annotation is like giving your assistant very specific, custom instructions written in a database-like language ([JPQL](https://www.baeldung.com/spring-data-jpa-query), which looks a lot like SQL).
 * You're telling Spring exactly how you want it to find the data, rather than letting it guess.
 
-### What does this method findAllByQueryContainingIgnoreCase do?
+### What Does This Method FindAllByQueryContainingIgnoreCase Do?
 
 * You give it two things:
   * `pageRequest`: Tells it which page of results you want and how many results per page. (More on Page below).
@@ -544,7 +544,7 @@ Sometimes, you need a more specific or complex search than what `JpaRepository` 
 * If you don't provide a search keyword (q is null or empty), it will just return all users (matching the `:q IS NULL` part).
 * Finally, it returns the found users, organized into the requested page.
 
-### What is Page?
+### What Is Page?
 
 Think of `Page` like a single page of search results on Google or Amazon. It doesn't contain all possible results, just a smaller chunk (e.g., 20 users).
 
@@ -580,7 +580,7 @@ public interface UserMapper {
 }
 ```
 
-## Create A Utility Class For Mapping Request Query Param Logic Into Page Logic
+## Create a Utility Class for Mapping Request Query Param Logic into Page Logic
 
 In `src/main/java/dev/pollito/users_manager/util`, create `PageUtil.java`.
 
