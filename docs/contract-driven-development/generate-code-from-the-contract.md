@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Generate Code From The Contract
+# Generate Code from the Contract
 
 If we were to write by hand these two endpoints and the needed Models (called Schemas in the OpenAPI Specification) it may not be that complicated. But imagine if it was a big project, with a few dozen endpoints and close to a hundred schemas…
 

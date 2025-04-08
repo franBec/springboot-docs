@@ -32,7 +32,7 @@ When the frontend tries to make an API call (like fetching user data), the brows
 
 **What about Backend-to-Backend calls?** Generally, CORS is a *browser*-enforced security mechanism. Server-to-server communication (e.g., one microservice calling another) typically does *not* involve CORS checks, as browsers aren't involved in mediating those requests.
 
-## Configuring CORS in Spring Boot (The Recommended Way)
+## Configuring CORS in Spring Boot (the Recommended Way)
 
 Spring Boot makes handling CORS relatively straightforward. While you *could* hardcode CORS settings directly in your Java code, a much better and more flexible approach is to **externalize the configuration into your `application.yml`** (or `application.properties`).
 

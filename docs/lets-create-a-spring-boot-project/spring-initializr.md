@@ -26,7 +26,7 @@ Think of these as your project’s managers. They:
 | Flexibility   | Strict, standardized conventions.    | Highly customizable (supports logic like if-else). |
 | Use Cases     | Legacy or enterprise Java projects.  | Android apps, modern Java/Kotlin projects.         |
 
-### Which One To Choose?
+### Which One to Choose?
 
 <div>
   <img src={require('@site/static/img/lets-create-a-spring-boot-project/maven-gradle-decision-tree.png').default} alt="maven gradle decision tree" />

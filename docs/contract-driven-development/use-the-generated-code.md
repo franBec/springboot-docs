@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-# Use The Generated Code
+# Use the Generated Code
 
-## Delete The Model We Previously Wrote
+## Delete the Model We Previously Wrote
 
 If we go to `src/main/java/dev/pollito/users_manager/model/User.java`, we will find the following error:
 
@@ -16,7 +16,7 @@ That is because the openapi-generator plugin already created a `User` class at t
 
 * **We want to use the generated class instead**, so delete the class (and the whole `model` package) we created by hand.
 
-## Implement The Generated API Interface
+## Implement the Generated API Interface
 
 Right now the `controller` looks like this:
 
@@ -213,7 +213,7 @@ Right-click the main class → Run. Then go to [http://localhost:8080/users](htt
   <img src={require('@site/static/img/contract-driven-development/response.png').default} alt="response" />
 </div>
 
-## Add A ConstraintViolationException Handler
+## Add a ConstraintViolationException Handler
 
 Back in [Generate Code From The Contract](/contract-driven-development/generate-code-from-the-contract) we added the dependency [Swagger Core Jakarta](https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core-jakarta). That give us access to handle `ConstraintViolationException`.
 
@@ -283,7 +283,7 @@ Right-click the main class → Run. Then go to a URL with an invalid query param
   <img src={require('@site/static/img/contract-driven-development/ConstraintViolationException.png').default} alt="ConstraintViolationException" />
 </div>
 
-### Why Is Detail Message In Spanish
+### Why Is Detail Message in Spanish
 
 Spring Boot automatically uses the Accept-Language header from the HTTP request to determine the response language. If your browser sends `Accept-Language: es` (my case here), Spring's exception messages (e.g., validation errors) are localized to Spanish using message bundles.
 

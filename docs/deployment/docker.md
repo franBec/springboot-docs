@@ -50,7 +50,7 @@ Spring Boot applications are perfect candidates for Docker containers for severa
 9. **Simplifies team collaboration**.
    * Developers and DevOps teams can use the same Docker image to ensure that everyone is working with identical application setups.
 
-## Dockerfile For Spring Boot
+## Dockerfile for Spring Boot
 
 A `Dockerfile` defines how your Spring Boot application should be containerized. Here's my own implementation:
 
@@ -70,7 +70,7 @@ ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 Nonetheless, if you are joining a team that already have their own `Dockerfile` defined, is best to avoid modifications unless necessary.
 
-### Understanding The Multi-Stage Build
+### Understanding the Multi-Stage Build
 
 This `Dockerfile` uses what's called a [multi-stage build](https://docs.docker.com/build/building/multi-stage/):
 
@@ -88,7 +88,7 @@ This `Dockerfile` uses what's called a [multi-stage build](https://docs.docker.c
 3. We copy just the final `JAR` file from the build stage.
 4. We set up the command to run our application.
 
-### Benefits Of This Approach
+### Benefits of This Approach
 
 This two-stage approach provides several advantages:
 
@@ -97,7 +97,7 @@ This two-stage approach provides several advantages:
 * **Faster deployments**: Smaller images deploy more quickly.
 * **Cleaner separation**: Build concerns are separated from runtime concerns.
 
-## Now I Should Build The Container Right?
+## Now I Should Build the Container Right?
 
 <div>
   <img src={require('@site/static/img/deployment/well-yes-but-no.png').default} alt="well yes but no" />

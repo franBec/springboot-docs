@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# What Is A Web Client?
+# What Is a Web Client?
 
 Let’s check once more the [Spring Boot Layers](/spring-boot-in-a-nutshell/spring-boot-layers) diagram and focus in the **Integration Layer** (yellow box lower right):
 

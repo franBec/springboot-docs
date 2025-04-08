@@ -58,15 +58,15 @@ The two tasks you'll actually use are **build** (compile + test + package into J
 
 We’ll skip Maven specifics here, but if you’ve heard terms like `mvn clean install`—it’s the same circus, different clowns (Gradle just calls the tricks ‘tasks’ instead).
 
-## Interfaces And Implementations
+## Interfaces and Implementations
 
 Let’s split this into two parts: the **interface** (the "what") and the **implementation** (the "how").
 
-### What’s An Interface?
+### What’s an Interface?
 
 Think of an interface as a menu at a restaurant. It lists what dishes are available (methods), but not how they’re cooked.
 
-### What’s An Implementation?
+### What’s an Implementation?
 
 If the interface is the restaurant menu, the implementation is the kitchen actually cooking your order. It’s the grunt work – the Java class that does what the interface promised.
 
@@ -149,7 +149,7 @@ public class CheckoutController {
 * **Immutable** – Can’t accidentally swap your database for a toaster mid-request.
 * **Testing-friendly** – No Spring magic needed in unit tests.
 
-### Constructor Injection With Lombok
+### Constructor Injection with Lombok
 
 WIth Lombok, Constructor Injection is even simplified (and this is my recommended approach):
 

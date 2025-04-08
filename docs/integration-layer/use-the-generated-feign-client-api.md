@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# Use The Generated Feign Client API
+# Use the Generated Feign Client API
 
 In `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`, inject the generated `UserApi` and make a rough implementation. So far the code should look something like this:
 
@@ -62,7 +62,7 @@ When checking those files, you realize they are basically are very similar:
 
 So indeed they are not the same class, but why has to be this way? What can we do now?
 
-## Keep The API Integration Layer Distinct From The Controller Layer
+## Keep the API Integration Layer Distinct from the Controller Layer
 
 Let’s imagine that we are not using the [openapi-generator plugin](https://github.com/OpenAPITools/openapi-generator), and instead we are writing our own DTOs by hand. Here’s a list of reasons why using the same class for both mapping the Feign Client API response and `@RestController` return is a bad idea:
 
@@ -74,7 +74,7 @@ Let’s imagine that we are not using the [openapi-generator plugin](https://git
 
 By having separate DTOs, the codebase becomes easier to test and maintain. Changes to external services won’t directly affect your core application’s functionality.
 
-## Mapstruct
+## MapStruct
 
 Imagine a big project with few dozens APIs, and hundreds of Schemas -> DTO conversions... Doing this manually can quickly create much boilerplate code and consume a lot of time. Luckily for us, there are multiple object mapping frameworks for Java.
 

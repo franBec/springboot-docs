@@ -4,7 +4,7 @@ sidebar_position: 1
 
 import YouTube from '@site/src/components/YouTube';
 
-# Working in Big Tech is Bad
+# Working in Big Tech Is Bad
 
 ## Over-Planning
 

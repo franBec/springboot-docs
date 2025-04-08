@@ -10,7 +10,7 @@ Getting your Spring Boot application running reliably for your users is the fina
 
 ## Deployment Methods
 
-### The "Old School" Manual Way (And Why It's Risky)
+### The "Old School" Manual Way (and Why It's Risky)
 
 At my first job, deploying our Spring Boot application (packaged as a `WAR` file) was a tense, manual ritual:
 
@@ -63,7 +63,7 @@ Pushing a new version live instantly to all users, even after testing, carries r
 
 This technique (often part of [Blue-Green](https://www.redhat.com/en/topics/devops/what-is-blue-green-deployment) or [Canary](https://www.jetbrains.com/teamcity/ci-cd-guide/concepts/canary-release/) deployment strategies) significantly reduces the risk of failed deployments impacting users and allows for zero-downtime releases.
 
-## Recommendation For Personal/PoC Projects: PaaS Free Tiers
+## Recommendation for Personal/PoC Projects: PaaS Free Tiers
 
 Setting up a full CI/CD pipeline is overkill for personal projects, proof-of-concepts (PoCs), or small demos. For these scenarios, Platform-as-a-Service (PaaS) providers offer excellent free tiers.
 

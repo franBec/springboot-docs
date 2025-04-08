@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Let’s Talk About IDEs
+# Let’s Talk about IDEs
 
 Technically, you could write Spring Boot apps in Notepad and compile them manually via the command line—but that’s like building a house with a screwdriver.
 
@@ -32,7 +32,7 @@ What About Other IDEs?
 
 My personal recommendation: download [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) (not sponsored, sadly).
 
-## Optimizing IntelliJ IDEA With Plugins
+## Optimizing IntelliJ IDEA with Plugins
 
 Before coding, let’s remove some IDE clutter and distractions.
 

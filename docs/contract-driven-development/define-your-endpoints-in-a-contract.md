@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Define Your Endpoints In a Contract
+# Define Your Endpoints in a Contract
 
 Given a User with the following structure:
 

@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Understanding The Generated Code
+# Understanding the Generated Code
 
 Let’s briefly explore what the [openapi-generator plugin](https://github.com/OpenAPITools/openapi-generator) produced and why it looks so verbose.
 

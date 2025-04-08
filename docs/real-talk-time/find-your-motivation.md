@@ -23,7 +23,7 @@ While I can't speak from experience, I've seen countless colleagues draw immense
 
 Knowing that people depend on you, seeing them every day, and wanting to provide for them or make them proud can be an incredibly powerful driver. It shifts the focus from abstract corporate goals to tangible, personal responsibility. If this resonates with you, embrace it – it's a valid and profound source of motivation.
 
-## 3. Chase The Thrill of Learning (Knowledge Acquisition)
+## 3. Chase the Thrill of Learning (Knowledge Acquisition)
 
 Software development is a field of perpetual learning. Use this to your advantage! Instead of just learning what's required for your job, carve out a path for things that genuinely interest *you*.
 
@@ -31,14 +31,14 @@ Software development is a field of perpetual learning. Use this to your advantag
 *   **Find Your Path:** Maybe it's cloud, maybe it's a new language (Rust? Go?), perhaps diving deep into databases, or exploring AI. Research potential learning paths or certifications.
 *   **Bonus:** These achievements look great on a CV, providing both intrinsic (knowledge) and extrinsic (career boost) rewards.
 
-## 4. Become The Teacher (Knowledge Sharing)
+## 4. Become the Teacher (Knowledge Sharing)
 
 Discovering something new is exciting. Helping someone *else* discover it can be even more rewarding.
 
 *   **Share What You Learn:** I started my blog, [pollito.dev](https://pollito.dev/), back in October 2022, primarily as a way to flesh out a somewhat empty-looking CV. I simply wrote about things I was learning or figuring out, aiming to create content I wished existed when *I* was stuck.
 *   **Unexpected Passion:** To my surprise, blogging became one of my biggest motivators. Explaining concepts forces you to understand them deeply. Getting feedback (even just knowing someone read it) is incredibly encouraging. You might have a hidden talent for teaching, writing, or simplifying complex topics that you haven't discovered yet. Start small – a blog post, a short internal presentation, helping a junior dev.
 
-## 5. Nobody Knows What Their Doing 
+## 5. Nobody Knows What They're Doing 
 
 <YouTube id="A3IQj0LCocA" />
 

@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Understanding The Generated Feign Client API
+# Understanding the Generated Feign Client API
 
 The [openapi-generator plugin](https://github.com/OpenAPITools/openapi-generator) produced a structured Java implementation containing:
 
@@ -47,6 +47,6 @@ Choose between default HTTP client or alternatives like OkHttp for better connec
 - Specifies base URL and client interface type
 - Can be customized for environment-specific endpoints (dev/staging/prod)
 
-## About interceptors
+## About Interceptors
 
 We are not going to focus on interceptors at the moment, but is good to know they exist. They can be used for implementing [retry mechanism](https://www.baeldung.com/feign-retry) and [security headers](https://medium.com/@babalolaopedaniel/how-to-use-feign-client-with-interceptors-for-authentication-in-a-spring-boot-application-71d46ba89c06).

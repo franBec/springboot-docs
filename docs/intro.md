@@ -27,13 +27,13 @@ This document is everything I wish someone had answered me. If you:
 
 You will notice that sometimes I put external link references. Feel free to check them to get a more in depth explanation of that specific concept, but be careful of not going into [information overload](https://www.interaction-design.org/literature/article/information-overload-why-it-matters-and-how-to-combat-it).
 
-## Do I Need To Master All Of Spring?
+## Do I Need to Master All of Spring?
 
 Short answer: **No**.
 
 [Spring Framework](https://spring.io/projects/spring-framework) is like a sprawling toolkit with 20 different hammers. Spring Boot, however, hands you the right hammer for the job upfront. You don’t need to memorize every annotation or XML configuration. Most projects require just a fraction of Spring’s features, and Boot’s “starter” dependencies and autoconfiguration do the heavy lifting. Think of it as coding with training wheels—except the training wheels also write half your [boilerplate](https://aws.amazon.com/what-is/boilerplate-code/).
 
-## Is It Even Worth Learning In 2025?
+## Is It Even Worth Learning in 2025?
 
 According to the [2024 Stack Overflow Developer Survey](https://survey.stackoverflow.co/2024/technology#most-popular-technologies-webframe), Spring Boot sits at 12.7% adoption, trailing behind giants like [Express.js](https://expressjs.com/) (17.8%) and [ASP.NET Core](http://ASP.NET) (16.9%). Does this mean it’s outdated? Absolutely not. Here’s why it’s still a powerhouse:
 
@@ -41,7 +41,7 @@ According to the [2024 Stack Overflow Developer Survey](https://survey.stackover
 * **Java’s staying power**: With 30+ years of dominance, Java isn’t disappearing—and Spring Boot is its modern, opinionated soulmate.
 * **Scalability**: Need to handle 10 users or 10 million? Spring Boot scales without breaking a sweat.
 
-## But What About AI Taking Over?
+## But What about AI Taking Over?
 
 AI won’t replace developers – but it will amplify the value of those who understand messy human realities. Here’s why Spring Boot engineers will thrive in the AI era.
 

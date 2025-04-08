@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# What To Test?
+# What to Test?
 
 ## Finding the Right Balance
 
