@@ -48,7 +48,7 @@ Spring Boot makes handling CORS relatively straightforward. While you *could* ha
 
    * `allowed-origins`: Lists the exact addresses (origins) of your frontend applications that are permitted.
    * `allowed-methods`: Specifies which HTTP actions (GET, POST, etc.) are allowed from these origins.
-   * `allowed-headers`: Defines which custom HTTP headers the frontend is allowed to include in its requests. * means allow any.
+   * `allowed-headers`: Defines which custom HTTP headers the frontend is allowed to include in its requests. `*` means allow any.
    * `allowed-credentials`: Allows cookies (or other user credentials) to be included on cross-origin requests.
 
 2. Create a `@Configuration` class that reads these properties. In `src/main/java/dev/pollito/users_manager/config/properties`, create `CorsConfigProperties.java`.
