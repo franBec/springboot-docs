@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-# Normaliza los Errores Devueltos
+# Normaliza los errores devueltos
 
-## La Consistencia Es Importante
+## La consistencia es importante
 
 Una de las cosas más frustrantes al consumir un microservicio es que los errores que devuelve no son consistentes. En el trabajo, he visto varios escenarios como:
 
@@ -84,7 +84,7 @@ Si visitamos una URI que no exista (como [http://localhost:8080](http://localhos
   <img src={require('@site/static/img/optional-but-recommended-features/standarized-error.png').default} alt="standarized error" />
 </div>
 
-## Agregando Más Handlers
+## Agregando más handlers
 
 En este momento, capaz estés pensando
 
@@ -140,7 +140,7 @@ Ahora, al solicitar [http://localhost:8080](http://localhost:8080) obtendremos e
   <img src={require('@site/static/img/optional-but-recommended-features/expected404.png').default} alt="expected 404" />
 </div>
 
-## Handlers Comunes Que Podrías Necesitar
+## Handlers comunes que podrías necesitar
 
 Acá te dejo algunas excepciones comunes que quizá quieras manejar:
 

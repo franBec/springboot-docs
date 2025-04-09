@@ -2,15 +2,17 @@
 sidebar_position: 1
 ---
 
-# Introducción: ¿Por qué Spring Boot?
+# Introducción: ¿por qué Spring Boot?
 
 _Ok, estás pensando en el desarrollo backend y ya te andan hablando de Spring Boot. Pero claro, también tienes tus dudas…_
 
-## ¿Para Quién es Esta Guía?
+## ¿Para quién es esta guía?
 
 El 21 de junio de 2022, escribí en el grupo de WhatsApp de la universidad:
 
-![WhatsAppImage2025-02-27.jpeg](/img/WhatsAppImage2025-02-27.jpeg)
+<div className="">
+  <img src={require('@site/static/img/WhatsAppImage2025-02-27.jpeg').default} alt="WhatsAppImage2025-02-27" />
+</div>
 
 Incluso cometí un typo, lol.
 
@@ -24,13 +26,13 @@ Este documento es todo lo que me hubiera gustado que alguien me dijera. Si tú:
 
 Vas a notar que a veces dejo links externos. No dudes en consultarlos para entender a fondo ese concepto en particular, pero ojo con caer en [una sobrecarga de información](https://www.interaction-design.org/literature/article/information-overload-why-it-matters-and-how-to-combat-it).
 
-## ¿Tengo que dominar Todo Spring?
+## ¿Tengo que dominar todo Spring?
 
 Respuesta corta: **No**.
 
 [Spring Framework](https://spring.io/projects/spring-framework) es como esa caja de herramientas inmensa que tiene 20 tipos distintos de martillos. Sin embargo, Spring Boot te da el martillo justo que necesitas desde el inicio. No tenés que memorizar cada anotación o configuración en XML. La mayoría de los proyectos solo requieren una fracción de las funciones de Spring, y las dependencias “starter” y la autoconfiguración de Boot hacen la chamba pesada por vos. Imaginate programar con rueditas de entrenamiento —excepto que esas rueditas de entrenamiento además te escriben la mitad de tu [código boilerplate](https://aws.amazon.com/what-is/boilerplate-code/).
 
-## ¿Vale la Pena Aprenderlo en 2025?
+## ¿Vale la pena aprenderlo en 2025?
 
 Según la [Encuesta de Desarrolladores de Stack Overflow 2024](https://survey.stackoverflow.co/2024/technology#most-popular-technologies-webframe), Spring Boot se ubica con un 12.7% de adopción, quedándose atrás de gigantes como [Express.js](https://expressjs.com/) (17.8%) y [ASP.NET Core](http://ASP.NET) (16.9%). ¿Eso quiere decir que está pasado de moda? Para nada. Acá te dejo algunas razones de por qué sigue siendo una potencia:
 
@@ -38,11 +40,11 @@ Según la [Encuesta de Desarrolladores de Stack Overflow 2024](https://survey.st
 * **La permanencia de Java**: Con más de 30 años dominando el mercado, Java no va a desaparecer—y Spring Boot es su alma gemela moderna y con opiniones firmes.
 * **Escalabilidad**: ¿Necesitás atender a 10 usuarios o a 10 millones? Spring Boot se adapta sin problemas.
 
-## ¿Y Qué Hay de la IA Dominando Todo?
+## ¿Y qué hay de la IA dominando todo?
 
 La IA no va a reemplazar a los desarrolladores —pero sí va a potenciar a aquellos que entienden lo caótico de la realidad humana. Acá te explico por qué los ingenieros de Spring Boot van a romperla en la era de la IA.
 
-### El Mito de "Requerimientos Claros"
+### El mito de "requerimientos claros"
 
 > **Solicitud del Product Owner**: "Que lo hagas como TikTok pero para reclamos de seguros, y lo necesitamos ayer."
 
@@ -50,7 +52,7 @@ La IA no va a reemplazar a los desarrolladores —pero sí va a potenciar a aque
 
 Hasta que la IA no pueda hacer psicoanálisis a los stakeholders y traducir “dale onda” a specs técnicos, los desarrolladores siguen siendo el pegamento humano entre la ambición y la realidad. Los que conocen Spring Boot no solo escriben código –descifran la jerga corporativa y lo convierten en sistemas mantenibles.
 
-### Deuda Técnica
+### Deuda técnica
 
 La IA es una máquina para escribir código, pero es pésima para asumir las consecuencias.
 
@@ -59,7 +61,7 @@ La IA es una máquina para escribir código, pero es pésima para asumir las con
 
 [La deuda técnica](https://www.productplan.com/glossary/technical-debt/) no es solo código —es una deuda organizacional. Los desarrolladores no son solo programadores; son los que limpian, diseñan la arquitectura y hasta actúan como terapeutas de sistemas que duran más que los roadmaps trimestrales.
 
-### La Ventaja de Spring Boot
+### La ventaja de Spring Boot
 
 La IA brilla en proyectos nuevos y sin historias. ¿El mundo empresarial? Es como un cementerio de:
 

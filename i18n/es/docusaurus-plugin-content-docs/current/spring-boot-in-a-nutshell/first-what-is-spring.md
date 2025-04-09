@@ -4,7 +4,7 @@ sidebar_position: 1
 
 import YouTube from '@site/src/components/YouTube';
 
-# Primero, ¿Qué es Spring?
+# Primero, ¿qué es Spring?
 
 Antes de entender Spring Boot, necesitas conocer a su "pariente": Spring Framework. Spring es un potente framework de aplicaciones de código abierto para Java que simplifica el desarrollo a nivel empresarial. Su filosofía principal se basa en:
 
@@ -18,7 +18,7 @@ Pero con gran poder viene una gran cantidad de configuraciones. Configurar un pr
 
 Aquí es donde Spring Boot entra para salvar el día.
 
-## Cómo Spring Boot Simplifica el Desarrollo
+## Cómo Spring Boot simplifica el desarrollo
 
 Spring Boot no reemplaza a Spring—es una extensión superpotenciada que elimina la chamba tediosa. Así es como te facilita la vida:
 

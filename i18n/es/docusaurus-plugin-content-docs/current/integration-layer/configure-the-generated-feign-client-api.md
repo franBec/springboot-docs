@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-# Configura el API Client Feign Generado
+# Configura el API client Feign generado
 
-## 1. Crea una Nueva Excepción
+## 1. Crea una nueva excepción
 
 En `src/main/java/dev/pollito/users_manager/exception`, creá `JsonPlaceholderException.java`.
 
@@ -28,9 +28,9 @@ No es necesario crear campos adicionales en la clase; podría estar vacía. Pero
   * Si la fuente externa que estás integrando tiene una estructura de error definida (o incluso varias), podés definirla como un `Schema` en el archivo `yaml` de la especificación OpenAPI, para que al compilar tengas una clase Java que represente esa estructura de error.
   * Usala cuando lancés la excepción para mapear la estructura de error en una clase Java.
 
-## 2. Maneja la Nueva Excepción Creada
+## 2. Maneja la nueva excepción creada
 
-### Lo que NO se debe hacer
+### Lo que no se debe hacer
 
 A menos que tengas lógica de negocio que implique que debés hacer algo cuando falla la llamada al API REST (o alguna otra razón muy importante), **siempre dejá que la excepción se propague**.
 
@@ -125,7 +125,7 @@ public class ControllerAdvice {
 }
 ```
 
-## 3. Crea una Implementación de Error Decoder
+## 3. Crea una implementación de error decoder
 
 En `src/main/java/dev/pollito/users_manager/errordecoder`, creá `JsonPlaceholderErrorDecoder.java`.
 
@@ -173,7 +173,7 @@ public class JsonPlaceholderErrorDecoder implements ErrorDecoder {
 }
 ```
 
-## 4. Agrega el Valor de la URL en application.yml
+## 4. Agrega el valor de la URL en application.yml
 
 Si hasta ahora no renombraste `src/main/resources/application.properties`, renombralo a `src/main/resources/application.yml`.
 
@@ -191,7 +191,7 @@ spring:
   * Si no, más tarde te va a dar el error `Prefix must be in canonical form`.
 * El orden en este archivo no importa. A mí me gusta tener todo ordenado alfabéticamente.
 
-## 5. Crea una Clase de ConfigurationProperties
+## 5. Crea una clase de ConfigurationProperties
 
 Para acceder a la URL que definimos en `src/main/resources/application.yml`, vamos a utilizar una clase [ConfigurationProperties](https://www.baeldung.com/configuration-properties-in-spring-boot).
 
@@ -214,7 +214,7 @@ public class JsonPlaceholderConfigProperties {
 }
 ```
 
-## 6. Configura el Feign Client
+## 6. Configura el Feign client
 
 En `src/main/java/dev/pollito/api/config`, creá `JsonPlaceholderApiConfig.java`.
 
@@ -263,14 +263,14 @@ public class JsonPlaceholderApiConfig {
 }
 ```
 
-### Consideraciones Importantes
+### Consideraciones importantes
 
 * `basePackages` debe apuntar al paquete donde fue generado el API client Feign:
   * En `build.gradle`, indicamos `apiPackage = "com.typicode.jsonplaceholder.api".toString()`, así que el valor de `basePackages` debería ser `com.typicode.jsonplaceholder.api`.
 * Configurá el `.errorDecoder` con la clase `ErrorDecoder` que creamos en [3. Crea una implementación de Error Decoder](/integration-layer/configure-the-generated-feign-client-api#3-crea-una-implementación-de-error-decoder).
   * El tipo de retorno del `@Bean`, la clase `.logger Slf4jLogger`, y la clase en `.target` deben ser el API client Feign deseado.
 
-## 7. Crea un Nuevo Aspect Pointcut
+## 7. Crea un nuevo aspect pointcut
 
 Volviendo al [Aspect](/optional-but-recommended-features/logs#aspect), creamos una clase Aspect que loggea automáticamente en ciertos puntos de la aplicación. Vamos a configurarlo para que también loggee todo lo que entra y sale del API client Feign.
 

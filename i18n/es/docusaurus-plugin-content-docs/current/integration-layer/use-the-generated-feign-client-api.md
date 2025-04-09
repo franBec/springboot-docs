@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# Usa el API Client Feign Generado
+# Usa el API client Feign generado
 
 En `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`, inyectá el `UserApi` generado y hacé una implementación aproximada. Hasta ahora el código debería verse más o menos así:
 
@@ -62,7 +62,7 @@ Al revisar esos archivos, te das cuenta de que básicamente son muy parecidos:
 
 En efecto, no son la misma clase, pero ¿por qué tiene que ser así? ¿Qué podemos hacer ahora?
 
-## Mantené Separada la Capa de Integración API de la Capa del Controller
+## Mantené separada la capa de integración API de la capa del controller
 
 Imaginemos que no estuviéramos usando el [openapi-generator plugin](https://github.com/OpenAPITools/openapi-generator), y en su lugar estuviéramos escribiendo nuestros DTOs a mano. Acá te dejo una lista de razones por las que usar la misma clase para mapear la respuesta del Feign Client API y el retorno del `@RestController` es mala idea:
 

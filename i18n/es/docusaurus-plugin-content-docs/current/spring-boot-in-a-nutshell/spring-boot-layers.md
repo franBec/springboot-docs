@@ -22,7 +22,7 @@ El flujo de una petición parte de un `Controller` → `Service`:
 * Si estás buscando datos en una base de datos, entonces `Repository` → `Database`.
 * Si estás buscando datos de una fuente externa, entonces `API Client` → `External API`.
 
-## ¿De Dónde Vienen Estos Nombres?
+## ¿De dónde vienen estos nombres?
 
 Estos nombres de capas (`Controller`, `Service`, `Repository`) vienen de:
 
@@ -33,7 +33,7 @@ Estos nombres de capas (`Controller`, `Service`, `Repository`) vienen de:
   * Las primeras aplicaciones [Java EE](https://www.geeksforgeeks.org/java-enterprise-edition/) usaban capas parecidas (como los DAOs para el acceso a datos), que Spring formalizó con anotaciones como `@Controller`, `@Service`, `@Repository`.
 * **Los nombres no son exclusivos de Spring**: reflejan las mejores prácticas de la industria para lograr un código limpio.
 
-## ¿Es Obligatorio?
+## ¿Es obligatorio?
 
 No. **Spring no impone estos nombres o capas**. Podrías escribir todo en una sola clase llamada `PizzaManager.java` llena de código enredado.
 
@@ -43,13 +43,13 @@ Pero estas convenciones resuelven problemas reales:
 * **Herramientas**: Anotaciones como `@Repository` permiten que Spring maneje automáticamente las excepciones de base de datos.
 * **Alineación del equipo**: Los nuevos integrantes (o tu "yo" del futuro) pierden menos tiempo descifrando una estructura personalizada.
 
-## Cuándo Flexionar las Reglas
+## Cuándo flexionar las reglas
 
 * **Proyectos pequeños pueden combinar capas** (por ejemplo, una clase `PaymentProcessor` que actúa como servicio y como capa de integración).
 * **Aplicaciones que no usan HTTP** (por ejemplo, [trabajos batch](https://www.ibm.com/think/topics/batch-jobs)) pueden omitir completamente los controllers.
 * **Si tu equipo usa otros términos** (por ejemplo, `DataManager` en lugar de `Repository`), lo importante es la consistencia más que el nombre en sí.
 
-## Prácticas y Errores Comunes
+## Prácticas y errores comunes
 
 * **Un servicio por controlador**: Un controlador no debería orquestar 5 servicios. Si lo hace, probablemente tu lógica de negocio está dispersa.
 * **Las capas son opcionales**: ¿No tienes base de datos? Omite la capa de persistencia. ¿No hay APIs externas? Omite la capa de integración. Empieza simple.

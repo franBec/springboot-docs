@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Define tus Clients en un Contrato
+# Define tus clients en un contrato
 
 En [Contract-Driven Development](/category/contract-driven-development) usamos una especificación OpenAPI para definir el comportamiento esperado de nuestra aplicación Spring Boot cuando **provee** endpoints a quien decida usar nuestra app.
 

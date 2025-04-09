@@ -26,13 +26,13 @@ Pensá en estos como los managers de tu proyecto. Ellos:
 | Flexibilidad  | Estricto, con convenciones estandarizadas | Altamente personalizable (soporta lógica tipo `if-else`) |
 | Casos de Uso  | Proyectos Java legados o empresariales    | Apps Android, proyectos modernos en Java/Kotlin          |
 
-### ¿Cuál Elegir?
+### ¿Cuál elegir?
 
 <div>
   <img src={require('@site/static/img/lets-create-a-spring-boot-project/maven-gradle-decision-tree.png').default} alt="maven gradle decision tree" />
 </div>
 
-### Por Qué No Importa
+### Por qué no importa
 
 Ambos van a:
 
@@ -57,7 +57,7 @@ Al seleccionar una versión de Spring Boot te vas a topar con tres tipos de etiq
 
 **Optá siempre por la versión estable más alta** (sin etiquetas SNAPSHOT/M) a menos que necesites características experimentales.
 
-## Metadatos del Proyecto
+## Metadatos del proyecto
 
 La sección de **Metadatos del Proyecto** define la identidad y la estructura de tu proyecto. Acá te explico cada campo y sus convenciones recomendadas:
 

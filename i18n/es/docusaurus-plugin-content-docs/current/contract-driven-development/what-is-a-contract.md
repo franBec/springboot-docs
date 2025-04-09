@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# ¿Qué Es Un Contrato?
+# ¿Qué es un contrato?
 
 En el [artículo de Wikipedia sobre Design by Contract](https://en.wikipedia.org/wiki/Design_by_contract) podemos leer lo siguiente:
 

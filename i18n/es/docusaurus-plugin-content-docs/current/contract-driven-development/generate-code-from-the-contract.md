@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Genera Código a Partir del Contrato
+# Genera código a partir del contrato
 
 Si fuéramos a escribir a mano estos dos endpoints y los modelos necesarios (llamados `Schemas` en la Especificación OpenAPI) puede que no sea tan complicado. Pero imaginate si fuera un proyecto grande, con algunas docenas de endpoints y cerca de un cien de schemas...
 

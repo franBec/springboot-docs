@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-# Usa el Código Generado
+# Usa el código generado
 
-## Borra el Modelo Que Escribimos Anteriormente
+## Borra el modelo que escribimos anteriormente
 
 Si vamos a `src/main/java/dev/pollito/users_manager/model/User.java` vamos a encontrar el siguiente error:
 
@@ -16,7 +16,7 @@ Eso es porque el plugin openapi-generator ya creó una clase `User` en la misma 
 
 * **Queremos usar la clase generada en su lugar**, así que borra la clase (y todo el paquete `model`) que creamos a mano.
 
-## Implementa la Interfaz API Generada
+## Implementa la interfaz api generada
 
 Ahora mismo el `controller` se ve así:
 
@@ -126,7 +126,7 @@ Hacé clic derecho en la clase principal → Run. Luego andá a [http://localhos
 
 Vamos a retornar una lista hardcodeada de usuarios nuevamente.
 
-## Reescribe el Service
+## Reescribe el service
 
 Considerando que el `service` solo retorna un usuario hardcodeado, lo mejor es borrar su contenido y reescribirlo.
 
@@ -213,7 +213,7 @@ Hacé clic derecho en la clase principal → Run. Luego andá a [http://localhos
   <img src={require('@site/static/img/contract-driven-development/response.png').default} alt="response" />
 </div>
 
-## Agrega un Manejador para ConstraintViolationException
+## Agrega un manejador para ConstraintViolationException
 
 En [Generate Code From The Contract](/contract-driven-development/generate-code-from-the-contract) agregamos la dependencia [Swagger Core Jakarta](https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core-jakarta). Eso nos da acceso para manejar `ConstraintViolationException`.
 
@@ -284,7 +284,7 @@ Hacé clic derecho en la clase principal → Run. Luego andá a una URL con un q
   <img src={require('@site/static/img/contract-driven-development/ConstraintViolationException.png').default} alt="ConstraintViolationException" />
 </div>
 
-### ¿Por Qué El Mensaje Detail Está en Español?
+### ¿Por qué el mensaje detail está en español?
 
 Spring Boot utiliza automáticamente el header Accept-Language de la petición HTTP para determinar el idioma de la respuesta. Si tu navegador envía `Accept-Language: es` (como en mi caso), los mensajes de excepción de Spring (por ej., errores de validación) se localizan a español usando bundles de mensajes.
 

@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Genera un API Client Feign A Partir del Contrato
+# Genera un API client Feign a partir del contrato
 
 1. Vamos a usar [FeignClient](https://docs.spring.io/spring-cloud-openfeign/docs/current/reference/html/). Necesitamos las dependencias [Spring Cloud Starter OpenFeign](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign), [Feign OkHttp](https://mvnrepository.com/artifact/io.github.openfeign/feign-okhttp), [Feign Jackson](https://mvnrepository.com/artifact/io.github.openfeign/feign-jackson), y [Feign Gson](https://mvnrepository.com/artifact/io.github.openfeign/feign-gson). En tu `build.gradle`, **agrega las dependencias** en la sección de `dependencies`:
 

@@ -2,7 +2,7 @@
 sidebar_position: 8
 ---
 
-# Filtrado y Paginación
+# Filtrado y paginación
 
 [La paginación](https://www.merge.dev/blog/rest-api-pagination) es un patrón que divide grandes conjuntos de datos en porciones manejables, controlando:
 
@@ -10,7 +10,7 @@ sidebar_position: 8
 - **Eficiencia de la respuesta**: Reduce el tamaño de la carga útil para transferencias de red más rápidas.
 - **Experiencia del usuario**: Permite patrones de navegación de datos predecibles.
 
-## ¿Por Qué Hacer Paginación?
+## ¿Por qué hacer paginación?
 
 ¿Por qué implementamos paginación cuando el conjunto actual de usuarios es pequeño (solo 10 usuarios)?
 
@@ -19,7 +19,7 @@ sidebar_position: 8
 3. **Facilita el acceso ágil a los datos**: Prepara el terreno para posibles funciones de la UI como el ordenamiento dinámico en tablas.
 4. **Reduce la deuda técnica**: Evita refactorizaciones costosas cuando los datos superan los enfoques de carga en memoria.
 
-## Implementando Filtrado y Paginación
+## Implementando filtrado y paginación
 
 En `src/main/java/dev/pollito/users_manager/service/impl/UserServiceImpl.java`, implementemos funcionalidades como:
 

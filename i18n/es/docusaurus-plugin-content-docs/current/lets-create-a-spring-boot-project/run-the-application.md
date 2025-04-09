@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Ejecuta La Aplicación
+# Ejecuta la aplicación
 
 1. **Abrí IntelliJ IDEA** → File → Open → Seleccioná la carpeta del proyecto descomprimido.
 2. **Configuración Inicial del JDK** (si te lo pide):

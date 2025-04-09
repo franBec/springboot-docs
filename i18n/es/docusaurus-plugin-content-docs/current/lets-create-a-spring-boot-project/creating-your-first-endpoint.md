@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Creando Tu Primer Endpoint
+# Creando tu primer endpoint
 
 Finalmente, manos a la obra. Vamos a crear un endpoint simple que retorne un usuario: cuando visitemos [http://localhost:8080/users](http://localhost:8080/users), deberíamos ver algo como esto:
 
@@ -10,7 +10,7 @@ Finalmente, manos a la obra. Vamos a crear un endpoint simple que retorne un usu
   <img src={require('@site/static/img/lets-create-a-spring-boot-project/users.png').default} alt="users" />
 </div>
 
-## Paso 0: Inicializar Git
+## Paso 0: inicializar Git
 
 ```bash
 git init
@@ -18,7 +18,7 @@ git add .
 git commit -m "Initial commit"
 ```
 
-## Paso 1: Agregar un Formateador (Spotless)
+## Paso 1: agregar un formateador (Spotless)
 
 * En tu `build.gradle`, **agrega el plugin** en la sección de plugins (usualmente al inicio del archivo):
 
@@ -62,7 +62,7 @@ git commit -m "Initial commit"
     git commit -m "spotless"
     ```
 
-## Paso 2: Crear el Modelo de Usuario
+## Paso 2: crear el modelo de usuario
 
 Un modelo es un plano para tus datos — define la estructura de la información que maneja tu aplicación. En este caso, un Usuario con id, nombre, username y email.
 
@@ -92,9 +92,9 @@ public class User {
 * **Utilizaremos Lombok para evitar código boilerplate**. Lombok genera de manera automática el código repetitivo de Java en tiempo de compilación.
   * Si tu IDE no tiene instalado el plugin de Lombok, verás errores de compilación. Revisá [Optimizing IntelliJ IDEA With Plugins](/lets-create-a-spring-boot-project/lets-talk-about-ides#optimizando-intellij-idea-con-plugins) para saber cómo agregar el plugin de Lombok.
 
-## Paso 3: Crear el UserService
+## Paso 3: crear el UserService
 
-### Crear la Interfaz
+### Crear la interfaz
 
 En `src/main/java/dev/pollito/users_manager/service`, creá `UserService.java`.
 
@@ -109,7 +109,7 @@ public interface UserService {
 }
 ```
 
-### Crear la Implementación
+### Crear la implementación
 
 En `src/main/java/dev/pollito/users_manager/service/impl`, creá `UserServiceImpl.java`.
 
@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
 * `@Service` le dice a Spring: "Acá tenés una implementación de `UserService`".
 * `@Override` indica que el método `public List<User> getUsers()` cumple con el "contrato" de la interfaz.
 
-## Paso 4: Crear el UserController
+## Paso 4: crear el UserController
 
 En `src/main/java/dev/pollito/users_manager/controller`, creá `UserController.java`.
 
@@ -174,7 +174,7 @@ Notá que declaramos la interfaz `UserService`, y no la implementación `UserSer
 * El Controller no le importa cómo funciona `UserService`—solo quiere la lista de usuarios.
 * Spring Boot buscará implementaciones de `UserService`, encontrará solo una (`UserServiceImpl.java`), y llamará al método `getUsers()`.
 
-## Ejecutá la Aplicación
+## Ejecutá la aplicación
 
 Hacé clic derecho en la clase principal → Run. Luego andá a [http://localhost:8080/users](http://localhost:8080/users).
 

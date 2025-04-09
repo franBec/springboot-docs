@@ -4,7 +4,7 @@ sidebar_position: 4
 
 import YouTube from '@site/src/components/YouTube';
 
-# Algunos Conceptos Importantes Antes de Continuar
+# Algunos conceptos importantes antes de continuar
 
 ## Git
 
@@ -58,26 +58,26 @@ Las dos tareas que realmente vas a usar son **build** (compilar + testear + empa
 
 Nos saltamos los detalles de Maven acá, pero si escuchaste términos como `mvn clean install`—es el mismo circo, distintos payasos (Gradle sólo llama "tareas" a los trucos).
 
-## Interfaces e Implementaciones
+## Interfaces e implementaciones
 
 Dividamos esto en dos partes: la **interfaz** (el "qué") y la **implementación** (el "cómo").
 
-### ¿Qué es una Interfaz?
+### ¿Qué es una interfaz?
 
 Pensá en una interfaz como el menú de un restaurante. Te lista los platos disponibles (métodos), pero no te dice cómo se cocinan.
 
-### ¿Qué es una Implementación?
+### ¿Qué es una implementación?
 
 Si la interfaz es el menú del restaurante, la implementación es la cocina que realmente cocina lo que pediste. Es el trabajo sucio – la clase Java que hace lo que la interfaz prometió.
 
-### ¿Por Qué Es Importante?
+### ¿Por qué es importante?
 
 * **Flexibilidad**: Cambiá implementaciones sin romper el código (por ej., pasar de datos hardcodeados a una base de datos más adelante).
 * **Testing**: Es facilísimo simular (mock) la interfaz para testear otros componentes.
 * **Claridad**: Separa el “qué” del “cómo” para tener un código más limpio. Las implementaciones reales se vuelven un desorden – por eso las escondemos tras interfaces limpias.
 * Spring Boot inyecta automáticamente la "cocina" correcta cuando pedís un "plato" (esto se llama [Inyección de Dependencias](/lets-create-a-spring-boot-project/some-important-concepts#dependency-injection)).
 
-## Inyección de Dependencias
+## Inyección de dependencias
 
 Revisemos una vez más el diagrama de [Capas de Spring Boot](/spring-boot-in-a-nutshell/spring-boot-layers) y pregúntate:
 
@@ -97,7 +97,7 @@ En nuestro diagrama, las dependencias se "leen" de izquierda a derecha:
 
 Fijémonos en el primero: "Un Controller depende de un Service". ¿Cómo lo escribimos? Hay tres formas de hacerlo.
 
-### Inyección por Campo
+### Inyección por campo
 
 ```java
 @RestController
@@ -110,7 +110,7 @@ public class CheckoutController {
 }
 ```
 
-### Inyección por Setter
+### Inyección por setter
 
 ```java
 @RestController
@@ -127,7 +127,7 @@ public class CheckoutController {
 }
 ```
 
-### Inyección por Constructor
+### Inyección por constructor
 
 ```java
 @RestController
@@ -149,7 +149,7 @@ public class CheckoutController {
 * **Inmutable** – No podés cambiar accidentalmente tu base de datos por una tostadora a mitad de una petición.
 * **Facilita las pruebas** – No necesitás magia de Spring en los tests unitarios.
 
-### Inyección por Constructor con Lombok
+### Inyección por constructor con Lombok
 
 Con Lombok, la inyección por constructor se simplifica aun más (y esta es mi opción recomendada):
 

@@ -8,7 +8,7 @@ Técnicamente, podrías escribir apps con Spring Boot en el Notepad y compilarla
 
 Un IDE (Entorno de Desarrollo Integrado) es una herramienta que facilita el codeo, atrapa errores en tiempo real y organiza los archivos para que te puedas concentrar en qué construir en lugar de cómo hacerlo.
 
-## ¿Por Qué Todo el Mundo Usa IntelliJ IDEA?
+## ¿Por qué todo el mundo usa IntelliJ IDEA?
 
 Si alguna vez viste a un colega codear o navegaste por algún tutorial de Spring online, seguro ya te topaste con este logo:
 
@@ -32,11 +32,11 @@ Si alguna vez viste a un colega codear o navegaste por algún tutorial de Spring
 
 Mi recomendación personal: descargá [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) (no es patrocinado, lamentablemente).
 
-## Optimizando IntelliJ IDEA con Plugins
+## Optimizando IntelliJ IDEA con plugins
 
 Antes de ponerte a codear, vamos a quitarle algo de bosta al IDE y eliminar distracciones.
 
-### Desactivá Plugins que No Usás
+### Desactivá plugins que no usás
 
 1. Andá a File → Settings → Plugins (en Windows) o IntelliJ IDEA → Settings → Plugins (en macOS).
 2. En la pestaña Installed, desactivá estos plugins:
@@ -51,7 +51,7 @@ Antes de ponerte a codear, vamos a quitarle algo de bosta al IDE y eliminar dist
 
 **Cómo Desactivarlo**: Apagá el toggle del plugin → Hacé clic en Apply → Reiniciá el IDE si te lo pide.
 
-### Instalá Plugins
+### Instalá plugins
 
 * [Lombok](https://plugins.jetbrains.com/plugin/6317-lombok): soporte para Project Lombok.
 * [CodeComplexity](https://plugins.jetbrains.com/plugin/21667-code-complexity): este plugin calcula la métrica de complejidad del código.

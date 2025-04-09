@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Entendiendo el API Client Feign Generado
+# Entendiendo el API client Feign generado
 
 El [plugin openapi-generator](https://github.com/OpenAPITools/openapi-generator) generó una implementación en Java que contiene:
 
@@ -17,7 +17,7 @@ Si bien este código generado te da una base, no está listo para producción po
 - **Sin personalización del cliente**: Requiere configuración explícita para timeouts, interceptores y logging.
 - **Sin integración con el contexto Spring**: Las interfaces generadas no se registran automáticamente como Beans de Spring.
 
-## Feign Builder
+## Feign builder
 
 El `Feign.Builder` permite personalizar el comportamiento del cliente a través de estos componentes clave:
 

@@ -1,22 +1,22 @@
 {
   "link.title.About": {
-    "message": "About",
+    "message": "Acerca de",
     "description": "The title of the footer links column with title=About in the footer"
   },
   "link.title.Get in touch": {
-    "message": "Get in touch",
+    "message": "Contacto",
     "description": "The title of the footer links column with title=Get in touch in the footer"
   },
   "link.title.Licenses": {
-    "message": "Licenses",
+    "message": "Licencias",
     "description": "The title of the footer links column with title=Licenses in the footer"
   },
   "link.item.label.Author": {
-    "message": "Author",
+    "message": "Autor",
     "description": "The label of footer link with label=Author linking to /about/about-the-author"
   },
   "link.item.label.Special Thanks": {
-    "message": "Special Thanks",
+    "message": "Agradecimientos",
     "description": "The label of footer link with label=Special Thanks linking to /about/special-thanks"
   },
   "link.item.label.Blog": {
@@ -28,11 +28,11 @@
     "description": "The label of footer link with label=LinkedIn linking to https://www.linkedin.com/in/franco-becvort/"
   },
   "link.item.label.Code License": {
-    "message": "Code License",
+    "message": "Licencia de código",
     "description": "The label of footer link with label=Code License linking to /licenses/code-license"
   },
   "link.item.label.Content License": {
-    "message": "Content License",
+    "message": "Licencia de contenido",
     "description": "The label of footer link with label=Content License linking to /licenses/content-license"
   },
   "copyright": {

@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Define tus Endpoints en un Contrato
+# Define tus endpoints en un contrato
 
 Dado un Usuario con la siguiente estructura:
 

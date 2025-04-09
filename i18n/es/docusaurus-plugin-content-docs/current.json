@@ -3,29 +3,29 @@
     "message": "Next",
     "description": "The label for version current"
   },
-  "sidebar.tutorialSidebar.category.Spring Boot In A Nutshell": {
+  "sidebar.tutorialSidebar.category.Spring Boot in a Nutshell": {
     "message": "Spring Boot en pocas palabras",
-    "description": "The label for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
+    "description": "The label for category Spring Boot in a Nutshell in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Spring Boot In A Nutshell.link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.Spring Boot in a Nutshell.link.generated-index.description": {
     "message": "Si alguna vez intentaste hacer un pastel desde cero, sabés que hay que medir la harina, romper huevos y mezclar los ingredientes – ¡todo antes de encender el horno! El desarrollo tradicional en Java puede sentirse igual de tedioso. Ahí viene Spring Boot, la masa ya preparada del mundo del código. Vamos a ver de qué va y por qué a los desarrolladores les encanta.",
-    "description": "The generated-index page description for category Spring Boot In A Nutshell in sidebar tutorialSidebar"
+    "description": "The generated-index page description for category Spring Boot in a Nutshell in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project": {
+  "sidebar.tutorialSidebar.category.Let’s Create a Spring Boot Project": {
     "message": "¡Vamos a crear un proyecto con Spring Boot!",
-    "description": "The label for category Let’s Create A Spring Boot Project in sidebar tutorialSidebar"
+    "description": "The label for category Let’s Create a Spring Boot Project in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Let’s Create A Spring Boot Project.link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.Let’s Create a Spring Boot Project.link.generated-index.description": {
     "message": "Empezar un proyecto Spring Boot es como pedir una pizza: elegís tus ingredientes (dependencias), la masa (configuración) y dejás que el horno (Spring Initializr) se encargue del resto. ¡Todavía no hay que escribir código! Acá te muestro cómo levantar un proyecto en cuestión de segundos.",
-    "description": "The generated-index page description for category Let’s Create A Spring Boot Project in sidebar tutorialSidebar"
+    "description": "The generated-index page description for category Let’s Create a Spring Boot Project in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Optional But Recommended Features": {
+  "sidebar.tutorialSidebar.category.Optional but Recommended Features": {
     "message": "Características opcionales, pero recomendadas",
-    "description": "The label for category Optional But Recommended Features in sidebar tutorialSidebar"
+    "description": "The label for category Optional but Recommended Features in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Optional But Recommended Features.link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.Optional but Recommended Features.link.generated-index.description": {
     "message": "Son cosas que quizás encontrés en algunos proyectos, pero siempre está bueno tenerlas.",
-    "description": "The generated-index page description for category Optional But Recommended Features in sidebar tutorialSidebar"
+    "description": "The generated-index page description for category Optional but Recommended Features in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Contract-Driven Development": {
     "message": "Desarrollo basado en Contratos",
