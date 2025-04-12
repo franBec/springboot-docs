@@ -1,6 +1,6 @@
 {
   "label": "Contract-Driven Development",
-  "position": 5,
+  "position": 6,
   "link": {
     "type": "generated-index",
     "description": "Usually when developing, we make our endpoint first, then we write documentation in an OpenAPI Specification. The problem appears later, when somebody else modifies the endpoint and now the documentation doesn’t reflect it. This can go unnoticed. Worse than no documentation, is wrong documentation. What if we wrote documentation first, and the code is generated from it? Let me introduce you to Contract-Driven Development."

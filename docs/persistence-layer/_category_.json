@@ -1,6 +1,6 @@
 {
   "label": "Persistence Layer",
-  "position": 9,
+  "position": 10,
   "link": {
     "type": "generated-index",
     "description": "Up until now, we have been getting the users data from an outside source. But what if we had the data in our own database?"
