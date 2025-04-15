@@ -8,18 +8,18 @@ You wouldn't build a house without a safety harness. Don't code without [version
 
 ## Version Control Systems
 
-Git commands the VCS market, with SVN being relegated to legacy holdouts.
+Git commands the VCS market, with others being relegated to legacy holdouts.
 
-| System        | Era      | Superpower                   | Flaw                 |
-|---------------|----------|------------------------------|----------------------|
-| **Git**       | Modern   | Distributed, branching magic | Steep learning curve |
-| **SVN**       | 2000s    | Centralized simplicity       | No local commits     |
-| **Mercurial** | Retired  | Easier than Git              | Lost the VCS wars    |
-| **CVS**       | Jurassic | Pioneered versioning         | File-level tracking  |
+| System                                      | Superpower                   | Flaw                 |
+|---------------------------------------------|------------------------------|----------------------|
+| [Git](https://git-scm.com/)                 | Distributed, branching magic | Steep learning curve |
+| [SVN](https://subversion.apache.org/)       | Centralized simplicity       | No local commits     |
+| [Mercurial](https://www.mercurial-scm.org/) | Easier than Git              | Lost the VCS wars    |
+| [CVS](https://cvs.nongnu.org/)              | Pioneered versioning         | File-level tracking  |
 
 ## Hosting Platforms
 
-This is where the code lives
+This is where the code lives.
 
 | Platform                                                         | Preferred by    | Free Private Repos         | Killer Feature                     |
 |------------------------------------------------------------------|-----------------|----------------------------|------------------------------------|

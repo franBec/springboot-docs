@@ -28,18 +28,14 @@ Think of these as your project’s managers. They:
 
 ### Which One to Choose?
 
-<div>
-  <img src={require('@site/static/img/lets-create-a-spring-boot-project/maven-gradle-decision-tree.png').default} alt="maven gradle decision tree" />
-</div>
-
-### Why It Doesn’t Matter
-
-Both will:
-
-* Pull Spring Boot dependencies identically.
-* Create the same executable JAR file.
-
-Debating Maven vs. Gradle is like arguing whether to use a blender or food processor – both make smoothies, just with different buttons. Spring Initializr handles the messy setup either way.
+ ```mermaid
+ graph TD
+   A[Start] --> B{Is it valid?}
+   B -- Yes --> C[Proceed]
+   B -- No --> D[Reevaluate]
+   C --> E[Finish]
+   D --> E[Finish]
+ ```
 
 ## Spring Boot Versions 
 

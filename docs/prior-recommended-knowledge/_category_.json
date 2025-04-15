@@ -3,6 +3,6 @@
   "position": 2,
   "link": {
     "type": "generated-index",
-    "description": "WIP"
+    "description": "Before diving into Spring Boot specifics, let’s address some backend development concepts, tools, and patterns."
   }
 }

@@ -53,8 +53,8 @@ Before coding, let’s remove some IDE clutter and distractions.
 
 ### Install Plugins
 
-* [Lombok](https://plugins.jetbrains.com/plugin/6317-lombok): support for Project Lombok.
+* [Lombok](https://plugins.jetbrains.com/plugin/6317-lombok): support for [Project Lombok](https://projectlombok.org/).
 * [CodeComplexity](https://plugins.jetbrains.com/plugin/21667-code-complexity): This plugin calculates code complexity metric.
-* [OpenAPI (Swagger) Editor](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor): Support for the OpenAPI Specification (OAS) / Swagger specification.
+* [OpenAPI (Swagger) Editor](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor): Support for the [OpenAPI Specification (OAS)](https://swagger.io/specification/).
 
 Click Apply → Restart IntelliJ IDEA when prompted.

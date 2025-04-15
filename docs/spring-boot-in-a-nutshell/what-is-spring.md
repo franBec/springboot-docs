@@ -4,11 +4,11 @@ sidebar_position: 1
 
 import YouTube from '@site/src/components/YouTube';
 
-# First, What Is Spring?
+# What Is Spring?
 
 Before understanding Spring Boot, you need to know its parent: Spring Framework. Spring is a powerful, open-source application framework for Java that simplifies enterprise-level development. Its core philosophy revolves around:
 
-* **Inversion of Control (IoC)**: Let the framework manage object creation and dependencies (via [Dependency injection](/lets-create-a-spring-boot-project/some-important-concepts#dependency-injection)).
+* **Inversion of Control (IoC)**: Let the framework manage object creation and dependencies (via [Dependency injection](/spring-boot-in-a-nutshell/dependency-injection)).
 * **Modularity**: Pick and choose components for your needs.
 * **Flexibility**: Supports everything from microservices to monolithic apps.
 

@@ -6,6 +6,10 @@ sidebar_position: 4
 
 When systems need to talk, they have two fundamental ways to communicate: **synchronously** (waiting for immediate replies) or **asynchronously** (fire-and-forget). Understanding this split will help you debug issues, choose technologies, and explain architectural decisions to your team.
 
+<div>
+  <img src={require('@site/static/img/prior-recommended-knowledge/sync-async-comparison.png').default} alt="sync async comparison" />
+</div>
+
 ## Synchronous
 
 A direct, real-time conversation where the caller waits for an immediate response.
@@ -42,14 +46,14 @@ Async communication via message brokers. Systems toss messages into a "digital m
 
 ## Comparison
 
-| Criteria              | Synchronous                      | Asynchronous                    |
-|-----------------------|----------------------------------|---------------------------------|
-| **Latency**           | Immediate response needed       | Tolerable delay (secs-min)      |
-| **Error Handling**    | Fail fast                       | Retry queues                    |
-| **Coupling**          | Tight (knows receiver)          | Loose (via broker)              |
-| **Scalability**       | Limited by caller               | Independent scaling             |
-| **Complexity**        | Simple to implement             | Complex delivery guarantees     |
-| **Cost**              | Resource-heavy (waiting)        | Efficient (no waiting)          |
+| Criteria           | Synchronous               | Asynchronous                |
+|--------------------|---------------------------|-----------------------------|
+| **Latency**        | Immediate response needed | Tolerable delay (secs-min)  |
+| **Error Handling** | Fail fast                 | Retry queues                |
+| **Coupling**       | Tight (knows receiver)    | Loose (via broker)          |
+| **Scalability**    | Limited by caller         | Independent scaling         |
+| **Complexity**     | Simple to implement       | Complex delivery guarantees |
+| **Cost**           | Resource-heavy (waiting)  | Efficient (no waiting)      |
 
 Most systems you’ll encounter use a mix. Remember:
 

@@ -13,7 +13,7 @@ When diving into software design, you'll often hear about [Clean Architecture](h
 Popularized by [Uncle Bob](https://en.wikipedia.org/wiki/Robert_C._Martin), this pattern organizes code into **four concentric layers**:
 
 <div>
-  <img src={require('@site/static/img/spring-boot-in-a-nutshell/clean-arch.png').default} alt="clean architecture" />
+  <img src={require('@site/static/img/prior-recommended-knowledge/clean-arch.png').default} alt="clean architecture" />
 </div>
 
 1. **Enterprise Business Rules**: Entities representing core business concepts.  
@@ -39,7 +39,7 @@ Popularized by [Uncle Bob](https://en.wikipedia.org/wiki/Robert_C._Martin), this
 Also known as Ports & Adapters, this pattern by [Alistair Cockburn](https://alistair.cockburn.us/) shifts the focus to the interactions between the system and its external actors, organizing responsibilities across two distinct perspectives:
 
 <div>
-  <img src={require('@site/static/img/spring-boot-in-a-nutshell/hexagonal-arch.png').default} alt="hexagonal architecture" />
+  <img src={require('@site/static/img/prior-recommended-knowledge/hexagonal-arch.png').default} alt="hexagonal architecture" />
 </div>
 
 - **Driver Side (Left)**:

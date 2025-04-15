@@ -21,7 +21,7 @@ Think of these as your project’s managers. They:
 | Use Cases     | Legacy or enterprise Java projects  | Android apps, modern Java/Kotlin projects           |
 
 
-## Why You Shouldn't Lose Sleep
+## Why Usually It Doesn't Matter
 
 Your production `JAR` doesn't care if it was packaged by Maven or Gradle.
 

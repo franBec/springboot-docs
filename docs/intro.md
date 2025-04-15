@@ -57,7 +57,7 @@ Until AI can psychoanalyze stakeholders and translate "make it pop" into technic
 
 AI is great at writing code, terrible at owning consequences.
 
-* That auto-generated Spring Boot microservice? Enjoy debugging 23 unsecured endpoints at 2 AM. 
+* That auto-generated Spring Boot microservice? Enjoy debugging unsecured endpoints. 
 * That rushed MVP built with ChatGPT? Now scales like a giraffe on rollerblades.
 
 [Technical debt](https://www.productplan.com/glossary/technical-debt/) isn’t code – it’s organizational debt. Developers aren’t just coders; they’re the janitors, architects, and therapists for systems that outlive quarterly roadmaps.
