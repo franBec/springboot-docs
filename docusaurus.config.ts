@@ -3,7 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Pollito\'s Opinion on Spring Boot Development',
+  title: "Pollito's Opinion on Spring Boot Development",
   tagline: 'Everything I wish someone has told me when I got into my first Spring Boot project',
   favicon: 'img/favicon.ico',
 
@@ -21,12 +21,18 @@ const config: Config = {
     locales: ['en', 'es'],
   },
 
+  markdown: {
+    mermaid: true,
+  },
+
+  themes: ['@docusaurus/theme-mermaid'],
+
   presets: [
     [
       'classic',
       {
         docs: {
-          routeBasePath: "/",
+          routeBasePath: '/',
           sidebarPath: './sidebars.ts',
         },
         blog: false,
@@ -38,6 +44,9 @@ const config: Config = {
   ],
 
   themeConfig: {
+    mermaid: {
+      theme: {light: 'neutral', dark: 'dark'},
+    },
     image: 'img/social-card.jpg',
     navbar: {
       logo: {

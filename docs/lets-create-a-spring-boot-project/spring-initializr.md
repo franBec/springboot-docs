@@ -28,14 +28,13 @@ Think of these as your project’s managers. They:
 
 ### Which One to Choose?
 
- ```mermaid
- graph TD
-   A[Start] --> B{Is it valid?}
-   B -- Yes --> C[Proceed]
-   B -- No --> D[Reevaluate]
-   C --> E[Finish]
-   D --> E[Finish]
- ```
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
 
 ## Spring Boot Versions 
 
