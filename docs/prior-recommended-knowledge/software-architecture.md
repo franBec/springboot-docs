@@ -4,7 +4,7 @@ sidebar_position: 1
 
 import YouTube from '@site/src/components/YouTube';
 
-# Software Design
+# Software Architecture
 
 When diving into software design, you'll often hear about [Clean Architecture](https://medium.com/@DrunknCode/clean-architecture-simplified-and-in-depth-guide-026333c54454). It's almost become the de facto blueprint for designing maintainable systems. However, in my current work environment, [Hexagonal Architecture](https://medium.com/ssense-tech/hexagonal-architecture-there-are-always-two-sides-to-every-story-bc0780ed7d9c) has emerged as a compelling alternative. Let’s take a closer look at both, their nuances, and why Hexagonal might soon become even more popular.
 

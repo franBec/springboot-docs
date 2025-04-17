@@ -14,26 +14,13 @@ You’ll see a form, don’t panic—we’ll decode each option.
 
 ## Project: Maven vs Gradle
 
-Think of these as your project’s managers. They:
-
-* Download libraries/dependencies.
-* Define steps (compile code, run tests, build `JAR` files).
-* Keep project structure standard and organized.
-
-| Aspect        | Maven                               | Gradle                                              |
-|---------------|-------------------------------------|-----------------------------------------------------|
-| Configuration | Uses XML (structured with `<tags>`) | Uses Kotlin/Groovy (code-like syntax)               |
-| Flexibility   | Strict, standardized conventions    | Highly customizable (supports logic like `if-else`) |
-| Use Cases     | Legacy or enterprise Java projects  | Android apps, modern Java/Kotlin projects           |
-
-### Which One to Choose?
-
 ```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+graph TD
+  A["Is it a new project?"]
+  A -- "No" --> B["You don't choose, follow what is already there"]
+  A -- "Yes" --> C["How do you feel about XML tags?"]
+  C -- "I hate XML tags" --> D["Gradle 🐘"]
+  C -- "I don't mind if it gets the job done" --> E["Maven 🪶"]
 ```
 
 ## Spring Boot Versions 

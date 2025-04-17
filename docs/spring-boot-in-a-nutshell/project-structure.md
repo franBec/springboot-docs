@@ -66,6 +66,8 @@ For this example, let's assume:
 - Dependencies always point inward.
 - The domain being the most independent layer and each outer layer depending on the inner ones.
 
+_`src/test` folder is omitted for simplicity._
+
 ```log
 src/
 └── main/
@@ -130,6 +132,8 @@ src/
 * External services used by the application (driven side).
 * The ports (interfaces) ensure loose coupling between these layers, making the application more maintainable and testable.
 
+_`src/test` folder is omitted for simplicity._
+
 ```log
 src/
 └── main/
@@ -152,10 +156,11 @@ src/
     │       │
     │       ├── adapter/
     │       │   ├── in/
-    │       │   │   └── web/
+    │       │   │   └── rest/
     │       │   │       ├── UserController.java    // REST controller adapting HTTP requests
-    │       │   │       └── dto/
-    │       │   │           ├── UserResponseDTO.java // DTO for API responses
+    │       │   │       ├── dto/
+    │       │   │       │   └── UserResponseDTO.java // DTO for API responses
+    │       │   │       └── mapper/
     │       │   │           └── UserMapper.java    // Maps between domain models and DTOs
     │       │   └── out/
     │       │       ├── persistence/
@@ -189,10 +194,13 @@ src/
 
 ## Is Mandatory to Follow an Architecture?
 
-No. **Spring doesn’t enforce names or layers**. You could write everything in a single class. But these conventions solve the **readability problem** : Developers instantly understand a class by its name.
+No. **Spring doesn’t enforce names or layers**. You could write everything in a single class. But these conventions solve the **readability problem**: developers instantly understand a class by its name.
 
-### When to Bend the Rules
+### Personal Recommendations
 
-* Small projects might combine layers.
+I feel that **Hexagonal Architecture makes coding easier to understand** (or at least is the one that quickly clicked on me). Having said that, I don't follow it word by word, and that's fine.
+
+* **Nobody really follows one architecture to the finest details**: Every place I worked tried to follow Clean Architecture but deviated somewhere mid-development and now is whatever.
+* **Is ok to bend the rules**: Small projects might combine layers.
 * **Consistency > Perfection**: Agree with your team on a structure and stick to it. Refactor later if needed.
   * If your team uses different terms (e.g., `DataManager` instead of `Repository`), consistency matters more than the name itself.

@@ -25,7 +25,9 @@ Think of these as your project’s managers. They:
 
 Your production `JAR` doesn't care if it was packaged by Maven or Gradle.
 
-1. **Dependency Management is Identical**: Both resolve from Maven Central/JitPack. This:
+1. **Dependency Management is Identical**: Both resolve from Maven Central/JitPack.
+
+   This:
 
     ```xml
     <!-- Maven -->
