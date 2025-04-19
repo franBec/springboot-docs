@@ -4,6 +4,14 @@ sidebar_position: 5
 
 # Use the Generated Code
 
+So far we've used the [OpenAPI Generator Gradle Plugin](https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin) to generate the representation of the OpenAPI Specification (our contract) in Java code.
+
+<div>
+  <img src={require('@site/static/img/contract-driven-development/build.png').default} alt="build" />
+</div>
+
+But we are not using any of that code in our application yet. Let's change that.
+
 ## Delete the Model We Previously Wrote
 
 If we go to `src/main/java/dev/pollito/users_manager/model/User.java`, we will find the following error:

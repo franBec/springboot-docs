@@ -4,7 +4,21 @@ sidebar_position: 3
 
 # Generate Code from the Contract
 
-If we were to write by hand these two endpoints and the needed Models (called `Schemas` in the OpenAPI Specification) it may not be that complicated. But imagine if it was a big project, with a few dozen endpoints and close to a hundred schemas…
+## Why We Want To Generate Code from the Contract?
+
+If we were to write by hand one Primary Adapter that has some few endpoints and its needed models (called `Schemas` in the OpenAPI Specification) it may not be that complicated. 
+
+<div>
+  <img src={require('@site/static/img/contract-driven-development/hexagonal-arch-one-endpoint.png').default} alt="hexagonal arch one endpoint" />
+</div>
+
+But imagine if it was a big project, with a few dozen Primary Adapters… Doing this manually is prone to error and consume a lot of time.
+
+<div>
+  <img src={require('@site/static/img/contract-driven-development/hexagonal-arch-multiple-endpoints.png').default} alt="hexagonal arch multiple endpoints" />
+</div>
+
+## OpenAPI Generator
 
 Let’s save us some problems by using one of the greatest libraries to ever exist: [openapi-generator](https://github.com/OpenAPITools/openapi-generator).
 
@@ -67,7 +81,7 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
     }
     ```
 
-6. Now that everything is set up, **run the Build Task**. When the task finishes, If you check the `build\generated\sources\openapi` folder, you’ll find the representation of the OpenAPI Specification (our contract) in Java code, ready to be used.
+6. Now that everything is set up, **run the Build Task**. When the task finishes, check the `build\generated\sources\openapi` folder. You’ll find the representation of the OpenAPI Specification (our contract) in Java code, ready to be used.
 
    <div>
      <img src={require('@site/static/img/contract-driven-development/build.png').default} alt="build" />

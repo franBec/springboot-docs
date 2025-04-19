@@ -12,9 +12,9 @@ In the [Design by contract wikipedia article](https://en.wikipedia.org/wiki/Desi
 
 > […] software designers should define formal, precise and verifiable interface specifications for software components, which extend the ordinary definition of abstract data types with preconditions, postconditions and invariants.
 
-From that, I made my own adaptation of the Contract-Driven Development philosophy for microservices architecture:
+From that, I made my own adaptation of the Contract-Driven Development philosophy for backends:
 
-> Microservices must comply with a contract, which defines inputs, outputs, and errors.
+> Backends must comply with a contract, which defines inputs, outputs, and errors.
 
 So, **what is a contract?** Is a **set of assertions** containing the following information:
 
@@ -26,3 +26,5 @@ In a Contract there are two parties:
 
 * **Consumer**: provides the input values and waits for the return.
 * **Provider**: waits for the input values and provides the return.
+
+So, **how do we write a contract?** Check the next lecture ;)

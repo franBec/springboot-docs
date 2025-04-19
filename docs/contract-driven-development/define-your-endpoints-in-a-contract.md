@@ -33,11 +33,10 @@ Given a User with the following structure:
 }
 ```
 
-We want to create the following endpoints:
+We want our backend to expose these endpoints:
 
-* `/users` will return a page of users.
-  * [Pagination](https://www.merge.dev/blog/rest-api-pagination) is a pattern that breaks large datasets into manageable chunks, controlling:
-* `/users/{id}` will return the user with a matching id.
+* `/users` list all users.
+* `/users/{id}` get user by identifier.
 
 ## OpenAPI Specification
 
@@ -64,44 +63,15 @@ paths:
         - User
       summary: List all users
       operationId: findAll
-      parameters:
-        - description: Zero-based page index (0..N)
-          in: query
-          name: pageNumber
-          schema:
-            default: 0
-            minimum: 0
-            maximum: 2147483647
-            type: integer
-        - description: Size of the page to be returned
-          in: query
-          name: pageSize
-          schema:
-            default: 10
-            maximum: 10
-            minimum: 1
-            type: integer
-        - description: >
-            Sorting criteria in the format `field:direction`. Specify multiple
-            sort criteria by repeating the `sort` query parameter. For example:
-            `?pageSort=name:desc&pageSort=id:asc`. Available field values:
-            `id`, `name`, `username`, `email`. Available direction values: `asc`,
-            `desc`. If direction value is omitted it defaults to `asc`
-          explode: true
-          in: query
-          name: pageSort
-          schema:
-            default: [ id:asc ]
-            items:
-              type: string
-            type: array
       responses:
         '200':
           description: List of all users
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserPage'
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
         default:
           description: Error
           content:
@@ -218,28 +188,6 @@ components:
           example: "81.1496"
           type: string
       type: object
-    Page:
-      properties:
-        content:
-          type: object
-        pageable:
-          $ref: '#/components/schemas/Pageable'
-        totalElements:
-          description: Total number of items that meet the criteria
-          example: 10
-          type: integer
-      type: object
-    Pageable:
-      type: object
-      properties:
-        pageNumber:
-          description: Current page number (starts from 0)
-          example: 0
-          type: integer
-        pageSize:
-          description: Number of items retrieved on this page
-          example: 1
-          type: integer
     User:
       properties:
         address:
@@ -275,13 +223,6 @@ components:
           description: User website
           example: "hildegard.org"
           type: string
-    UserPage:
-      allOf:
-        - $ref: '#/components/schemas/Page'
-        - type: object
-          properties:
-            content:
-              $ref: '#/components/schemas/User'
 ```
 
 For better visualization you can copy-paste the yaml file into [Swagger Editor](https://editor.swagger.io/) or use [OpenAPI (Swagger) Editor
@@ -304,7 +245,7 @@ in IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-edi
 
 **RESTful** APIs strictly follow *all* these constraints. But here's the thing: **most "REST" APIs aren't truly RESTful**, and that's okay.
 
-### The HATEOAS Hurdle
+### Rest Is Fine
 
 True RESTful APIs require [HATEOAS](https://restfulapi.net/hateoas/) (Hypermedia as the Engine of Application State) - embedding links to related resources in responses:
 
@@ -329,9 +270,7 @@ An OpenAPI contract already gives you 80% of REST's benefits:
 * **Standard HTTP methods** (`GET`/`POST`/`PUT`/`DELETE`).
 * **Clear error handling** (`4xx`/`5xx` codes).
 
-For those reasons, **we are going to build REST APIs**.
-
-Unless you're building hypermedia-driven systems, **REST is fine**. Focus on:
+For those reasons, **we are going to build REST APIs**. Unless you're building hypermedia-driven systems, **REST is fine**. Focus on:
 
 * Consistent contracts.
 * Predictable error handling.
