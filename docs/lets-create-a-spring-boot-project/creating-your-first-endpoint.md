@@ -73,11 +73,11 @@ git commit -m "Initial commit"
 
 A **model** is a blueprint for your data — it defines the structure of the information your application handles.
 
-_`src/test` folder is omitted for simplicity._
-
 <div>
    <img src={require('@site/static/img/lets-create-a-spring-boot-project/hexagonal-arch-domain-model-user.png').default} alt="hexagonal arch domain model user" />
 </div>
+
+_Other folders are omitted for simplicity._
 
 Create `User.java`.
 
@@ -110,11 +110,11 @@ public class User {
 * `UserSevice` is the Primary Port, defining user operations.
 * `UserSeviceImpl` is the implementation, containing domain logic.
 
-_`src/test` folder and arrows not relevant for this specific section are omitted for simplicity._
-
 <div>
    <img src={require('@site/static/img/lets-create-a-spring-boot-project/hexagonal-arch-service-and-impl.png').default} alt="hexagonal arch service and impl.png" />
 </div>
+
+_Other folders are omitted for simplicity._
 
 Create `UserService.java`.
 
@@ -165,11 +165,11 @@ public class UserServiceImpl implements UserService {
 * The controller acts as a primary adapter, converting HTTP requests to calls on the domain service.
 * The domain model is not exposed directly to the clients; instead, [DTOs are used](https://www.baeldung.com/java-dto-pattern).
 
-_`src/test` folder and arrows not relevant for this specific section are omitted for simplicity._
-
 <div>
    <img src={require('@site/static/img/lets-create-a-spring-boot-project/hexagonal-arch-adapter-in-rest.png').default} alt="hexagonal arch adapter in rest.png" />
 </div>
+
+_Other folders are omitted for simplicity._
 
 Create `UserResponseDTO.java`. It contains the data to be returned as response.
 

@@ -91,5 +91,5 @@ Commit the progress so far.
 
 ```bash
 git add .
-git commit -m "generated spring code from an openapi specification"
+git commit -m "generated primary adapter code from an openapi specification"
 ```

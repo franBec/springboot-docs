@@ -61,13 +61,13 @@ An aspect is a piece of code with a specific task—in this case, logging—that
    }
    ```
 
-   * These kinds of classes don't have a clear place in the Hexagonal Architecture. I put it in `/config` to indicate it's a cross-cutting concern.
+   * `@Aspect` classes don't have a clear place in the Hexagonal Architecture. You may find them in `/config` to indicate it's a cross-cutting concern.
 
 Rebuild the application. Then go to [http://localhost:8080/users](http://localhost:8080/users) and check the logs. You should find something like this:
 
 ```log
-2025-04-16T23:33:45.851+01:00  INFO 108782 --- [users_manager] [nio-8080-exec-1] d.p.u.config.aspect.LogAspect            : [UserController.getUsers()] Args: []
-2025-04-16T23:33:45.858+01:00  INFO 108782 --- [users_manager] [nio-8080-exec-1] d.p.u.config.aspect.LogAspect            : [UserController.getUsers()] Response: <200 OK OK,[UserResponseDTO(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)],[]>
+2025-04-16T23:33:45.851+01:00  INFO 108782 --- [users_manager] [nio-8080-exec-1] d.p.u.config.aspect.LogAspect            : [UserController.findAll()] Args: []
+2025-04-16T23:33:45.858+01:00  INFO 108782 --- [users_manager] [nio-8080-exec-1] d.p.u.config.aspect.LogAspect            : [UserController.findAll()] Response: <200 OK OK,[UserResponseDTO(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)],[]>
 ```
 
 ## What Does the IntelliJ IDEA Suggestion “Insert ‘@NotNull’ on parameter” Mean?
@@ -123,8 +123,8 @@ implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.3'
 Rebuild the application. Then go to [http://localhost:8080/users](http://localhost:8080/users) and check the logs. You should find something like this:
 
 ```log
-2025-04-16T23:53:52.082+01:00  INFO 112231 --- [users_manager] [nio-8080-exec-1] [e508c97bff061f8daabd16aee85498c7-d654b43da989fdb1] d.p.u.config.aspect.LogAspect            : [UserController.getUsers()] Args: []
-2025-04-16T23:53:52.089+01:00  INFO 112231 --- [users_manager] [nio-8080-exec-1] [e508c97bff061f8daabd16aee85498c7-d654b43da989fdb1] d.p.u.config.aspect.LogAspect            : [UserController.getUsers()] Response: <200 OK OK,[UserResponseDTO(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)],[]>
+2025-04-16T23:53:52.082+01:00  INFO 112231 --- [users_manager] [nio-8080-exec-1] [e508c97bff061f8daabd16aee85498c7-d654b43da989fdb1] d.p.u.config.aspect.LogAspect            : [UserController.findAll()] Args: []
+2025-04-16T23:53:52.089+01:00  INFO 112231 --- [users_manager] [nio-8080-exec-1] [e508c97bff061f8daabd16aee85498c7-d654b43da989fdb1] d.p.u.config.aspect.LogAspect            : [UserController.findAll()] Response: <200 OK OK,[UserResponseDTO(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)],[]>
 ```
 
 ## Filter
@@ -137,24 +137,21 @@ What if I tell you there’s something in the Spring Boot App that goes before t
 
 _Filters are left out of diagrams when talking about Hexagonal Architecture as they add complexity. Know that they are always there, but are kept out for simplicity._
 
-A Filter acts like a checkpoint for every incoming request and outgoing response, even before they reach your Primary Adapters or after they leave. Think of it as a gatekeeper that can observe—and optionally modify—the raw flow of data between the client and your application.
+A Filter acts like a checkpoint for every incoming request and outgoing response, even before they reach your Primary Adapters or after they leave.
 
-While aspects work closer to the application level, **filters operate at a lower level, intercepting all HTTP traffic regardless of whether it eventually triggers controller logic**. This makes filters uniquely valuable for logging requests that never make it to your business code.
+* Think of it as a gatekeeper that can observe—and optionally modify—the raw flow of data between the client and your application.
+* Filters operate at a lower level, intercepting all HTTP traffic regardless of whether it eventually triggers controller logic**.
 
 By integrating filter, you ensure that nothing slips through the cracks in your logs:
 
 * Every incoming request gets timestamped, inspected, and logged at the "front door," and every outgoing response is documented on its way out.
 * This provides a complete audit trail, even for edge cases that don’t reach any of the Primary Adapters.
 
-_`src/test` folder and arrows not relevant for this specific section are omitted for simplicity._
-
-<div>
-  <img src={require('@site/static/img/optional-but-recommended-features/hexagonal-arch-filter.png').default} alt="hexagonal arch filter" />
-</div>
+Filter classes in the Hexagonal Architecture make sense to be in the `/adapter/in` folder. However, you may find them in `/config` to indicate it's a cross-cutting concern.
 
 Let’s create `LogFilter.java`.
 
-```java title="src/main/java/dev/pollito/users_manager/adapter/in/filter/LogFilter.java"
+```java title="src/main/java/dev/pollito/users_manager/config/filter/LogFilter.java"
 package dev.pollito.users_manager.adapter.in.filter;
 
 import jakarta.servlet.FilterChain;
@@ -225,17 +222,17 @@ Rebuild the application. Then go to [http://localhost:8080/users](http://localho
 * `LogFilter` printing the response status.
 
 ```log
-2025-04-17T13:30:12.767+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.adapter.in.filter.LogFilter        : >>>> Method: GET; URI: /users; QueryString: null; Headers: {host: localhost:8080, connection: keep-alive, sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135", sec-ch-ua-mobile: ?0, sec-ch-ua-platform: "Linux", dnt: 1, upgrade-insecure-requests: 1, user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36, accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7, sec-fetch-site: none, sec-fetch-mode: navigate, sec-fetch-user: ?1, sec-fetch-dest: document, accept-encoding: gzip, deflate, br, zstd, accept-language: es-AR,es-419;q=0.9,es;q=0.8,en;q=0.7,pt;q=0.6, cookie: Idea-f1d89c39=5112bd44-91f2-4b6c-8d18-4c172f6b483e, sec-gpc: 1}
-2025-04-17T13:30:12.768+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.config.aspect.LogAspect            : [UserController.getUsers()] Args: []
-2025-04-17T13:30:12.769+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.config.aspect.LogAspect            : [UserController.getUsers()] Response: <200 OK OK,[UserResponseDTO(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)],[]>
-2025-04-17T13:30:12.772+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.adapter.in.filter.LogFilter        : <<<< Response Status: 200
+2025-04-17T13:30:12.767+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.config.filter.LogFilter        : >>>> Method: GET; URI: /users; QueryString: null; Headers: {host: localhost:8080, connection: keep-alive, sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135", sec-ch-ua-mobile: ?0, sec-ch-ua-platform: "Linux", dnt: 1, upgrade-insecure-requests: 1, user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36, accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7, sec-fetch-site: none, sec-fetch-mode: navigate, sec-fetch-user: ?1, sec-fetch-dest: document, accept-encoding: gzip, deflate, br, zstd, accept-language: es-AR,es-419;q=0.9,es;q=0.8,en;q=0.7,pt;q=0.6, cookie: Idea-f1d89c39=5112bd44-91f2-4b6c-8d18-4c172f6b483e, sec-gpc: 1}
+2025-04-17T13:30:12.768+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.config.aspect.LogAspect            : [UserController.findAll()] Args: []
+2025-04-17T13:30:12.769+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.config.aspect.LogAspect            : [UserController.findAll()] Response: <200 OK OK,[UserResponseDTO(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)],[]>
+2025-04-17T13:30:12.772+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.config.filter.LogFilter        : <<<< Response Status: 200
 ```
 
 If we visit an uri that doesn't exist (like [http://localhost:8080/asdasd](http://localhost:8080/asdasd)), `LogFilter` will be the one that will let us know in the logs that this request ever happened.
 
 ```log
-2025-04-17T13:31:48.742+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-7] [90afb3fc373bfd83516e4f2349d3cd58-1b84c2268c83b23e] d.p.u.adapter.in.filter.LogFilter        : >>>> Method: GET; URI: /asdasd; QueryString: null; Headers: {host: localhost:8080, connection: keep-alive, sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135", sec-ch-ua-mobile: ?0, sec-ch-ua-platform: "Linux", dnt: 1, upgrade-insecure-requests: 1, user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36, accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7, sec-fetch-site: same-site, sec-fetch-mode: navigate, sec-fetch-user: ?1, sec-fetch-dest: document, accept-encoding: gzip, deflate, br, zstd, accept-language: es-AR,es-419;q=0.9,es;q=0.8,en;q=0.7,pt;q=0.6, cookie: Idea-f1d89c39=5112bd44-91f2-4b6c-8d18-4c172f6b483e, sec-gpc: 1}
-2025-04-17T13:31:48.748+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-7] [90afb3fc373bfd83516e4f2349d3cd58-1b84c2268c83b23e] d.p.u.adapter.in.filter.LogFilter        : <<<< Response Status: 404
+2025-04-17T13:31:48.742+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-7] [90afb3fc373bfd83516e4f2349d3cd58-1b84c2268c83b23e] d.p.u.config.filter.LogFilter        : >>>> Method: GET; URI: /asdasd; QueryString: null; Headers: {host: localhost:8080, connection: keep-alive, sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135", sec-ch-ua-mobile: ?0, sec-ch-ua-platform: "Linux", dnt: 1, upgrade-insecure-requests: 1, user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36, accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7, sec-fetch-site: same-site, sec-fetch-mode: navigate, sec-fetch-user: ?1, sec-fetch-dest: document, accept-encoding: gzip, deflate, br, zstd, accept-language: es-AR,es-419;q=0.9,es;q=0.8,en;q=0.7,pt;q=0.6, cookie: Idea-f1d89c39=5112bd44-91f2-4b6c-8d18-4c172f6b483e, sec-gpc: 1}
+2025-04-17T13:31:48.748+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-7] [90afb3fc373bfd83516e4f2349d3cd58-1b84c2268c83b23e] d.p.u.config.filter.LogFilter        : <<<< Response Status: 404
 ```
 
 Commit the progress so far.

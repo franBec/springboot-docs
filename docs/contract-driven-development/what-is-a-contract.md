@@ -10,7 +10,7 @@ In the [Design by contract wikipedia article](https://en.wikipedia.org/wiki/Desi
   <img src={require('@site/static/img/contract-driven-development/design-by-contract.png').default} alt="design by contract" />
 </div>
 
-> […] software designers should define formal, precise and verifiable interface specifications for software components, which extend the ordinary definition of abstract data types with preconditions, postconditions and invariants.
+> […] software designers should define formal, precise, and verifiable interface specifications for software components, which extend the ordinary definition of abstract data types with preconditions, postconditions, and invariants.
 
 From that, I made my own adaptation of the Contract-Driven Development philosophy for backends:
 

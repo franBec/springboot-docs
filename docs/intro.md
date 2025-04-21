@@ -76,6 +76,6 @@ AI writes code. Developers solve problems. As long as businesses:
 
 * Prioritize "move fast" over "don’t break things",
 * Confuse "agile" with "vague",
-* Treat software as a cost center rather than living infrastructure
+* Treat software as a cost center rather than living infrastructure...
 
 … Spring Boot experts will remain essential. The framework’s enterprise stronghold ensures you’re not just relevant – you’re the adult in a room full of AI-powered sugar-high toddlers.

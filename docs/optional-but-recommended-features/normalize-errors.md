@@ -40,17 +40,13 @@ Errors are not consistent just flew out of the window there, and it gets worse w
 * The HTTP status code (e.g., 404)
 * Additional details (e.g., "User ID -1 does not exist")
 
-Together, these tools ensure your microservice never confuses clients with mismatched error formats. Even edge cases or unanticipated errors get wrapped into the same predictable structure
+Together, these tools ensure your microservice never confuses clients with mismatched error formats. Even edge cases or unanticipated errors get wrapped into the same predictable structure.
 
-_`src/test` folder and arrows not relevant for this specific section are omitted for simplicity._
-
-<div>
-  <img src={require('@site/static/img/optional-but-recommended-features/hexagonal-arch-advice.png').default} alt="hexagonal arch advice" />
-</div>
+`@RestControllerAdvice` classes in the Hexagonal Architecture make sense to be in the `/adapter/in` folder. However, you may find them in `/config` to indicate it's a cross-cutting concern.
 
 Let’s create a `@RestControllerAdvice` class.
 
-```java title="src/main/java/dev/pollito/users_manager/adapter/in/rest/advice/ControllerAdvice.java"
+```java title="src/main/java/dev/pollito/users_manager/config/advice/ControllerAdvice.java"
 package dev.pollito.users_manager.adapter.in.rest.advice;
 
 import io.opentelemetry.api.trace.Span;

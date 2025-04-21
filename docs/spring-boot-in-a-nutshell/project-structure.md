@@ -163,7 +163,7 @@ src/
     │       │   │       └── mapper/
     │       │   │           └── UserMapper.java    // Maps between domain models and DTOs
     │       │   └── out/
-    │       │       ├── persistence/
+    │       │       ├── jpa/
     │       │       │   ├── entity/
     │       │       │   │   └── UserEntity.java    // JPA entity for database operations
     │       │       │   ├── repository/
@@ -171,7 +171,7 @@ src/
     │       │       │   ├── mapper/
     │       │       │   │   └── UserEntityMapper.java // Maps between domain User and UserEntity
     │       │       │   └── UserRepositoryAdapter.java // Implements UserRepository using Spring Data
-    │       │       └── externalapi/
+    │       │       └── rest/
     │       │           ├── client/
     │       │           │   └── UserDetailsClient.java // FeignClient for external API
     │       │           ├── dto/

@@ -16,7 +16,7 @@ Mappers are a [“choose your own adventure”](https://www.baeldung.com/java-pe
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     ```
 
-2. Rewrite `UserMapper.java` so it becomes an interface that uses MapStruct.
+2. Rewrite `UserMapper` so it becomes an interface annotated by MapStruct.
 
    ```java title="src/main/java/dev/pollito/users_manager/adapter/in/rest/mapper/UserMapper.java"
    package dev.pollito.users_manager.adapter.in.rest.mapper;

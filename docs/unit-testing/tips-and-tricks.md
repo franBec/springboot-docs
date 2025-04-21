@@ -2,6 +2,8 @@
 sidebar_position: 3
 ---
 
+import YouTube from '@site/src/components/YouTube';
+
 # Tips and Tricks
 
 ## Testing Frameworks
@@ -171,7 +173,7 @@ void returnsUserNameWhenUserExists() {
 }
 ```
 
-**Remember**: Only mock what you need to test the specific behavior you're interested in.
+Only mock what you need to test the specific behavior you're interested in.
 
 ## Naming Test Methods
 
@@ -213,3 +215,9 @@ void findById_existingUser_returnsUser() {
 ```
 
 This is especially useful for test reports and IDE display, as it makes test results much easier to interpret without sacrificing proper method naming conventions.
+
+## Recommended Learning Resource
+
+**I really recommend** Cody Engel's video "How To Write Unit Tests (The Right Way)".
+
+<YouTube id="aId-WLZnvkw" />

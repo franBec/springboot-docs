@@ -1,8 +1,0 @@
-{
-  "label": "Integration Layer",
-  "position": 7,
-  "link": {
-    "type": "generated-index",
-    "description": "In modern backend development, services often need to communicate with external web services using HTTP. Whether your service needs to integrate with third-party platforms, microservices, or legacy systems, the web client becomes a critical component of your application’s architecture."
-  }
-}
