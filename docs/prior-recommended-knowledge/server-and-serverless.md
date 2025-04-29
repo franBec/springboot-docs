@@ -6,17 +6,17 @@ import YouTube from '@site/src/components/YouTube';
 
 # Server and Serverless
 
-Our applications ultimately need to run _somewhere_. That "somewhere" typically comes down to two options: traditional servers (where you play landlord) or serverless environments (where you're a cloud nomad). Both approaches keep your code running in the clouds, but one gives you keys to the server room while the other hands you an Uber-like bill. Let's break down these options.
+Our applications ultimately need to run _somewhere_. That "somewhere" typically comes down to two options: traditional servers (where you play the house owner) or serverless environments (where you're a cloud nomad). Both approaches keep your code running in the clouds, but one gives you keys to the server room while the other hands you an Uber-like bill. Let's break down these options.
 
 ## Server
 
-While serverless gets all the hype, traditional server-based architectures still power enterprise systems . Here's what you need to know:
+While serverless gets all the hype, traditional server-based architectures still power enterprise systems. Here's what you need to know:
 
-- **You own the box**: physical (on-premise hardware) or virtual (cloud VMs such as [AWS EC2](https://aws.amazon.com/ec2/) or [Google Compute Engine](https://cloud.google.com/products/compute)), you have full control over:
-    - OS patches & security updates.
-    - Scaling strategies (vertical/horizontal).
-    - Resource allocation (CPU, RAM, storage).
-- **Predictable costs**: Fixed monthly bills regardless of traffic spikes.
+* **You own the box**: physical (on-premise hardware) or virtual (cloud VMs such as [AWS EC2](https://aws.amazon.com/ec2/) or [Google Compute Engine](https://cloud.google.com/products/compute)), you have full control over:
+  * OS patches and security updates.
+  * Scaling strategies (vertical/horizontal).
+  * Resource allocation (CPU, RAM, storage).
+* **Predictable costs**: Fixed monthly bills regardless of traffic spikes.
 
 ## Serverless
 
@@ -54,7 +54,7 @@ This isn’t an isolated incident. Serverless pricing is heavily based on usage,
 
 Most teams you'll join have already made this decision years before your arrival. But here's why this matters to **you**:
 
-* **Architecture discussions**: Understand tradeoffs when colleagues debate "migrating to Lambda".
+* **Architecture discussions**: Understand tradeoffs when colleagues debate _migrating to Lambda_.
 * **Debugging context**: Issues in serverless (cold starts/timeouts) are different from those in servers (thread pool).
 * **Career moves**: Cloud certifications expect this knowledge.
 * **Promotion potential**: Roles such as Tech leads need to advise on infrastructure choices.

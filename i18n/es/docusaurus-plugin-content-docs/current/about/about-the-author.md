@@ -2,46 +2,46 @@
 sidebar_position: 1
 ---
 
-# Acerca del autor
+# Sobre el autor
 
 ## Franco Exequiel Becvort
 
 <div>
-  <img src={require('@site/static/img/about/profile.png').default} alt="perfil" />
+  <img src={require('@site/static/img/about/profile.png').default} alt="foto de perfil" />
 </div>
 
-### Experiencia profesional
+### Antecedentes profesionales
 
-✓ Desarrollador de Java Spring Boot para el banco privado más grande de Ecuador  
-✓ Certificado de Google Cloud: Digital Leader / Associate Engineer / Professional Architect  
-✓ Certificado de Microsoft Azure: Azure Fundamentals  
-✓ Certificado como Scrum Master por Scrum.org  
-✓ Certificado de dominio del inglés C2 por EF SET
+✓ Desarrollador Java Spring Boot para el banco privado más grande de Ecuador  
+✓ Certificado Google Cloud: Digital Leader / Associate Engineer / Professional Architect  
+✓ Certificado Microsoft Azure: Azure Fundamentals  
+✓ Certificado Scrum Master por Scrum.org  
+✓ Certificado English C2 Proficient por EF SET
 
-### Resumen de mi carrera
+### Resumen de carrera
 
-Mi carrera se ha desarrollado en diversos sectores, incluyendo el gobierno, la salud y la banca. Mi rol actual como desarrollador backend para [el banco privado más grande de Ecuador](https://www.pichincha.com/) destaca mi destreza para manejar proyectos sensibles y de gran escala.
+Mi carrera abarcó varios sectores, incluyendo gobierno, salud y banca. Mi puesto actual como desarrollador backend para [el banco privado más grande de Ecuador](https://www.pichincha.com/) destaca mi habilidad para manejar proyectos sensibles y a gran escala.
 
-Mis raíces académicas como [investigador en la Universidad Nacional de San Luis](https://fmn.unsl.edu.ar/curso-de-ingreso-2021-agradecimiento-a-docentes-y-tutores-del-curso-comprension-de-texto/) reflejan mi firme compromiso con el aprendizaje continuo y el intercambio de conocimientos.
+Mis raíces académicas como [investigador en la Universidad Nacional de San Luis](https://fmn.unsl.edu.ar/curso-de-ingreso-2021-agradecimiento-a-docentes-y-tutores-del-curso-comprension-de-texto/) reflejan mi profundo compromiso con el aprendizaje continuo y el compartir conocimiento.
 
 ### ¿Por qué "Pollito"?
 
-Te estarás preguntando por qué esta es **la opinión de Pollito** sobre el desarrollo en Spring Boot.
+Quizás te estés preguntando por qué esta es la **Opinión de Pollito** sobre Desarrollo Spring Boot.
 
-"Pollito" ha sido mi apodo desde mi primer cumpleaños, cuando mi madre me vistió con ropa de color amarillo brillante. Mis parientes empezaron a llamarme "pollito" enseguida, ¡y el nombre se quedó!
+"Pollito" es mi apodo desde mi primer cumpleaños, cuando mi madre me vistió con ropa amarilla brillante. Mis familiares inmediatamente empezaron a llamarme "pollito", ¡y el nombre se quedó!
 
-Con los años, he abrazado este apodo porque es original y memorable. En el mundo tech, donde la marca personal importa, tener una identidad distintiva me ha sido sorprendentemente útil. Además, ¿a quién no le saca una sonrisa escuchar sobre un desarrollador llamado "pollito" que construye sistemas empresariales para un banco importante?
+A lo largo de los años, adopté este apodo, ya que es original y memorable. En el mundo tech, donde el branding personal importa, tener una identidad distintiva fue sorprendentemente útil. Además, ¿quién no sonríe al escuchar sobre un desarrollador llamado "pollito" construyendo sistemas empresariales para un banco importante?
 
-El logo del pollito y la marca "pollito" se han convertido en mi firma profesional, un recordatorio de que incluso el trabajo serio puede mantener un toque de personalidad y cariño.
+El logo del pollito y la marca "pollito" se convirtieron en mi firma profesional — un recordatorio de que incluso el trabajo serio puede mantener un toque de personalidad y calidez.
 
 &lt;🐤/&gt;
 
 ### Compartir conocimiento
 
-Esta pasión por la educación también es la base de mi blog de programación. Allí me sumerjo en las complejidades del desarrollo web (principalmente en Java Spring Boot).
+Esta pasión por la educación es también la base de mi blog de programación. Allí, me sumerjo en las complejidades del desarrollo web (principalmente en Java Spring Boot).
 
-Estos documentos representan el conocimiento acumulado y la experiencia que tengo en el desarrollo con Spring Boot, todo lo que ojalá alguien me hubiera contado cuando empecé mi camino.
+Estos documentos representan mi conocimiento acumulado y experiencia con el desarrollo Spring Boot — todo lo que me hubiese gustado que alguien me dijera cuando empecé mi viaje.
 
-### Conectate conmigo
+### Conectá conmigo
 
-Sentite libre de contactarme a través de [LinkedIn](https://www.linkedin.com/in/franco-becvort/) o de echar un vistazo a mi otro contenido técnico en [pollito.dev](https://pollito.dev/).
+No dudes en contactarme a través de [LinkedIn](https://www.linkedin.com/in/franco-becvort/) o chequear mi otro contenido técnico en [pollito.dev](https://pollito.dev/).

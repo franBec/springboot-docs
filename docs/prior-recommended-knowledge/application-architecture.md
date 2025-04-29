@@ -14,9 +14,9 @@ _A house as one big unit, it gets the job done._
   <img src={require('@site/static/img/prior-recommended-knowledge/monolith.png').default} alt="monolith" />
 </div>
 
-I'm 99.9% sure this is the first application architecture you learn, cause is the most intuitive to start with. Also, most tutorials and courses goes for this approach.
+I'm 99.9% sure this is the first application architecture you learn because it is the most intuitive to start with. Also, most tutorials and courses go for this approach.
 
-A monolith is an all-in-one box. The best way to explain it is using the famous “house analogy”. Imagine you’re building a house. In traditional monolith web development, the entire house is constructed as one big unit, with all the rooms, functionalities, and infrastructure connected together in a single structure.
+A monolith is an all-in-one box. The best way to explain it is using the famous _house analogy_. Imagine you’re building a house. In traditional monolith web development, the entire house is constructed as one big unit, with all the rooms, functionalities, and infrastructure connected in a single structure.
 
 In this analogy:
 
@@ -79,23 +79,23 @@ _Benefits with challenges._
   <img src={require('@site/static/img/prior-recommended-knowledge/spongebob-panic.png').default} alt="spongebob panic" />
 </div>
 
-Imagine you have a large, single, multi-purpose building (like a mega-mall) that houses all the different businesses, services, and facilities. This is similar to **a monolith architecture, where everything is tightly integrated into one large system**.
+Imagine you have a large, single, multipurpose building (like a mega-mall) that houses all the different businesses, services, and facilities. This is similar to **a monolith architecture, where everything is tightly integrated into one large system**.
 
 Now, let’s explore the pros and cons of transforming this monolith into **microservices, a collection of smaller, independent buildings, each dedicated to a specific function**.
 
 **Pros**:
 
 * **Scalability**: If a particular service (e.g., shopping, entertainment, transportation) experiences high demand, it can scale independently without affecting others.
-* **Flexibility**: Each service can be designed and upgraded independently. If a service needs a new feature or technology, it can be updated without affecting others. This allows to stay up-to-date with the latest trends and advancements.
+* **Flexibility**: Each service can be designed and upgraded independently. If a service needs a new feature or technology, it can be updated without affecting others. This allows staying up to date with the latest trends and advancements.
 * **Fault Isolation**: If a problem arises in one service, it can be contained to that specific service, reducing the risk of widespread disruption.
 * **Specialization**: Different services can specialize in what they do best. This allows each service to excel and deliver high-quality experiences.
 * **Development Speed**: Independent teams can work on different services simultaneously, speeding up the development process. Changes and updates can be implemented faster since they are confined and don’t require coordination across the entire board.
 
 **Cons**:
 
-* **Complexity**: Managing numerous independent services requires coordination and communication. Microservices add complexity in terms of inter-service communication, deployment, and monitoring.
+* **Complexity**: Managing many independent services requires coordination and communication. Microservices add complexity in terms of inter-service communication, deployment, and monitoring.
 * **Infrastructure Overhead**: Each service needs its own infrastructure and resources, which can result in higher maintenance and operational costs compared to a single monolith.
-* **Integration Challenges**: With numerous independent services, ensuring seamless integration between them can be more challenging than a monolith. Developers must implement robust communication protocols and handle potential issues arising from service interactions.
+* **Integration Challenges**: With many independent services, ensuring seamless integration between them can be more challenging than a monolith. Developers must implement robust communication protocols and handle potential issues arising from service interactions.
 * **Learning Curve**: Transitioning to a microservice architecture can be a significant shift for the development team, requiring them to learn new concepts and best practices.
 
 ## Comparison

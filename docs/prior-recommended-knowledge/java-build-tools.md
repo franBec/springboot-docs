@@ -4,7 +4,7 @@ sidebar_position: 8
 
 # Java Build Tools
 
-Your build tool is like a dishwasher - you just want clean dishes, not a PhD in appliance engineering. Let's cut through the XML/Groovy noise.
+Your build tool is like a dishwasher—you just want clean dishes, not a PhD in appliance engineering. Let's cut through the XML/Groovy noise.
 
 ## Maven vs Gradle
 
@@ -12,7 +12,7 @@ Think of these as your project’s managers. They:
 
 * Download libraries/dependencies.
 * Define steps (compile code, run tests, build `JAR` files).
-* Keep project structure standard and organized.
+* Keep the project structure standard and organized.
 
 | Aspect        | Maven                               | Gradle                                              |
 |---------------|-------------------------------------|-----------------------------------------------------|
@@ -25,7 +25,7 @@ Think of these as your project’s managers. They:
 
 Your production `JAR` doesn't care if it was packaged by Maven or Gradle.
 
-1. **Dependency Management is Identical**: Both resolve from Maven Central/JitPack.
+1. **Dependency management is identical**: Both resolve from Maven Central/JitPack.
 
    This:
 
@@ -45,5 +45,5 @@ Your production `JAR` doesn't care if it was packaged by Maven or Gradle.
     implementation 'com.google.guava:guava:33.0.0'
     ```
 
-2. **Generated JARs are Twins**: Same class layout, same `MANIFEST.MF`.
-3. **IDEs Don't Care**: IntelliJ will auto-detect either and show the corresponding Maven or Gradle toolbar.
+2. **Generated JARs are twins**: Same class layout, same `MANIFEST.MF`.
+3. **IDEs don't care**: IntelliJ will auto-detect either and show the corresponding Maven or Gradle toolbar.

@@ -42,7 +42,7 @@ We want our backend to expose these endpoints:
 
 An [OpenAPI Specification](https://swagger.io/specification/) complies with the definition of contract I gave before: Is a set of assertions containing **valid input values** and their meaning, **valid return values** and their meaning, and **error values that can occur** and their meaning.
 
-An OpenAPI Specification that would represent the desired behaviour would look something like this:
+An OpenAPI Specification that would represent the desired behavior would look something like this:
 
 ```yaml
 openapi: 3.0.3
@@ -225,7 +225,7 @@ components:
           type: string
 ```
 
-For better visualization you can copy-paste the yaml file into [Swagger Editor](https://editor.swagger.io/) or use [OpenAPI (Swagger) Editor
+For better visualization you can copy-paste the YAML file into [Swagger Editor](https://editor.swagger.io/) or use [OpenAPI (Swagger) Editor
 in IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor). You should be able to see something like this:
 
 <div>
@@ -247,7 +247,7 @@ in IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-edi
 
 ### Rest Is Fine
 
-True RESTful APIs require [HATEOAS](https://restfulapi.net/hateoas/) (Hypermedia as the Engine of Application State) - embedding links to related resources in responses:
+True RESTful APIs require [HATEOAS](https://restfulapi.net/hateoas/) (Hypermedia as the Engine of Application State)—embedding links to related resources in responses:
 
 ```json
 {

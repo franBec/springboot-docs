@@ -12,6 +12,6 @@ Let’s split this into two parts: the **interface** (the "what") and the **impl
 ## Why Does This Matter?
 
 * **Flexibility**: Swap implementations without breaking code (e.g., switch from hardcoded data to a database later).
-* **Testing**: Easily mock the interface to test other components.
+* **Testing**: Ease of mock the interface to test other components.
 * **Clarity**: Separates “what” from “how” for cleaner code. Real implementations get messy – that’s why we hide them behind clean interfaces
-* Spring Boot automatically injects the right "kitchen" when you order a "dish" (this is called [Dependency injection](/lets-create-a-spring-boot-project/some-important-concepts#dependency-injection)).
+* Spring Boot automatically injects the right "kitchen" when you order a "dish" (this is called [Dependency injection](/spring-boot-in-a-nutshell/dependency-injection)).

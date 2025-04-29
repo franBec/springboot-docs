@@ -50,7 +50,7 @@ git commit -m "Initial commit"
         }
     }
     ```
-  For further info about configurations, check [Spotless GItHub repository](https://github.com/diffplug/spotless).
+  For further info about configurations, check [Spotless GitHub repository](https://github.com/diffplug/spotless).
 
 * **Auto-format on every build**, by adding a new task:
 
@@ -103,7 +103,7 @@ public class User {
 
 **We’ll use Lombok to avoid boilerplate code**. Lombok automatically generates repetitive Java code at compile time.
 
-* If your IDE doesn’t have the Lombok plugin installed, you’ll see compilation errors. Check [Optimizing IntelliJ IDEA with Plugins (for Java)](/prior-recommended-knowledge/ides#optimizing-intellij-idea-with-plugins-for-java) to find how to add the Lombok plugin.
+* If your IDE doesn’t have the Lombok plugin installed, you’ll see compilation errors. Check [Optimizing IntelliJ IDEA with Plugins (for Java)](/prior-recommended-knowledge/ide#optimizing-intellij-idea-with-plugins-for-java) to find how to add the Lombok plugin.
 
 ## Step 3: Create the Primary Port and its Implementation
 
@@ -157,8 +157,8 @@ public class UserServiceImpl implements UserService {
 ```
 
 * At the moment we are going to return a hardcoded user.
-* `@Service` tells Spring "Here is an implementation of `UserService`".
-* `@Override` indicates that the method `public List<User> getUsers()` fulfills the interface’s "contract".
+* `@Service` tells Spring _here is an implementation of `UserService`_.
+* `@Override` indicates that the method `public List<User> getUsers()` fulfills the interface’s contract.
 
 ## Step 4: Create the Primary Adapter
 
@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
 
 _Other folders are omitted for simplicity._
 
-Create `UserResponseDTO.java`. It contains the data to be returned as response.
+Create `UserResponseDTO.java`. It contains the data to be returned as a response.
 
 ```java title="src/main/java/dev/pollito/users_manager/adapter/in/rest/dto/UserResponseDTO.java"
 package dev.pollito.users_manager.adapter.in.rest.dto;

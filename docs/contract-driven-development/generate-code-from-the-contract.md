@@ -4,15 +4,15 @@ sidebar_position: 3
 
 # Generate Code from the Contract
 
-## Why We Want To Generate Code from the Contract?
+## Why do We Want to Generate Code from the Contract?
 
-If we were to write by hand one Primary Adapter that has some few endpoints and its needed models (called `Schemas` in the OpenAPI Specification) it may not be that complicated. 
+If we were to write by hand one Primary Adapter that has some few endpoints and its necessary models (called `Schemas` in the OpenAPI Specification) it may not be that complicated. 
 
 <div>
   <img src={require('@site/static/img/contract-driven-development/hexagonal-arch-one-endpoint.png').default} alt="hexagonal arch one endpoint" />
 </div>
 
-But imagine if it was a big project, with a few dozen Primary Adapters… Doing this manually is prone to error and consume a lot of time.
+But imagine if it was a big project, with a few dozen Primary Adapters… Doing this manually is prone to error and consumes a lot of time.
 
 <div>
   <img src={require('@site/static/img/contract-driven-development/hexagonal-arch-multiple-endpoints.png').default} alt="hexagonal arch multiple endpoints" />
@@ -59,7 +59,7 @@ Let’s save us some problems by using one of the greatest libraries to ever exi
    ```
 
     * You can find more information about the different possible configurations in the [OpenAPI Generator Gradle Plugin GitHub page](https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin).
-    * It is **important** to make sure that `inputspec` is pointing to the desired OpenAPI Specification `yaml` file.
+    * It is **important** to make sure that `inputspec` is pointing to the desired OpenAPI Specification YAML file.
 
 4. Add the `sourceSets` configuration. This tells Gradle where to find the generated Java sources. Place the following code immediately below the `plugins` section:
 

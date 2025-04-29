@@ -1,10 +1,10 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Project Structure
 
-Choosing a project structure is like picking a house blueprint - it dictates where your code "lives" and how it socializes with neighbors.
+Choosing a project structure is like picking a house blueprint—it dictates where your code "lives" and how it socializes with neighbors.
 
 Let's check how we can group related classes in Java and what are the recommended approaches.
 
@@ -43,7 +43,7 @@ your-project/
 * `DemoApplication.java`: The entry point of your app. Annotated with `@SpringBootApplication` to enable [autoconfiguration](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html).
 * `application.properties` (or `application.yml`): Central configuration file for database URLs, server ports, logging, etc.
 * `static/` and `templates/`, empty by default. Used for web assets:
-    * `static/`: Serve images, CSS, JS directly.
+    * `static/`: Serves images, CSS, JS directly.
     * `templates/`: Server-rendered HTML (if using [Thymeleaf](https://www.thymeleaf.org/), [Mustache](https://www.baeldung.com/spring-boot-mustache), etc.).
 * `pom.xml` (Maven) or `build.gradle` (Gradle): Defines dependencies and plugins.
 * `test/`: Preconfigured for JUnit tests (More about this in the [Unit Testing section](/category/unit-testing)). It has a skeleton test class `DemoApplicationTests.java` that verifies the app context loads.
@@ -57,14 +57,15 @@ Let's do an example of a simple application that:
 3. Supplements that data with information from an external API via FeignClient.
 
 For this example, let's assume:
-- Our application manages users.
-- Basic user info (id, name, email) is stored in the H2 database.
-- Additional user details (profile picture, status, etc.) are fetched from an external API.
+
+* Our application manages users.
+* Basic user info (id, name, email) is stored in a H2 database.
+* Additional user details (profile picture, status, etc.) are fetched from an external API.
 
 ### Follow Clean Architecture
 
-- Dependencies always point inward.
-- The domain being the most independent layer and each outer layer depending on the inner ones.
+* Dependencies always point inward.
+* The domain being the most independent layer, and each outer layer depends on the inner ones.
 
 _`src/test` folder is omitted for simplicity._
 
@@ -202,5 +203,5 @@ I feel that **Hexagonal Architecture makes coding easier to understand** (or at 
 
 * **Nobody really follows one architecture to the finest details**: Every place I worked tried to follow Clean Architecture but deviated somewhere mid-development and now is whatever.
 * **Is ok to bend the rules**: Small projects might combine layers.
-* **Consistency > Perfection**: Agree with your team on a structure and stick to it. Refactor later if needed.
+* **Consistency > perfection**: Agree with your team on a structure and stick to it. Refactor later if needed.
   * If your team uses different terms (e.g., `DataManager` instead of `Repository`), consistency matters more than the name itself.

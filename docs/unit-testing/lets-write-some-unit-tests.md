@@ -6,13 +6,13 @@ sidebar_position: 4
 
 ## Create the Tests
 
-Go to `src/main/java/dev/pollito/users_manager/adapter/in/rest/UserController.java`, and do `ctrl+intro` on the name of the class. On the pop-up menu, select "Create test".
+Go to `src/main/java/dev/pollito/users_manager/adapter/in/rest/UserController.java`, and do `ctrl+intro` on the name of the class. On the pop-up menu, select `Create test`.
 
 <div>
   <img src={require('@site/static/img/unit-testing/create-test.png').default} alt="create test" />
 </div>
 
-On the next pop-up menu, leave everything as default.
+In the next pop-up menu, leave everything as default.
 
 <div>
   <img src={require('@site/static/img/unit-testing/test-options.png').default} alt="test options" />
@@ -20,9 +20,7 @@ On the next pop-up menu, leave everything as default.
 
 Now you should have a new empty class created in `src/test/java/dev/pollito/users_manager/adapter/in/rest/UserControllerTest.java`.
 
-Repeat this process for:
-
-* some classes...
+Repeat this process for as many classes as you want to test.
 
 ## How to Test
 
@@ -156,9 +154,9 @@ class UserControllerTest {
 
 These test classes should be the most comprehensive ones because they verify your business logic.
 
-* Classes that test the behaviour of service implementations are the one that will change more often.
+* Classes that test the behavior of service implementations are the ones that will change more often.
 
-Right now we don't have much logic, so the tests are very simple.
+Right now we have little logic, so the tests are basic.
 
 ```java title="src/test/java/dev/pollito/users_manager/domain/service/UserServiceImplTest.java"
 package dev.pollito.users_manager.domain.service;

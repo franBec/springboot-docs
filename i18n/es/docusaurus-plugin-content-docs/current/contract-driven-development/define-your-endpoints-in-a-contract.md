@@ -2,44 +2,47 @@
 sidebar_position: 2
 ---
 
-# Define tus endpoints en un contrato
+# Definí tus endpoints en un contrato
 
 Dado un Usuario con la siguiente estructura:
 
 ```json
 {
-	"id": 1,
-	"name": "Leanne Graham",
-	"username": "Bret",
-	"email": "Sincere@april.biz",
-	"address": {
-		"street": "Kulas Light",
-		"suite": "Apt. 556",
-		"city": "Gwenborough",
-		"zipcode": "92998-3874",
-		"geo": {
-			"lat": "-37.3159",
-			"lng": "81.1496"
-		}
-	},
-	"phone": "1-770-736-8031 x56442",
-	"website": "hildegard.org",
-	"company": {
-		"name": "Romaguera-Crona",
-		"catchPhrase": "Multi-layered client-server neural-net",
-		"bs": "harness real-time e-markets"
-	}
+  "id": 1,
+  "name": "Leanne Graham",
+  "username": "Bret",
+  "email": "Sincere@april.biz",
+  "address": {
+    "street": "Kulas Light",
+    "suite": "Apt. 556",
+    "city": "Gwenborough",
+    "zipcode": "92998-3874",
+    "geo": {
+      "lat": "-37.3159",
+      "lng": "81.1496"
+    }
+  },
+  "phone": "1-770-736-8031 x56442",
+  "website": "hildegard.org",
+  "company": {
+    "name": "Romaguera-Crona",
+    "catchPhrase": "Multi-layered client-server neural-net",
+    "bs": "harness real-time e-markets"
+  },
+  "profilePictureUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
 }
 ```
 
-Queremos crear los siguientes endpoints:
+Queremos que nuestro backend exponga estos endpoints:
 
-* `/users` retornará una lista de usuarios.
-* `/users/{id}` retornará el usuario que tenga el id indicado.
+* `/users` lista todos los usuarios.
+* `/users/{id}` obtiene un usuario por identificador.
 
-Una [Especificación OpenAPI](https://swagger.io/specification/) cumple con la definición de contrato que di antes: es un conjunto de aserciones que contiene **valores de entrada válidos**, y su significado, **valores de retorno válidos**, y su significado, y **valores de error que pueden ocurrir**, y su significado.
+## OpenAPI specification
 
-Una Especificación OpenAPI que represente el comportamiento deseado se vería algo así:
+Una [OpenAPI Specification](https://swagger.io/specification/) cumple con la definición de contrato que di antes: Es un conjunto de afirmaciones que contiene **valores de entrada válidos** y su significado, **valores de retorno válidos** y su significado, y **valores de error que pueden ocurrir** y su significado.
+
+Una OpenAPI Specification que representaría el comportamiento deseado se vería algo así:
 
 ```yaml
 openapi: 3.0.3
@@ -60,44 +63,15 @@ paths:
         - User
       summary: List all users
       operationId: findAll
-      parameters:
-        - description: Zero-based page index (0..N)
-          in: query
-          name: pageNumber
-          schema:
-            default: 0
-            minimum: 0
-            maximum: 2147483647
-            type: integer
-        - description: Size of the page to be returned
-          in: query
-          name: pageSize
-          schema:
-            default: 10
-            maximum: 10
-            minimum: 1
-            type: integer
-        - description: >
-            Sorting criteria in the format `field:direction`. Specify multiple
-            sort criteria by repeating the `sort` query parameter. For example:
-            `?pageSort=name:desc&pageSort=id:asc`. Available field values:
-            `id`, `name`, `username`, `email`. Available direction values: `asc`,
-            `desc`. If direction value is omitted it defaults to `asc`
-          explode: true
-          in: query
-          name: pageSort
-          schema:
-            default: [ id:asc ]
-            items:
-              type: string
-            type: array
       responses:
         '200':
           description: List of all users
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Users'
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
         default:
           description: Error
           content:
@@ -214,17 +188,6 @@ components:
           example: "81.1496"
           type: string
       type: object
-    Pageable:
-      type: object
-      properties:
-        pageNumber:
-          description: Current page number (starts from 0)
-          example: 0
-          type: integer
-        pageSize:
-          description: Number of items retrieved on this page
-          example: 1
-          type: integer
     User:
       properties:
         address:
@@ -248,6 +211,10 @@ components:
           description: User phone
           example: "1-770-736-8031 x56442"
           type: string
+        profilePictureUrl:
+          description: User profile picture url
+          example: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+          type: string
         username:
           description: User username
           example: "Bret"
@@ -256,31 +223,56 @@ components:
           description: User website
           example: "hildegard.org"
           type: string
-    Users:
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-        pageable:
-          $ref: '#/components/schemas/Pageable'
-        totalElements:
-          description: Total number of items that meet the criteria
-          example: 10
-          type: integer
-      type: object
 ```
 
-Para una mejor visualización, podés copiar y pegar este archivo yaml en [Swagger Editor](https://editor.swagger.io/) o usar la opción “Show OpenAPI Preview” en IntelliJ IDEA (esquina superior derecha).
+Para una mejor visualización, podés copiar y pegar el archivo YAML en [Swagger Editor](https://editor.swagger.io/) o usar [OpenAPI (Swagger) Editor en IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor). Deberías poder ver algo así:
 
 <div>
-  <img src={require('@site/static/img/contract-driven-development/openapi-preview.png').default} alt="openapi preview" />
+  <img src={require('@site/static/img/contract-driven-development/preview-browser.png').default} alt="vista previa en el navegador" />
 </div>
 
-Deberías poder ver algo así:
+## Rest y Restful
 
-<div>
-  <img src={require('@site/static/img/contract-driven-development/preview-browser.png').default} alt="preview browser" />
-</div>
+**REST** (Representational State Transfer) es un estilo arquitectónico definido por [Roy Fielding](https://roy.gbiv.com/), que enfatiza:
 
-Ya tenemos la documentación de los endpoints lista.
+1. Separación cliente-servidor.
+2. Ausencia de estado (Statelessness).
+3. Capacidad de caché (Cacheability).
+4. Sistema en capas (Layered system).
+5. Interfaz uniforme (recursos, representaciones).
+6. Código bajo demanda (Code-on-demand) (opcional).
+
+Las API **RESTful** siguen estrictamente *todas* estas restricciones. Pero la realidad es esta: **la mayoría de las API "REST" no son verdaderamente RESTful**, y eso está bien.
+
+### Rest está bien
+
+Las APIs verdaderamente RESTful requieren [HATEOAS](https://restfulapi.net/hateoas/) (Hypermedia as the Engine of Application State) — embeber links a recursos relacionados en las respuestas:
+
+```json
+{
+  "id": 1,
+  "links": [
+    { "rel": "self", "href": "/users/1" },
+    { "rel": "orders", "href": "/users/1/orders" }
+  ]
+}
+```
+
+En la práctica, esto no sucede:
+
+* Los equipos de frontend rara vez usan links embebidos.
+* Agrega complejidad sin valor inmediato.
+
+Un contrato OpenAPI ya te da el 80% de los beneficios de REST:
+
+* **URLs centradas en recursos** (`/users/{id}`).
+* **Métodos HTTP estándar** (`GET`/`POST`/`PUT`/`DELETE`).
+* **Manejo claro de errores** (códigos `4xx`/`5xx`).
+
+Por esas razones, **vamos a construir APIs REST**. A menos que estés construyendo sistemas impulsados por hipermedia, **REST está bien**. Enfocate en:
+
+* Contratos consistentes.
+* Manejo predecible de errores.
+* Documentación que humanos y máquinas puedan usar.
+
+A medida que tu API evolucione, podés agregar funcionalidades RESTful más adelante si es necesario.

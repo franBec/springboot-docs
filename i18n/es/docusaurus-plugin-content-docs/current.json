@@ -3,6 +3,14 @@
     "message": "Next",
     "description": "The label for version current"
   },
+  "sidebar.tutorialSidebar.category.Prior Recommended Knowledge": {
+    "message": "Conocimientos previos recomendados",
+    "description": "The label for category Prior Recommended Knowledge in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Prior Recommended Knowledge.link.generated-index.description": {
+    "message": "Antes de meternos en los detalles específicos de Spring Boot, vamos a repasar algunos conceptos, herramientas, y patrones del desarrollo backend.",
+    "description": "The generated-index page description for category Prior Recommended Knowledge in sidebar tutorialSidebar"
+  },
   "sidebar.tutorialSidebar.category.Spring Boot in a Nutshell": {
     "message": "Spring Boot en pocas palabras",
     "description": "The label for category Spring Boot in a Nutshell in sidebar tutorialSidebar"
@@ -35,14 +43,6 @@
     "message": "Normalmente, al desarrollar primero armamos el endpoint y después escribimos la documentación con una Especificación OpenAPI. El problema surge cuando alguien modifica el endpoint y la documentación ya no coincide. Esto podría pasar desapercibido. Peor que no tener documentación es tenerla mal. ¿Y si primero escribimos la documentación y luego generamos el código? Te presento el Desarrollo basado en Contratos.",
     "description": "The generated-index page description for category Contract-Driven Development in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Integration Layer": {
-    "message": "Capa de integración",
-    "description": "The label for category Integration Layer in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Integration Layer.link.generated-index.description": {
-    "message": "En el desarrollo backend actual, los servicios suelen tener que comunicarse con web services externos vía HTTP. Si tu servicio necesita integrarse con plataformas de terceros, microservicios o sistemas legados, el cliente web se vuelve clave en la arquitectura de tu app.",
-    "description": "The generated-index page description for category Integration Layer in sidebar tutorialSidebar"
-  },
   "sidebar.tutorialSidebar.category.Unit Testing": {
     "message": "Pruebas unitarias",
     "description": "The label for category Unit Testing in sidebar tutorialSidebar"
@@ -51,13 +51,29 @@
     "message": "Las pruebas unitarias consisten en testear partes individuales de tu código por separado para asegurarte de que funcionen bien. Es como revisar cada ingrediente antes de cocinar, en lugar de probar el plato final y adivinar qué salió mal.",
     "description": "The generated-index page description for category Unit Testing in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Persistence Layer": {
-    "message": "Capa de persistencia",
-    "description": "The label for category Persistence Layer in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.External API Integration": {
+    "message": "Integración de APIs externas",
+    "description": "The label for category External API Integration in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Persistence Layer.link.generated-index.description": {
-    "message": "Hasta ahora hemos obtenido los datos de los usuarios de una fuente externa. ¿Pero qué pasaría si tuviéramos esos datos en nuestra propia base de datos?",
-    "description": "The generated-index page description for category Persistence Layer in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.External API Integration.link.generated-index.description": {
+    "message": "En el desarrollo backend moderno, los servicios muchas veces tienen que comunicarse con otros servicios web externos usando HTTP. Ya sea que necesites integrarte con plataformas, microservicios o sistemas heredados, aprende a interactuar sin complicaciones con APIs de terceros para extender la funcionalidad de tu aplicación.",
+    "description": "The generated-index page description for category External API Integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Persistence Integration": {
+    "message": "Integración con persistencia de datos",
+    "description": "The label for category Persistence Integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Persistence Integration.link.generated-index.description": {
+    "message": "Hasta ahora hemos obtenido los datos de los usuarios de una fuente externa. ¿Pero qué pasaría si tuviéramos datos en nuestra propia base de datos?",
+    "description": "The generated-index page description for category Persistence Integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Efficient Data Retrieval": {
+    "message": "Acceso a datos eficiente",
+    "description": "The label for category Efficient Data Retrieval in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Efficient Data Retrieval.link.generated-index.description": {
+    "message": "Explora técnicas para una paginación efectiva, un filtrado dinámico y una caché inteligente, asegurándote de que tus aplicaciones recuperen datos rápido y escalen sin problemas.",
+    "description": "The generated-index page description for category Efficient Data Retrieval in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Deployment": {
     "message": "Despliegue",

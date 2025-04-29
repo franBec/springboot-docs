@@ -157,7 +157,7 @@ Let's rewrite the `Controller` so it implements the generated API Interface.
    
       That's fine. We are going to map those values later down the road.
 
-Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users). You should get once again the list with the hardcoded user.
+Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users). You should get the list with the hardcoded user once again.
 
 <div>
   <img src={require('@site/static/img/contract-driven-development/response.png').default} alt="response" />

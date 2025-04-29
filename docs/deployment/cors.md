@@ -4,9 +4,9 @@ sidebar_position: 2
 
 # CORS
 
-As you deploy your backend application, you might run into a security feature built into web browsers called [CORS](https://aws.amazon.com/what-is/cross-origin-resource-sharing/), which stands for **Cross-Origin Resource Sharing**. It sounds technical, but the core idea is simple and important for web security.
+As you deploy your backend application, you might run into a security feature built into web browsers called [CORS](https://aws.amazon.com/what-is/cross-origin-resource-sharing/), which stands for **Cross-Origin Resource Sharing**. It sounds technical, but the core idea is straightforward and important for web security.
 
-## What is CORS and Why Does It Exist?
+## What Is CORS and Why Does It Exist?
 
 Imagine your web browser is like a careful security guard for different websites. By default, this guard enforces a strict rule called the **Same-Origin Policy**. This rule basically says: "A web page loaded from website A (e.g., `your-awesome-app.com`) should only be allowed to make requests back to website A. It shouldn't be able to freely request data from website B (e.g., `your-bank.com` or `some-other-api.com`)."
 
@@ -19,7 +19,7 @@ An **Origin** is defined by the combination of:
 2.  **Hostname:** `localhost`, `your-awesome-app.com`, `api.your-awesome-app.com`.
 3.  **Port:** `:8080`, `:3000` (often implicit, like 80 for http, 443 for https).
 
-If any of these three parts differ between the website making the request (e.g., your frontend) and the server receiving it (e.g., your backend API), it's considered a **cross-origin** request, and the browser's security guard steps in, requiring CORS approval from the server.
+If any of these three parts differ between the website making the request (e.g., your frontend) and the server receiving it (e.g., your backend API), it's considered a **cross-origin** request.
 
 ## When Do You Encounter CORS Issues?
 
@@ -36,9 +36,9 @@ When the frontend tries to make an API call (like fetching user data), the brows
 
 Spring Boot makes handling CORS relatively straightforward. While you *could* hardcode CORS settings directly in your Java code, a much better and more flexible approach is to **externalize the configuration into your `application.yml`** (or `application.properties`).
 
-1. Define CORS Properties in `application.yml`: Add a section to your `src/main/resources/application.yml` to define your CORS settings. This keeps the configuration separate from your code.
+1. Define CORS Properties in `application.yml`.
 
-    ```yaml
+    ```yaml title="src/main/resources/application.yml"
     cors:
       allowed-origins: http://localhost:3000
       allowed-methods: GET, POST, PUT, DELETE, PATCH
@@ -51,9 +51,9 @@ Spring Boot makes handling CORS relatively straightforward. While you *could* ha
    * `allowed-headers`: Defines which custom HTTP headers the frontend is allowed to include in its requests. `*` means allow any.
    * `allowed-credentials`: Allows cookies (or other user credentials) to be included on cross-origin requests.
 
-2. Create a `@Configuration` class that reads these properties. In `src/main/java/dev/pollito/users_manager/config/properties`, create `CorsConfigProperties.java`.
+2. Create a `@Configuration` class that reads these properties.
 
-    ```java
+    ```java title="src/main/java/dev/pollito/users_manager/config/cors/CorsConfigProperties.java"
     package dev.pollito.users_manager.config.properties;
     
     import java.util.List;
@@ -75,39 +75,38 @@ Spring Boot makes handling CORS relatively straightforward. While you *could* ha
     }
     ```
 
-3. Create a `@Configuration` class that implement `WebMvcConfigurer` to apply Spring's CORS handling. In `src/main/java/dev/pollito/users_manager/config`, create `WebConfig.java`.
+3. Create a `@Configuration` class that implement `WebMvcConfigurer` to apply Spring's CORS handling.
 
-```java
-package dev.pollito.users_manager.config;
+   ```java title="src/main/java/dev/pollito/users_manager/config/cors/WebConfig.java"
+   package dev.pollito.users_manager.config.cors;
+   
+   import lombok.RequiredArgsConstructor;
+   import org.jetbrains.annotations.NotNull;
+   import org.springframework.context.annotation.Configuration;
+   import org.springframework.web.servlet.config.annotation.CorsRegistry;
+   import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+   
+   @Configuration
+   @RequiredArgsConstructor
+   public class WebConfig implements WebMvcConfigurer {
+     private final CorsConfigProperties corsConfigProperties;
+   
+     @Override
+     public void addCorsMappings(@NotNull CorsRegistry registry) {
+       registry
+           .addMapping("/**")
+           .allowedOrigins(corsConfigProperties.getAllowedOrigins().toArray(new String[0]))
+           .allowedMethods(corsConfigProperties.getAllowedMethods().toArray(new String[0]))
+           .allowedHeaders(corsConfigProperties.getAllowedHeaders())
+           .allowCredentials(corsConfigProperties.getAllowCredentials());
+     }
+   }
+   ```
 
-import dev.pollito.users_manager.config.properties.CorsConfigProperties;
-import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-@Configuration
-@RequiredArgsConstructor
-public class WebConfig implements WebMvcConfigurer {
-  private final CorsConfigProperties corsConfigProperties;
-
-  @Override
-  public void addCorsMappings(@NotNull CorsRegistry registry) {
-    registry
-        .addMapping("/**")
-        .allowedOrigins(corsConfigProperties.getAllowedOrigins().toArray(new String[0]))
-        .allowedMethods(corsConfigProperties.getAllowedMethods().toArray(new String[0]))
-        .allowedHeaders(corsConfigProperties.getAllowedHeaders())
-        .allowCredentials(corsConfigProperties.getAllowCredentials());
-  }
-}
-```
-
-### Why is Using application.yml?
+### Why Use application.yml?
 
 * **No hardcoding**: You avoid embedding specific URLs or settings directly in your Java code, which makes the code cleaner and less prone to errors if URLs change.
-* **Environment flexibility**: You can easily define different allowed-origins (and other settings) for your dev, test, and prod environments using profile-specific `application-{profile}.yml` files without changing any Java code. For example, allow localhost:3000 in dev, but only https://your-frontend-app.com in prod.
+* **Environment flexibility**: You can define different allowed-origins (and other settings) for your dev, test, and prod environments using profile-specific `application-{profile}.yml` files without changing any Java code. For example, allow localhost:3000 in dev, but only https://your-frontend-app.com in prod.
 * **Centralized configuration**: All CORS settings are clearly visible in your configuration files, making them easier to manage and audit. 
 
-* By understanding CORS and configuring it correctly using externalized properties, you can securely allow your frontend applications to interact with your Spring Boot backend.
+By understanding CORS and configuring it correctly using externalized properties, you can securely allow your frontend applications to interact with your Spring Boot backend.

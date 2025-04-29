@@ -1,0 +1,8 @@
+{
+  "label": "Efficient Data Retrieval",
+  "position": 11,
+  "link": {
+    "type": "generated-index",
+    "description": "Explore techniques for effective pagination, dynamic filtering, and intelligent caching to ensure your applications retrieve data quickly and scale gracefully."
+  }
+}

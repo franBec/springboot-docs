@@ -10,8 +10,7 @@ Annotations are Spring’s way of letting you **tag** your code with instruction
 
 * **Before annotations**, you had to repeat class names, dependencies, and configurations in a separate file. One typo and the project doesn't start.
 
-    ```xml
-    <!-- beans.xml -->
+    ```xml title="beans.xml"
     <bean id="userService" class="com.example.UserService">
         <property name="userRepository" ref="userRepository"/>
     </bean>
@@ -108,7 +107,7 @@ Annotations are Spring’s way of letting you **tag** your code with instruction
    }
    ```
 
-4. **Environment-Specific beans**: Use `@Profile` for dev/staging/prod setups.
+4. **Environment-specific beans**: Use `@Profile` for dev/staging/prod setups.
 
    ```java
    @Profile("dev")

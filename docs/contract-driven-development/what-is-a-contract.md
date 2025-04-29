@@ -20,7 +20,7 @@ So, **what is a contract?** Is a **set of assertions** containing the following 
 
 * **Valid input values**, and their meaning.
 * **Valid return values**, and their meaning.
-* **Error values that can occur**, and their meaning.
+* **Error values that can occur** and their meaning.
 
 In a Contract there are two parties:
 

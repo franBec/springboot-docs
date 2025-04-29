@@ -6,7 +6,7 @@ import YouTube from '@site/src/components/YouTube';
 
 # Formatters
 
-A **formatter** automatically styles your code (indentation, spacing, line breaks) to enforce consistency. No more debates about "tabs vs. spaces".
+A **formatter** automatically styles your code (indentation, spacing, line breaks) to enforce consistency. No more debates about _tabs vs. spaces_
 
 <YouTube id="V7PLxL8jIl8" />
 

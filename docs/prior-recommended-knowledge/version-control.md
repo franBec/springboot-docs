@@ -31,7 +31,7 @@ This is where the code lives.
 ## Git Tips
 
 1. **Git first, code second**: Always `git init` before writing your first line of code.
-2. **Console > GUI**. Tools like [GitHub Desktop](https://desktop.github.com/download/) are great, but learn these 4 commands first:
+2. **Console > GUI**. Tools like [GitHub Desktop](https://desktop.github.com/download/) are great, but learn these four commands first:
 
     ```bash
     git add .
@@ -41,4 +41,4 @@ This is where the code lives.
     ```
 
    Why? Because when your IDE's Git plugin mysteriously breaks (it will), you'll need to debug like a pro.
-3. **Your Team's Rules > Textbook Gitflow**: You might love feature branches, but every company has their own "sacred" workflow. Observe first, then suggest improvements later.
+3. **Your team's rules > textbook gitflow**: You might love feature branches, but every company has their own "sacred" workflow. Observe first, then suggest improvements later.

@@ -4,12 +4,12 @@ sidebar_position: 2
 
 # Logs
 
-Considering we don’t mind printing sensitive information (keys, passwords, etc.), I’ve found useful to log:
+Considering we don’t mind printing sensitive information (keys, passwords, etc.), I’ve found it useful to log:
 
 * Everything that comes in.
 * Everything that comes out.
 
-To achieve that we are going to be using:
+To achieve that, we are going to be using:
 
 * An [Aspect](https://www.baeldung.com/spring-aop) that logs before and after execution of public controller methods.
 * [Micrometer](https://www.baeldung.com/micrometer) to enhance logs.
@@ -72,7 +72,7 @@ Rebuild the application. Then go to [http://localhost:8080/users](http://localho
 
 ## What Does the IntelliJ IDEA Suggestion “Insert ‘@NotNull’ on parameter” Mean?
 
-If you’re using IntelliJ IDEA, you would notice that in the class we just created you are being suggested the following:
+If you’re using IntelliJ IDEA, you would notice that in the class we just created, you are being suggested the following:
 
 <div>
   <img src={require('@site/static/img/optional-but-recommended-features/notnull.png').default} alt="notnull" />
@@ -86,7 +86,7 @@ It is not mandatory to add the `@NotNull` annotation, but it is highly recommend
 * **Code readability**: It makes the code more readable and self-documenting by clearly indicating that null values are not allowed.
 * **Static analysis**: Tools like IntelliJ IDEA can use this annotation to provide better static analysis, warnings, and code suggestions.
 
-When accepting the suggestion, we are going to be notified about a new dependency being added. Just accept.
+When accepting the suggestion, we are going to be notified about a new dependency being added. Accept.
 
 <div>
   <img src={require('@site/static/img/optional-but-recommended-features/notnull-dependency.png').default} alt="notnull dependency" />
@@ -104,14 +104,14 @@ Rebuild the application. Then go to [http://localhost:8080/users](http://localho
 
 ## Micrometer
 
-Imagine this application has many endpoints, and also has many requests at the same time. **How are we going to be sure which logs are related to the same request**, when everything is happening at the same time (or very close enough to mix each other)?
+Imagine this application has many endpoints and also has many requests at the same time. **How are we going to be sure which logs are related to the same request**, when everything is happening at the same time (or very close enough to mix each other)?
 
 **Micrometer** enriches your logs by automatically attaching contextual information. This means that logs include details like [trace and span identifiers](https://medium.com/dzerolabs/observability-journey-understanding-logs-events-traces-and-spans-836524d63172), helping to correlate log messages with specific events and requests across your application.
 
 We need these dependencies:
 
 * [Micrometer Observation](https://mvnrepository.com/artifact/io.micrometer/micrometer-observation): allows you to measure and track various aspects of your application's performance in a standardized way.
-* [Micrometer Tracing Bridge OTel](https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing-bridge-otel): This is a "bridge" that enables distributed tracing using the [OpenTelemetry (OTEL)](https://opentelemetry.io/) standard .
+* [Micrometer Tracing Bridge OTel](https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing-bridge-otel): This is a "bridge" that enables distributed tracing using the [OpenTelemetry (OTEL)](https://opentelemetry.io/) standard.
 
 Add them in the `build.gradle` dependencies section:
 

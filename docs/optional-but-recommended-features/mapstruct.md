@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # MapStruct
 
-Imagine a big project with few dozens APIs, and hundreds of Model -> DTO conversions... Doing this manually can quickly create much boilerplate code, be prone to error, and consume a lot of time. Luckily for us, there are multiple object mapping frameworks for Java.
+Imagine a big project with a few dozen APIs, and hundreds of Model → DTO conversions... Doing this manually can quickly create much boilerplate code, be prone to error, and consume a lot of time. Luckily for us, there are multiple object mapping frameworks for Java.
 
 Mappers are a [“choose your own adventure”](https://www.baeldung.com/java-performance-mapping-frameworks) situation. The one I recommend is [MapStruct](https://mapstruct.org/). Let's add it to the project
 
@@ -35,7 +35,7 @@ Mappers are a [“choose your own adventure”](https://www.baeldung.com/java-pe
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users). Everything should be working as usual.
 
-Don't forget to commit the progress so far.
+Remember to commit the progress so far.
 
 ```bash
 git add .

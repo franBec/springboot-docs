@@ -8,8 +8,8 @@ import YouTube from '@site/src/components/YouTube';
 
 When I started to write this document, I was very sure that I wanted to talk about Unit Testing, but I was not sure where to put it in the context of the whole page.
 
-* In theory, Unit Testing should be the very first thing.
-* In practice, is more engaging to start with a practical scenario.
+* In theory, unit testing should be the very first thing.
+* In practice, it is more engaging to start with a practical scenario.
 
 Why does this happen?
 
@@ -21,9 +21,9 @@ Why does this happen?
 
 It wasn't until **my current position** that I experienced genuine unit testing culture. Here, code quality is paramount, measured rigorously through [Sonar](https://docs.sonarsource.com/sonarqube-server/latest/), with unit test coverage being a key metric. This environment finally showed me what proper testing looks like in practice, not just in theory.
 
-## Unit Testing Is Not Loved By Everyone
+## Everyone Does Not Love unit Testing
 
-> Unit Testing is a way to set up a guardrail at every possible turn, when developers are the ones whose job is to make the path.
+> Unit Testing is a way to set up a guardrail at every possible turn when developers are the ones whose job is to make the path.
 
 That is a hot take said by Theo ([T3.gg](https://t3.gg/)) in his video _Why I Don’t Unit Test_
 
@@ -33,11 +33,11 @@ That video got an interesting answer by someone who heavily recommends unit test
 
 <YouTube id="S5geCJb_bN4" />
 
-## Where's the Value in Unit Testing
+## The Value in Unit Testing
 
 When I learned about Unit Testing in university, I was told something along the lines of:
 
-> The value of Unit Testing isn't immediately apparent to the author of the code. You don't write tests for yourself today—you write them for the developer (possibly future you) who'll maintain your code tomorrow.
+> The value of Unit Testing isn't immediately clear to the author of the code. You don't write tests for yourself today—you write them for the developer (possibly future you) who'll maintain your code tomorrow.
 
 * **Unit tests provide immediate feedback when making changes to existing code**. They give developers confidence to refactor, enhance, or fix issues without the fear of introducing new bugs. They're like having a safety net when walking a tightrope—you hope you won't need it, but you're certainly glad it's there.
 * **Well-written tests also serve as living documentation**... If done well. They demonstrate the expected behavior of your code in various scenarios, often more clearly than written documentation that tends to drift out of sync with actual implementation.

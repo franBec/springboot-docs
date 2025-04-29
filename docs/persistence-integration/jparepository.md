@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # JpaRepository
 
-Let’s check once more the [Hexagonal Architecture](/spring-boot-in-a-nutshell/project-structure#follow-hexagonal-architecture) diagram and focus in the **Secondary Adapter (JPA)** (blue box upper right outside the hexagon):
+Let’s check the [Hexagonal Architecture](/spring-boot-in-a-nutshell/project-structure#follow-hexagonal-architecture) diagram once more and focus on the **Secondary Adapter (JPA)** (blue box upper right outside the hexagon):
 
 <div>
   <img src={require('@site/static/img/external-api-integration/hexagon.png').default} alt="hexagon" />
@@ -28,10 +28,10 @@ When you use `JpaRepository`, you're getting:
 
 ### How It Works
 
-1. **Your business logic** (the service layer) asks for data: "I need all active users"
-2. **The repository** translates this request: `SELECT * FROM users WHERE status = 'active'`
-3. **The database** executes the query and returns raw data
-4. **The repository** transforms that data back into objects your application understands
+1. **Your business logic** (the service layer) asks for data: "I need all active users".
+2. **The repository** translates this request: `SELECT * FROM users WHERE status = 'active'`.
+3. **The database** executes the query and returns raw data.
+4. **The repository** transforms that data back into objects your application understands.
 
 ### Why JpaRepository Makes Life Easier
 

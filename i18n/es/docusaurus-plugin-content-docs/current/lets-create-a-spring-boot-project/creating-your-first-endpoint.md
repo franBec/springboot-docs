@@ -1,16 +1,23 @@
 ---
-sidebar_position: 5
+sidebar_position: 3
 ---
 
 # Creando tu primer endpoint
 
-Finalmente, manos a la obra. Vamos a crear un endpoint simple que retorne un usuario: cuando visitemos [http://localhost:8080/users](http://localhost:8080/users), deberíamos ver algo como esto:
+Finalmente, manos a la obra. Vamos a crear un endpoint simple que devuelve un usuario: cuando visitemos [http://localhost:8080/users](http://localhost:8080/users), deberíamos obtener algo así:
 
-<div>
-  <img src={require('@site/static/img/lets-create-a-spring-boot-project/users.png').default} alt="users" />
-</div>
+```json
+[
+  {
+    "id": 1,
+    "name": "Leanne Graham",
+    "username": "Bret",
+    "email": "Sincere@april.biz"
+  }
+]
+```
 
-## Paso 0: inicializar Git
+## Paso 0: Inicializar git
 
 ```bash
 git init
@@ -18,17 +25,17 @@ git add .
 git commit -m "Initial commit"
 ```
 
-## Paso 1: agregar un formateador (Spotless)
+## Paso 1: Agregar un formatter (Spotless)
 
-* En tu `build.gradle`, **agrega el plugin** en la sección de plugins (usualmente al inicio del archivo):
+* **Agregá el plugin** en la sección de plugins (generalmente al principio de `build.gradle`):
 
-    ```groovy
+    ```groovy title="build.gradle"
     id 'com.diffplug.spotless' version '6.25.0'
     ```
 
-* **Configura** Spotless al final de `build.gradle`; lo siguiente es mi preferencia personal:
+* **Agregá la configuración de Spotless** (al final de `build.gradle`). Lo siguiente es mi preferencia personal:
 
-    ```groovy
+    ```groovy title="build.gradle"
     spotless {
         java {
             target 'src/*/java/**/*.java'
@@ -43,42 +50,49 @@ git commit -m "Initial commit"
         }
     }
     ```
-    Para más información sobre las configuraciones, consultá el [repositorio de Spotless en GitHub](https://github.com/diffplug/spotless).
+    Para más info sobre configuraciones, chequeá el [repositorio de Spotless en GitHub](https://github.com/diffplug/spotless).
 
-* **Auto-formatear en cada build**, agregando una nueva tarea:
+* **Auto-formateá en cada build**, agregando una nueva tarea:
 
-    ```groovy
+    ```groovy title="build.gradle"
     tasks.named("build") {
         dependsOn 'spotlessApply'
         dependsOn 'spotlessGroovyGradleApply'
     }
     ```
 
-* Ahora que ya está todo listo, **ejecutá la tarea Build**.
-* Guardá los cambios realizados hasta ahora:
+* Ahora que todo está configurado, **ejecutá la tarea Build**.
+* Guardá los cambios hechos hasta ahora:
 
     ```bash
     git add .
     git commit -m "spotless"
     ```
 
-## Paso 2: crear el modelo de usuario
+## Paso 2: Crear el modelo user
 
-Un modelo es un plano para tus datos — define la estructura de la información que maneja tu aplicación. En este caso, un Usuario con id, nombre, username y email.
+Un **modelo** es un plano para tus datos — define la estructura de la información que maneja tu aplicación.
 
-En `src/main/java/com/dev/pollito/users_manager/model`, creá `User.java`.
+<div>
+   <img src={require('@site/static/img/lets-create-a-spring-boot-project/hexagonal-arch-domain-model-user.png').default} alt="diagrama de modelo de dominio de arquitectura hexagonal - usuario" />
+</div>
 
-```java
-package dev.pollito.users_manager.model;
+_Otras carpetas se omiten por simplicidad._
 
-import lombok.AccessLevel;
+Creá `User.java`.
+
+```java title="src/main/java/com/dev/pollito/users_manager/domain/model/User.java"
+package dev.pollito.users_manager.domain.model;
+
+import static lombok.AccessLevel.PRIVATE;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Builder
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = PRIVATE)
 public class User {
   Long id;
   String name;
@@ -87,21 +101,27 @@ public class User {
 }
 ```
 
-* Encontré que esta carpeta "model" suele ubicarse junto con las carpetas `controller`, `service`, `utils` o incluso se llama `dto` (haciendo referencia al [patrón DTO](https://www.baeldung.com/java-dto-pattern)).
-  * No te preocupes demasiado por esto; más adelante encontraremos la forma de generar automáticamente este tipo de clases, y no tendremos que escribirlas (a menos que sea necesario).
-* **Utilizaremos Lombok para evitar código boilerplate**. Lombok genera de manera automática el código repetitivo de Java en tiempo de compilación.
-  * Si tu IDE no tiene instalado el plugin de Lombok, verás errores de compilación. Revisá [Optimizing IntelliJ IDEA With Plugins](/lets-create-a-spring-boot-project/lets-talk-about-ides#optimizando-intellij-idea-con-plugins) para saber cómo agregar el plugin de Lombok.
+**Vamos a usar Lombok para evitar código boilerplate**. Lombok genera automáticamente código Java repetitivo al momento de compilar.
 
-## Paso 3: crear el UserService
+* Si tu IDE no tiene el plugin de Lombok instalado, vas a ver errores de compilación. Chequeá [Optimizando IntelliJ IDEA con plugins (para Java)](/prior-recommended-knowledge/ide#optimizando-intellij-idea-con-plugins-para-java) para ver cómo agregarlo.
 
-### Crear la interfaz
+## Paso 3: Crear el primary port y su implementación
 
-En `src/main/java/dev/pollito/users_manager/service`, creá `UserService.java`.
+* `UserService` es el Primary Port, definiendo las operaciones de usuario.
+* `UserServiceImpl` es la implementación, conteniendo la lógica del dominio.
 
-```java
-package dev.pollito.users_manager.service;
+<div>
+   <img src={require('@site/static/img/lets-create-a-spring-boot-project/hexagonal-arch-service-and-impl.png').default} alt="diagrama de arquitectura hexagonal - servicio e implementación" />
+</div>
 
-import dev.pollito.users_manager.model.User;
+_Otras carpetas se omiten por simplicidad._
+
+Creá `UserService.java`.
+
+```java title="src/main/java/dev/pollito/users_manager/domain/port/in/UserService.java"
+package dev.pollito.users_manager.domain.port.in;
+
+import dev.pollito.users_manager.domain.model.User;
 import java.util.List;
 
 public interface UserService {
@@ -109,21 +129,18 @@ public interface UserService {
 }
 ```
 
-### Crear la implementación
+Creá `UserServiceImpl.java`.
 
-En `src/main/java/dev/pollito/users_manager/service/impl`, creá `UserServiceImpl.java`.
+```java title="src/main/java/dev/pollito/users_manager/domain/service/UserServiceImpl.java"
+package dev.pollito.users_manager.domain.service;
 
-```java
-package dev.pollito.users_manager.service.impl;
-
-import dev.pollito.users_manager.model.User;
-import dev.pollito.users_manager.service.UserService;
+import dev.pollito.users_manager.domain.model.User;
+import dev.pollito.users_manager.domain.port.in.UserService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-
   private static final User USER_1 =
       User.builder()
           .id(1L)
@@ -139,52 +156,118 @@ public class UserServiceImpl implements UserService {
 }
 ```
 
-* Por el momento vamos a retornar un usuario "hardcodeado".
-* `@Service` le dice a Spring: "Acá tenés una implementación de `UserService`".
-* `@Override` indica que el método `public List<User> getUsers()` cumple con el "contrato" de la interfaz.
+* Por el momento, vamos a devolver un usuario hardcodeado.
+* `@Service` le dice a Spring _acá tenés una implementación de `UserService`_.
+* `@Override` indica que el método `public List<User> getUsers()` cumple el contrato de la interfaz.
 
-## Paso 4: crear el UserController
+## Paso 4: Crear el primary adapter
 
-En `src/main/java/dev/pollito/users_manager/controller`, creá `UserController.java`.
+* El controlador actúa como un adaptador primario, convirtiendo peticiones HTTP a llamadas al servicio del dominio.
+* El modelo de dominio no se expone directamente a los clientes; en su lugar, [se usan DTOs](https://www.baeldung.com/java-dto-pattern).
 
-```java
-package dev.pollito.users_manager.controller;
+<div>
+   <img src={require('@site/static/img/lets-create-a-spring-boot-project/hexagonal-arch-adapter-in-rest.png').default} alt="diagrama de arquitectura hexagonal - adaptador de entrada REST" />
+</div>
 
-import dev.pollito.users_manager.model.User;
-import dev.pollito.users_manager.service.UserService;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+_Otras carpetas se omiten por simplicidad._
 
-@RestController
-@RequiredArgsConstructor
-public class UserController {
-  private final UserService userService;
+Creá `UserResponseDTO.java`. Contiene los datos a devolver como respuesta.
 
-  @GetMapping("/users")
-  public List<User> getUsers() {
-    return userService.getUsers();
+```java title="src/main/java/dev/pollito/users_manager/adapter/in/rest/dto/UserResponseDTO.java"
+package dev.pollito.users_manager.adapter.in.rest.dto;
+
+import static lombok.AccessLevel.PRIVATE;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@Builder
+@FieldDefaults(level = PRIVATE)
+public class UserResponseDTO {
+  Long id;
+  String name;
+  String username;
+  String email;
+}
+```
+
+Creá `UserMapper.java`. Convierte entre modelos de dominio y DTOs.
+
+```java title="src/main/java/dev/pollito/users_manager/adapter/in/rest/mapper/UserMapper.java"
+package dev.pollito.users_manager.adapter.in.rest.dto;
+
+import static java.util.Objects.isNull;
+
+import dev.pollito.users_manager.domain.model.User;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UserMapper {
+  public UserResponseDTO map(User user) {
+    if (isNull(user)) {
+      return null;
+    }
+
+    return UserResponseDTO.builder()
+        .id(user.getId())
+        .name(user.getName())
+        .username(user.getUsername())
+        .email(user.getEmail())
+        .build();
   }
 }
 ```
 
-Notá que declaramos la interfaz `UserService`, y no la implementación `UserServiceImpl`.
+Creá `UserController.java`. Actúa como un adaptador primario que convierte peticiones HTTP a llamadas al servicio.
 
-* El Controller no le importa cómo funciona `UserService`—solo quiere la lista de usuarios.
-* Spring Boot buscará implementaciones de `UserService`, encontrará solo una (`UserServiceImpl.java`), y llamará al método `getUsers()`.
+```java title="src/main/java/dev/pollito/users_manager/adapter/in/rest/UserController.java"
+package dev.pollito.users_manager.adapter.in.rest;
+
+import dev.pollito.users_manager.adapter.in.rest.dto.UserResponseDTO;
+import dev.pollito.users_manager.adapter.in.rest.mapper.UserMapper;
+import dev.pollito.users_manager.domain.port.in.UserService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/users")
+@RequiredArgsConstructor
+public class UserController {
+  private final UserService userService;
+  private final UserMapper userMapper;
+
+  @GetMapping
+  public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+    return ResponseEntity.ok(userService.getUsers().stream().map(userMapper::map).toList());
+  }
+}
+```
+
+* El controlador solo depende de la interfaz del servicio (puerto), no de su implementación.
+* La lógica de mapeo se extrae a una clase mapper separada.
+* Los objetos de dominio no se exponen a los clientes de la API.
 
 ## Ejecutá la aplicación
 
 Hacé clic derecho en la clase principal → Run. Luego andá a [http://localhost:8080/users](http://localhost:8080/users).
 
 <div>
-    <img src={require('@site/static/img/lets-create-a-spring-boot-project/users.png').default} alt="users" />
+  <img src={require('@site/static/img/lets-create-a-spring-boot-project/req-res.gif').default} alt="petición y respuesta" />
 </div>
 
-¡Felicidades! Tu app con Spring Boot está en marcha, corriendo y exponiendo un endpoint. Commiteá el progreso realizado hasta el momento.
+<div>
+  <img src={require('@site/static/img/lets-create-a-spring-boot-project/users.png').default} alt="usuarios" />
+</div>
+
+¡Felicidades! Tu app Spring Boot está lista, funcionando y exponiendo un endpoint. Commiteá el progreso hasta ahora.
 
 ```bash
 git add .
-git commit -m "/users returns hardcoded user"
+git commit -m "/users devuelve usuario hardcodeado"
 ```

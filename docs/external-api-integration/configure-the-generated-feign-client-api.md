@@ -40,7 +40,7 @@ public interface AdapterOutRestUserMapper {
 
 Why does this mapper have a long name (`AdapterOutRestUserMapper`) instead of a simple one (like `UserMapper`)? That's because in our project, the name `UserMapper` is already taken by `src/main/java/dev/pollito/users_manager/adapter/in/rest/mapper/UserMapper.java`.
 
-* When using `@Mapper(componentModel = SPRING)`, the generated implementations is registered as Spring beans.
+* When using `@Mapper(componentModel = SPRING)`, the generated implementations are registered as Spring beans.
 * Spring requires unique bean identifiers, and same-named classes cause conflicts.
 
 Personal recommendation: for consistency, rename `src/main/java/dev/pollito/users_manager/adapter/in/rest/mapper/UserMapper.java` to `src/main/java/dev/pollito/users_manager/adapter/in/rest/mapper/AdapterInRestUserMapper.java`
@@ -122,7 +122,7 @@ public class UserApiClientImpl implements UserApiClient {
 
 If by now you haven’t renamed `src/main/resources/application.properties`, rename it to `src/main/resources/application.yml`.
 
-Then, add the url of the outside source we are integrating. The end result should look something like this:
+Then, add the url of the outside source we are integrating. The result should look something like this:
 
 ```yaml title="src/main/resources/application.yml"
 jsonplaceholder:
@@ -140,7 +140,7 @@ spring:
 
 To access the url defined in `src/main/resources/application.yml`, we are going to use a [ConfigurationProperties](https://www.baeldung.com/configuration-properties-in-spring-boot) class
 
-* There are other ways to access an externalized configuration property. The most common one I see everywhere is using [the annotation @Value](https://www.baeldung.com/spring-value-annotation). I don't recommend it much cause when doing unit testing you end up using [Reflection](https://stackoverflow.com/questions/2811141/is-it-bad-practice-to-use-reflection-in-unit-testing), which is seen as bad practice.
+* There are other ways to access an externalized configuration property. The most common one I see everywhere is using [the annotation @Value](https://www.baeldung.com/spring-value-annotation). I don't recommend it much cause when doing unit testing, you end up using [Reflection](https://stackoverflow.com/questions/2811141/is-it-bad-practice-to-use-reflection-in-unit-testing), which is seen as bad practice.
 
 ```java title="src/main/java/dev/pollito/users_manager/config/feign/jsonplaceholder/JsonPlaceholderConfigProperties.java"
 package dev.pollito.users_manager.config.feign.jsonplaceholder;
@@ -341,7 +341,7 @@ public class User {
 }
 ```
 
-### Extend The Logging Aspect
+### Extend the Logging Aspect
 
 Extend the logging aspect to cover methods in the jsonPlaceholder API.
 
@@ -402,7 +402,7 @@ pitest {
     excludedClasses = [
         // exclude all subpackages in adapter.in.rest, such as mappers and openApi generated code
         "${project.group}.${project.name}.adapter.in.rest.*.*".toString(),
-        // exclude all subpackages in adapter.in.rest, such as mappers
+        // exclude all subpackages in adapter.out.rest, such as mappers
         "${project.group}.${project.name}.adapter.out.rest.*.*".toString()
     ]
     targetTests = [

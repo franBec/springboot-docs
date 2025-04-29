@@ -22,7 +22,7 @@ In my current role, we've found a balanced strategy that delivers both quality a
 
 ## When Coverage Gets Tough
 
-Even with our reasonable 70% coverage requirement, we still experience delivery challenges. This is especially evident when working with older, poorly maintained codebases where:
+Even with our reasonable 70% coverage requirement, we still experience delivery challenges. This is especially clear when working with older, poorly maintained codebases where:
 
 - Methods are often lengthy and complex.
 - Dependencies are tightly coupled and difficult to mock.

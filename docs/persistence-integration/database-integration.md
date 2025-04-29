@@ -10,7 +10,7 @@ Currently, the application retrieves user data from [\{JSON\} Placeholder /users
   <img src={require('@site/static/img/persistence-integration/response.png').default} alt="response" />
 </div>
 
-We need to enhance the application to retrieve and store profile picture URLs in a database. We'll implement this using H2 in-memory database.
+We need to enhance the application to retrieve and store profile picture URLs in a database. We'll implement this using an H2 in-memory database.
 
 ## Add Dependencies
 
@@ -296,10 +296,56 @@ public class UserServiceImpl implements UserService {
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users).
 
+<div>
+  <img src={require('@site/static/img/persistence-integration/req-res.gif').default} alt="request response" />
+</div>
+
+<div>
+  <img src={require('@site/static/img/persistence-integration/response-complete.png').default} alt="response complete" />
+</div>
+
+Congratulations! Your Spring Boot app is:
+
+* Up and running.
+* Getting users' information from an external source.
+* Complementing users' information by querying a database.
 
 Commit the progress so far.
 
 ```bash
 git add .
-git commit -m "persistence layer"
+git commit -m "database integration"
+```
+
+## Next Steps
+
+### Update Unit Tests
+
+If you want mutation testing to apply to the newly created `UserMetadataRepositoryImpl`, you need to add its location to the `pitest` configuration in `build.gradle`.
+
+```groovy title="build.gradle"
+pitest {
+	junit5PluginVersion = '1.2.1'
+	outputFormats = ['HTML']
+	targetClasses = [
+		"${project.group}.${project.name}.adapter.in.rest.*".toString(),
+		"${project.group}.${project.name}.adapter.out.rest.*".toString(),
+		"${project.group}.${project.name}.adapter.out.jpa.*".toString(),
+		"${project.group}.${project.name}.config.advice.*".toString(),
+		"${project.group}.${project.name}.domain.service.*".toString(),
+	]
+	excludedClasses = [
+		// exclude all subpackages in adapter.in.rest, such as mappers and openApi generated code
+		"${project.group}.${project.name}.adapter.in.rest.*.*".toString(),
+		// exclude all subpackages in adapter.out.rest, such as mappers
+		"${project.group}.${project.name}.adapter.out.rest.*.*".toString(),
+		// exclude all subpackages in adapter.out.jpa, such as entities
+		"${project.group}.${project.name}.adapter.out.jpa.*.*".toString(),
+	]
+	targetTests = [
+		"${project.group}.${project.name}.*".toString()
+	]
+	timestampedReports = false
+	useClasspathFile = true
+}
 ```

@@ -26,7 +26,7 @@ At work, I have plenty of scenarios like:
 
 Errors are not consistent just flew out of the window there, and it gets worse with errors inside 200OK. We don’t want to be that kind of dev: we are going to do proper error handling with [@RestControllerAdvice](https://www.bezkoder.com/spring-boot-restcontrolleradvice/) and [ProblemDetail](https://www.baeldung.com/spring-boot-return-errors-problemdetail).
 
-## Error Hanlding
+## Error Handing
 
 `@RestControllerAdvice` acts like a central "error coordinator" for your application.
 
@@ -82,7 +82,7 @@ public class ControllerAdvice {
 If we visit an uri that doesn't exist (like [http://localhost:8080](http://localhost:8080)), we will now get a standardized error:
 
 <div>
-  <img src={require('@site/static/img/optional-but-recommended-features/standarized-error.png').default} alt="standarized error" />
+  <img src={require('@site/static/img/optional-but-recommended-features/standarized-error.png').default} alt="standard error" />
 </div>
 
 ## Adding More Handlers
@@ -91,7 +91,7 @@ Right now you could be thinking
 
 > But `No static resource` should be 404 instead of 500
 
-To which I say, yes you’re totally right and I wish there was a way to implement that behaviour by default. But with this normalization of errors, everything is a 500 unless you explicitly say otherwise. I think the trade-off is worth it.
+To which I say, yes, you’re totally right, and I wish there was a way to implement that behavior by default. But with this normalization of errors, everything is a 500 unless you explicitly say otherwise. I think the trade-off is worth it.
 
 For making `No static resource` a 404, add in the `@RestControllerAdvice` class a new `@ExceptionHandler(NoResourceFoundException.class)` method.
 
@@ -102,7 +102,7 @@ public ProblemDetail handle(@NotNull NoResourceFoundException e) {
 }
 ```
 
-Now when requesting to [http://localhost:8080](http://localhost:8080) we get the new expected behaviour:
+Now when requesting to [http://localhost:8080](http://localhost:8080) we get the new expected behavior:
 
 <div>
   <img src={require('@site/static/img/optional-but-recommended-features/expected404.png').default} alt="expected 404" />

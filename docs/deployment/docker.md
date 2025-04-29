@@ -54,7 +54,7 @@ Spring Boot applications are perfect candidates for Docker containers for severa
 
 A `Dockerfile` defines how your Spring Boot application should be containerized. Here's my own implementation:
 
-```Dockerfile
+```Dockerfile title="Dockerfile"
 # Build Stage
 FROM gradle:jdk21-alpine AS build
 COPY --chown=gradle:gradle . /home/gradle/src
@@ -144,6 +144,6 @@ Understanding Docker helps bridge the gap between "it works on my machine" and "
 
 ## Recommended Learning Resource
 
-**I really recommend** KodeKloud's video "Learn Docker in 2 Hours - A Full Tutorial (2025)".
+**I really recommend** KodeKloud's video "Learn Docker in 2 Hours—A Full Tutorial (2025)".
 
 <YouTube id="zJ6WbK9zFpI" />

@@ -46,7 +46,7 @@ sidebar_position: 3
     * **Personal recommendations**:
       * In `apiPackage` use the url we are going to integrate in java-style, and end in `.api` (`jsonplaceholder.typicode.com` -> `com.typicode.jsonplaceholder.api`)
       * Same idea for `modelPackage` (`jsonplaceholder.typicode.com` -> `com.typicode.jsonplaceholder.model`)
-    * It is **important** to make sure that `inputspec` is pointing to the desired OpenAPI Specification yaml file.
+    * It is **important** to make sure that `inputspec` is pointing to the desired OpenAPI Specification YAML file.
 
 4. Ensure `compileJava` now depends on both OpenAPI generation tasks:
 

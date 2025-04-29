@@ -25,14 +25,14 @@ graph TD
 
 ## Spring Boot Versions 
 
-When selecting a Spring Boot version you’ll encounter three types of labels:
+When selecting a Spring Boot version, you’ll encounter three types of labels:
 
 * **SNAPSHOT**
   * Indicates a development build of Spring Boot.
   * These versions are unstable, actively being worked on, and may include untested features or bugs.
   * Avoid using them for production, as they can change without notice.
 * M1, M2, etc. (**Milestones**)
-  * Pre-release versions marking major milestones (e.g., new features) before a stable release.
+  * Pre-release versions mark major milestones (e.g., new features) before a stable release.
   * More stable than SNAPSHOT but still not production-ready. Ideal for early testing of upcoming features.
 * No Marker (**Stable Releases**)
   * These are stable releases, rigorously tested and production-ready.
@@ -51,7 +51,7 @@ The **Project Metadata** section defines your project’s identity and structure
 | Description  | Brief summary of the project’s purpose. Added to `pom.xml`/`build.gradle` | Keep concise (1–2 sentences) and specific              | Microservice for tracking warehouse inventory |
 | Package Name | Root Java package for source code                                         | Derived from Group + Artifact (hyphens removed)        | `com.acme.inventoryservice`                   |
 
-**Personal preference**: I like to use underscore ( _ ) in the artifact name. There’s no rule against it, it's just not common. But I feel it helps to keep consistency, cause Spring Initializr will replace the hyphen with underscore in some folders.
+**Personal preference**: I like to use underscore (_) in the artifact name. There’s no rule against it, it's just not common. But I feel it helps to keep consistency, cause Spring Initializr will replace the hyphen with underscore in some folders.
 
 ## Packaging: JAR vs WAR
 

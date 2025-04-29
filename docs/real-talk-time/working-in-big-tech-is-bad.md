@@ -12,7 +12,7 @@ Theo’s video “Build first, plan second” is the perfect starting point.
 
 <YouTube id="rosMfs3pZ_0" />
 
-That video show us the following tweet capture:
+That video shows us the following tweet capture:
 
 <div>
   <img src={require('@site/static/img/real-talk-time/tweet-capture.png').default} alt="tweet capture" />
@@ -20,9 +20,9 @@ That video show us the following tweet capture:
 
 When teams prioritize theoretical documentation over tangible prototypes, they risk:
 
-* **Complexity Hallucination**: The engineers on charge (that most probably haven’t written a single line of code in years) create solutions without hands-on experience, leading to bloated designs.
-* **Stagnant Innovation**: Documents become gospel, discouraging iteration.
-* **Misaligned User Needs**: Without early user engagement, teams build solutions in a vacuum.
+* **Complexity hallucination**: The engineers in charge (that most probably haven’t written a single line of code in years) create solutions without hands-on experience, leading to bloated designs.
+* **Stagnant innovation**: Documents become gospel, discouraging iteration.
+* **Misaligned user needs**: Without early user engagement, teams build solutions in a vacuum.
 
 Design docs aren’t evil—they’re tools. But when wielded too early, they anchor teams to untested ideas. Building first ground decisions in reality.
 
@@ -30,24 +30,24 @@ Design docs aren’t evil—they’re tools. But when wielded too early, they an
 
 The rush to deliver often sidelines code health, breeding long-term consequences:
 
-* **Technical Debt**: Quick-and-dirty prototypes become legacy systems. A feature that “works” today might crumble under scalability demands.
-* **Collaboration Barriers**: Poorly structured code confuses teammates, slowing progress. Imagine inheriting a messy codebase—a silent productivity killer.
-* **The Myth of Speed**: Sacrificing quality for speed backfires. Refactoring a fragile system takes longer than building it right the first time.
+* **Technical debt**: Quick-and-dirty prototypes become legacy systems. A feature that “works” today might crumble under scalability demands.
+* **Collaboration barriers**: Poorly structured code confuses teammates, slowing progress. Imagine inheriting a messy codebase—a silent productivity killer.
+* **The myth of speed**: Sacrificing quality for speed backfires. Refactoring a fragile system takes longer than building it right the first time.
 
 ## Disengagement
 
 The “not my job” mentality—whether from burnout or rigid role definitions—erodes team dynamics:
 
-* **Siloed Innovation**: Developers who stick strictly to tasks may miss cross-team insights.
-* **User Disconnect**: If no one owns user feedback, products drift from real needs. Imagine a backend engineer ignoring UX concerns, assuming it’s “the frontend’s problem.”
-* **Stifled Growth**: Limiting yourself to role boundaries curbs learning. Software thrives on interdisciplinary curiosity.
+* **Siloed innovation**: Developers who stick strictly to tasks may miss cross-team insights.
+* **User disconnect**: If no one owns user feedback, products drift from real needs. Imagine a backend engineer ignoring UX concerns, assuming it’s “the frontend’s problem.”
+* **Stifled growth**: Limiting yourself to role boundaries curbs learning. Software thrives on interdisciplinary curiosity.
 
 ## Why Do These Issues Persist?
 
 Because underlying these problems is a culture that often rewards the wrong metrics:
 
-* **Promotions for Paperwork**: Companies value people that write docs and attend meetings over people that write code, incentivizing bureaucracy.
-* **Short-Term Wins**: Managers prioritize sprint velocity over sustainable practices, ignoring tech debt.
+* **Promotions for paperwork**: Companies value people that write docs and attend meetings over people that write code, incentivizing bureaucracy.
+* **Short-term wins**: Managers prioritize sprint velocity over sustainable practices, ignoring tech debt.
 * **Complacency**: “If it works, why change it?” becomes a mantra, killing innovation.
 
 ## The Path Forward

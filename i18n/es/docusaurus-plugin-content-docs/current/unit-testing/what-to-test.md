@@ -6,27 +6,27 @@ sidebar_position: 2
 
 ## Encontrando el equilibrio adecuado
 
-Existe un enfoque purista en las pruebas unitarias que dice:
+Existe un enfoque purista del unit testing que defiende
 
-> Si se puede ejecutar una línea de código, debe ser testeada.
+> Si una línea de código puede ejecutarse, debe testearse.
 
-Aunque esa filosofía suena súper completa, puede llevar a lo que yo llamo "parálisis de tests" – donde los equipos se pasan tanto tiempo escribiendo tests que la entrega real de funcionalidades se retrasa un montón. Y ni con cobertura del 100% se puede garantizar que no se escape algún caso extraño.
+Si bien esta filosofía suena minuciosa, puede llevar a lo que yo llamo "parálisis de testing" – donde los equipos pasan tanto tiempo escribiendo tests que la entrega real de funcionalidades se retrasa significativamente. E incluso con una cobertura del 100%, nunca podés garantizar que un caso extremo imprevisto no se te escape.
 
 ## Un enfoque pragmático
 
-En mi rol actual, encontramos una estrategia balanceada que entrega calidad y puntualidad:
+En mi puesto actual, encontramos una estrategia equilibrada que ofrece tanto calidad como puntualidad:
 
-- **Enfócate en la lógica del negocio**: Prioriza testear todo en los controller(s) y en las implementaciones de servicio, que es donde vive la mayor parte de la lógica crítica.
-- **Apunta a una cobertura realista**: Aunque el 100% de cobertura podría ser lo ideal en teoría, nosotros buscamos llegar a un práctico 70%. Ese benchmark asegura tests sólidos y permite que el equipo siga avanzando.
-- **Considera el contexto**: Cuanto más complejo o crítico sea un componente, más a fondo debe ser testeado. No todos los códigos merecen la misma atención en sus tests.
+-   **Enfocate en la lógica de negocio**: Priorizá testear todo en los controladores y las implementaciones de servicio, donde reside la mayor parte de tu lógica de negocio crítica.
+-   **Apuntá a una cobertura realista**: Si bien el 100% de cobertura puede ser el ideal teórico, apuntamos a un umbral práctico del 70%. Este punto de referencia asegura un testing robusto mientras permite a los equipos mantener el ritmo.
+-   **Considerá el contexto**: Cuanto más complejo o crítico sea un componente, más a fondo debe testearse. No todo el código merece la misma atención de testing.
 
-## Cuando la cobertura se complica
+## Cuando la cobertura se pone difícil
 
-Incluso con nuestro razonable requisito de 70% de cobertura, seguimos teniendo desafíos en la entrega. Esto se ve especialmente al trabajar con bases de código viejas y mal mantenidas, donde:
+Incluso con nuestro razonable requisito de cobertura del 70%, seguimos experimentando desafíos de entrega. Esto es especialmente claro al trabajar con códigos base más antiguos y mal mantenidos donde:
 
-- Los métodos suelen ser largos y complejos.
-- Las dependencias están muy acopladas y son difíciles de mockear.
-- Los efectos secundarios son comunes e impredecibles.
-- La documentación es escasa o está desactualizada.
+-   Los métodos son a menudo largos y complejos.
+-   Las dependencias están fuertemente acopladas y son difíciles de mockear.
+-   Los efectos secundarios son comunes e impredecibles.
+-   La documentación es escasa o desactualizada.
 
-En estas situaciones, puede que sea necesario refactorizar antes de poder empezar a testear de manera efectiva, lo que resalta aún más cómo **las pruebas unitarias fomentan un mejor diseño del código**.
+En estas situaciones, la refactorización puede ser necesaria antes de que se pueda empezar a testear de manera efectiva, lo que resalta aún más cómo **el unit testing fomenta un mejor diseño de código**.

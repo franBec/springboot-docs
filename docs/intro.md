@@ -11,7 +11,7 @@ Back on June 21st 2022, I wrote in the University WhatsApp group:
 
 > Quick question, is it really worth it learning Java Spring? At work, I was put into a course, and I’m too lazy
 
-<div className="">
+<div>
   <img src={require('@site/static/img/WhatsAppImage2025-02-27.jpeg').default} alt="WhatsAppImage2025-02-27" />
 </div>
 
@@ -25,7 +25,7 @@ This document is everything I wish someone had answered me. If you:
 
 … You’re in the right place. I won’t explain bean lifecycles, thread pools, or any of those things, because for 90% of practical scenarios, you won’t need that—this isn’t a Spring Boot encyclopedia. It’s a guide for devs who want to jump quickly into a codebase and ship code.
 
-You will notice that sometimes I put external link references. Feel free to check them to get a more in depth explanation of that specific concept, but be careful of not going into [information overload](https://www.interaction-design.org/literature/article/information-overload-why-it-matters-and-how-to-combat-it).
+You will notice that sometimes I put external link references. Feel free to check them to get a more in-depth explanation of that specific concept, but be careful of not going into [information overload](https://www.interaction-design.org/literature/article/information-overload-why-it-matters-and-how-to-combat-it).
 
 ## Do I Need to Master All of Spring?
 
@@ -41,13 +41,13 @@ According to the [2024 Stack Overflow Developer Survey](https://survey.stackover
 * **Java’s staying power**: With 30+ years of dominance, Java isn’t disappearing—and Spring Boot is its modern, opinionated soulmate.
 * **Scalability**: Need to handle 10 users or 10 million? Spring Boot scales without breaking a sweat.
 
-## But What about AI Taking Over?
+## But What About AI Taking Over?
 
 AI won’t replace developers – but it will amplify the value of those who understand messy human realities. Here’s why Spring Boot engineers will thrive in the AI era.
 
 ### The "Clear Requirements" Myth
 
-> **Product Owner Request**: "Make it like TikTok but for insurance claims, and we need it yesterday."
+> **Product Owner Request**: "Make it like TikTok but for insurance claims, and we needed it yesterday."
 
 > **AI Response**: Generates 200 lines of Java that ignores compliance, scalability, and why combining dance trends with claim forms is a terrible idea.
 
@@ -68,7 +68,7 @@ AI thrives in greenfield projects. The enterprise world? It’s a graveyard of:
 
 * 15-year-old monolithic Spring apps.
 * Legacy integrations that cough blood if you look at them wrong.
-* Compliance requirements written in hieroglyphics.
+* Compliance requirements are written in hieroglyphics.
 
 Spring Boot developers aren’t just writing code – they’re navigating dependency hell, patching vulnerabilities in 50K-line codebases, and making ancient systems dance with modern cloud infra. AI tools become helpers, not replacements, in this chaos.
 

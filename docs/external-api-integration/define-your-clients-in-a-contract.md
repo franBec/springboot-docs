@@ -4,13 +4,13 @@ sidebar_position: 2
 
 # Define Your Clients in a Contract
 
-Back in [Contract-Driven Development](/category/contract-driven-development), we used an [OpenAPI Specification](https://swagger.io/specification/) to define the expected behaviour of our Spring Boot application when **providing** endpoints to whoever decides to use our app.
+Back in [Contract-Driven Development](/category/contract-driven-development), we used an [OpenAPI Specification](https://swagger.io/specification/) to define the expected behavior of our Spring Boot application when **providing** endpoints to whoever decides to use our app.
 
 <div>
   <img src={require('@site/static/img/external-api-integration/openapi-primary-adapter.png').default} alt="openapi primary adapter" />
 </div>
 
-But what if we used another OpenAPI Specification to define the expected behaviour of our Spring Boot application when **integrating** an External API?
+But what if we used another OpenAPI Specification to define the expected behavior of our Spring Boot application when **integrating** an External API?
 
 <div>
   <img src={require('@site/static/img/external-api-integration/openapi-primary-and-secondary-adapters.png').default} alt="openapi primary and secondary adapters" />
@@ -20,7 +20,7 @@ Well, we are in luck, cause the same [openapi-generator plugin](https://github.c
 
 For our project, we are going to integrate [\{JSON\} Placeholder /users endpoint](https://jsonplaceholder.typicode.com/users) to get fake data about users:
 
-- Outside sources may provide an OpenAPI Specification, but for this case I was not able to find any. So I made my own interpretation.
+- Outside sources may provide an OpenAPI Specification, but in this case I was not able to find any. So I made my own interpretation.
 
 ```yaml
 openapi: 3.0.3

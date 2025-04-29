@@ -10,7 +10,7 @@ import YouTube from '@site/src/components/YouTube';
 
 We're going to be using JUnit 5, but it's worth knowing about alternatives:
 
-- [JUnit 5](https://junit.org/junit5/): The latest version with improved features like nested tests, parameterized tests, and better extension model.
+- [JUnit 5](https://junit.org/junit5/): The latest version with improved features like nested tests, parameterized tests, and a better extension model.
 - [JUnit 4](https://junit.org/junit4/): Still widely used in legacy projects.
 - [Mockito](https://site.mockito.org/): The most popular mocking framework for Java.
 - [Mockk](https://mockk.io/): A powerful mocking library designed specifically for Kotlin.
@@ -52,7 +52,7 @@ void withdrawReducesBalance() {
 }
 ```
 
-You can use comments to separate sections or simply structure your code in this order. Some teams even use descriptive method names that follow this pattern.
+You can use comments to separate sections or structure your code in this order.
 
 ## Common Structure of a JUnit 5 Test with Mockito
 
@@ -177,7 +177,7 @@ Only mock what you need to test the specific behavior you're interested in.
 
 ## Naming Test Methods
 
-Good test names are like documentation - they explain what the code should do and under what circumstances.
+Good test names are like documentation—they explain what the code should do and under what circumstances.
 
 ### Effective Naming Patterns
 

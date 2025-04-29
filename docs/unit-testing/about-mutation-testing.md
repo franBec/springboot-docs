@@ -6,7 +6,7 @@ sidebar_position: 5
 
 What is mutation testing? [Pitest](https://pitest.org/) defines it as:
 
-> Mutation testing is conceptually quite simple. Faults (or mutations) are automatically seeded into your code, then your tests are run. If your tests fail then the mutation is killed, if your tests pass then the mutation lived. The quality of your tests can be gauged from the percentage of mutations killed.
+> Mutation testing is conceptually quite simple. Faults (or mutations) are automatically seeded into your code, then your tests are run. If your tests fail, then the mutation is killed, if your tests pass, then the mutation lived. The quality of your tests can be gauged from the percentage of mutations killed.
 
 ## Mutation Testing in Java Spring Boot Projects
 
@@ -60,7 +60,7 @@ To get this metric, we need the [Solidsoft Pitest Gradle Plugin](https://mvnrepo
     }
     ```
 
-4. Now that everything is set up, run the `test` Task. When the task finishes, If you check the `build/reports/pitest/index.html`, you’ll find a HTML file, that is the report. Open it and explore it.
+4. Now that everything is set up, run the `test` Task. When the task finishes, If you check the `build/reports/pitest/index.html`, you’ll find an HTML file, that is the report. Open it and explore it.
 
    <div>
      <img src={require('@site/static/img/unit-testing/report.png').default} alt="report" />
