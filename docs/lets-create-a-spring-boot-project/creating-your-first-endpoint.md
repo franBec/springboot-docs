@@ -2,6 +2,8 @@
 sidebar_position: 3
 ---
 
+import ZoomableMermaid from '@site/src/components/ZoomableMermaid';
+
 # Creating Your First Endpoint
 
 Finally, let’s get our hands dirty. We’ll create a simple endpoint that returns a user: when we visit [http://localhost:8080/users](http://localhost:8080/users), we should get something like this:
@@ -257,6 +259,7 @@ public class UserController {
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users).
 
+<ZoomableMermaid caption="Sequence diagram illustation of `getAllUsers` flow">
 ```mermaid
 sequenceDiagram
   participant Client
@@ -264,27 +267,28 @@ sequenceDiagram
   participant UserServiceImpl
   participant UserMapper
 
-  Client->>UserController: GET /users Request
-  activate UserController
+Client->>UserController: GET /users Request
+activate UserController
 
-  UserController->>UserServiceImpl: getUsers()
-  activate UserServiceImpl
+UserController->>UserServiceImpl: getUsers()
+activate UserServiceImpl
 
-  UserServiceImpl-->>UserController: List<User>
-  deactivate UserServiceImpl
+UserServiceImpl-->>UserController: List<User>
+deactivate UserServiceImpl
 
-  Note over UserController: Map List<User> to List<UserResponseDTO> using UserMapper
+Note over UserController: Map List<User> to List<UserResponseDTO> using UserMapper
 
-  loop For each User in List<User>
-    UserController->>UserMapper: map(user: User)
-    activate UserMapper
-    UserMapper-->>UserController: userDto: UserResponseDTO
-    deactivate UserMapper
-  end
+loop For each User in List<User>
+UserController->>UserMapper: map(user: User)
+activate UserMapper
+UserMapper-->>UserController: userDto: UserResponseDTO
+deactivate UserMapper
+end
 
-  UserController-->>Client: ResponseEntity<List<UserResponseDTO>> (HTTP 200 OK)
-  deactivate UserController
+UserController-->>Client: ResponseEntity<List<UserResponseDTO>> (HTTP 200 OK)
+deactivate UserController
 ```
+</ZoomableMermaid>
 
 1. **Client->>UserController:** An external client makes a GET request to the `/users` endpoint, which is handled by the `UserController`.
 2. **UserController->>UserServiceImpl:** The `UserController` calls the `getUsers()` method on the injected `UserService` instance (which is implemented by `UserServiceImpl`).
