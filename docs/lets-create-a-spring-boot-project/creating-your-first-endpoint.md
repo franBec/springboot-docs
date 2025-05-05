@@ -259,8 +259,7 @@ public class UserController {
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users).
 
-<ZoomableMermaid caption="Sequence diagram illustation of `getAllUsers` flow">
-```mermaid
+```mermaid title="Sequence diagram illustation of getAllUsers flow"
 sequenceDiagram
   participant Client
   participant UserController
@@ -288,7 +287,6 @@ end
 UserController-->>Client: ResponseEntity<List<UserResponseDTO>> (HTTP 200 OK)
 deactivate UserController
 ```
-</ZoomableMermaid>
 
 1. **Client->>UserController:** An external client makes a GET request to the `/users` endpoint, which is handled by the `UserController`.
 2. **UserController->>UserServiceImpl:** The `UserController` calls the `getUsers()` method on the injected `UserService` instance (which is implemented by `UserServiceImpl`).

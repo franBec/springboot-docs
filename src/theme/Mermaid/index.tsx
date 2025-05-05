@@ -5,7 +5,7 @@ import type {Props} from '@theme/Mermaid';
 
 export default function MermaidWrapper(props: Props): JSX.Element {
     return (
-        <ZoomableMermaid>
+        <ZoomableMermaid value={props.value}>
             <OriginalMermaid {...props} />
         </ZoomableMermaid>
     );
