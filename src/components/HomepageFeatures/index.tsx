@@ -1,4 +1,4 @@
-import type {ReactNode} from 'react';
+import React, {ReactNode} from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
@@ -10,7 +10,6 @@ type FeatureItem = {
     description: ReactNode;
 };
 
-// Translations for all supported languages
 const translations = {
     en: {
         features: [
@@ -31,22 +30,21 @@ const translations = {
     es: {
         features: [
             {
-                title: 'Conocimientos del Mundo Real',
-                description: 'Aprende de experiencias prácticas y desafíos reales en proyectos de Spring Boot. Sin rodeos—solo la verdad honesta sobre lo que funciona.',
+                title: 'Aprendizajes del mundo real',
+                description: 'Aprendé de experiencias prácticas y desafíos reales en proyectos de Spring Boot. Nada de relleno —solo la verdad honesta sobre lo que funciona.',
             },
             {
-                title: 'Enfoque Directo',
-                description: 'Sáltate la jerga complicada. Concéntrate en consejos claros y prácticos que te ayuden a comenzar a programar sin ahogarte en teoría.',
+                title: 'Enfoque directo',
+                description: 'Evitá la jerga súper complicada. Enfocate en consejos claros y prácticos que te ayuden a saltar a codear sin ahogarte en teoría.',
             },
             {
-                title: 'Guía con Opinión',
-                description: 'Descubre la perspectiva de un desarrollador sobre Spring Boot—donde la experiencia práctica se encuentra con la crítica honesta. No se trata de memorizar cada detalle, sino de resolver problemas reales.',
+                title: 'Guía opinionada',
+                description: 'Descubrí la visión de un desarrollador sobre Spring Boot —donde la experiencia práctica se encuentra con la crítica honesta. No se trata de memorizar cada detalle, sino de resolver problemas reales.',
             },
         ],
     },
 };
 
-// The images don't change with language
 const featureSvgs = [
     require('@site/static/img/undraw_programming_65t2.svg').default,
     require('@site/static/img/undraw_sorting-thoughts_w6dr.svg').default,
@@ -68,14 +66,9 @@ function Feature({title, Svg, description}: FeatureItem) {
 }
 
 export default function HomepageFeatures(): ReactNode {
-    // Get the current locale from Docusaurus context
     const {i18n: {currentLocale}} = useDocusaurusContext();
-
-    // Use the current locale, or fall back to English if the locale isn't supported
     const t = translations[currentLocale] || translations.en;
-
-    // Create the feature list by combining translations with SVGs
-    const FeatureList: FeatureItem[] = t.features.map((feature, index) => ({
+    const FeatureList: FeatureItem[] = t.features.map((feature: { title: any; description: any; }, index: string | number) => ({
         title: feature.title,
         Svg: featureSvgs[index],
         description: <>{feature.description}</>,
