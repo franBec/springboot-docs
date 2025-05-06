@@ -215,10 +215,10 @@ public class LogFilter extends OncePerRequestFilter {
 
 Reconstruí la aplicación. Luego andá a [http://localhost:8080/users](http://localhost:8080/users) y chequeá los logs. Deberías encontrar algo que se parezca a esta estructura:
 
-* `LogFilter` imprimiendo la información de la petición como Método, URI, Headers.
-* `LogAspect` imprimiendo el método del controlador y los argumentos.
-* `LogAspect` imprimiendo el método del controlador y la respuesta.
-* `LogFilter` imprimiendo el estado de la respuesta.
+1. `LogFilter` imprimiendo la información de la petición como Método, URI, Headers.
+2. `LogAspect` imprimiendo el método del controlador y los argumentos.
+3. `LogAspect` imprimiendo el método del controlador y la respuesta.
+4. `LogFilter` imprimiendo el estado de la respuesta.
 
 ```log
 2025-04-17T13:30:12.767+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.config.filter.LogFilter        : >>>> Method: GET; URI: /users; QueryString: null; Headers: {host: localhost:8080, connection: keep-alive, sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135", sec-ch-ua-mobile: ?0, sec-ch-ua-platform: "Linux", dnt: 1, upgrade-insecure-requests: 1, user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36, accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7, sec-fetch-site: none, sec-fetch-mode: navigate, sec-fetch-user: ?1, sec-fetch-dest: document, accept-encoding: gzip, deflate, br, zstd, accept-language: es-AR,es-419;q=0.9,es;q=0.8,en;q=0.7,pt;q=0.6, cookie: Idea-f1d89c39=5112bd44-91f2-4b6c-8d18-4c172f6b483e, sec-gpc: 1}
