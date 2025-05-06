@@ -296,9 +296,101 @@ public class UserServiceImpl implements UserService {
 
 Hacé clic derecho en la clase principal → Run. Luego andá a [http://localhost:8080/users](http://localhost:8080/users).
 
-<div>
-  <img src={require('@site/static/img/persistence-integration/req-res.gif').default} alt="petición y respuesta" />
-</div>
+```mermaid
+sequenceDiagram
+    participant Client
+    participant LogFilter
+    participant Rest as UserController
+    participant Aspect as LogAspect
+    participant Service as UserServiceImpl
+    participant ApiClient as UserApiClientImpl
+    participant ExternalApi as "External API (UserApi)"
+    participant Repo as UserMetadataRepositoryImpl
+    participant Database as "Database (UserMetadataJpaRepository)"
+
+    Client->>LogFilter: HTTP GET /users
+    activate LogFilter
+    Note over LogFilter: Log Request Details
+
+    LogFilter->>Rest: Forward Request
+    activate Rest
+
+    Aspect-->>Rest: @Before controller method logging
+
+    Rest->>Service: findAll()
+    activate Service
+
+    Service->>ApiClient: findAll()
+    activate ApiClient
+
+    Aspect-->>ApiClient: @Before API client method logging
+
+    ApiClient->>ExternalApi: GET /users (via Feign)
+    activate ExternalApi
+    ExternalApi-->>ApiClient: List<ExternalUser>
+    deactivate ExternalApi
+
+    Aspect-->>ApiClient: @AfterReturning API client method logging
+
+    Note over ApiClient: Map ExternalUser to DomainUser
+
+    ApiClient-->>Service: List<DomainUser>
+    deactivate ApiClient
+
+    Note over Service: Extract User IDs
+
+    Service->>Repo: findProfilePictureUrlByIds(List<Long> ids)
+    activate Repo
+
+    Repo->>Database: SELECT profile_picture_url FROM USERMETADATA WHERE user_id IN (...)
+    activate Database
+    Database-->>Repo: List<UserMetadataJpaEntity>
+    deactivate Database
+
+    Note over Repo: Process results into Map<Long, Optional<String>>
+
+    Repo-->>Service: Map<Long, Optional<String>> profilePictureUrls
+    deactivate Repo
+
+    Note over Service: Merge profilePictureUrls into DomainUser objects
+
+    Service-->>Rest: List<DomainUser>
+    deactivate Service
+
+    Aspect-->>Rest: @AfterReturning controller method logging
+
+    Note over Rest: Map DomainUser to RestUserDto
+
+    Rest-->>LogFilter: ResponseEntity<List<RestUserDto>> (HTTP 200 OK)
+    deactivate Rest
+
+    Note over LogFilter: Log Response Details
+
+    LogFilter-->>Client: HTTP 200 OK Response
+    deactivate LogFilter
+```
+
+1. **Petición del cliente:** Un `Cliente` inicia el proceso mandando una petición HTTP GET al endpoint `/users`.
+2. **Filtro de logging:** La petición es primero interceptada por el `LogFilter`, que loguea detalles sobre la petición entrante y luego la deja pasar.
+3. **Entrada al controlador:** La petición llega al `UserController`, que es el encargado de manejar las peticiones de la API.
+4. **Logging del aspecto (antes del controlador):** El `LogAspect` loguea que se está llamando al método `UserController.findAll()`.
+5. **Delegar al servicio:** El `UserController` delega la lógica de negocio principal al `UserServiceImpl` llamando a su método `findAll()`.
+6. **Lógica del servicio (obtener datos base):** El `UserServiceImpl` necesita los datos base de los usuarios. Llama al método `findAll()` del `UserApiClientImpl`.
+7. **Logging del aspecto (antes del cliente de API):** El `LogAspect` loguea la llamada a `UserApiClientImpl.findAll()`.
+8. **Llamada a la API externa:** El `UserApiClientImpl` hace una llamada de red real a la *API Externa* usando su interfaz de cliente Feign (`UserApi`) para obtener una lista de usuarios en el formato de la API externa (`List<ExternalUser>`).
+9. **Respuesta de la API externa:** La API Externa responde con los datos de los usuarios.
+10. **Logging del aspecto (después del cliente de API):** El `LogAspect` loguea la respuesta recibida del `UserApiClientImpl` (antes del mapeo).
+11. **Mapeo (externo a dominio):** *Dentro* del `UserApiClientImpl`, los datos de la API externa (`List<ExternalUser>`) son mapeados al modelo interno `List<DomainUser>` de la aplicación usando `AdapterOutRestUserMapper`.
+12. **Lógica del servicio (obtener metadatos):** El `UserServiceImpl` ahora tiene los datos base de los usuarios. Extrae los ID de usuario de la `List<DomainUser>`. Para obtener las imágenes de perfil, llama al método `findProfilePictureUrlByIds()` del `UserMetadataRepositoryImpl`, pasándole los ID extraídos.
+13. **Consulta a la base de datos:** El `UserMetadataRepositoryImpl` interactúa con la *Base de Datos* usando su `UserMetadataJpaRepository` para consultar las URLs de las imágenes de perfil asociadas a los IDs de usuario proporcionados.
+14. **Respuesta de la base de datos:** La *Base de Datos* devuelve las entidades de metadatos de usuario que coinciden (`List<UserMetadataJpaEntity>`).
+15. **Procesando resultados de la base de datos:** *Dentro* del `UserMetadataRepositoryImpl`, los resultados crudos de la base de datos son procesados y transformados en un `Map<Long, Optional<String>>`, mapeando los IDs de usuario a sus URL opcionales de imágenes de perfil.
+16. **Lógica del servicio (fusionar datos):** El `UserServiceImpl` toma la `List<DomainUser>` y el mapa `profilePictureUrls` y fusiona los datos. Itera a través de los usuarios y establece la `profilePictureUrl` en cada objeto `DomainUser` si encuentra una URL en el mapa para el ID de ese usuario. La `List<DomainUser>` enriquecida es luego devuelta al `UserController`.
+17. **Logging del aspecto (después del controlador):** El `LogAspect` loguea la lista de usuarios de dominio devuelta por el `UserServiceImpl` al `UserController`.
+18. **Mapeo (dominio a DTO de REST):** *Dentro* del `UserController`, la `List<DomainUser>` es mapeada al formato `List<RestUserDto>` adecuado para la respuesta de la API usando el `AdapterInRestUserMapper`.
+19. **Construir respuesta:** El `UserController` crea una `ResponseEntity` conteniendo la `List<RestUserDto>` y el estado HTTP (200 OK). Esta respuesta es devuelta.
+20. **Filtro de logging:** La respuesta vuelve a pasar por el `LogFilter`, que loguea el estado de la respuesta y otros detalles.
+21. **Respuesta al cliente:** Finalmente, el `LogFilter` manda la respuesta HTTP completa de vuelta al `Cliente`.
 
 <div>
   <img src={require('@site/static/img/persistence-integration/response-complete.png').default} alt="respuesta completa" />

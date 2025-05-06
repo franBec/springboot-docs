@@ -296,9 +296,101 @@ public class UserServiceImpl implements UserService {
 
 Right-click the main class → Run. Then go to [http://localhost:8080/users](http://localhost:8080/users).
 
-<div>
-  <img src={require('@site/static/img/persistence-integration/req-res.gif').default} alt="request response" />
-</div>
+```mermaid
+sequenceDiagram
+    participant Client
+    participant LogFilter
+    participant Rest as UserController
+    participant Aspect as LogAspect
+    participant Service as UserServiceImpl
+    participant ApiClient as UserApiClientImpl
+    participant ExternalApi as "External API (UserApi)"
+    participant Repo as UserMetadataRepositoryImpl
+    participant Database as "Database (UserMetadataJpaRepository)"
+
+    Client->>LogFilter: HTTP GET /users
+    activate LogFilter
+    Note over LogFilter: Log Request Details
+
+    LogFilter->>Rest: Forward Request
+    activate Rest
+
+    Aspect-->>Rest: @Before controller method logging
+
+    Rest->>Service: findAll()
+    activate Service
+
+    Service->>ApiClient: findAll()
+    activate ApiClient
+
+    Aspect-->>ApiClient: @Before API client method logging
+
+    ApiClient->>ExternalApi: GET /users (via Feign)
+    activate ExternalApi
+    ExternalApi-->>ApiClient: List<ExternalUser>
+    deactivate ExternalApi
+
+    Aspect-->>ApiClient: @AfterReturning API client method logging
+
+    Note over ApiClient: Map ExternalUser to DomainUser
+
+    ApiClient-->>Service: List<DomainUser>
+    deactivate ApiClient
+
+    Note over Service: Extract User IDs
+
+    Service->>Repo: findProfilePictureUrlByIds(List<Long> ids)
+    activate Repo
+
+    Repo->>Database: SELECT profile_picture_url FROM USERMETADATA WHERE user_id IN (...)
+    activate Database
+    Database-->>Repo: List<UserMetadataJpaEntity>
+    deactivate Database
+
+    Note over Repo: Process results into Map<Long, Optional<String>>
+
+    Repo-->>Service: Map<Long, Optional<String>> profilePictureUrls
+    deactivate Repo
+
+    Note over Service: Merge profilePictureUrls into DomainUser objects
+
+    Service-->>Rest: List<DomainUser>
+    deactivate Service
+
+    Aspect-->>Rest: @AfterReturning controller method logging
+
+    Note over Rest: Map DomainUser to RestUserDto
+
+    Rest-->>LogFilter: ResponseEntity<List<RestUserDto>> (HTTP 200 OK)
+    deactivate Rest
+
+    Note over LogFilter: Log Response Details
+
+    LogFilter-->>Client: HTTP 200 OK Response
+    deactivate LogFilter
+```
+
+1. **Client request:** A `Client` initiates the process by sending an HTTP GET request to the `/users` endpoint.
+2. **Logging filter:** The request is first intercepted by the `LogFilter`, which logs details about the incoming request and then passes it along.
+3. **Controller entry:** The request reaches the `UserController`, which is responsible for handling API requests.
+4. **Aspect logging (before controller):** The `LogAspect` logs that the `UserController.findAll()` method is being called.
+5. **Delegate to service:** The `UserController` delegates the core business logic to the `UserServiceImpl` by calling its `findAll()` method.
+6. **Service logic (fetch base data):** The `UserServiceImpl` needs the base user data. It calls the `UserApiClientImpl`'s `findAll()` method.
+7. **Aspect logging (before API client):** The `LogAspect` logs the call to `UserApiClientImpl.findAll()`.
+8. **External API call:** The `UserApiClientImpl` makes an actual network call to the *External API* using its Feign client interface (`UserApi`) to retrieve a list of users in the external API's format (`List<ExternalUser>`).
+9. **External API response:** The External API responds with the user data.
+10. **Aspect logging (after API client):** The `LogAspect` logs the response received from the `UserApiClientImpl` (before mapping).
+11. **Mapping (external to domain):** *Within* the `UserApiClientImpl`, the data from the external API (`List<ExternalUser>`) is mapped to the application's internal `List<DomainUser>` model using `AdapterOutRestUserMapper`.
+12. **Service logic (fetch metadata):** The `UserServiceImpl` now has the base user data. It extracts the user IDs from the `List<DomainUser>`. To get profile pictures, it calls the `UserMetadataRepositoryImpl`'s `findProfilePictureUrlByIds()` method, passing the extracted IDs.
+13. **Database query:** The `UserMetadataRepositoryImpl` interacts with the *Database* using its `UserMetadataJpaRepository` to query for profile picture URLs associated with the provided user IDs.
+14. **Database response:** The `Database` returns the matching user metadata entities (`List<UserMetadataJpaEntity>`).
+15. **Processing database results:** *Within* the `UserMetadataRepositoryImpl`, the raw database results are processed and transformed into a `Map<Long, Optional<String>>`, mapping user IDs to their optional profile picture URLs.
+16. **Service logic (merge data):** The `UserServiceImpl` takes the `List<DomainUser>` and the `profilePictureUrls` map and merges the data. It iterates through the users and sets the `profilePictureUrl` on each `DomainUser` object if a URL is found in the map for that user's ID. The enriched `List<DomainUser>` is then returned to the `UserController`.
+17. **Aspect logging (after controller):** The `LogAspect` logs the list of domain users returned by the `UserServiceImpl` to the `UserController`.
+18. **Mapping (domain to REST DTO):** *Within* the `UserController`, the `List<DomainUser>` is mapped to the `List<RestUserDto>` format suitable for the API response using the `AdapterInRestUserMapper`.
+19. **Build response:** The `UserController` creates a `ResponseEntity` containing the `List<RestUserDto>` and the HTTP status (200 OK). This response is returned.
+20. **Logging filter:** The response passes back through the `LogFilter`, which logs the response status and other details.
+21. **Client response:** Finally, the `LogFilter` sends the complete HTTP response back to the `Client`.
 
 <div>
   <img src={require('@site/static/img/persistence-integration/response-complete.png').default} alt="response complete" />
