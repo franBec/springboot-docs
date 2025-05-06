@@ -239,9 +239,86 @@ public class UserServiceImpl implements UserService {
 
 Hacé clic derecho en la clase principal → Run. Luego andá a [http://localhost:8080/users](http://localhost:8080/users).
 
-<div>
-  <img src={require('@site/static/img/external-api-integration/req-res.gif').default} alt="petición y respuesta" />
-</div>
+```mermaid
+sequenceDiagram
+  participant Client
+  participant Spring as Spring MVC / DispatcherServlet
+  participant LogFilter
+  participant Controller as UserController
+  participant Service as UserServiceImpl
+  participant ApiClient as UserApiClientImpl
+  participant Feign as Feign Client Proxy
+  participant ExternalAPI as JSONPlaceholder API
+
+  Client->>Spring: HTTP GET request (e.g., /users)
+  activate Spring
+
+  Spring->>LogFilter: doFilter(request, response, chain)
+  activate LogFilter
+  Note over LogFilter: logRequestDetails(request) logs incoming request
+  LogFilter->>Spring: chain.doFilter(request, response) // Continue processing
+
+  Spring->>Controller: findAll()
+  activate Controller
+  Note right of Controller: LogAspect.logBefore() invoked
+
+  Controller->>Service: findAll()
+  activate Service
+
+  Service->>ApiClient: findAll()
+  activate ApiClient
+  Note right of ApiClient: LogAspect.logBefore() invoked
+
+  ApiClient->>Feign: execute external API call
+  activate Feign
+
+  Feign->>ExternalAPI: HTTP GET request (/users)
+  activate ExternalAPI
+  Note over ExternalAPI: External API processes request...
+
+  ExternalAPI-->>Feign: HTTP Response (List of External User Models)
+  deactivate ExternalAPI
+
+  Feign-->>ApiClient: Return List<com.typicode.jsonplaceholder.model.User>
+  deactivate Feign
+  Note left of ApiClient: LogAspect.logAfterReturning() invoked (Feign call)
+
+  Note over ApiClient: Map external models to domain models (using AdapterOutRestUserMapper)
+
+  ApiClient-->>Service: Return List<dev.pollito.users_manager.domain.model.User>
+  deactivate ApiClient
+
+  Service-->>Controller: Return List<dev.pollito.users_manager.domain.model.User>
+  deactivate Service
+  Note left of Controller: LogAspect.logAfterReturning() invoked (Service call)
+
+  Note over Controller: Map domain models to REST DTOs (using AdapterInRestUserMapper)
+
+  Controller-->>Spring: Return ResponseEntity<List<dev.pollito.users_manager.adapter.in.rest.dto.User>>
+  deactivate Controller
+
+  Spring->>LogFilter: Returning from chain.doFilter()
+  Note over LogFilter: logResponseDetails(response) logs outgoing response
+  deactivate LogFilter
+
+  Spring-->>Client: HTTP Response (Status 200 OK, List of User DTOs)
+```
+
+1.  **El cliente inicia la petición:** Un cliente externo hace una petición HTTP GET al endpoint de listado de usuarios de la aplicación.
+2.  **Spring MVC y filtros:** La petición llega al `DispatcherServlet` de Spring y pasa por el `LogFilter`, que loguea los detalles de la petición entrante antes de permitir que el procesamiento continúe.
+3.  **Enrutando al controlador:** Spring MVC enruta la petición al `UserController`, específicamente al método `findAll()`. El `LogAspect` loguea la entrada a este método del controlador.
+4.  **El controlador invoca al servicio:** El método `findAll()` del `UserController` delega la petición a la implementación de la interfaz `UserService` (`UserServiceImpl`).
+5.  **El servicio invoca al adaptador:** El método `findAll()` del `UserServiceImpl` delega la petición a la implementación de la interfaz `UserApiClient` (`UserApiClientImpl`).
+6.  **El adaptador llama a la API externa vía Feign:** El método `findAll()` del `UserApiClientImpl` llama a `userApi.findAll()`. `userApi` es un proxy de cliente Feign que manda una petición HTTP GET a la API externa JSONPlaceholder. El `LogAspect` loguea la entrada a esta llamada a la API externa vía Feign.
+7.  **La API externa responde:** La API JSONPlaceholder procesa la petición y devuelve una respuesta HTTP que contiene una lista de usuarios en su formato específico.
+8.  **El cliente Feign maneja la respuesta:** El cliente Feign recibe la respuesta, la deserializa, y devuelve una lista de modelos de usuario externos al `UserApiClientImpl`. El `LogAspect` loguea la respuesta de la llamada a Feign.
+9.  **El adaptador mapea modelos:** *Dentro* del `UserApiClientImpl`, la lista de modelos de usuario externos que volvió es mapeada al modelo de dominio de la aplicación (`dev.pollito.users_manager.domain.model.User`) usando el `AdapterOutRestUserMapper`.
+10. **El adaptador vuelve al aervicio:** El `UserApiClientImpl` devuelve la lista de modelos de usuario de dominio al `UserServiceImpl`.
+11. **El servicio vuelve al controlador:** El `UserServiceImpl` devuelve la lista de modelos de usuario de dominio al `UserController`.
+12. **El controlador mapea modelos:** *Dentro* del `UserController`, la lista de modelos de usuario de dominio es mapeada al formato DTO de REST (`dev.pollito.users_manager.adapter.in.rest.dto.User`) que se usa para la respuesta de la API, usando el `AdapterInRestUserMapper`.
+13. **El controlador devuelve la entidad de respuesta:** El `UserController` envuelve la lista de DTOs en un `ResponseEntity.ok()` y lo devuelve a Spring. El `LogAspect` loguea la respuesta del método del controlador.
+14. **Spring MVC y filtros manejan la respuesta:** Spring MVC procesa el `ResponseEntity`. La respuesta vuelve a pasar por el `LogFilter`, que loguea los detalles de la respuesta de salida.
+15. **Respuesta enviada al cliente:** Spring manda la respuesta HTTP final al cliente.
 
 <div>
   <img src={require('@site/static/img/external-api-integration/response.png').default} alt="respuesta" />
