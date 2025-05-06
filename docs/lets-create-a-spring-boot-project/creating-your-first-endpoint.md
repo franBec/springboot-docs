@@ -127,7 +127,7 @@ import dev.pollito.users_manager.domain.model.User;
 import java.util.List;
 
 public interface UserService {
-  List<User> getUsers();
+  List<User> findAll();
 }
 ```
 
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
           .build();
 
   @Override
-  public List<User> getUsers() {
+  public List<User> findAll() {
     return List.of(USER_1);
   }
 }
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
 * At the moment we are going to return a hardcoded user.
 * `@Service` tells Spring _here is an implementation of `UserService`_.
-* `@Override` indicates that the method `public List<User> getUsers()` fulfills the interface’s contract.
+* `@Override` indicates that the method `public List<User> findAll()` fulfills the interface’s contract.
 
 ## Step 4: Create the Primary Adapter
 
@@ -245,8 +245,8 @@ public class UserController {
   private final UserMapper userMapper;
 
   @GetMapping
-  public ResponseEntity<List<UserResponseDTO>> getUsers() {
-    return ResponseEntity.ok(userService.getUsers().stream().map(userMapper::map).toList());
+  public ResponseEntity<List<UserResponseDTO>> findAll() {
+    return ResponseEntity.ok(userService.findAll().stream().map(userMapper::map).toList());
   }
 }
 ```
@@ -269,7 +269,7 @@ sequenceDiagram
 Client->>UserController: GET /users Request
 activate UserController
 
-UserController->>UserServiceImpl: getUsers()
+UserController->>UserServiceImpl: findAll()
 activate UserServiceImpl
 
 UserServiceImpl-->>UserController: List<User>
@@ -289,7 +289,7 @@ deactivate UserController
 ```
 
 1. **Client->>UserController:** An external client makes a GET request to the `/users` endpoint, which is handled by the `UserController`.
-2. **UserController->>UserServiceImpl:** The `UserController` calls the `getUsers()` method on the injected `UserService` instance (which is implemented by `UserServiceImpl`).
+2. **UserController->>UserServiceImpl:** The `UserController` calls the `findAll()` method on the injected `UserService` instance (which is implemented by `UserServiceImpl`).
 3. **UserServiceImpl-->>UserController:** The `UserServiceImpl` retrieves or generates the list of `User` domain objects and returns it to the `UserController`.
 4. **Note over UserController:** The `UserController` then processes the received list of `User` objects.
 5. **loop For each User...end:** The code uses a Java stream to iterate through the list. For each `User` object:
