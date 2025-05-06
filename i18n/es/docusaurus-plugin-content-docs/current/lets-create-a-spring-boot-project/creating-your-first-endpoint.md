@@ -243,7 +243,7 @@ public class UserController {
   private final UserMapper userMapper;
 
   @GetMapping
-  public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+  public ResponseEntity<List<UserResponseDTO>> getUsers() {
     return ResponseEntity.ok(userService.getUsers().stream().map(userMapper::map).toList());
   }
 }
@@ -257,7 +257,7 @@ public class UserController {
 
 Hacé clic derecho en la clase principal → Run. Luego andá a [http://localhost:8080/users](http://localhost:8080/users).
 
-```mermaid title="Sequence diagram illustation of getAllUsers flow"
+```mermaid
 sequenceDiagram
   participant Client
   participant UserController
