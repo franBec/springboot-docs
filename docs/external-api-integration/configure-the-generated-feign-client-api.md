@@ -290,7 +290,7 @@ sequenceDiagram
 
   Service-->>Controller: Return List<dev.pollito.users_manager.domain.model.User>
   deactivate Service
-  Note left of Controller: LogAspect.logAfterReturning() invoked (Service call)
+  Note left of Controller: LogAspect.logAfterReturning() invoked
 
   Note over Controller: Map domain models to REST DTOs (using AdapterInRestUserMapper)
 
