@@ -70,6 +70,29 @@ Rebuild the application. Then go to [http://localhost:8080/users](http://localho
 2025-04-16T23:33:45.858+01:00  INFO 108782 --- [users_manager] [nio-8080-exec-1] d.p.u.config.aspect.LogAspect            : [UserController.findAll()] Response: <200 OK OK,[UserResponseDTO(id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz)],[]>
 ```
 
+```mermaid
+sequenceDiagram
+    participant Client
+    participant UserController
+    participant UserServiceImpl
+
+    Client->>UserController: GET /users Request
+    activate UserController
+    Note right of UserController: LogAspect.logBefore() invoked
+
+    UserController->>UserServiceImpl: findAll()
+    activate UserServiceImpl
+
+    UserServiceImpl-->>UserController: List<User>
+    deactivate UserServiceImpl
+
+    Note left of UserController: LogAspect.logAfterReturning() invoked
+    Note over UserController: Map List<User> to List<UserResponseDTO> using UserMapper
+
+    UserController-->>Client: ResponseEntity<List<UserResponseDTO>> (HTTP 200 OK)
+    deactivate UserController
+```
+
 ## What Does the IntelliJ IDEA Suggestion “Insert ‘@NotNull’ on parameter” Mean?
 
 If you’re using IntelliJ IDEA, you would notice that in the class we just created, you are being suggested the following:
@@ -228,11 +251,74 @@ Rebuild the application. Then go to [http://localhost:8080/users](http://localho
 2025-04-17T13:30:12.772+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-5] [fa95bea514835a03b3bbd669b9a9b3dd-e77bd546beaf3350] d.p.u.config.filter.LogFilter        : <<<< Response Status: 200
 ```
 
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Spring as Spring MVC / DispatcherServlet
+    participant LogFilter
+    participant UserController
+    participant UserServiceImpl
+
+    Client->>Spring: HTTP GET request (e.g., /users)
+    activate Spring
+
+    Spring->>LogFilter: doFilter(request, response, chain)
+    activate LogFilter
+    Note over LogFilter: logRequestDetails(request) logs incoming request
+    LogFilter->>Spring: chain.doFilter(request, response) // Continue processing
+
+    Spring->>UserController: findAll()
+    activate UserController
+    Note right of UserController: LogAspect.logBefore() invoked
+
+    UserController->>UserServiceImpl: findAll()
+    activate UserServiceImpl
+
+    UserServiceImpl-->>UserController: List<User>
+    deactivate UserServiceImpl
+
+    Note left of UserController: LogAspect.logAfterReturning() invoked
+    Note over UserController: Map List<User> to List<UserResponseDTO> using UserMapper
+
+    UserController-->>Spring: Return ResponseEntity<List<dev.pollito.users_manager.adapter.in.rest.dto.User>>
+    deactivate UserController
+
+    Spring->>LogFilter: Returning from chain.doFilter()
+    Note over LogFilter: logResponseDetails(response) logs outgoing response
+    deactivate LogFilter
+
+    Spring-->>Client: HTTP Response (Status 200 OK, List of User DTOs)
+```
+
 If we visit an uri that doesn't exist (like [http://localhost:8080/asdasd](http://localhost:8080/asdasd)), `LogFilter` will be the one that will let us know in the logs that this request ever happened.
 
 ```log
 2025-04-17T13:31:48.742+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-7] [90afb3fc373bfd83516e4f2349d3cd58-1b84c2268c83b23e] d.p.u.config.filter.LogFilter        : >>>> Method: GET; URI: /asdasd; QueryString: null; Headers: {host: localhost:8080, connection: keep-alive, sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135", sec-ch-ua-mobile: ?0, sec-ch-ua-platform: "Linux", dnt: 1, upgrade-insecure-requests: 1, user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36, accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7, sec-fetch-site: same-site, sec-fetch-mode: navigate, sec-fetch-user: ?1, sec-fetch-dest: document, accept-encoding: gzip, deflate, br, zstd, accept-language: es-AR,es-419;q=0.9,es;q=0.8,en;q=0.7,pt;q=0.6, cookie: Idea-f1d89c39=5112bd44-91f2-4b6c-8d18-4c172f6b483e, sec-gpc: 1}
 2025-04-17T13:31:48.748+01:00  INFO 32637 --- [users_manager] [nio-8080-exec-7] [90afb3fc373bfd83516e4f2349d3cd58-1b84c2268c83b23e] d.p.u.config.filter.LogFilter        : <<<< Response Status: 404
+```
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant Spring as Spring MVC / DispatcherServlet
+  participant LogFilter
+
+  Client->>Spring: HTTP GET request (e.g., /nonexistent/uri)
+  activate Spring
+
+  Spring->>LogFilter: doFilter(request, response, chain)
+  activate LogFilter
+  Note over LogFilter: logRequestDetails(request) logs incoming request
+  LogFilter->>Spring: chain.doFilter(request, response) // Continue processing
+
+  Note over Spring: DispatcherServlet attempts to find handler for URI...<br/>No mapping found for /nonexistent/uri. Spring generates 404 response.
+
+  Spring->>LogFilter: Returning from chain.doFilter() (with error response set)
+  Note over LogFilter: logResponseDetails(response) logs outgoing error response (e.g., 404 Not Found)
+  deactivate LogFilter
+
+  Spring-->>Client: HTTP Response (Status 404 Not Found)
+  deactivate Spring
 ```
 
 Commit the progress so far.
