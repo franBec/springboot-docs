@@ -257,9 +257,43 @@ public class UserController {
 
 Hacé clic derecho en la clase principal → Run. Luego andá a [http://localhost:8080/users](http://localhost:8080/users).
 
-<div>
-  <img src={require('@site/static/img/lets-create-a-spring-boot-project/req-res.gif').default} alt="petición y respuesta" />
-</div>
+```mermaid title="Sequence diagram illustation of getAllUsers flow"
+sequenceDiagram
+  participant Client
+  participant UserController
+  participant UserServiceImpl
+  participant UserMapper
+
+Client->>UserController: GET /users Request
+activate UserController
+
+UserController->>UserServiceImpl: getUsers()
+activate UserServiceImpl
+
+UserServiceImpl-->>UserController: List<User>
+deactivate UserServiceImpl
+
+Note over UserController: Map List<User> to List<UserResponseDTO> using UserMapper
+
+loop For each User in List<User>
+UserController->>UserMapper: map(user: User)
+activate UserMapper
+UserMapper-->>UserController: userDto: UserResponseDTO
+deactivate UserMapper
+end
+
+UserController-->>Client: ResponseEntity<List<UserResponseDTO>> (HTTP 200 OK)
+deactivate UserController
+```
+
+1. **Client->>UserController:** Un cliente externo hace una petición GET al endpoint `/users`, que es manejado por el `UserController`.
+2. **UserController->>UserServiceImpl:** El `UserController` llama al método `getUsers()` de la instancia inyectada de `UserService` (que está implementada por `UserServiceImpl`).
+3. **UserServiceImpl-->>UserController:** El `UserServiceImpl` obtiene o genera la lista de objetos de dominio `User` y la devuelve al `UserController`.
+4. **Nota sobre UserController:** El `UserController` procesa la lista de objetos `User` que recibió.
+5. **loop For each User...end::** El código usa un stream de Java para recorrer la lista. Por cada objeto `User`:
+   * **UserController->>UserMapper:** El `UserController` llama al método `map()` del `UserMapper` inyectado, pasándole el objeto `User` actual.
+   * **UserMapper-->>UserController:** El `UserMapper` crea un `UserResponseDTO` a partir del objeto `User` y lo devuelve.
+6. **UserController-->>Client:** Después de mapear todos los objetos `User` a `UserResponseDTO`s (resultando en una `List<UserResponseDTO>`), el `UserController` envuelve la lista en un `ResponseEntity.ok()` y devuelve la respuesta HTTP final (con un estado 200 OK) al cliente.
 
 <div>
   <img src={require('@site/static/img/lets-create-a-spring-boot-project/users.png').default} alt="usuarios" />
