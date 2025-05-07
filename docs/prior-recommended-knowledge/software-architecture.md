@@ -25,7 +25,7 @@ Popularized by [Uncle Bob](https://en.wikipedia.org/wiki/Robert_C._Martin), this
 3. **Interface adapters**: Converts data between layers. Includes controllers, presenters, and gateways.  
    *Example*: `ClaimRestController` converting HTTP requests to Java objects.
 
-4. ** Frameworks & drivers**: Infrastructure details (DB, Web, UI).  
+4. **Frameworks & drivers**: Infrastructure details (DB, Web, UI).  
    *Example*: Spring Data JPA repositories, Hibernate configurations.
 
 ### Why You'll Often Encounter Clean Architecture
