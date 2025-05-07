@@ -14,7 +14,7 @@ function HomepageHeader() {
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
         <Heading as="h1" className="hero__title">
-            La opinión de Pollito sobre el desarrollo de Spring Boot
+            La opinión de Pollito sobre el desarrollo con Spring Boot
         </Heading>
         <p className="hero__subtitle">Todo lo que me hubiera gustado que alguien me dijera cuando me embarqué en mi primer proyecto Spring Boot</p>
         <div className={styles.buttons}>
