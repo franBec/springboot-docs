@@ -2,6 +2,8 @@
 sidebar_position: 2
 ---
 
+import YouTube from '@site/src/components/YouTube';
+
 # Define Your Endpoints in a Contract
 
 Given a User with the following structure:
@@ -277,3 +279,9 @@ For those reasons, **we are going to build REST APIs**. Unless you're building h
 * Documentation humans and machines can use.
 
 As your API evolves, you may add RESTful features later if required.
+
+## Recommended Learning Resource
+
+**I really recommend** High-Performance Programming's video "Rest API - Best Practices - Design".
+
+<YouTube id="1Wl-rtew1_E" />
