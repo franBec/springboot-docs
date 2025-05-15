@@ -2,6 +2,8 @@
 sidebar_position: 1
 ---
 
+import YouTube from '@site/src/components/YouTube';
+
 # Introducción: ¿Por qué Spring Boot?
 
 _Así que estás considerando el desarrollo backend, y escuchaste hablar de Spring Boot. Pero tenés tus dudas…_
@@ -38,6 +40,8 @@ Según la [encuesta de desarrolladores de Stack Overflow de 2024](https://survey
 * **Fuerza de nivel empresarial**: ¿Detrás de esos números de adopción más bajos? Un ecosistema masivo en el que confían tanto empresas Fortune 500 como startups.
 * **La permanencia de Java**: Con más de 30 años de dominio, Java no va a desaparecer —y Spring Boot es su alma gemela moderna y opinionada.
 * **Escalabilidad**: ¿Necesitás manejar 10 usuarios o 10 millones? Spring Boot escala sin transpirar.
+
+<YouTube id="8inhakY1q9w" />
 
 ## Pero, ¿qué onda con la IA tomando el control?
 

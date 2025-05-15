@@ -2,6 +2,8 @@
 sidebar_position: 1
 ---
 
+import YouTube from '@site/src/components/YouTube';
+
 # Introduction: Why Spring Boot?
 
 _So, you’re considering backend development, and you’ve heard about Spring Boot. But you have your doubts…_
@@ -40,6 +42,8 @@ According to the [2024 Stack Overflow Developer Survey](https://survey.stackover
 * **Enterprise-grade muscle**: Behind those lower adoption numbers? A massive ecosystem trusted by Fortune 500 companies and startups alike.
 * **Java’s staying power**: With 30+ years of dominance, Java isn’t disappearing—and Spring Boot is its modern, opinionated soulmate.
 * **Scalability**: Need to handle 10 users or 10 million? Spring Boot scales without breaking a sweat.
+
+<YouTube id="8inhakY1q9w" />
 
 ## But What About AI Taking Over?
 
