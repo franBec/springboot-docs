@@ -8,9 +8,13 @@ import YouTube from '@site/src/components/YouTube';
 
 Me gustaría empezar este documento con un comentario que encontré en un video de YouTube y me quedó grabado:
 
-> “Full stack” developer means “I do whatever the fuck you tell me to do”
+> Desarrollador “full stack” significa “hago lo que me digas”
 
 Dado que toda esta guía es sobre Spring Boot, un framework tradicionalmente visto firmemente en el bando del "backend", esta frase te puede pegar distinto. ¿Enfocarte en Spring Boot significa que no sos full stack? ¿Es full stack algo que siquiera quieras ser?
+
+> ¿Alguna vez te contrataron como "desarrollador full stack" y te diste cuenta de que ahora eso simplemente significa que eres legalmente responsable de cada error en el código base?
+
+<YouTube id="If90OuYRYeY" />
 
 ## El lado "full stack" tradicional de Spring Boot
 

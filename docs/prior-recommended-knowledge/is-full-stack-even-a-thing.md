@@ -12,6 +12,10 @@ I'd like to start this document with a comment I found in a YouTube video that s
 
 Given that this whole guide is about Spring Boot, a framework traditionally seen as firm in the "backend" camp, this quote might hit differently. Does focusing on Spring Boot mean you're not full stack? Is full stack something you even want to be?
 
+> You ever get hired as a “full-stack developer” and realize it just means you’re now legally responsible for every bug in the codebase?
+
+<YouTube id="If90OuYRYeY" />
+
 ## Spring Boot's Traditional "Full Stack" Side
 
 Historically, especially in enterprise Java applications, it was widespread for the same application to handle both the business logic and the user interface rendering. With Spring Boot, this often looked like:
