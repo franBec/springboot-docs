@@ -2,6 +2,8 @@
 sidebar_position: 6
 ---
 
+import YouTube from '@site/src/components/YouTube';
+
 # IDE
 
 Technically, you could write Spring Boot apps in Notepad and compile them manually via the command line—but that’s like building a house with a screwdriver.
@@ -31,6 +33,8 @@ What About Other IDEs?
 * [NetBeans](https://netbeans.apache.org/front/main/index.html): Rarely used for modern Spring development.
 
 My personal recommendation: download [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) (not sponsored, sadly).
+
+<YouTube id="jTZVx4TCmI4" />
 
 ## Optimizing IntelliJ IDEA with Plugins (for Java)
 

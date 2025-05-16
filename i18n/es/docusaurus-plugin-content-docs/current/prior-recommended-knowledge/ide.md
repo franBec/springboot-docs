@@ -2,6 +2,8 @@
 sidebar_position: 6
 ---
 
+import YouTube from '@site/src/components/YouTube';
+
 # IDE
 
 Técnicamente, podrías escribir apps de Spring Boot en el Bloc de Notas y compilarlas manualmente por línea de comandos—pero eso es como construir una casa con un destornillador.
@@ -31,6 +33,8 @@ Si alguna vez viste a un compañero de laburo programar o exploraste un tutorial
 * [NetBeans](https://netbeans.apache.org/front/main/index.html): Rara vez usado para desarrollo moderno con Spring.
 
 Mi recomendación personal: descargá [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) (no me patrocinan, lamentablemente).
+
+<YouTube id="jTZVx4TCmI4" />
 
 ## Optimizando IntelliJ IDEA con plugins (para Java)
 
