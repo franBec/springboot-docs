@@ -14,7 +14,7 @@ sidebar_position: 1
 
 ✓ Desarrollador Java Spring Boot para el banco privado más grande de Ecuador  
 ✓ Certificado Google Cloud: Digital Leader / Associate Engineer / Professional Architect  
-✓ Certificado Microsoft Azure: Azure Fundamentals  
+✓ Certificado Microsoft Azure: Fundamentals / Developer Associate  
 ✓ Certificado Scrum Master por Scrum.org  
 ✓ Certificado English C2 Proficient por EF SET
 
