@@ -14,7 +14,7 @@ sidebar_position: 1
 
 ✓ Java Spring Boot developer for Ecuador's largest private bank  
 ✓ Google Cloud Certified: Digital Leader / Associate Engineer / Professional Architect  
-✓ Microsoft Azure Certified: Azure Fundamentals  
+✓ Microsoft Azure Certified: Fundamentals / Developer Associate
 ✓ Scrum Master Certified by Scrum.org  
 ✓ English C2 Proficient Certified by EF SET
 
