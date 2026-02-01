@@ -1,0 +1,298 @@
+---
+sidebar_position: 2
+title: Spring IoC Container
+---
+
+import Image from '@site/src/components/image';
+import Youtube from '@site/src/components/youtube';
+import {
+  SpringIocContainerGraphES,
+  AnnotationsLayerJava,
+  AnnotationsLayerKt,
+  AnnotationsLayerGroovy,
+  ConfigurationBeanJava,
+  ConfigurationBeanKt,
+  ConfigurationBeanGroovy,
+  ProfileBeanJava,
+  ProfileBeanKt,
+  ProfileBeanGroovy,
+  AnnotationSoupJava,
+  AnnotationSoupKt,
+  AnnotationSoupGroovy,
+  ConstructorInjectionJava,
+  ConstructorInjectionKt,
+  ConstructorInjectionGroovy,
+  RequiredArgsConstructor,
+  KtPrimaryConstructor,
+  GroovyImmutable,
+  SetterInjectionJava,
+  SetterInjectionKt,
+  SetterInjectionGroovy,
+  FieldInjectionJava,
+  FieldInjectionKt,
+  FieldInjectionGroovy,
+} from '@site/src/components/docs/spring-boot-in-a-nutshell/spring-ioc-container';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+
+Considero que toda la filosofía de Spring está construida sobre cuatro conceptos centrales:
+
+- IoC Container
+- Beans
+- Annotations
+- Dependency Injection
+
+<SpringIocContainerGraphES />
+
+Es difícil explicar uno sin hacer referencia implícita a los otros, lo que puede hacer que entender los aspectos fundamentales del framework sea bastante desalentador para los recién llegados.
+
+<Image
+  src={require('@site/static/img/spring-boot-in-a-nutshell/meme.jpg').default}
+/>
+
+En este documento, vamos a intentar desentrañar esta red interconectada, una pieza a la vez.
+
+## Spring IoC Container
+
+Imaginá que sos chef. En lugar de ir corriendo a la granja por los huevos y al molino por la harina, simplemente gritás _"¡Necesito ingredientes!"_ y aparecen en tu mesada, listos para usar. **Ese es el IoC Container de Spring**, tu asistente personal para objetos Java.
+
+Funciona así:
+
+1. **Component Scan**: Spring escanea tu código en busca de clases especiales marcadas con anotaciones como `@Component`, `@Service` o `@Repository`.
+2. **Bean Creation**: Crea instancias de estas clases, llamadas "beans", y maneja todo su ciclo de vida.
+3. **Dependency Injection**: Cuando uno de tus beans necesita otro, Spring automáticamente se lo provee.
+
+## Beans
+
+Un bean es un objeto manejado por el IoC Container de Spring (Inversión de Control).
+
+- **Los beans se definen en la configuración de Spring**, ya sea vía:
+  - Anotaciones (ej. `@Component`, `@Service`, `@Repository`, `@Configuration`).
+  - Configuración XML (NO lo uses en Spring moderno).
+  - Configuración basada en Java (métodos `@Bean` en clases `@Configuration`).
+- **Singleton por default**: Por defecto, un bean de Spring es un singleton (una instancia por contenedor). Esto se puede personalizar con scopes como `@Scope("prototype")`.
+- **Los beans pueden inyectarse entre sí**. Esto promueve el desacoplamiento y la testeabilidad.
+- **El contenedor controla el ciclo de vida de un bean**, desde la instanciación hasta la destrucción. Podés definir hooks personalizados con anotaciones como `@PostConstruct` y `@PreDestroy`.
+
+## Annotations
+
+Las anotaciones son la forma de Spring de permitirte **etiquetar** tu código con instrucciones como "¡Hey Spring, manejá esta clase!" o "¡Inyectá esa dependencia acá!".
+
+### Definición de Beans
+
+| Anotación         | Significado                                                   | Caso de Uso                                                     |
+| ----------------- | ------------------------------------------------------------- | --------------------------------------------------------------- |
+| `@Component`      | "¡Spring, manejá esta clase!"                                 | Beans genéricos                                                 |
+| `@Service`        | "¡Acá hay lógica de negocio!"                                 | Clases de la capa de servicio                                   |
+| `@Repository`     | "¡Acá hay interacciones con base de datos!"                   | DAOs/clases de base de datos (agrega traducción de excepciones) |
+| `@RestController` | "¡Endpoint de API!" (Combina `@Controller` + `@ResponseBody`) | APIs REST                                                       |
+
+### Dependency Injection
+
+| Anotación    | Significado                    | Ejemplo                               |
+| ------------ | ------------------------------ | ------------------------------------- |
+| `@Autowired` | "¡Inyectá un bean acá!"        | Constructor/field/setter              |
+| `@Primary`   | "¡Elegime primero!"            | Resolver conflictos de beans ambiguos |
+| `@Qualifier` | "Inyectá ESTE bean específico" | `@Qualifier("mysqlDb")`               |
+
+### Configuración
+
+| Anotación        | Significado                       | Ejemplo                                      |
+| ---------------- | --------------------------------- | -------------------------------------------- |
+| `@Configuration` | "¡Esta clase configura beans!"    | Setup de base de datos/librerías de terceros |
+| `@Bean`          | "¡Acá hay un bean para manejar!"  | Métodos que retornan objetos complejos       |
+| `@Value`         | "¡Inyectá un valor de propiedad!" | `@Value("${api.key}")`                       |
+
+### Web/REST
+
+| Anotación         | Significado                    | Ejemplo                              |
+| ----------------- | ------------------------------ | ------------------------------------ |
+| `@RequestMapping` | "Mapeá requests a este método" | `@RequestMapping("/users")`          |
+| `@GetMapping`     | "Manejá requests GET"          | `@GetMapping("/{id}")`               |
+| `@PostMapping`    | "Manejá requests POST"         | `@PostMapping("/create")`            |
+| `@RequestBody`    | "Convertí JSON → objeto Java"  | `createUser(@RequestBody User user)` |
+| `@PathVariable`   | "Obtené parámetros de URL"     | `@PathVariable Long id`              |
+
+### Lombok
+
+| Anotación                  | Propósito                                                                                         | Ejemplo                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `@Getter` / `@Setter`      | Auto-generá getters/setters                                                                       | `@Getter @Setter private String username;` |
+| `@ToString`                | Auto-generá toString()                                                                            | `@ToString(exclude = "password")`          |
+| `@EqualsAndHashCode`       | Auto-generá equals() y hashCode()                                                                 | `@EqualsAndHashCode(callSuper = true)`     |
+| `@NoArgsConstructor`       | Generá constructor sin args                                                                       | `@NoArgsConstructor`                       |
+| `@AllArgsConstructor`      | Generá constructor con todos los args                                                             | `@AllArgsConstructor`                      |
+| `@RequiredArgsConstructor` | Generá constructor con campos final/@NonNull                                                      | `@RequiredArgsConstructor`                 |
+| `@Data`                    | Todo-en-uno (`@Getter`, `@Setter`, `@ToString`, `@EqualsAndHashCode`, `@RequiredArgsConstructor`) | `@Data public class User { ... }`          |
+| `@Builder`                 | Implementá patrón Builder                                                                         | `User.builder().name("Alice").build();`    |
+| `@Slf4j`                   | Inyectá logger (Logger log)                                                                       | `log.info("User created: {}", username);`  |
+
+<Admonition type="tip" title="¡No para proyectos Groovy!">
+Si estás usando Groovy, no necesitás Lombok. [Las transformaciones AST (Abstract Syntax Tree) built-in de Groovy](https://github.com/ellegonzalez/52-technologies-in-2025/blob/master/32-groovy-ast-transformations/README.md) hacen todo lo que hace Lombok, pero lo hacen como ciudadano de primera clase del lenguaje en lugar de un "hack" que se conecta al compilador.
+
+| Feature                       | Lombok                         | Groovy AST                                              |
+| :---------------------------- | :----------------------------- | :------------------------------------------------------ |
+| **Todas las características** | `@Data`                        | `@Canonical` (Combina Equals, HashCode, ToString, etc.) |
+| **Inmutabilidad**             | `@Value`                       | `@Immutable`                                            |
+| **Constructores**             | `@AllArgsConstructor`          | `@TupleConstructor`                                     |
+| **Patrón Builder**            | `@Builder`                     | `@Builder`                                              |
+| **Logging**                   | `@Slf4j`                       | `@Slf4j` (o `@Log`)                                     |
+| **Delegación**                | `@Delegate` (Experimental-ish) | `@Delegate` (Sólido y poderoso)                         |
+| **Lazy Loading**              | `@Getter(lazy=true)`           | `@Lazy`                                                 |
+
+</Admonition>
+
+<Admonition type="tip" title="¡No para proyectos Kotlin!">
+Kotlin fue diseñado desde cero para resolver los problemas que Lombok aborda, pero lo hace como parte de la sintaxis del lenguaje en lugar de depender de trucos de procesamiento de anotaciones. Esto significa código más legible, idiomático con menos "magia" pasando detrás de escena.
+
+| Feature de Lombok     | Equivalente en Kotlin              | Por qué es mejor                                                                                            |
+| :-------------------- | :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| `@Data` / `@Value`    | `data class`                       | Obtenés `equals`, `hashCode`, `toString` y `copy()` en una línea.                                           |
+| `@Getter` / `@Setter` | Propiedades (`val`/`var`)          | Los accesores son built-in. `user.name` llama al getter bajo el capó.                                       |
+| `@AllArgsConstructor` | Constructor Primario               | Definido directo en el header de la clase. No se necesita magia.                                            |
+| `@Builder`            | Parámetros Nombrados y por Default | `User(name = "Franco", age = 30)` es más limpio que un patrón builder.                                      |
+| `@Slf4j`              | `Companion object` o Librerías     | La mayoría usa `private val log = LoggerFactory.getLogger(javaClass)` o una librería como `kotlin-logging`. |
+| `@NonNull`            | Tipos Nulables (`String?`)         | El sistema de tipos de Kotlin maneja null safety en tiempo de compilación, en lugar de chequeos en runtime. |
+
+</Admonition>
+
+### Tips
+
+1. **Preferí constructor injection** (`private final` + Lombok `@RequiredArgsConstructor`) sobre field injection (`@Autowired`).
+2. **Estructurá tus anotaciones en capas**.
+
+   <Tabs groupId="language" queryString>
+     <TabItem value="java" label="Java" default>
+       <AnnotationsLayerJava />
+     </TabItem>
+     <TabItem value="kotlin" label="Kotlin">
+       <AnnotationsLayerKt />
+     </TabItem>
+     <TabItem value="groovy" label="Groovy">
+       <AnnotationsLayerGroovy />
+     </TabItem>
+   </Tabs>
+
+3. Usá `@Configuration` + `@Bean` para conectar dependencias complejas.
+
+   <Tabs groupId="language" queryString>
+     <TabItem value="java" label="Java" default>
+       <ConfigurationBeanJava />
+     </TabItem>
+     <TabItem value="kotlin" label="Kotlin">
+       <ConfigurationBeanKt />
+     </TabItem>
+     <TabItem value="groovy" label="Groovy">
+       <ConfigurationBeanGroovy />
+     </TabItem>
+   </Tabs>
+
+4. **Beans específicos por ambiente**: Usá `@Profile` para configuraciones dev/staging/prod.
+
+   <Tabs groupId="language" queryString>
+     <TabItem value="java" label="Java" default>
+       <ProfileBeanJava />
+     </TabItem>
+     <TabItem value="kotlin" label="Kotlin">
+       <ProfileBeanKt />
+     </TabItem>
+     <TabItem value="groovy" label="Groovy">
+       <ProfileBeanGroovy />
+     </TabItem>
+   </Tabs>
+
+5. **Evitá la sopa de anotaciones**: Mantenete con **una** anotación específica del rol.
+
+   <Tabs groupId="language" queryString>
+     <TabItem value="java" label="Java" default>
+       <AnnotationSoupJava />
+     </TabItem>
+     <TabItem value="kotlin" label="Kotlin">
+       <AnnotationSoupKt />
+     </TabItem>
+     <TabItem value="groovy" label="Groovy">
+       <AnnotationSoupGroovy />
+     </TabItem>
+   </Tabs>
+
+## Dependency Injection
+
+Le decís a Spring qué necesitás pidiendo la [interfaz](/prior-recommended-knowledge/interfaces-and-implementations). Hay varias formas de hacerlo, pero solo una es la correcta.
+
+### Constructor Injection (La Forma Correcta)
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <ConstructorInjectionJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <ConstructorInjectionKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <ConstructorInjectionGroovy />
+  </TabItem>
+</Tabs>
+
+Este es el estándar de oro. ¿Por qué?
+
+- **No hay Nulls**: El objeto ni siquiera puede crearse sin sus dependencias. Te obliga a tener un objeto válido y listo para usar desde el principio.
+- **Inmutabilidad**: Al declarar el campo `final`, garantizás que no puede cambiar después. No vas a cambiar accidentalmente tu base de datos por una tostadora en medio de un request.
+- **Amigable para Testing**: En tus unit tests, no necesitás Spring. Simplemente llamás `new CheckoutController(new MockPaymentService())` y listo. Limpio, simple y rápido.
+
+Mejor aún, te podés deshacer del boilerplate. En Java, usarías una librería como Lombok, pero en Kotlin esto es una feature built-in del lenguaje.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <RequiredArgsConstructor />
+    Lombok genera el constructor para todos tus campos `final` automáticamente.
+    Limpio, conciso e imposible de equivocarse. Así es como se hace.
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <KtPrimaryConstructor />
+    En Kotlin, no necesitás una anotación especial. Declarar una propiedad en el
+    constructor primario (`class ... (...)`) es todo lo que necesitás hacer.
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <GroovyImmutable />
+    Las transformaciones AST de Groovy (Abstract Syntax Tree) pueden hacer el
+    mismo trabajo que Lombok. `@Immutable` es una de muchas que pueden generar
+    constructores y más.
+  </TabItem>
+</Tabs>
+
+### Setter Injection
+
+Esto es para dependencias opcionales. El problema es que tu objeto puede existir en un estado donde sus dependencias son `null`. Es menos seguro y hace tu código más difícil de razonar.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <SetterInjectionJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <SetterInjectionKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <SetterInjectionGroovy />
+  </TabItem>
+</Tabs>
+
+### Field Injection
+
+Se ve limpio, pero es una trampa. Esconde las dependencias, hace tu clase más difícil de testear sin la magia de Spring, y hace imposible crear objetos inmutables.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <FieldInjectionJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <FieldInjectionKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <FieldInjectionGroovy />
+  </TabItem>
+</Tabs>
+
+Como nota final sobre este tema, **realmente recomiendo** el video de CodeAesthetic "Dependency Injection, The Best Pattern". El punto queda clarísimo.
+
+<Youtube id="J1f5b4vcxCQ" />

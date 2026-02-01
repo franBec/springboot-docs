@@ -1,0 +1,139 @@
+---
+sidebar_position: 2
+title: Arquitectura de Aplicación
+---
+
+Hay varias formas de construir aplicaciones, y cada enfoque tiene su propio estilo, beneficios, y desafíos.
+
+## Monolito
+
+Estoy 99.9% seguro de que esta es la primera arquitectura de aplicaciones que aprendés porque es la más intuitiva para empezar. Además, la mayoría de tutoriales y cursos van por este enfoque.
+
+Un monolito es una caja todo-en-uno. La mejor forma de explicarlo es usando la famosa _analogía de la casa_. Imaginate que estás construyendo una casa. En el desarrollo web monolito tradicional, toda la casa se construye como una unidad grande, con todas las habitaciones, funcionalidades, e infraestructura conectadas en una sola estructura.
+
+```txt
+┌─────────────────────────────────────────────────┐
+│                   MONOLITO                      │
+│  ┌───────────────────────────────────────────┐  │
+│  │            Interfaz de Usuario            │  │
+│  └───────────────────────────────────────────┘  │
+│                       ↓                         │
+│  ┌─────────┬─────────┬─────────┬─────────────┐  │
+│  │  Auth   │ Carrito │Productos│   Pedidos   │  │
+│  └─────────┴─────────┴─────────┴─────────────┘  │
+│                       ↓                         │
+│  ┌───────────────────────────────────────────┐  │
+│  │           Base de Datos Única             │  │
+│  └───────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────┘
+```
+
+En esta analogía:
+
+- **Casa**: El monolito mismo es como la casa, que representa toda la aplicación.
+- **Habitaciones**: Dentro de la casa, tenés diferentes habitaciones, como la sala de estar, cocina, dormitorios, y baño. Estas habitaciones representan las distintas features y componentes de la aplicación web, como login de usuario, listado de productos, carrito de compras, y procesamiento de pagos.
+- **Infraestructura**: La plomería, electricidad, y otros sistemas esenciales que sostienen toda la casa son como el código subyacente, base de datos, y recursos que hacen funcionar la aplicación web.
+
+### Puntos Clave
+
+- **Todo en un Solo Lugar**: Al igual que una casa tiene todo bajo un mismo techo, una aplicación web monolito tiene todo su código, funciones, y datos dentro de una única codebase.
+- **Simplicidad**: Construir toda la casa como una unidad puede ser directo y fácil de entender ya que todo está en un solo lugar.
+- **Comunicación**: En un monolito, todas las habitaciones pueden comunicarse fácilmente entre sí ya que son parte de la misma estructura. De manera similar, en el desarrollo web, diferentes features de la aplicación pueden compartir datos y funcionalidades fácilmente.
+
+### Desventajas
+
+- **Escalabilidad**: Si querés hacer la casa más grande, tenés que expandir todo, lo cual puede ser más desafiante y costoso. De manera similar, en el desarrollo web, a medida que la aplicación crece, se vuelve más difícil escalar, y agregar nuevas features puede volverse más complicado.
+- **Mantenimiento**: Imaginate si hay un problema con la plomería en una habitación; podría afectar toda la casa. De manera similar, si hay un bug o issue en una parte del código monolito, podría impactar toda la aplicación.
+- **Velocidad de Desarrollo**: En un monolito, cuando múltiples equipos trabajan en diferentes partes de la aplicación, coordinar sus esfuerzos puede ser desafiante. Los cambios en un área pueden requerir testing y validación exhaustivos a lo largo de toda la aplicación.
+
+## Frontend + Backend
+
+Vamos con la analogía del restaurante para este.
+
+```txt
+╔═══════════════════════════════════════════╗
+║           👤 USUARIOS / CLIENTES          ║
+╠═══════════════════════════════════════════╣
+║  FRONTEND (Área del Comedor)              ║
+║  ┌─────────┐ ┌─────────┐ ┌─────────┐      ║
+║  │  Menú   │ │ Mesero  │ │Ambiente │      ║
+║  └─────────┘ └─────────┘ └─────────┘      ║
+╠═══════════════════════════════════════════╣
+║  BACKEND (Cocina)                         ║
+║  ┌─────────┐ ┌──────────┐ ┌─────────┐     ║
+║  │  Chef   │ │Inventario│ │ Pedidos │     ║
+║  └─────────┘ └──────────┘ └─────────┘     ║
+╚═══════════════════════════════════════════╝
+```
+
+Imaginate que tenés un restaurante. En los primeros días, tu restaurante era chico, y todo pasaba en un solo lugar: la cocina, el área de comedor, y la caja estaban todos juntos (un monolito).
+
+Sin embargo, a medida que tu restaurante se volvió más popular, te encontraste con algunos desafíos:
+
+- **Escalabilidad**: Con la demanda creciente, se volvió más difícil acomodar más clientes, preparar comida rápidamente, y manejar el área de comedor simultáneamente. Necesitabas una forma de expandirte sin saturar el lugar.
+- **Especialización**: Notaste que el staff de tu restaurante tenía habilidades diversas. Algunos eran excelentes cocineros, mientras otros eran amigables y geniales atendiendo clientes. Pero tener a todos haciendo de todo causaba ineficiencias.
+
+Para superar estos desafíos, decidiste dividir tu restaurante en dos áreas distintas:
+
+- **Frontend**: Este es el área de comedor, la parte del restaurante con la que los clientes interactúan directamente. Está diseñada para ser user-friendly y visualmente atractiva. Hay menús, mozos, y ambiente, todo enfocado en crear una experiencia delightful para los clientes.
+- **Backend**: Esta es la cocina, la parte del restaurante oculta de la vista de los clientes. Es donde los chefs trabajan eficientemente para preparar la comida, se maneja el inventario, y se procesan las órdenes.
+
+### Por Qué Esta Separación Tiene Sentido
+
+- **Escalabilidad Mejorada**: Con el frontend y backend separados, ahora podés expandir cualquiera de ellos independientemente. Si querés acomodar más clientes, podés enfocarte en expandir el área de comedor (frontend) sin afectar las operaciones de la cocina (backend).
+- **Especialización y Eficiencia**: Ahora que el staff de cocina puede enfocarse únicamente en cocinar y manejar inventario, se vuelven más eficientes en sus tareas. Los mozos pueden concentrarse en brindar excelente servicio a los clientes sin tener que preocuparse por la preparación de la comida.
+- **Flexibilidad**: Con un frontend y backend independientes, tenés la flexibilidad de actualizar o reemplazar uno sin necesariamente tocar el otro. Por ejemplo, podés renovar el menú y el área de comedor (frontend) sin cambiar toda la configuración de la cocina (backend).
+
+En términos de desarrollo web:
+
+- **Frontend**: Esta es la interfaz de usuario (UI) de un sitio web o aplicación web con la que los usuarios interactúan directamente. Es responsable del layout y la experiencia de usuario general.
+- **Backend**: Este es el lado servidor de la aplicación, manejando tareas como almacenamiento de datos, procesamiento, y lógica de negocio.
+
+La división permite un proceso de desarrollo web más eficiente y flexible, facilitando la gestión de proyectos complejos y entregando una mejor experiencia de usuario a los visitantes.
+
+## Microservicios
+
+```txt
+MONOLITO                      MICROSERVICIOS
+   ┌────────────────┐          ┌─────────────────────────┐
+   │  App Única     │          │      API Gateway        │
+   │ ┌────────────┐ │          └───────────┬─────────────┘
+   │ │     IU     │ │                      │
+   │ ├────────────┤ │          ┌───────────┼───────────┐
+   │ │  Lógica de │ │          ▼           ▼           ▼
+   │ │  Negocio   │ │       ┌─────┐    ┌─────┐    ┌─────┐
+   │ ├────────────┤ │       │Svc  │    │Svc  │    │Svc  │
+   │ │ Base Datos │ │       │Usua.│    │Pedi.│    │Pago │
+   │ └────────────┘ │       └──┬──┘    └──┬──┘    └──┬──┘
+   └────────────────┘          ▼          ▼          ▼
+                             [BD]       [BD]       [BD]
+```
+
+Imaginate que tenés un edificio grande, único, y multipropósito (como un mega-mall) que aloja todos los diferentes negocios, servicios, e instalaciones. Esto es similar a **una arquitectura monolito, donde todo está integrado fuertemente en un sistema grande**.
+
+Ahora, exploremos los pros y contras de transformar este monolito en **microservicios, una colección de edificios más chicos e independientes, cada uno dedicado a una función específica**.
+
+**Pros**:
+
+- **Escalabilidad**: Si un servicio particular (ej., shopping, entretenimiento, transporte) experimenta alta demanda, puede escalar independientemente sin afectar a los demás.
+- **Flexibilidad**: Cada servicio puede diseñarse y actualizarse independientemente. Si un servicio necesita una nueva feature o tecnología, puede actualizarse sin afectar a los demás. Esto permite mantenerse al día con las últimas tendencias y avances.
+- **Aislamiento de Fallas**: Si surge un problema en un servicio, puede contenerse a ese servicio específico, reduciendo el riesgo de disrupción generalizada.
+- **Especialización**: Diferentes servicios pueden especializarse en lo que mejor hacen. Esto permite que cada servicio sobresalga y entregue experiencias de alta calidad.
+- **Velocidad de Desarrollo**: Equipos independientes pueden trabajar en diferentes servicios simultáneamente, acelerando el proceso de desarrollo. Los cambios y actualizaciones pueden implementarse más rápido, ya que están confinados y no requieren coordinación en toda la aplicación.
+
+**Contras**:
+
+- **Complejidad**: Manejar muchos servicios independientes requiere coordinación y comunicación. Los microservicios agregan complejidad en términos de comunicación inter-servicio, deployment, y monitoreo.
+- **Overhead de Infraestructura**: Cada servicio necesita su propia infraestructura y recursos, lo cual puede resultar en costos de mantenimiento y operación más altos comparados con un único monolito.
+- **Desafíos de Integración**: Con muchos servicios independientes, asegurar una integración fluida entre ellos puede ser más desafiante que un monolito. Los desarrolladores deben implementar protocolos de comunicación robustos y manejar potenciales issues que surjan de las interacciones entre servicios.
+- **Curva de Aprendizaje**: La transición a una arquitectura de microservicios puede ser un cambio significativo para el equipo de desarrollo, requiriendo que aprendan nuevos conceptos y mejores prácticas.
+
+## Comparación
+
+| Enfoque            | Ventajas                                                                                                                           | Desventajas                                                                                              |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Monolito           | Simple de construir y entender. Todo en un solo lugar facilita la comunicación                                                     | Más difícil de escalar a medida que crece la aplicación. Un bug en un área puede afectar todo el sistema |
+| Frontend + Backend | Clara separación de responsabilidades mejora la organización. Cada parte puede actualizarse o escalar independientemente           | Requiere comunicación entre dos capas. Más setup comparado con un monolito                               |
+| Microservicios     | Altamente flexible. Escalá y actualizá servicios individuales. El aislamiento de fallas minimiza el riesgo de issues generalizados | Puede ser complejo de manejar y coordinar. Mayor overhead operativo con múltiples servicios              |
+
+En última instancia, no existe un enfoque perfecto. Cada arquitectura tiene sus propios beneficios y trade-offs, y la elección correcta depende de la experiencia de tu equipo, requerimientos del proyecto, y objetivos a largo plazo.

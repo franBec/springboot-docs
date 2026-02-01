@@ -1,0 +1,76 @@
+---
+sidebar_position: 3
+title: Normalize Error Responses
+---
+
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+
+import {
+  FileTree,
+  ControllerAdvice,
+  NotFoundErrorTerminal,
+} from '@site/src/components/docs/optional-but-recommended-features/normalize-errors';
+
+<GithubBranchInfo branch="feature/normalize-errors" />
+
+At work, I have plenty of scenarios like:
+
+- `service.com/users/-1` returns:
+
+  ```json
+  {
+    "errorDescription": "User not found",
+    "cause": "BAD REQUEST"
+  }
+  ```
+
+- but `service.com/product/-1` returns:
+
+  ```json
+  {
+    "message": "not found",
+    "error": 404
+  }
+  ```
+
+Consistency just flew out of the window there, and it gets worse with errors inside 200OK. We don’t want to be that kind of dev: we are going to do proper error handling.
+
+## Error Handling
+
+[`@RestControllerAdvice`](https://www.bezkoder.com/spring-boot-restcontrolleradvice/) acts like a central "error coordinator" for your application.
+
+- It's a single place where you can define how all errors, exceptions, or unexpected scenarios get translated into responses.
+- Instead of scattering error-handling logic across every controller, this tool ensures every error, whether from a user lookup, product search, or internal bug, follows the same rules and format.
+
+[Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc7807) is a standardized "error template" that structures responses in a clear, consistent way. Think of it as a pre-designed form that every error fills out:
+
+- What type of error occurred (e.g., "film_not_found")
+- A human-readable title (e.g., "Resource Not Found")
+- The HTTP status code (e.g., 404)
+- Additional details (e.g., "Film ID -1 does not exist")
+
+Together, these tools ensure your app never confuses clients with mismatched error formats. Even edge cases or unanticipated errors get wrapped into the same predictable structure.
+
+<FileTree />
+
+Create the `@RestControllerAdvice` class
+
+<ControllerAdvice />
+
+If you visit a uri that doesn't exist (like [http://localhost:8080](http://localhost:8080)), you will now get a standardized error:
+
+<NotFoundErrorTerminal />
+
+## Common Handlers You May Need
+
+If an exception occurs that isn't handled by any specific `@ExceptionHandler` in your `@RestControllerAdvice`, it will fall through to the default `@ExceptionHandler(Exception.class)` which returns a generic 500 Internal Server Error response.
+
+Here are the most common exceptions you'll want to handle explicitly:
+
+| Exception                             | Description                                                                 | Example                                            | Notes                                    |
+| ------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------- |
+| `ConstraintViolationException`        | Request parameters/fields fail validation (`@NotNull`, `@Size`, `@Pattern`) | Request body missing a required field              | Requires Jakarta EE (to be added later)  |
+| `MethodArgumentTypeMismatchException` | Request parameter cannot be converted to expected type                      | Controller expects `Integer` but receives `String` |                                          |
+| `NoResourceFoundException`            | Request accesses non-existent Spring MVC resource                           | Accessing an undefined endpoint                    |                                          |
+| `NoSuchElementException`              | `Optional.get()` called on empty `Optional`                                 | Looking for non-existent user by ID                |                                          |
+| `PropertyReferenceException`          | Invalid property used in Spring Data repository query                       | Sorting by non-existent field                      | Requires Spring Data (to be added later) |

@@ -1,0 +1,8 @@
+{
+  "label": "Big Picture",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Understand the overarching ideas and structures behind software development."
+  }
+}

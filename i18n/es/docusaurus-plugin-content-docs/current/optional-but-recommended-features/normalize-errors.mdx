@@ -1,0 +1,76 @@
+---
+sidebar_position: 3
+title: Normalizar Respuestas de Error
+---
+
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+
+import {
+  FileTree,
+  ControllerAdvice,
+  NotFoundErrorTerminal,
+} from '@site/src/components/docs/optional-but-recommended-features/normalize-errors';
+
+<GithubBranchInfo branch="feature/normalize-errors" />
+
+En el trabajo, tengo muchos escenarios como:
+
+- `service.com/users/-1` devuelve:
+
+  ```json
+  {
+    "errorDescription": "User not found",
+    "cause": "BAD REQUEST"
+  }
+  ```
+
+- pero `service.com/product/-1` devuelve:
+
+  ```json
+  {
+    "message": "not found",
+    "error": 404
+  }
+  ```
+
+La consistencia se fue por la ventana ahí, y se pone peor con errores dentro de 200OK. No queremos ser ese tipo de dev: vamos a hacer un manejo de errores apropiado.
+
+## Manejo de Errores
+
+[`@RestControllerAdvice`](https://www.bezkoder.com/spring-boot-restcontrolleradvice/) actúa como un "coordinador de errores" central para tu aplicación.
+
+- Es un lugar único donde podés definir cómo todos los errores, excepciones, o escenarios inesperados se traducen en respuestas.
+- En lugar de esparcir la lógica de manejo de errores por cada controlador, esta herramienta asegura que cada error, ya sea de una búsqueda de usuario, búsqueda de producto, o bug interno, siga las mismas reglas y formato.
+
+[Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc7807) es una "plantilla de error" estandarizada que estructura respuestas de forma clara y consistente. Pensalo como un formulario pre-diseñado que cada error completa:
+
+- Qué tipo de error ocurrió (por ejemplo, "film_not_found")
+- Un título legible por humanos (por ejemplo, "Resource Not Found")
+- El código de estado HTTP (por ejemplo, 404)
+- Detalles adicionales (por ejemplo, "Film ID -1 does not exist")
+
+Juntas, estas herramientas aseguran que tu app nunca confunda a los clientes con formatos de error dispares. Incluso casos edge o errores no anticipados se envuelven en la misma estructura predecible.
+
+<FileTree />
+
+Creá la clase `@RestControllerAdvice`
+
+<ControllerAdvice />
+
+Si visitás una uri que no existe (como [http://localhost:8080](http://localhost:8080)), ahora vas a obtener un error estandarizado:
+
+<NotFoundErrorTerminal />
+
+## Handlers Comunes Que Podés Necesitar
+
+Si ocurre una excepción que no es manejada por ningún `@ExceptionHandler` específico en tu `@RestControllerAdvice`, va a caer en el `@ExceptionHandler(Exception.class)` default que retorna una respuesta genérica de 500 Internal Server Error.
+
+Acá están las excepciones más comunes que vas a querer manejar explícitamente:
+
+| Excepción                             | Descripción                                                                      | Ejemplo                                           | Notas                                       |
+| ------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------- | ------------------------------------------- |
+| `ConstraintViolationException`        | Parámetros/campos de request fallan validación (`@NotNull`, `@Size`, `@Pattern`) | Request body faltando un campo requerido          | Requiere Jakarta EE (para agregar después)  |
+| `MethodArgumentTypeMismatchException` | Parámetro de request no puede ser convertido al tipo esperado                    | Controlador espera `Integer` pero recibe `String` |                                             |
+| `NoResourceFoundException`            | Request accede a un recurso Spring MVC inexistente                               | Accediendo a un endpoint indefinido               |                                             |
+| `NoSuchElementException`              | `Optional.get()` llamado sobre un `Optional` vacío                               | Buscando un usuario inexistente por ID            |                                             |
+| `PropertyReferenceException`          | Propiedad inválida usada en query de repositorio Spring Data                     | Ordenando por un campo inexistente                | Requiere Spring Data (para agregar después) |

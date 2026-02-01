@@ -1,0 +1,92 @@
+---
+sidebar_position: 4
+title: Cross-Cutting Concerns
+---
+
+import { RequestLifecycleDiagramES } from '@site/src/components/docs/spring-boot-in-a-nutshell/cross-cutting-concerns';
+import Admonition from '@theme/Admonition';
+
+Tu trabajo principal es escribir lógica de negocio (ya sabés, el código que realmente genera plata o resuelve el problema para el que se construyó la app).
+
+Pero envolviendo toda esa preciosa lógica de negocio hay un montón de otras cosas necesarias. Esas son lo que llamamos **cross-cutting concerns**.
+
+Son cosas como:
+
+- **Logging**: "¿Qué pasó?"
+- **Seguridad**: "¿Este usuario tiene permitido estar acá?"
+- **Caching**: "No corramos esa query cara de base de datos de nuevo"
+- **Transacciones**: "O hacemos todos estos pasos, o no hacemos ninguno. No dejemos la data hecha un desastre."
+
+Spring Boot, siendo el framework opinionado que es, te da diferentes herramientas para manejar estas cosas sin contaminar tu código de negocio central.
+
+Las tres principales de las que vas a escuchar son Filters, Interceptors y Aspect-Oriented Programming (AOP).
+
+## El Toolkit: AOP vs. Filters vs. Interceptors
+
+Antes de meternos en detalles, acá va un overview rápido de cómo se relacionan con un request HTTP entrante.
+
+<RequestLifecycleDiagramES />
+
+Ahora vamos a ver qué hace cada una de estas y cuándo deberías (y no deberías) usarlas.
+
+### Servlet Filters
+
+- **Qué son**: Los filters son los guardias de seguridad en la puerta de entrada de tu club. Son parte de la especificación Servlet, que es un estándar de Java sobre el cual se construye Spring. Operan al nivel más bajo, interceptando el `HttpServletRequest` y `HttpServletResponse` crudos.
+- **Para qué sirven**: Como ven el request primero y la respuesta último, son perfectos para tareas que son completamente independientes de la lógica de tu aplicación.
+  - **Autenticación**: Chequeando un token JWT en el header.
+  - **Logging**: Registrando cada URL de request entrante y su tiempo de respuesta.
+  - **Compresión**: Comprimiendo con gzip el body de la respuesta para ahorrar ancho de banda.
+  - **CORS**: Agregando headers como `Access-Control-Allow-Origin`.
+- **El Problema**: Los filters son simples. No tienen idea de lo que Spring está haciendo, qué controller va a manejar el request, o incluso si existe un controller para esa URL. Solo ven un request y una respuesta.
+
+### Spring MVC Interceptors
+
+- **Qué son**: Los interceptors son un concepto de Spring MVC, enteramente manejados por el `DispatcherServlet`, que es el hub central de Spring para manejar requests web.
+
+<Admonition type="info">
+  El `DispatcherServlet` es el primer punto de contacto dentro del framework
+  Spring en sí. Mira la URL y decide cuál de tus métodos `@Controller` debería
+  manejarla. Como está a cargo, te permite registrar `Interceptors` para correr
+  en puntos específicos de su workflow, justo antes de llamar a tu controller, y
+  justo después de que el controller termina.
+</Admonition>
+
+- **Para qué sirven**: Te dan hooks `preHandle`, `postHandle` y `afterCompletion`.
+  - `preHandle`: Antes de que se llame al método del controller. Genial para lógica de autorización más compleja donde podrías necesitar chequear algo en la base de datos antes de proceder.
+  - `postHandle`: Después de que corre el método del controller pero _antes_ de que se renderice la vista. Podés usar esto para agregar atributos comunes al modelo. Honestamente, este es menos útil en la era de las APIs REST.
+  - `afterCompletion`: Después de que el request está completamente terminado. Bueno para limpieza.
+- **El Problema**: Están atados a Spring MVC. Si no estás usando Spring para tu capa web (ej., estás usando JAX-RS en su lugar), estos no funcionan. Tampoco se disparan para requests que no mapean a un handler.
+
+### Aspect-Oriented Programming (AOP)
+
+- **Qué es**: AOP es la herramienta más poderosa y más peligrosa de la caja. No está atada a la capa web en absoluto. Te permite inyectar lógica en puntos específicos de la ejecución de tu código, conocidos como "join points". En Spring, esto típicamente es la ejecución de métodos.
+- **Cómo funciona**: Spring crea un objeto proxy que envuelve tu bean real. Cuando se llama a un método de tu bean, la llamada es interceptada por el proxy, que ejecuta el "advice" (tu lógica cross-cutting) antes, después o alrededor de la llamada al método real.
+- **Para qué sirve**:
+  - **Transacciones (`@Transactional`)**: El ejemplo clásico. Iniciar una transacción antes de un método, commitearla si tiene éxito, hacer rollback si falla.
+  - **Caching (`@Cacheable`)**: Antes de correr un método, chequear si el resultado ya está en el cache para los argumentos dados. Si es así, devolver el valor cacheado y saltear el método por completo.
+  - **Logging**: Loguear entrada y salida de métodos, incluyendo argumentos y valores de retorno.
+- **El Problema**: La magia de los proxies puede morderte. Si un método dentro de un bean llama a otro método en el _mismo bean_ (`this.someOtherMethod()`), el proxy AOP es evitado por completo. Este es un "gotcha" clásico que ha confundido a desarrolladores junior y senior por igual durante años. Solo funciona en métodos públicos llamados desde _afuera_ del bean.
+
+## Comparación
+
+| Feature      | Servlet Filter                                               | Handler Interceptor                                       | AOP (Aspect-Oriented Programming)                                 |
+| ------------ | ------------------------------------------------------------ | --------------------------------------------------------- | ----------------------------------------------------------------- |
+| **Scope**    | Servlet Container (Bajo nivel)                               | Spring MVC (Web específico)                               | Spring Container (Cualquier bean/método)                          |
+| **Context**  | `HttpServletRequest`/`Response` solo                         | `Request`, `Response`, y el handler objetivo (Controller) | Contexto de ejecución de método (argumentos, objeto target, etc.) |
+| **Use Case** | Manipulación cruda de request/response (logging, CORS, auth) | Pre/post-procesamiento de request, autorización compleja  | Caching, transacciones, chequeos de seguridad, logging detallado  |
+| **Coupling** | Desacoplado de Spring                                        | Acoplado a Spring MVC                                     | Desacoplado de la capa web, pero usa Spring AOP                   |
+| **Gotcha**   | "Tonto" - no tiene idea del contexto de Spring               | Solo funciona para requests manejados por Spring MVC      | Evitado por llamadas internas `this.method()`                     |
+
+## ¿Cuál Debería Usar?
+
+Antes de siquiera pensar en poner una de estas, preguntate: "¿_Realmente_ necesito esto?"
+
+Por su naturaleza, estas herramientas esconden lógica, haciendo más difícil seguir el flujo de ejecución. Eso es genial para mantener tu lógica de negocio central limpia, pero también es una forma fantástica de introducir bugs que son una pesadilla de rastrear.
+
+A menos que tengas una necesidad clara e innegable, no las uses.
+
+Pero si vos...
+
+- **Necesitás toquetear el HTTP request/response crudo antes de que alguien más lo vea?** Usá un **Filter**. Pensá en headers, compresión, logging crudo.
+- **Necesitás hacer algo antes o después de que un controller maneje un web request, y necesitás info sobre qué controller es?** Usá un **Interceptor**. Pensá en workflows específicos de web.
+- **Necesitás aplicar lógica a tu capa de servicio, completamente independiente de la web?** Usá **AOP**. Pensá en transacciones, caching, o cualquier cross-cutting concern a nivel de negocio.

@@ -1,8 +1,8 @@
 {
   "label": "Persistence Integration",
-  "position": 10,
+  "position": 9,
   "link": {
     "type": "generated-index",
-    "description": "Up until now, we have been getting the users data from an outside source. But what if we had data in our own database?"
+    "description": "Learn how to integrate databases and implement persistence patterns in Spring Boot."
   }
 }

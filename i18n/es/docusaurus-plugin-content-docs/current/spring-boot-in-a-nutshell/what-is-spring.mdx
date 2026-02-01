@@ -1,0 +1,33 @@
+---
+sidebar_position: 1
+title: ¿Qué Es Spring?
+---
+
+import Youtube from '@site/src/components/youtube';
+
+Antes de entender Spring Boot, necesitás conocer a su padre: [Spring Framework](https://spring.io/projects/spring-framework). Spring es un potente framework de aplicaciones open-source para Java que simplifica el desarrollo a nivel empresarial.
+
+Su filosofía central gira en torno a:
+
+- **Inversión de control (IoC)**: Dejá que el framework maneje la creación de objetos y las dependencias (mediante inyección de dependencias).
+  - Si esto no tiene sentido, no te preocupés. Una explicación más detallada está en el documento siguiente.
+- **Modularidad**: Elegí y seleccioná componentes según tus necesidades.
+- **Flexibilidad**: Soporta todo, desde microservicios hasta aplicaciones monolíticas.
+
+Pero con gran poder viene una gran configuración. Configurar un proyecto Spring tradicionalmente implica escribir archivos `XML` y lidiar con código boilerplate. En el tutorial de abajo, tardó aproximadamente 30 minutos en tener todo listo. Si te da curiosidad, mirá el video, pero no es necesario.
+
+<Youtube id="e8aSyQo0nHo" />
+
+Ahí es donde Spring Boot aparece para salvar el día.
+
+## Cómo Spring Boot Simplifica el Desarrollo
+
+Spring Boot no es un reemplazo de Spring, es una extensión sobrealimentada que elimina el trabajo pesado. Así es como hace la vida más fácil:
+
+- **Convención sobre configuración**: Defaults predefinidos para dependencias, estructura del proyecto y configuraciones. No más infierno de XML.
+- **Servidores embebidos**: Empaquetá un servidor [Tomcat](https://tomcat.apache.org/), [Jetty](https://jetty.org/index.html) o [Undertow](https://undertow.io/) directamente en tu app. Solo ejecutá el `JAR`, no se necesita configuración externa.
+- **Starter dependencies**: ¿Necesitás seguridad, acceso a base de datos o capacidades web? Agregá `spring-boot-starter-web` o `spring-boot-starter-data-jpa`, y Spring Boot autoconfigura lo esencial.
+- **Autoconfiguración**: Detecta librerías en tu classpath y configura defaults sensatos.
+- **Herramientas listas para producción**: Métricas built-in, health checks y gestión de ambientes vía [Spring Actuator](https://github.com/spring-projects/spring-boot/tree/v3.4.2/spring-boot-project/spring-boot-actuator).
+
+En resumen, Spring Boot te permite enfocarte en escribir lógica de negocio en lugar de luchar con infraestructura.

@@ -1,0 +1,77 @@
+---
+sidebar_position: 4
+title: Mutation Testing
+---
+
+import Admonition from '@theme/Admonition';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import {
+  FileTree,
+  BuildGradle,
+  PitestCoverageReportJava,
+  PitestCoverageReportKt,
+} from '@site/src/components/docs/testing/mutation-testing';
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+
+<GithubBranchInfo branch="feature/mutation-testing" />
+
+## ¿Qué es el Mutation Testing?
+
+[Pitest](https://pitest.org/) lo define así:
+
+> Mutation testing es conceptualmente bastante simple. Se siembran automáticamente fallos (o mutaciones) en tu código, luego se ejecutan tus tests. Si tus tests fallan, la mutación es eliminada, si tus tests pasan, la mutación sobrevive. La calidad de tus tests se puede medir a partir del porcentaje de mutaciones eliminadas.
+
+Mutation testing no se discute frecuentemente en círculos de Spring Boot. Algunas razones de su popularidad limitada son:
+
+- **Preocupaciones de performance**: El mutation testing es computacionalmente caro, especialmente para codebases grandes de Spring.
+- **Percepción de complejidad vs. valor**: Muchos equipos cuestionan si los insights adicionales justifican la complejidad de setup y los costos de runtime.
+- **Impacto en CI/CD**: El largo tiempo de ejecución puede interrumpir los ciclos de feedback rápido en pipelines de CI/CD.
+
+Hay un interés lentamente creciente, particularmente entre equipos con prácticas de testing maduras, pero preparate para tiempos de build más largos.
+
+### Por qué el Mutation Testing No Tiene Sentido en Proyectos Groovy
+
+El **tipado dinámico** de Groovy, el dispatch de métodos en runtime, el overloading de operadores, y el uso intensivo de **AST transformations** (`@Canonical`, `@Builder`, `@Slf4j`, Spock internals, etc.) significan que PIT muta bytecode generado que a menudo **no se parece al código fuente** que escribiste. Como resultado, muchos mutantes son insignificantes, inalcanzables, o sobreviven por razones no relacionadas con la calidad del test.
+
+El mutation testing es una gran opción para **Java y Kotlin**, pero en proyectos Groovy produce ruido en vez de insights.
+
+## PIT Mutation Testing
+
+<FileTree />
+
+Configuremos el [Gradle plugin for PIT Mutation Testing](https://github.com/szpak/gradle-pitest-plugin/tree/master)
+
+<BuildGradle />
+
+Ejecuta la tarea `pitest`. Cuando termine vas a tener un reporte HTML en `build/reports/pitest/index.html`.
+
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+        <PitestCoverageReportJava />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+        <PitestCoverageReportKt />
+        <Admonition type="warning" title="Pitest only includes classes in the report if it successfully generated at least one mutation (mutant) for that class">
+            `FindByIdPortInImpl` y `FilmController` no contienen "lógica" a los ojos de los mutators default de Pitest.
+            1. **No Conditionals:** No hay `if`, `when`, o loops.
+            2. **No Math:** No hay `+`, `-`, `*`, `/`.
+            3. **No Void Calls:** Llamando a un constructor (que devuelve un valor), no un método void.
+            4. **Constructor Arguments:** Los mutators default de Pitest **no** cambian strings o números hardcodeados pasados como argumentos a constructores.
+            5. Due a la null-safety estricta de Kotlin, Pitest salta generar un mutante null para tipos de retorno simples no nullable.
+
+            Las clases faltan en el reporte porque son demasiado simples.
+        </Admonition>
+    </TabItem>
+
+</Tabs>
+
+## Qué Significa Cada Métrica
+
+| Métrica               | Qué Mide                                       | Por Qué Importa                                                          | Buen Target                      |
+| --------------------- | ---------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------- |
+| **Line Coverage**     | % de líneas de código ejecutadas durante tests | Fácil de lograr pero engañoso - números altos no significan buenos tests | 80%+ (estándar de la industria)  |
+| **Mutation Coverage** | % de mutaciones matadas de todas las creadas   | La cosa real - muestra cuántos bugs tus tests realmente atraparían       | ~70%+ (indica tests sólidos)     |
+| **Test Strength**     | `Mutaciones Matadas / Mutaciones Cubiertas`    | Efectividad de los tests sobre el código que realmente tocan             | 80%+ (aserciones significativas) |
+
+Enfocate en **mutation coverage** y **test strength** por sobre el line coverage. Un 70% de mutation coverage es infinitamente más valioso que un 95% de line coverage con aserciones débiles. Si el test strength es bajo pero el line coverage es alto, tus tests están ejecutando código sin realmente verificar comportamiento.

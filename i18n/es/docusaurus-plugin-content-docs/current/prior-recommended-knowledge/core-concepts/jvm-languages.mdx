@@ -1,0 +1,58 @@
+---
+sidebar_position: 4
+title: Lenguajes de la JVM
+---
+
+import Youtube from '@site/src/components/youtube';
+import { JvmBytecodeDiagram } from '@site/src/components/docs/prior-recommended-knowledge/core-concepts/jvm-languages';
+
+Si vas a construir algo serio en el ecosistema Java, está bueno entender la JVM y los lenguajes que se llevan bien con ella.
+
+## La Magia de "Escribí Una Vez, Corré en Cualquier Lado"
+
+Probablemente escuchaste la frase: "Escribí una vez, corré en cualquier lado". Esa es la superpotencia de la JVM. Acá te explico cómo funciona:
+
+1.  **Tu código (Java, Kotlin, Groovy, etc.)** se compila a algo llamado **Bytecode de la JVM**. Pensá en el bytecode como un lenguaje intermedio, como un traductor universal.
+2.  La **Máquina Virtual de Java (JVM)** toma ese bytecode y lo ejecuta. La belleza es que la JVM se encarga de todos los detalles espinosos del sistema operativo y hardware subyacente.
+
+Así que escribís tu código, lo compilás a bytecode, y ese bytecode puede correr en cualquier sistema que tenga una JVM instalada – Windows, Linux, macOS, incluso algún SO de heladera raro, si tiene una JVM. Abstrae los detalles específicos de la plataforma, ahorrándote un mundo de dolor que los desarrolladores de otros ecosistemas a menudo enfrentan.
+
+<JvmBytecodeDiagram />
+
+## Java: El Caballo de Batalla Confiable
+
+Empecemos metiendo el chiste obvio de `public static void String main args` acá.
+
+<Youtube id="m4-HM_sCvtQ" />
+
+Dato curioso: [con Java 21, ni siquiera necesitás ese boilerplate para un método main](https://medium.com/@shwetha.narayan/java-21-no-more-public-static-void-main-c90334d6d95e).
+
+[Java](https://www.java.com/) es el lenguaje que elegís cuando querés confiabilidad. Si te encontrás con un bug raro, chances son que alguien, en algún lado, ya lo haya debuggeado, escrito una respuesta en Stack Overflow, o publicado un post de blog completo al respecto. Sería genuinamente extraño encontrarse con un error de Java que nadie más en la historia de la computación haya visto antes.
+
+No siempre es llamativo, pero hace el trabajo, y sigue mejorando con cada release.
+
+## Kotlin: El Desafiante Pragmático
+
+[Kotlin](https://kotlinlang.org/) viene de JetBrains, la misma gente que te trajo [IntelliJ IDEA](/docs/prior-recommended-knowledge/development-environment/ide#por-qué-todos-usan-intellij-idea).
+
+<Youtube id="76Uc8IyJkpM" />
+
+Mi experiencia personal con Kotlin es limitada a un [side project](https://pollito.dev/en/blog/2025-02-12-i-built-the-same-app-thrice). No lo usé en escenarios de producción real, así que no puedo darte opiniones fuertes o historias de guerra. De lo que vi, es "Java, pero mejor" para los que quieren una sintaxis más expresiva sin abandonar completamente el ecosistema de la JVM.
+
+## Groovy: El Artista Indie
+
+Alerta de bias: tengo un lugar especial en el corazón para [Groovy](https://groovy-lang.org/), ya que fue el lenguaje que usé en mi primer trabajo de dev en 2021.
+
+<Youtube id="aPIGYUDEKsY" />
+
+La sintaxis expresiva de Groovy apunta a hacer Java mejor recortando boilerplate y adoptando un estilo más dinámico.
+
+- ¿Punto y coma? Opcional.
+- ¿Excepciones chequeadas? Manejadas implícitamente.
+- ¿Verbosidad de Java? Neutralizada por características poderosas como closures y el operador de navegación segura `?`.
+
+Es como codear en el primo más copado y relajado de Java. Sin embargo, Groovy sigue siendo el artista indie de los lenguajes de la JVM: querido por los escritores de buildscripts de Gradle, pero nunca logrando el prestigio académico de Scala o la fama respaldada por JetBrains de Kotlin.
+
+## ¿Cuál para Spring Boot?
+
+Para desarrollo con Spring Boot, cualquiera de estos tres lenguajes va a funcionar bien. Al final viene a preferencia personal y, más importante, el skillset existente de tu equipo y los acuerdos.

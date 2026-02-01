@@ -1,0 +1,104 @@
+---
+sidebar_position: 1
+title: About Testing
+---
+
+- In Theory, testing should be the very first thing.
+- In Practice, it's more engaging to start with a practical scenario.
+
+Why does this happen?
+
+## Why Testing
+
+Most people will say:
+
+- **Confidence:** You make your change, run the tests, and if they're green, you can deploy without that lingering "did I just break something?" anxiety.
+- **Living documentation:** Just look at a test that shows exactly how that method is supposed to be used, what inputs it expects, and what outputs it produces.
+
+Here's my personal take: Poor test suites gives you false confidence. You see green checkmarks and think everything's fine, but in reality, your tests pass even when the actual behavior is broken.
+
+For me though, the real value in testing goes deeper than feedback or documentation. It forces you to write **better code**. To make something testable, you have:
+
+- To break it down.
+- To separate concerns.
+- To inject dependencies.
+- To think about your code's interface before its implementation.
+
+Testing makes you practice good software design whether you want to or not.
+
+## The Testing Pyramid
+
+[Mike Cohn](https://en.wikipedia.org/wiki/Mike_Cohn), one of the signatories of the [Agile Manifesto](https://agilemanifesto.org/), introduced the **Test Pyramid** in his 2009 book "Succeeding with Agile" as a way to demonstrate the ideal distribution of test types in a healthy test suite.
+
+```txt
+        /\          ┌─────────────┬────────┬───────────┬─────────────┐
+       /  \         │    Layer    │ Speed  │  Quantity │    Cost     │
+      /E2E \        ├─────────────┼────────┼───────────┼─────────────┤
+     /──────\       │ E2E / UI    │ Slow   │ Few       │ $$$         │
+    /Service \      │ Integration │ Medium │ Some      │ $$          │
+   /──────────\     │ Unit        │ Fast   │ Many      │ $           │
+  /   Unit     \    └─────────────┴────────┴───────────┴─────────────┘
+ /______________\
+```
+
+The pyramid has three tiers:
+
+- **Unit tests** form the broad base. These are fast, isolated, and test individual components in isolation. They're your first line of defense and should make up the majority of your test suite.
+- **Integration tests (Service)** sit in the middle. These verify that components work together by checking database interactions, API calls between services, or how your service layer talks to repositories. They're slower and more complex than unit tests but catch a different class of bugs.
+- **End-to-end tests (E2E / UI)** are the tippy top. These simulate real user journeys through your entire application, often through the UI. They're slow, brittle, and expensive to maintain, so you keep them few and focused.
+
+## The Testing Spectrum
+
+Understanding where each test lives on this spectrum is crucial because it directly impacts your feedback loop and CI pipeline execution time.
+
+```txt
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  FAST • CHEAP • ISOLATED                      SLOW • EXPENSIVE • REALISTIC  │
+├────────────┬────────────┬──────────────────┬───────────────┬────────────────┤
+│    Unit    │   Slice    │   Integration    │   Contract    │      E2E       │
+│  (Mockito) │(@WebMvcTest│ (@SpringBootTest │  (WireMock)   │   (Cypress)    │
+│            │@DataJpaTest│  TestContainers) │               │                │
+├────────────┴────────────┴──────────────────┴───────────────┴────────────────┤
+│ ░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓████████████████████ │
+│ LOW CONFIDENCE ──────────────────────────────────────────── HIGH CONFIDENCE │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+As a Spring Boot developer, these are the three you'll encounter most often:
+
+- **Unit testing** (Usually with [Mockito](https://site.mockito.org/)): Everything is mocked. The test runs in milliseconds. Fast feedback, deterministic results, no external dependencies to worry about.
+- **Slice testing** (`@WebMvcTest`, `@DataJpaTest`): Spring boots up only the relevant slice of your application. These are your "almost unit but I need the real Spring magic" tests.
+- **Integration testing** (`@SpringBootTest`): Full context. Everything Spring-managed gets initialized. These tests are slower (seconds, not milliseconds) but catch a different class of problems.
+
+| Aspect                    | Unit Tests                 | Slice Tests               | Integration Tests               |
+| ------------------------- | -------------------------- | ------------------------- | ------------------------------- |
+| **Speed**                 | Milliseconds               | Seconds                   | Seconds to minutes              |
+| **Dependencies**          | Mocked only                | Real Spring slice         | Full Spring context             |
+| **Coverage**              | Single component           | Component + framework     | Full application                |
+| **Feedback Time**         | Immediate                  | Fast                      | Slow                            |
+| **Maintenance Cost**      | Low                        | Medium                    | High                            |
+| **Confidence Level**      | Low (isolated)             | Medium (partial)          | High (realistic)                |
+| **Best For**              | Business logic, algorithms | Controllers, repositories | End-to-end flows, configuration |
+| **Execution Environment** | In-memory                  | In-process                | Requires running application    |
+| **Failure Localization**  | Precise                    | Component-level           | System-level                    |
+| **Parallel Execution**    | Excellent                  | Good                      | Limited                         |
+
+## Avoid Testing Paralysis
+
+There's a purist approach to testing that advocates _If a line of code can be executed, it must be tested._
+
+While this philosophy sounds thorough, it can lead to what I call "testing paralysis", where teams spend so much time writing tests that actual feature delivery gets significantly delayed. And even with 100% coverage, you can never guarantee that an unforeseen edge case won't slip through.
+
+In my current role, we've found a balanced strategy that delivers both quality and timeliness:
+
+- **Target realistic coverage**: While 100% coverage might be the theoretical ideal, we aim for a practical 80% line coverage. This benchmark ensures robust testing while allowing teams to maintain momentum.
+- **Consider the context**: The more complex or critical a component is, the more thoroughly it should be tested. Not all code deserves equal testing attention.
+
+Even with a reasonable coverage requirement, we still face delivery challenges. This is especially clear when working with older, poorly maintained codebases where:
+
+- Methods are often lengthy and complex.
+- Dependencies are tightly coupled and difficult to mock.
+- Side effects are common and unpredictable.
+- Documentation is sparse or outdated.
+
+In these situations, refactoring might be necessary before effective testing can begin, which further highlights how **testing encourages better code design**.

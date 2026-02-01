@@ -1,0 +1,15 @@
+# Docusaurus
+.docusaurus/
+build/
+
+# Dependencies
+node_modules/
+
+# Lock file
+pnpm-lock.yaml
+
+# Legacy content
+legacy-content/
+
+# IDE
+.idea/

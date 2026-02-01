@@ -1,0 +1,8 @@
+{
+  "label": "Testing",
+  "position": 7,
+  "link": {
+    "type": "generated-index",
+    "description": "Learn to write reliable tests for your Spring Boot applications, from unit tests to integration testing strategies that actually matter."
+  }
+}

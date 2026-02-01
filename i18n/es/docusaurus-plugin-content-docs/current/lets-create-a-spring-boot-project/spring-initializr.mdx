@@ -1,0 +1,183 @@
+---
+sidebar_position: 1
+title: Spring Initializr
+---
+
+import Image from '@site/src/components/image';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import {
+  SpringBootInitializrProjectGraph,
+  ConfigFormatProperties,
+  ConfigFormatYaml,
+} from '@site/src/components/docs/lets-create-a-spring-boot-project/spring-initializr';
+import Admonition from '@theme/Admonition';
+
+Andá a [Spring Initializr](https://start.spring.io/), el generador oficial de proyectos Spring Boot (mención honorífica a [Bootify](https://bootify.io/), alternativa interesante).
+
+Vas a ver un formulario. No te asustes, te decimos qué significa cada opción.
+
+<Image
+  src={
+    require('@site/static/img/lets-create-a-spring-boot-project/start-spring-io.png')
+      .default
+  }
+/>
+
+## Proyecto: Maven vs Gradle
+
+<SpringBootInitializrProjectGraph />
+
+Si estás buscando el "camino de menor resistencia", acá te dejo cómo suelen decidir los pragmáticos:
+
+- **Para proyectos Java:** La mayoría se inclina por **Gradle Groovy**. Como es el default en Spring Initializr, es el estándar de la industria.
+- **Para proyectos Groovy:** Usá **Gradle Groovy**. Mantener tu lógica de build y tu lógica de aplicación en el mismo idioma te ahorra el impuesto del cambio de contexto mental.
+- **Para proyectos Kotlin:** Andá con **Gradle Kotlin**. De nuevo, se trata de sinergia de lenguajes. Si ya estás escribiendo Kotlin, podés aprovechar el type-safety y el autocomplete del IDE en tus scripts de build también.
+
+La realidad? **No hay combinación "incorrecta".**
+
+## Versiones de Spring Boot
+
+Al seleccionar una versión de Spring Boot, te vas a encontrar con tres tipos de etiquetas:
+
+- **SNAPSHOT**
+  - Indica una build de desarrollo de Spring Boot.
+  - Estas versiones son inestables, están en desarrollo activo, y pueden incluir features sin testear o bugs.
+  - Evitá usarlas en producción, ya que pueden cambiar sin aviso.
+- M1, M2, etc. (**Milestones**)
+  - Versiones pre-release que marcan hitos importantes (ej: nuevas features) antes de una release estable.
+  - Más estables que SNAPSHOT pero todavía no son para producción. Ideales para testear features que vienen.
+- Sin Marcador (**Releases Estables**)
+  - Estas son releases estables, testeadas rigurosamente y listas para producción.
+
+**Siempre elegí la versión estable más alta** (sin labels SNAPSHOT/M) a menos que necesites features experimentales explícitamente.
+
+## Metadata del Proyecto
+
+La sección de **Project Metadata** define la identidad y estructura de tu proyecto. Acá te dejo el breakdown de cada campo y sus convenciones recomendadas:
+
+| Campo        | Qué Significa                                                                  | Estructura Recomendada/Estandar                                 | Ejemplo                                           |
+| ------------ | ------------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------- |
+| Group        | Identifica tu organización/equipo                                              | Usá reverse domain name notation. Evitá términos genéricos      | `com.acme`                                        |
+| Artifact     | El nombre del proyecto                                                         | Usá letras minúsculas y guiones para nombres de varias palabras | `inventory-service`                               |
+| Name         | Nombre display para humanos                                                    | Usá espacios/mayúsculas para legibilidad                        | Inventory Management                              |
+| Description  | Resumen breve del propósito del proyecto. Se agrega a `pom.xml`/`build.gradle` | Mantenélo conciso (1–2 oraciones) y específico                  | Microservicio para trackear inventario de almacén |
+| Package Name | Paquete Java raíz para el código fuente                                        | Derivado de Group + Artifact (guiones removidos)                | `com.acme.inventoryservice`                       |
+
+**Preferencia personal:** Me gusta usar underscores (\_) en el nombre del artifact. No hay regla en contra, pero encuentro que ayuda a mantener consistencia, porque Spring Initializr va a reemplazar el guión con underscore en algunas carpetas.
+
+## Packaging: JAR vs WAR
+
+El **Packaging** determina cómo se empaqueta tu aplicación en un único archivo compartible, permitiéndole correr suavemente en cualquier sistema sin setup complejo.
+
+| Formato | Mejor Para                                                                                                                                                      | Diferencia Clave                                                                                   |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `JAR`   | Apps Spring Boot modernas, microservicios, deployments en la nube                                                                                               | Contiene servidor embebido (ej: [Tomcat](https://tomcat.apache.org/)) para ejecución autocontenida |
+| `WAR`   | Apps legacy o deployments a servidores externos (ej: Tomcat tradicional, [JBoss](https://www.redhat.com/en/technologies/jboss-middleware/application-platform)) | Requiere un servidor separado para correr; no incluye servidor embebido                            |
+
+**Usá JAR a menos que estés atado a infraestructura legacy**. `JAR` es el default en Spring Boot. El servidor embebido de Spring Boot hace que `JAR` sea la opción liviana y sin complicaciones para la mayoría de los proyectos hoy.
+
+## Configuración: Properties vs YAML
+
+Típicamente te vas a encontrar con dos formatos principales en Spring Boot: `application.properties` y `application.yml` (o `application.yaml`). Ambos hacen el mismo trabajo. Te permiten definir pares key-value para configurar tu aplicación, conexiones a base de datos, puertos del servidor, y toda esa diversión.
+
+<Tabs groupId="config-format" queryString>
+  <TabItem value="properties" label="Properties" default>
+    <ConfigFormatProperties />
+    **La Opción "Clásica":**
+    <ul>
+      <li>Es simple, directa, y está desde siempre.</li>
+      <li>Cada propiedad está en su propia línea: `key=value`.</li>
+      <li>
+        Genial para configs chicos, pero puede volverse desordenado con
+        propiedades anidadas. Pensalo como una lista de compras larga donde cada
+        item está listado uno después del otro.
+      </li>
+    </ul>
+  </TabItem>
+  <TabItem value="yaml" label="YAML">
+    <ConfigFormatYaml />
+    **La Opción "Moderna":**
+    <ul>
+      <li>
+        Usa indentación para representar jerarquía, haciendo las configuraciones
+        anidadas mucho más limpias y legibles. Es como un outline para tus
+        settings.
+      </li>
+      <li>Menos verboso que properties para estructuras complejas.</li>
+    </ul>
+  </TabItem>
+</Tabs>
+
+**Mi preferencia personal es YAML.** ¿Por qué? Porque encuentro que es significativamente más fácil de leer y organizar, especialmente a medida que las configuraciones crecen. Además, la mayoría de las herramientas y APIs modernas suelen inclinarse por YAML para configuración hoy en día.
+
+En última instancia, ambos funcionan perfectamente bien. Si tu equipo tiene un estándar, mantenete en eso. Si estás empezando de cero, dale una chance a YAML.
+
+## Versión de Java
+
+- Quedate con lo que usa tu equipo.
+  - Si tu equipo está usando una versión vieja sin soporte, andá por la versión más baja que provee Spring Initializr.
+- Si no estás seguro, [elegí el último LTS](https://www.oracle.com/java/technologies/java-se-support-roadmap.html). Es el punto dulce.
+
+Yo estoy eligiendo Java 21 porque el 25 me estaba dando problemas con Kotlin `build.gradle.kts`
+
+## Dependencias
+
+Las dependencias son librerías pre-construidas que agregan features específicas a tu app (como herramientas en una caja de herramientas). Por ahora, vamos a usar las que vas a necesitar en el 90% de los proyectos Spring del mundo real:
+
+| Dependency                                                                                                                                                           | Categoría             | Por Qué la Necesitás                                                              |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | --------------------------------------------------------------------------------- |
+| [Lombok](https://projectlombok.org/) (Solo para proyectos Java)                                                                                                      | Developer Tools       | Reduce código repetitivo (ej: getters/setters) con anotaciones simples            |
+| [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#actuator)                                                       | Operations/Monitoring | Agrega health checks, métricas, y endpoints de management para tu app             |
+| [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#using.devtools)                                                 | Developer Tools       | Acelera el desarrollo con auto-restarts, LiveReload, y config amigable para debug |
+| [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/3.3.4/reference/htmlsingle/index.html#appendix.configuration-metadata.annotation-processor) | Developer Tools       | Habilita code-completion para settings custom de `application.properties`/`yml`   |
+| [Spring Web](https://docs.spring.io/spring-boot/docs/3.3.3/reference/htmlsingle/index.html#web)                                                                      | Web                   | Construí APIs REST con Spring MVC + servidor Tomcat embebido                      |
+
+## Generar
+
+Una vez que configuraste tu app Spring Boot, apretá el botón Generate (o Ctrl + Enter). Spring Initializr va a empaquetar tu proyecto en un archivo `.zip`.
+
+En las capturas de pantalla de abajo, estamos creando el proyecto Demo que vamos a desarrollar durante el resto de esta guía, usando diferentes lenguajes para demostración.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <Image
+      src={
+        require('@site/static/img/lets-create-a-spring-boot-project/start-spring-io-java.png')
+          .default
+      }
+    />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <Image
+      src={
+        require('@site/static/img/lets-create-a-spring-boot-project/start-spring-io-kotlin.png')
+          .default
+      }
+    />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <Image
+      src={
+        require('@site/static/img/lets-create-a-spring-boot-project/start-spring-io-groovy.png')
+          .default
+      }
+    />
+  </TabItem>
+</Tabs>
+
+<Admonition type="info">
+  No necesitás descargar las tres versiones de lenguaje para esta guía. Elegí el
+  lenguaje que preferís y quedate con ese. Si te sentís aventurero y querés
+  explorar los tres, podés clonar el monorepo que preparamos en
+  [https://github.com/franBec/springboot-demo-projects](https://github.com/franBec/springboot-demo-projects).
+</Admonition>
+
+### ¿Qué hay dentro del zip?
+
+- Una estructura de proyecto estándar (carpetas para código, tests, configs).
+- `pom.xml` (Maven) o `build.gradle` (Gradle) preconfigurado.
+- Un archivo starter `application.yml`.
+- La clase main (`*Application.java`) para correr tu app.
+
+No te preocupes por los detalles todavía. Vamos a desempaquetar y explorar todo junto en los próximos pasos.

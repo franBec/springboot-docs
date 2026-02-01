@@ -1,0 +1,99 @@
+---
+sidebar_position: 2
+title: OpenAPI Specification
+---
+
+import GithubBranchInfo from '@site/src/components/github-branch-info.tsx';
+import Image from '@site/src/components/image';
+import {
+  FilmStructureJson,
+  FileTree,
+  OpenApiSpecYaml,
+  ErrorResponseJson,
+  FilmsListResponseJson,
+  FilmResponseJson,
+  EnvelopePatternJson,
+  ResponseMetadataSchemaYaml,
+} from '@site/src/components/docs/contract-driven-development/openapi-spec.tsx';
+
+<GithubBranchInfo branch="feature/openapi-spec" />
+
+Given a Film with the following structure:
+
+<FilmStructureJson />
+
+We want our Spring Boot application to expose these endpoints:
+
+- `/api/films` list all films.
+- `/api/films/{id}` get film by identifier.
+
+<FileTree />
+
+## OpenAPI Specification
+
+An [OpenAPI Specification](https://swagger.io/specification/) complies with the definition of contract I gave before: Is a set of assertions containing **valid input values** and their meaning, **valid return values** and their meaning, and **error values that can occur** and their meaning.
+
+An OpenAPI Specification that would represent the desired behavior would look something like this:
+
+<OpenApiSpecYaml />
+
+For better visualization you can copy-paste the YAML file into [Swagger Editor](https://editor.swagger.io/) or use [OpenAPI (Swagger) Editor
+in IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor).
+
+<Image
+  src={
+    require('@site/static/img/contract-driven-development/preview-browser.png')
+      .default
+  }
+/>
+
+- All error responses would look like this:
+
+  <ErrorResponseJson />
+
+- `/api/films` responses would look like this:
+
+  <FilmsListResponseJson />
+
+- `/api/films/{id}` responses would look like this:
+
+  <FilmResponseJson />
+
+## The Envelope Pattern
+
+You might be looking at the response examples and thinking, "What's with all that extra fluff? Why wrap the actual film data inside a `data` object?"
+
+<EnvelopePatternJson />
+
+That is a deliberate choice called the **Envelope Pattern**. And once you start using it, you'll never go back.
+
+Think of it like physical mail. Every piece of mail you get, whether it's a birthday card or a bill, comes in an envelope. The envelope has standard information on it: a return address, a destination address, a stamp. The actual message is _inside_.
+
+Our API responses work the same way. The `ResponseMetadata` schema is our envelope.
+
+<ResponseMetadataSchemaYaml />
+
+Every single response from the API, whether it's a success (`200 OK`) or an error (`404 Not Found`, `500 Internal Server Error`, etc.), will have this same top-level structure.
+
+- The actual payload goes inside the `data` property for successful responses.
+- For errors, we swap `data` for `title` and `detail` so we keep adhering to [Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc7807).
+
+### Why Bother?
+
+Consistency. That's the whole game.
+
+1.  **Client side sanity:** The developer building the frontend or mobile app can write _one_ piece of code to handle all API responses. They always know where to find the `trace` ID to show a user reporting a bug. They can build a generic error handler that always looks for `title` and `detail`. They aren't guessing whether the payload is the object itself, an array, or some weird error shape.
+2.  **Future proofing:** What if we need to add some other metadata? No problem. We just add a new field to the envelope level. The `data` part remains untouched, and we don't break the client's parsing logic for the actual film data.
+3.  **It just looks professional:** An API with a consistent response structure feels solid and well-thought-out. An inconsistent one feels amateurish and is a pain to work with.
+
+## Pagination
+
+The`/api/films` endpoint "lists all films." But if you take that literally in the real world, you're gonna have a bad time.
+
+Imagine your database has a million films. Trying to pull all of them in one go is a recipe for disaster. Your database will crash, your server's memory will evaporate, and the poor user's browser will crash trying to render a colossal JSON payload.
+
+This is where **pagination** comes in. It's the simple idea of breaking a large result set into smaller, manageable "pages." Instead of asking for _all_ the films, you ask for "page 1 with 20 films," then "page 2 with 20 films," and so on.
+
+This is standard practice everywhere. Think about Google search results or browsing products on Amazon. You never get everything at once; you get a page and a "Next" button.
+
+For the sake of keeping things simple right now, the specification doesn't include pagination parameters. We'll add proper pagination later.

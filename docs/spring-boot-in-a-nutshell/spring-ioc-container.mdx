@@ -1,0 +1,297 @@
+---
+sidebar_position: 2
+title: Spring IoC Container
+---
+
+import Image from '@site/src/components/image';
+import Youtube from '@site/src/components/youtube';
+import {
+  SpringIocContainerGraph,
+  AnnotationsLayerJava,
+  AnnotationsLayerKt,
+  AnnotationsLayerGroovy,
+  ConfigurationBeanJava,
+  ConfigurationBeanKt,
+  ConfigurationBeanGroovy,
+  ProfileBeanJava,
+  ProfileBeanKt,
+  ProfileBeanGroovy,
+  AnnotationSoupJava,
+  AnnotationSoupKt,
+  AnnotationSoupGroovy,
+  ConstructorInjectionJava,
+  ConstructorInjectionKt,
+  ConstructorInjectionGroovy,
+  RequiredArgsConstructor,
+  KtPrimaryConstructor,
+  GroovyImmutable,
+  SetterInjectionJava,
+  SetterInjectionKt,
+  SetterInjectionGroovy,
+  FieldInjectionJava,
+  FieldInjectionKt,
+  FieldInjectionGroovy,
+} from '@site/src/components/docs/spring-boot-in-a-nutshell/spring-ioc-container';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+
+I consider Spring's entire philosophy to be built on four core concepts:
+
+- IoC Container
+- Beans
+- Annotations
+- Dependency Injection
+
+<SpringIocContainerGraph />
+
+It's difficult to explain one without implicitly referencing the others, which can make understanding the foundational aspects of the framework rather daunting for newcomers.
+
+<Image
+  src={require('@site/static/img/spring-boot-in-a-nutshell/meme.jpg').default}
+/>
+
+In this document, we'll try to unravel this interconnected web, one piece at a time.
+
+## Spring IoC Container
+
+Imagine you're a chef. Instead of running to the farm for eggs and the mill for flour, you just shout _"I need ingredients!"_ and they appear on your counter, ready to go. **That's Spring's IoC Container**, your personal assistant for Java objects.
+
+It works like this:
+
+1. **Component Scan**: Spring scans your code for special classes marked with annotations like `@Component`, `@Service`, or `@Repository`.
+2. **Bean Creation**: It creates instances of these classes, called "beans," and manages their entire lifecycle.
+3. **Dependency Injection**: When one of your beans needs another one, Spring automatically provides it.
+
+## Beans
+
+A bean is an object managed by the Spring IoC (Inversion of Control) container.
+
+- **Beans are defined in the Spring configuration**, either via:
+  - Annotations (e.g., `@Component`, `@Service`, `@Repository`, `@Configuration`).
+  - XML configuration (do NOT in modern Spring).
+  - Java-based configuration (`@Bean` methods in `@Configuration` classes).
+- **Singleton by default**: By default, a Spring bean is a singleton (one instance per container). This can be customized with scopes like `@Scope("prototype")`.
+- **Beans can be injected into each other**. This promotes loose coupling and testability.
+- **The container controls a bean’s lifecycle**, from instantiation to destruction. You can define custom hooks with annotations like `@PostConstruct` and `@PreDestroy`.
+
+## Annotations
+
+Annotations are Spring’s way of letting you **tag** your code with instructions like "Hey Spring, manage this class!" or "Inject that dependency here!".
+
+### Bean Definition
+
+| Annotation        | Meaning                                                    | Use Case                                     |
+| ----------------- | ---------------------------------------------------------- | -------------------------------------------- |
+| `@Component`      | "Spring, manage this class!"                               | Generic beans                                |
+| `@Service`        | "Business logic here!"                                     | Service-layer classes                        |
+| `@Repository`     | "Database interactions here!"                              | DAOs/DB classes (adds exception translation) |
+| `@RestController` | "API endpoint!" (Combines `@Controller` + `@ResponseBody`) | REST APIs                                    |
+
+### Dependency Injection
+
+| Annotation   | Meaning                     | Example                          |
+| ------------ | --------------------------- | -------------------------------- |
+| `@Autowired` | "Inject a bean here!"       | Constructor/field/setter         |
+| `@Primary`   | "Choose me first!"          | Resolve ambiguous bean conflicts |
+| `@Qualifier` | "Inject THIS specific bean" | `@Qualifier("mysqlDb")`          |
+
+### Configuration
+
+| Annotation       | Meaning                        | Example                           |
+| ---------------- | ------------------------------ | --------------------------------- |
+| `@Configuration` | "This class configures beans!" | Setup database/3rd-party libs     |
+| `@Bean`          | "Here’s a bean to manage!"     | Methods returning complex objects |
+| `@Value`         | "Inject a property value!"     | `@Value("${api.key}")`            |
+
+### Web/REST
+
+| Annotation        | Meaning                       | Example                              |
+| ----------------- | ----------------------------- | ------------------------------------ |
+| `@RequestMapping` | "Map requests to this method" | `@RequestMapping("/users")`          |
+| `@GetMapping`     | "Handle GET requests"         | `@GetMapping("/{id}")`               |
+| `@PostMapping`    | "Handle POST requests"        | `@PostMapping("/create")`            |
+| `@RequestBody`    | "Convert JSON → Java object"  | `createUser(@RequestBody User user)` |
+| `@PathVariable`   | "Get URL parameters"          | `@PathVariable Long id`              |
+
+### Lombok
+
+| Annotation                 | Purpose                                                                                          | Example                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| `@Getter` / `@Setter`      | Auto-generate getters/setters                                                                    | `@Getter @Setter private String username;` |
+| `@ToString`                | Auto-generate toString()                                                                         | `@ToString(exclude = "password")`          |
+| `@EqualsAndHashCode`       | Auto-generate equals() and hashCode()                                                            | `@EqualsAndHashCode(callSuper = true)`     |
+| `@NoArgsConstructor`       | Generate no-arg constructor                                                                      | `@NoArgsConstructor`                       |
+| `@AllArgsConstructor`      | Generate constructor with all args                                                               | `@AllArgsConstructor`                      |
+| `@RequiredArgsConstructor` | Generate constructor with final/@NonNull fields                                                  | `@RequiredArgsConstructor`                 |
+| `@Data`                    | All-in-one (`@Getter`, `@Setter`, `@ToString`, `@EqualsAndHashCode`, `@RequiredArgsConstructor`) | `@Data public class User { ... }`          |
+| `@Builder`                 | Implement Builder pattern                                                                        | `User.builder().name("Alice").build();`    |
+| `@Slf4j`                   | Inject logger (Logger log)                                                                       | `log.info("User created: {}", username);`  |
+
+<Admonition type="tip" title="Not for Groovy Projects!">
+If you're using Groovy, you don't need Lombok. [Groovy’s built-in AST (Abstract Syntax Tree) transformations](https://github.com/ellegonzalez/52-technologies-in-2025/blob/master/32-groovy-ast-transformations/README.md) do everything Lombok does, but they do it as a first-class citizen of the language rather than a "hack" that plugs into the compiler.
+
+| Feature                    | Lombok                         | Groovy AST                                               |
+| :------------------------- | :----------------------------- | :------------------------------------------------------- |
+| **The "Everything" Bagel** | `@Data`                        | `@Canonical` (Combines Equals, HashCode, ToString, etc.) |
+| **Immutability**           | `@Value`                       | `@Immutable`                                             |
+| **Constructors**           | `@AllArgsConstructor`          | `@TupleConstructor`                                      |
+| **Builder Pattern**        | `@Builder`                     | `@Builder`                                               |
+| **Logging**                | `@Slf4j`                       | `@Slf4j` (or `@Log`)                                     |
+| **Delegation**             | `@Delegate` (Experimental-ish) | `@Delegate` (Solid and powerful)                         |
+| **Lazy Loading**           | `@Getter(lazy=true)`           | `@Lazy`                                                  |
+
+</Admonition>
+
+<Admonition type="tip" title="Not for Kotlin Projects!">
+Kotlin was designed from the ground up to solve the problems Lombok addresses, but it does so as part of the language syntax rather than relying on annotation processing tricks. This means more readable, idiomatic code with less "magic" happening behind the scenes.
+
+| Lombok Feature        | Kotlin Equivalent          | Why it’s better                                                                                        |
+| :-------------------- | :------------------------- | :----------------------------------------------------------------------------------------------------- |
+| `@Data` / `@Value`    | `data class`               | You get `equals`, `hashCode`, `toString`, and `copy()` in one line.                                    |
+| `@Getter` / `@Setter` | Properties (`val`/`var`)   | Accessors are built-in. `user.name` calls the getter under the hood.                                   |
+| `@AllArgsConstructor` | Primary Constructor        | Defined right in the class header. No magic required.                                                  |
+| `@Builder`            | Named & Default Params     | `User(name = "Franco", age = 30)` is cleaner than a builder pattern.                                   |
+| `@Slf4j`              | `Companion object` or Libs | Most use `private val log = LoggerFactory.getLogger(javaClass)` or a library like `kotlin-logging`.    |
+| `@NonNull`            | Nullable Types (`String?`) | Kotlin’s type system handles null safety at compile time, instead of relying solely on runtime checks. |
+
+</Admonition>
+
+### Tips
+
+1. **Prefer constructor injection** (`private final` + Lombok `@RequiredArgsConstructor`) over field injection (`@Autowired`).
+2. **Layer your annotations**.
+
+   <Tabs groupId="language" queryString>
+     <TabItem value="java" label="Java" default>
+       <AnnotationsLayerJava />
+     </TabItem>
+     <TabItem value="kotlin" label="Kotlin">
+       <AnnotationsLayerKt />
+     </TabItem>
+     <TabItem value="groovy" label="Groovy">
+       <AnnotationsLayerGroovy />
+     </TabItem>
+   </Tabs>
+
+3. Use `@Configuration` + `@Bean` to wire complex dependencies.
+
+   <Tabs groupId="language" queryString>
+     <TabItem value="java" label="Java" default>
+       <ConfigurationBeanJava />
+     </TabItem>
+     <TabItem value="kotlin" label="Kotlin">
+       <ConfigurationBeanKt />
+     </TabItem>
+     <TabItem value="groovy" label="Groovy">
+       <ConfigurationBeanGroovy />
+     </TabItem>
+   </Tabs>
+
+4. **Environment-specific beans**: Use `@Profile` for dev/staging/prod setups.
+
+   <Tabs groupId="language" queryString>
+     <TabItem value="java" label="Java" default>
+       <ProfileBeanJava />
+     </TabItem>
+     <TabItem value="kotlin" label="Kotlin">
+       <ProfileBeanKt />
+     </TabItem>
+     <TabItem value="groovy" label="Groovy">
+       <ProfileBeanGroovy />
+     </TabItem>
+   </Tabs>
+
+5. **Avoid annotation soup**: Stick to **one** role-specific annotation.
+
+   <Tabs groupId="language" queryString>
+     <TabItem value="java" label="Java" default>
+       <AnnotationSoupJava />
+     </TabItem>
+     <TabItem value="kotlin" label="Kotlin">
+       <AnnotationSoupKt />
+     </TabItem>
+     <TabItem value="groovy" label="Groovy">
+       <AnnotationSoupGroovy />
+     </TabItem>
+   </Tabs>
+
+## Dependency Injection
+
+You tell Spring what you need by asking for the [interface](/prior-recommended-knowledge/interfaces-and-implementations). There are a few ways to do it, but only one right way.
+
+### Constructor Injection (The Right Way)
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <ConstructorInjectionJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <ConstructorInjectionKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <ConstructorInjectionGroovy />
+  </TabItem>
+</Tabs>
+
+This is the gold standard. Why?
+
+- **No Nulls**: The object can't even be created without its dependencies. It forces you to have a valid, ready-to-use object from the start.
+- **Immutability**: By declaring the field `final`, you guarantee it can't be changed later. You won't accidentally swap your database for a toaster mid-request.
+- **Testing-Friendly**: In your unit tests, you don't need Spring. You just call `new CheckoutController(new MockPaymentService())` and you're done. Clean, simple, and fast.
+
+Even better, you can get rid of the boilerplate. In Java, you'd use a library like Lombok, but in Kotlin this is a built-in language feature!
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <RequiredArgsConstructor />
+    Lombok generates the constructor for all your `final` fields automatically.
+    Clean, concise, and impossible to get wrong. This is the way.
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <KtPrimaryConstructor />
+    In Kotlin, you don't need a special annotation. Declaring a property in the
+    primary constructor (`class ... (...)`) is all you need to do.
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <GroovyImmutable />
+    Groovy's AST (Abstract Syntax Tree) transformations can do the same work as
+    Lombok. `@Immutable` is one of many that can generate constructors and more.
+  </TabItem>
+</Tabs>
+
+### Setter Injection
+
+This is for optional dependencies. The problem is, your object can exist in a state where its dependencies are `null`. It's less safe and makes your code harder to reason about.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <SetterInjectionJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <SetterInjectionKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <SetterInjectionGroovy />
+  </TabItem>
+</Tabs>
+
+### Field Injection
+
+It looks clean, but it's a trap. It hides the dependencies, makes your class harder to test without Spring's magic, and makes it impossible to create immutable objects.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <FieldInjectionJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <FieldInjectionKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <FieldInjectionGroovy />
+  </TabItem>
+</Tabs>
+
+As a final note on this topic, **I really recommend** CodeAesthetic’s video “Dependency Injection, The Best Pattern”. It drives the point home beautifully.
+
+<Youtube id="J1f5b4vcxCQ" />

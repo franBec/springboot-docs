@@ -1,0 +1,210 @@
+---
+sidebar_position: 3
+title: Primeros tests
+---
+
+import {
+  MainFileTree,
+  FileTree,
+  BuildGradle,
+  FindByIdPortInTests,
+  ApiResponseMatchersJavaCode,
+  ApiResponseMatchersKtCode,
+  ApiResponseMatchersGroovyCode,
+  FilmRestControllerTests,
+  ControllerAdvice,
+  TestErrorLog,
+  MapperSpec,
+  JacocoReportJava,
+  JacocoReportKt,
+  JacocoReportGroovy,
+  ControllerAdviceTests,
+  LoggingIntegrationTests,
+} from '@site/src/components/docs/testing/first-tests';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+
+<GithubBranchInfo branch="feature/first-tests" />
+
+## Estrategia de testing
+
+### Elegí un framework
+
+- Para la aplicación **Java** Spring Boot vamos a elegir **JUnit + Mockito**: es el estándar de facto, el que siempre preguntan en entrevistas, y el que se espera que conozcas.
+- Para la aplicación **Kotlin** Spring Boot vamos a elegir **JUnit + MockK**: herramientas nativas de kotlin + mocking pensado para kotlin.
+- Para el proyecto **Groovy** Spring Boot vamos a elegir **Spock**, ya que es la elección natural con menos fricción.
+
+### JaCoCo
+
+[JaCoCo (Java Code Coverage)](https://www.jacoco.org/jacoco/) te dice qué líneas de código tus tests realmente ejecutan. Es la herramienta estándar de cobertura para proyectos JVM.
+
+Cuando corrés la tarea `test` o `jacocoTestReport`, JaCoCo va a generar reportes en HTML (para humanos) y XML (para herramientas de CI) en `build/reports/jacoco/test`.
+
+### Qué archivos testear
+
+<MainFileTree />
+
+| Símbolo | Tipo de Prueba          | Descripción                                                             |
+| ------- | ----------------------- | ----------------------------------------------------------------------- |
+| 🔴      | `@SpringBootTest`       | Prueba de integración con contexto completo                             |
+| 🟣      | `@ContextConfiguration` | Contexto parcial (solo beans específicos) [Usado en el proyecto GROOVY] |
+| 🟡      | `@WebMvcTest`           | Prueba de capa web (slice test)                                         |
+| 🔶      | MockMvc Standalone      | MockMvc sin contexto completo de Spring                                 |
+| 🟢      | Prueba Unitaria         | Prueba unitaria pura                                                    |
+| ⚪      | Ignorado                | No requiere prueba (config/interfaz/POJO)                               |
+
+```txt
+◀─────────────────────── ESPECTRO DE PRUEBAS ───────────────────────▶
+
+UNITARIO                                                INTEGRACIÓN
+RÁPIDO                                                        LENTO
+AISLADO                                                    CONECTADO
+
+🟢────────🔶────────🟡────────🟣────────🔴
+ │         │         │         │         │
+ │         │         │         │         └── Spring Boot Completo
+ │         │         │         └── Contexto Parcial
+ │         │         └── Solo Capa Web
+ │         └── MockMvc Independiente
+ └── Prueba Unitaria Pura
+
+⚪ = Fuera del espectro (no necesita prueba)
+```
+
+<FileTree />
+
+## Dependencias
+
+<BuildGradle />
+
+## 🟢 Unit Tests
+
+Los tests unitarios no involucran a Spring en absoluto. Estos son más rápidos de correr y perfectos para testear lógica de negocio en completo aislamiento.
+
+`FindByIdPortInImpl` actualmente solo devuelve una película hardcodeada. No tiene mucho sentido hacer testing profundo acá todavía, pero al menos verifiquemos que el servicio se instancie y devuelva algo:
+
+<FindByIdPortInTests />
+
+## 🔶 🟡 Slice Tests
+
+### 🟡 Capa Web
+
+Estamos testeando tres cosas acá:
+
+- **Comportamiento del endpoint REST**: ¿El controller mapea requests correctamente y devuelve las respuestas esperadas?
+- **Manejo de excepciones**: Cuando las cosas salen mal, ¿la estructura de respuesta de error se ve bien?
+- **Estructura de respuesta JSON**: ¿El JSON final coincide con lo que promete nuestro contrato de API?
+
+Para hacer nuestras aserciones más legibles, primero vamos a crear algunos matchers custom para la estructura de respuesta de nuestra API:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <ApiResponseMatchersJavaCode />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <ApiResponseMatchersKtCode />
+    <Admonition type="tip" title="Kotlin Extension Function">
+      Al extender `MockMvcResultMatchersDsl`, nuestros matchers custom se
+      integran perfectamente con el DSL de Kotlin de Spring. Se pueden llamar
+      directamente dentro del bloque `andExpect`, haciendo que el código de test
+      lea como una parte nativa del framework.
+    </Admonition>
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <ApiResponseMatchersGroovyCode />
+    <Admonition type="tip" title="Groovy Trait">
+      Un trait es como una interfaz con implementación que se puede mezclar en
+      clases. Al implementar este trait en tus especificaciones Spock, los
+      métodos matcher se vuelven disponibles como si estuvieran definidos
+      directamente en tu clase de test, sin necesidad de imports estáticos. A
+      diferencia de las clases base abstractas, podés implementar múltiples
+      traits, manteniendo tu jerarquía de tests flexible.
+    </Admonition>
+  </TabItem>
+</Tabs>
+
+Ahora escribamos el test del `@RestController` propiamente dicho usando un enfoque de slice testing con `@WebMvcTest`, que crea un contexto mínimo de Spring enfocado en la capa web.
+
+<FilmRestControllerTests />
+
+Cuando corremos los tests, encontramos que este falla:
+
+<TestErrorLog />
+
+Esperábamos un 400 (Bad Request) cuando pasamos un ID inválido (0), pero obtuvimos un 500. Esto nos dice que nuestro `ControllerAdvice` no está manejando `ConstraintViolationException` correctamente. Está siendo atrapado por el manejador genérico de `Exception` y devolviendo un estado 500.
+
+Arreglemos el `ControllerAdvice` agregando un manejador explícito para `ConstraintViolationException` que devuelve `BAD_REQUEST` (400) en vez de dejarlo pasar al manejador genérico de 500:
+
+<ControllerAdvice />
+
+Después de este arreglo, todos los tests pasan. Ahora tenemos confianza de que nuestro controller maneja correctamente los caminos felices, errores de validación, y excepciones inesperadas.
+
+### 🔶 MockMvc Standalone
+
+El objetivo de estos tests es verificar que nuestro `ControllerAdvice` maneja diferentes escenarios de excepciones correctamente. Testeamos que los errores de validación devuelvan códigos de estado HTTP y estructuras de respuesta apropiadas, asegurando que nuestra API proporcione respuestas de error consistentes en diferentes modos de falla.
+
+<ControllerAdviceTests />
+
+## 🟣 🔴 Integration Tests
+
+### 🟣 Contexto parcial
+
+<Admonition type="info" title="Ejemplo específico de Groovy">
+  Esta sección aplica principalmente al proyecto Groovy ya que es el único donde
+  inicializar el mapper parcialmente tiene sentido conceptualmente. Sin embargo,
+  este enfoque puede aplicarse a proyectos Java y Kotlin en escenarios donde
+  necesitás testear componentes con dependencias parciales o cuando mockeamos
+  ciertos beans mientras testeamos otros.
+</Admonition>
+
+El objetivo de este test es demostrar cómo testear la funcionalidad del mapper con un contexto de Spring parcialmente inicializado. Queremos verificar que nuestro mapper pueda manejar casos extremos y entradas inválidas correctamente sin necesidad del contexto completo de la aplicación.
+
+<MapperSpec />
+
+### 🔴 Test de integración con contexto completo
+
+El objetivo de este test es verificar que la configuración de logging de nuestra aplicación funciona correctamente y que todos los componentes registran eventos como se espera. Queremos asegurar que los eventos importantes sean capturados y formateados correctamente en nuestros logs.
+
+<LoggingIntegrationTests />
+
+## Ver el reporte de JaCoCo
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <JacocoReportJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <JacocoReportKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <JacocoReportGroovy />
+    <Admonition
+      type="warning"
+      title="JaCoCo Limitations with Groovy Spring Boot Projects"
+    >
+      JaCoCo funciona a nivel de bytecode, pero Groovy genera bytecode
+      significativamente diferente al que escribís en código fuente. Para
+      proyectos Groovy (especialmente con Spring Boot), deberías generalmente
+      ignorar las columnas "Instructions" y "Branches" y enfocarte casi
+      exclusivamente en Line Coverage.
+    </Admonition>
+  </TabItem>
+</Tabs>
+
+Acá está lo que significa cada columna en un reporte de cobertura de JaCoCo:
+
+| Columna                  | Significado                                                             | Notas / Cuándo Importar                            |
+| ------------------------ | ----------------------------------------------------------------------- | -------------------------------------------------- |
+| **Name**                 | El package, clase, archivo, o método siendo medido                      | La fila **Total** agrega todas las entradas        |
+| **Instruction Coverage** | Porcentaje de instrucciones de bytecode JVM ejecutadas                  | Muy detallado; puede ser engañoso para Groovy      |
+| **Branch Coverage**      | Porcentaje de branches condicionales ejecutados (`if`, `switch`, loops) | Genial para atrapar caminos de lógica no testeados |
+| **Missed Complexity**    | Complejidad ciclomática no cubierta por tests                           | Indica flujo de control riesgoso o no testeado     |
+| **Total Complexity**     | Complejidad ciclomática total del código                                | Valores más altos significan lógica más compleja   |
+| **Missed Lines**         | Número de líneas ejecutables de código no corrida                       | Basado en líneas con bytecode                      |
+| **Total Lines**          | Total de líneas ejecutables de código                                   | Métrica de coverage más intuitiva                  |
+| **Missed Methods**       | Métodos nunca invocados por tests                                       | Bueno para detectar APIs no testeadas              |
+| **Total Methods**        | Número total de métodos                                                 | Incluye constructores y lambdas                    |
+| **Missed Classes**       | Clases nunca cargadas durante tests                                     | Indicador de completitud de tests de alto nivel    |
+| **Total Classes**        | Número total de clases                                                  | Incluye clases internas y anónimas                 |

@@ -1,0 +1,51 @@
+---
+sidebar_position: 4
+title: Continuous Integration Continuous Deployment
+---
+
+import Image from '@site/src/components/image';
+
+# Continuous Integration Continuous Deployment
+
+Getting your Spring Boot application running reliably for your users is the final, crucial step. Deployment strategies vary wildly depending on the team, the company's maturity, and the project's scale.
+
+## The "Old School" Manual Way
+
+On my first job, deploying our Spring Boot application (packaged as a [`WAR` file](https://www.geeksforgeeks.org/java/servlet-war-file/)) was a tense, manual ritual:
+
+1. **Remote desktop**: Connect to the production Virtual Machine using a [Remote Desktop client](https://en.wikipedia.org/wiki/Remote_desktop_software).
+2. **Stop the server**: Manually stop the [Apache Tomcat](https://tomcat.apache.org/) instance running the current application version. This meant **downtime** for users.
+3. **Replace the file**: Navigate the server's file system, delete the old `app.war` file, and copy the new `app.war` file (uploaded manually).
+4. **Start the server**: Manually start the Tomcat instance again.
+5. **Count your blessings**: Hope everything worked, check logs frantically, and manually test critical features.
+
+This approach has serious problems:
+
+- **High risk of human error**: Copying the wrong file, deleting something important, misconfiguring Tomcat. Manual steps are prone to mistakes.
+- **Downtime**: Stopping the server means the application is unavailable to users during deployment.
+- **No easy rollback**: If the new version fails, rolling back involves repeating the manual process in reverse, often under pressure.
+- **Lack of auditability**: Who deployed what, when, and how? Manual processes leave poor trails.
+- **Not scalable**: Imagine doing this for tens or hundreds of microservices. It is unsustainable.
+- **Stressful**: Manual deployments are often high-pressure events, leading to burnout and mistakes.
+
+While this might work for a tiny internal tool, it is completely inadequate for serious applications.
+
+## The CI/CD Pipeline
+
+The modern way to deploy Spring Boot applications involves automation through a [Continuous Integration/Continuous Deployment (CI/CD) pipeline](https://www.redhat.com/en/topics/devops/what-is-ci-cd), often leveraging containerization. The pipeline follows a continuous loop with eight stages:
+
+<Image
+  src={require('@site/static/img/deployment/cicd.png').default}
+  alt="CI/CD Pipeline"
+/>
+
+1. **Plan**: Decide what to build and why. Break down work into manageable pieces and prioritize what delivers value.
+2. **Code**: Write the software. Implement features in feature branches and open pull requests when ready.
+3. **Build**: Compile the code, package the application, and create a Docker image with all dependencies.
+4. **Test**: Run automated unit tests, integration tests, and static code analysis. Faulty code stops the pipeline.
+5. **Release**: Tag the Docker image with a version number and push it to a container registry like [Docker Hub](https://hub.docker.com/), [Google Artifact Registry](https://cloud.google.com/artifact-registry), or [AWS ECR](https://aws.amazon.com/ecr/).
+6. **Deploy**: Use strategies like [Blue-Green](https://www.redhat.com/en/topics/devops/what-is-blue-green-deployment) or [Canary](https://www.jetbrains.com/teamcity/ci-cd-guide/concepts/canary-release/) deployments to minimize risk. Deploy alongside the current version, shift traffic gradually, and roll back immediately if issues arise.
+7. **Operate**: Keep the application running, healthy, and responsive. Scale based on demand and handle incidents.
+8. **Measure**: Gather production data through logs, metrics, and traces. Feed insights back into planning. The loop continues.
+
+This automated approach offers huge advantages: consistency, reliability, speed, auditability, and automated rollbacks.

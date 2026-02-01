@@ -1,0 +1,56 @@
+---
+sidebar_position: 2
+title: Correr la Aplicación
+---
+
+import Image from '@site/src/components/image';
+import Admonition from '@theme/Admonition';
+import { WhitelabelErrorPage } from '@site/src/components/docs/lets-create-a-spring-boot-project/run-the-application';
+
+<Admonition type="info">
+  Para este documento, asumimos que creaste un proyecto Spring Boot usando
+  [Spring Initializr](https://start.spring.io/). Si no lo hiciste, podés clonar
+  el monorepo que preparé en
+  [https://github.com/franBec/springboot-demo-projects](https://github.com/franBec/springboot-demo-projects)
+  branch `feature/initial-commit`.
+</Admonition>
+
+1. **Abrí IntelliJ IDEA** → File → Open → Seleccioná la carpeta del proyecto descomprimido.
+2. **Setup inicial del JDK** (si te lo pide):
+   - IntelliJ te va a pedir que descargues un JDK. Elegí la **misma versión** que seleccionaste en Spring Initializr (ej: Java 21).
+   - Hacé click en Download JDK y seguí las instrucciones.
+3. **Esperá las tareas en segundo plano**:
+   - Buscá los indicadores de progreso en la **esquina inferior derecha** (ej: "Downloading Gradle dependencies" o "Indexing").
+   - Dejalos terminar, ellos setean las herramientas y librerías de tu proyecto.
+4. **Corré la aplicación**:
+   - Buscá la ventana de herramientas Gradle (en IntelliJ suele ser un ícono de elefante chiquito en el lado derecho).
+   - Ejecutá el comando `build`.
+   - Ejecutá el comando `bootRun`.
+     <Image
+       src={
+         require('@site/static/img/lets-create-a-spring-boot-project/run-gradle-app.png')
+           .default
+       }
+     />
+5. **Fijate en la terminal de ejecución:** Después de unos segundos, vas a ver algo similar a `Tomcat started on port 8080 (http) with context path '/'`. ¡Esto significa que tu app Spring Boot está viva!
+6. **Probalo:** Andá a [http://localhost:8080](http://localhost:8080). Vas a ver una Whitelabel Error Page. Esto es normal porque todavía no hicimos ningún desarrollo.
+
+   <WhitelabelErrorPage />
+
+¡Felicitaciones! Tu app Spring Boot está levantada y corriendo.
+
+Acá te explico por qué esto es importante:
+
+**Antes de Spring Boot**, hacer que una app Java escuche en un puerto como 8080 requería horas de setup manual:
+
+- Configurar archivos `XML` (como `web.xml`).
+- Deployar archivos `WAR` a un servidor externo (ej: Tomcat).
+- Escribir código boilerplate solo para levantar el servidor.
+
+**Hoy con Spring Boot**:
+
+- El servidor Tomcat embebido se levanta automáticamente.
+- Cero código necesario: el método `main()` hace todo.
+- No hay `XML` ni setup manual del servidor.
+
+Acabás de presenciar la magia de Spring Boot: transformar lo que solía ser una tarea de días en una tarea de 10 segundos. ¡Y ni siquiera escribimos una sola línea de código propio todavía!

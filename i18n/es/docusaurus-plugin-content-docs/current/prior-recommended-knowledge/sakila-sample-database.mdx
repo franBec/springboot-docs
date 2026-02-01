@@ -1,0 +1,30 @@
+---
+sidebar_position: 4
+title: La Base de Datos de Ejemplo Sakila
+---
+
+import { SakilaSchemaDiagram } from '@site/src/components/docs/prior-recommended-knowledge/sakila-sample-database';
+
+¿Alguna vez escuchaste hablar de [Lorem Ipsum](http://en.wikipedia.org/wiki/Lorem_ipsum)? Es ese contenido de relleno en latín sin sentido que usan los diseñadores cuando todavía no tienen texto real.
+
+Ahora, imaginate eso, pero para bases de datos relacionales. Necesitás probar una consulta, armar una demo, escribir un tutorial o aprender un nuevo dialecto SQL. No querés perder tiempo inventando un esquema de "Usuarios", "Productos", "Pedidos" desde cero por millonésima vez. Ahí entra **Sakila**.
+
+[Sakila](https://dev.mysql.com/doc/sakila/en/) es un esquema de base de datos de ejemplo completo y prefabricado. Su encarnación original fue creada por [MySQL](https://www.mysql.com/) para mostrar las características de su base de datos.
+
+<SakilaSchemaDiagram />
+
+La genialidad está en la temática: está construido alrededor de una tienda de alquiler de DVDs. Es familiar, un poco divertido y tiene justo la complejidad suficiente (con cosas como relaciones muchos a muchos, claves foráneas y registros con fechas) para ser útil para práctica realista.
+
+Pensalo como un muñeco de entrenamiento bien usado, no cuestionás sus orígenes.
+
+## Cuál es la Gran Diferencia?
+
+Acá te explico por qué debería importarte, más allá de pasar un quiz de trivia.
+
+1. **Es conocimiento universal:** Mencioná "Sakila" en una habitación llena de gente experimentada y la mayoría va a asentir con la cabeza. Aparece en conversaciones y entrevistas, similar a [PEBKAC](https://en.wikipedia.org/wiki/User_error) y [xkcd 2347](https://xkcd.com/2347/).
+2. **Escapó de la jaula de MySQL:** Aunque nació para MySQL, la belleza de Sakila es que el _concepto_ y el _esquema_ se han portado para todos lados. Podés encontrar adaptaciones oficiales o de la comunidad. Esto lo convierte en una fantástica **Piedra Rosetta**. Podés aprender las sutilezas de una nueva base de datos cargando Sakila y tratando de escribir las mismas consultas en un dialecto SQL diferente. El modelo mental se mantiene constante; solo cambia la sintaxis.
+3. **Es la herramienta de enseñanza perfecta:** Cuando escribo sobre [Integración Persistente](/es/category/persistence-integration), necesito un conjunto de datos consistente y relatable. No voy a inventar uno nuevo. **Voy a usar Sakila.** Considerá esto tu aviso anticipado.
+
+Sakila no se trata de los DVDs. Se trata de tener un punto de partida común y probado en batalla. Es el **conocimiento previo** que nos permite saltarnos la aburrida explicación de "acá está mi base de datos falsa" e ir directo a lo bueno.
+
+Este es tu brief oficial. Ahora estás en el loop. Ya sabés el lore.

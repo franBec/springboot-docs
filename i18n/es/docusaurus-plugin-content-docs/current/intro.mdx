@@ -1,0 +1,92 @@
+---
+sidebar_position: 1
+---
+
+import Youtube from '@site/src/components/youtube';
+import Image from '@site/src/components/image';
+
+# Introducción: ¿Por qué Spring Boot?
+
+_Así que estás considerando el desarrollo backend y escuchaste hablar de Spring Boot. Pero tenés tus dudas..._
+
+## ¿Para quién es esta guía?
+
+El 21 de junio de 2022, escribí en el grupo de WhatsApp de la Universidad:
+
+> Pregunta rápida, ¿Vale la pena aprender Java Spring posta? Los del laburo me anotaron en un curso y mansa paja
+
+<Image src={require('@site/static/img/WhatsAppImage2025-02-27.jpeg').default} />
+
+Hasta cometí una falta de ortografía, jaja.
+
+Este documento es todo lo que me hubiera gustado que alguien me respondiera en su momento. Si vos:
+
+- Sabés [Java](https://www.java.com/) (u otro [lenguaje POO](https://www.freecodecamp.org/news/what-is-object-oriented-programming/)) pero nunca construiste una [API](https://aws.amazon.com/what-is/api/),
+- Querés aprender Spring Boot sin ahogarte en jerga ni tutoriales legacy con XML,
+- Preferís hacer antes que teoría (vamos a codificar rápido y explicar más rápido),
+
+... Estás en el lugar correcto. No te voy a explicar ciclos de vida de beans, thread pools ni ninguna de esas cosas, porque para el 90% de los escenarios prácticos, no las necesitás. Esto no es una enciclopedia de Spring Boot. Es una guía para devs que quieren meterse rápido en un codebase y enviar código.
+
+Vas a notar que a veces pongo referencias a enlaces externos. Siéntete libre de revisarlos para obtener una explicación más profunda de ese concepto específico, pero cuidado con caer en [sobrecarga de información](https://www.interaction-design.org/literature/article/information-overload-why-it-matters-and-how-to-combat-it).
+
+## ¿Necesitás dominar todo Spring?
+
+Respuesta corta: **No**.
+
+[Spring Framework](https://spring.io/projects/spring-framework) es como un kit de herramientas enorme con 20 martillos distintos. Spring Boot, sin embargo, te da el martillo correcto para el trabajo desde el principio. No necesitás memorizar cada anotación ni configuración XML.
+
+La mayoría de los proyectos requieren solo una fracción de las características de Spring, y las dependencias "starter" y la autoconfiguración de Boot hacen el trabajo pesado. Pensalo como programar con ruedas de entrenamiento, excepto que las ruedas de entrenamiento también escriben la mitad de tu [boilerplate](https://aws.amazon.com/what-is/boilerplate-code/).
+
+## ¿Vale la pena aprenderlo en 2025?
+
+Según la [Encuesta de Desarrolladores de Stack Overflow 2025](https://survey.stackoverflow.co/2025/technology#most-popular-technologies-webframe-prof), entre los desarrolladores profesionales Spring Boot tiene una adopción del 15,6%, detrás de gigantes como [Express.js](https://expressjs.com/) (20,3%) y [ASP.NET Core](http://ASP.NET) (21,3%).
+
+<Image src={require('@site/static/img/stack-overflow-survey.png').default} />
+
+¿Esto significa que está desactualizado? Para nada. Acá te explico por qué sigue siendo una bestia:
+
+- **Musculatura enterprise**: Detrás de esos números de adopción más bajos hay un ecosistema masivo confiado por empresas Fortune 500 y startups por igual.
+- **La permanencia de Java**: Con más de 30 años de dominio, Java no va a desaparecer, y Spring Boot es su alma gemela moderna y con opiniones definidas.
+- **Escalabilidad**: ¿Necesitás manejar 10 usuarios o 10 millones? Spring Boot escala sin transpirar.
+
+<Youtube id="8inhakY1q9w" />
+
+## ¿Pero qué pasa con la IA reemplazando todo?
+
+La IA no va a reemplazar a los desarrolladores, pero va a amplificar el valor de aquellos que entiendan las realidades humanas desordenadas. Acá te explico por qué los ingenieros de Spring Boot van a florecer en la era de la IA.
+
+### El mito de los "requisitos claros"
+
+> **Pedido del product owner**: "¿Podés simplemente hacer que la API sea más rápida?"
+
+> **Respuesta de la IA**: Agrega una capa básica de caching. Se pierde el cuello de botella real: queries N+1 a través de tres microservicios, foreign keys sin indexar, latencia de APIs de terceros, y el hecho de que alguien ejecutó un job batch durante horario pico.
+
+Hasta que la IA pueda hacer psicoanálisis de stakeholders y traducir "que tenga onda" en specs técnicos, los desarrolladores siguen siendo el pegamento humano entre la ambición y la realidad. Los pros de Spring Boot no solo escriben código. Decodifican bardo corporativo en sistemas mantenibles.
+
+### La ventaja de Spring Boot
+
+La IA florece en proyectos greenfield. El mundo enterprise es un cementerio de:
+
+- Aplicaciones monolíticas de Spring de 15 años.
+- Integraciones legacy que escupen sangre si las mirás mal.
+- Requisitos de cumplimiento escritos en jeroglíficos.
+
+Los desarrolladores de Spring Boot no solo escriben código. Navegan el infierno de dependencias, parchan vulnerabilidades en codebases de 50K líneas, y hacen bailar sistemas antiguos con infraestructura cloud moderna. Las herramientas de IA se vuelven ayudantes, no reemplazos, en este caos.
+
+La IA escribe código. Los desarrolladores resuelven problemas. Mientras las empresas:
+
+- Prioricen "mover rápido" sobre "no romper cosas",
+- Confundan "ágil" con "vago",
+- Traten el software como centro de costos en vez de infraestructura viva...
+
+... Los expertos en Spring Boot van a seguir siendo esenciales. El stronghold enterprise del framework asegura que no solo seas relevante, sino el adulto en un room lleno de toddlers hiperactivos con IA.
+
+## ¿Por qué deberías prestarle atención a esta guía?
+
+Spring Boot no siempre es obvio a primera vista.
+
+Tuve que aprender sobre la marcha, resolviendo tareas y navegando [Stack Overflow](https://stackoverflow.com/questions) (¿se acuerdan de la era pre-IA?). Mientras que frameworks populares como [MEAN](https://www.mongodb.com/resources/languages/mean-stack) o [MERN](https://www.mongodb.com/resources/languages/mern-stack) tienen numerosos tutoriales de más de 5 horas, encontrar una fuente sólida para Spring Boot, al menos en su momento, era todo un desafío.
+
+Aunque Spring Boot es un subconjunto de Spring, es vasto. Usa algunas "palabras mágicas", te empuja hacia una forma particular de pensar el código, pero es sorprendentemente flexible en cómo organizás tu código o cómo nombrás las cosas. Esto suele llevar a que cada uno tenga su propio enfoque, sin un "correcto" o "incorrecto" definitivo, y a veces, incluso dentro de un proyecto, no hay un estándar claro ni un líder definiendo el "modo Spring Boot". Es una mezcla rara de estabilidad y flexibilidad.
+
+Por eso, armado con "Insights del Mundo Real" y un amor genuino por la simplicidad, creo que esta guía va a ser un "hola" accesible a Spring Boot para cualquier developer ahí afuera.

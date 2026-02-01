@@ -1,0 +1,144 @@
+---
+sidebar_position: 3
+title: Docker
+---
+
+import Youtube from '@site/src/components/youtube';
+import { Dockerfile } from '@site/src/components/docs/prior-recommended-knowledge/deployment-concepts/docker';
+import Image from '@site/src/components/image';
+
+# Docker
+
+Si estuviste haciendo desarrollo de software por un tiempo, probablemente hayas visto este logo:
+
+<Image
+  src={require('@site/static/img/deployment/docker.png').default}
+  alt="Docker Logo"
+  width="174"
+  height="146"
+/>
+
+[Docker](https://www.docker.com/) es como un contenedor de envío estándar para software. Así como los contenedores de envío revolucionaron el comercio global proveyendo una forma estándar de transportar bienes sin importar el contenido, Docker provee una forma estándar de empaquetar y correr software sin importar la infraestructura subyacente.
+
+Pensá en Docker como crear una caja completa y autocontenida que tiene todo lo que tu aplicación necesita para correr:
+
+- La aplicación misma.
+- Todas las librerías y dependencias.
+- Runtime environment.
+- Configuración.
+
+Esta "caja" (llamada contenedor) puede después moverse y correr consistentemente en cualquier sistema que soporte Docker, desde la laptop de un developer hasta un entorno de test hasta un server de producción.
+
+## ¿Por qué dockerizar aplicaciones Spring Boot?
+
+Las aplicaciones Spring Boot son candidatos perfectos para contenedores Docker por varias razones:
+
+1. **Portabilidad across environments**.
+   - Los contenedores Docker empaquetan la aplicación junto con todas sus dependencias (ej. JDK, librerías).
+   - Asegura consistencia a través de diferentes entornos (development, staging, producción), evitando el clásico problema "funciona en mi máquina".
+2. **Facilidad de deployment**.
+   - Una imagen Docker es un artefacto autocontenido que puede ser deployado en cualquier lugar donde Docker esté soportado (on-premises, AWS, GCP, Azure, etc.).
+3. **Escalabilidad**.
+   - Los contenedores son livianos comparados con virtual machines tradicionales, permitiéndote levantar múltiples instancias de tu app Spring Boot rápidamente.
+   - Útil para arquitectura de microservicios donde escalar servicios individuales es común.
+4. **Aislamiento**.
+   - Cada contenedor Docker corre en su propio entorno aislado.
+   - Esto evita conflictos entre las dependencias de tu app Spring Boot y otras apps o librerías a nivel de sistema.
+5. **Pipelines de CI/CD simplificados**.
+   - Docker se integra perfectamente con herramientas CI/CD como Jenkins, GitLab CI o GitHub Actions.
+6. **Mejor utilización de recursos**.
+   - Los contenedores comparten el kernel del host OS, haciéndolos más eficientes en recursos que VMs tradicionales.
+   - Esto habilita correr más instancias de tu app Spring Boot en el mismo hardware.
+7. **Versionado y rollbacks**.
+   - Las imágenes Docker son versionadas, permitiéndote trackear cambios y hacer rollback a una versión anterior si es necesario.
+8. **Alineación Cloud-Native**.
+   - La mayoría de las plataformas cloud están optimizadas para aplicaciones containerizadas.
+9. **Simplifica la colaboración en equipo**.
+   - Los equipos de Developers y DevOps pueden usar la misma imagen Docker para asegurar que todos estén trabajando con setups idénticos de aplicación.
+
+## Dockerfile para Spring Boot
+
+Un `Dockerfile` define cómo tu aplicación Spring Boot debería ser containerizada. Acá está una implementación básica:
+
+<Dockerfile />
+
+Sin embargo, si te estás uniendo a un equipo que ya tiene su propio `Dockerfile` definido, es mejor evitar modificaciones a menos que sean necesarias.
+
+## Entendiendo el Multi-Stage Build
+
+Este `Dockerfile` usa lo que se llama un [multi-stage build](https://docs.docker.com/build/building/multi-stage/):
+
+**Build Stage**. Este primer stage es como un workshop donde buildeamos nuestra aplicación:
+
+1. Empezamos con un contenedor que tiene Gradle y el full [Java Development Kit (JDK)](https://www.geeksforgeeks.org/jdk-in-java/).
+2. Copiamos nuestro proyecto Spring Boot en este contenedor.
+3. Corremos el comando de build de Gradle para compilar nuestra aplicación y crear un archivo `JAR`.
+4. Cuando termina, vamos a tener nuestra aplicación compilada, pero también muchas herramientas de build que no necesitamos más.
+
+**Run Stage**. Este segundo stage es el contenedor actual que va a correr:
+
+1. Empezamos con un contenedor mucho más pequeño que solo tiene el [Java Runtime Environment (JRE)](https://www.geeksforgeeks.org/jre-in-java/).
+2. Agregamos curl para health checks y troubleshooting.
+3. Copiamos solo el archivo `JAR` final del build stage.
+4. Seteamos el comando para correr nuestra aplicación.
+
+### Beneficios de este enfoque
+
+Este enfoque de dos stages provee varias ventajas:
+
+- **Tamaño final de imagen más pequeño**: El contenedor final solo incluye lo que se necesita para correr la aplicación, no para buildearla.
+- **Mayor seguridad**: Menos componentes significan menos vulnerabilidades potenciales.
+- **Deployments más rápidos**: Imágenes más pequeñas deployan más rápido.
+- **Separación más limpia**: Los concerns de build están separados de los concerns de runtime.
+
+## ¿Ahora debería buildear el contenedor, verdad?
+
+<Image
+  src={require('@site/static/img/deployment/well-yes-but-no.png').default}
+  alt="Well yes but no"
+/>
+
+Si bien buildear y testear imágenes Docker localmente es el escenario ideal, en muchos entornos profesionales los developers toman un enfoque diferente:
+
+### Desafíos de instalación de Docker
+
+Hacer que Docker corra fluidamente en tu máquina de desarrollo no siempre es sencillo:
+
+- **Usuarios de Windows** pueden enfrentar issues de compatibilidad con WSL (Windows Subsystem for Linux), requerimientos de Hyper-V o preocupaciones de performance.
+- **Usuarios de macOS** necesitan trabajar con Docker Desktop, que consume recursos significativos del sistema y tiene requerimientos de licenciamiento para organizaciones más grandes.
+- **Usuarios de Linux** tienen la experiencia más nativa pero todavía necesitan permisos y configuración apropiados.
+
+Estos obstáculos de setup pueden distraerte de tu trabajo principal: escribir código.
+
+### Aprovechando pipelines existentes
+
+La mayoría de los proyectos establecidos ya tienen [pipelines CI/CD](/prior-recommended-knowledge/deployment-concepts/ci-cd.mdx) configurados:
+
+- Cuando hacés push de código al repositorio, procesos automatizados buildea, testean y deployan tus cambios.
+- Los entornos de development y test se actualizan automáticamente con tus cambios.
+- Logs de build y resultados de deployment están disponibles a través de tu plataforma CI/CD (Jenkins, GitHub Actions, GitLab CI, etc.).
+
+En estos casos, es a menudo más eficiente:
+
+1. Hacer push de tus cambios a una feature branch.
+2. Dejar que el pipeline maneje el proceso de build de Docker.
+3. Revisar logs si surgen issues.
+4. Chequear la aplicación deployada en el entorno de desarrollo.
+
+Este enfoque te permite enfocarte en la calidad del código mientras herramientas de pipeline especializadas manejan el proceso de build en entornos consistentes y controlados construidos específicamente para esa tarea.
+
+## Por qué cada developer debería entender los básicos de Docker
+
+- **Solucionar problemas de deployment** entendiendo logs y comportamientos de contenedores.
+- **Colaborar efectivamente** con equipos de DevOps usando terminología compartida.
+- **Crear ambientes consistentes** a través de desarrollo y producción.
+- **Escribir código más portable** que no se base en configuraciones específicas de máquina.
+- **Impulsar tu carrera** con una skill que ahora se considera fundamental en el desarrollo moderno.
+
+Entender Docker ayuda a cerrar la brecha entre "funciona en mi máquina" y "funciona en todos lados". Es conocimiento esencial en el mundo containerizado de hoy.
+
+## Recurso de aprendizaje recomendado
+
+**Te recomiendo mucho** el video de KodeKloud "Learn Docker in 2 Hours—A Full Tutorial (2025)".
+
+<Youtube id="zJ6WbK9zFpI" />

@@ -1,0 +1,297 @@
+---
+sidebar_position: 4
+title: Deployment en un VPS con Coolify
+---
+
+import Admonition from '@theme/Admonition';
+import Image from '@site/src/components/image';
+import {
+  DeploymentFlowDiagramES,
+  FileTree,
+  DockerComposeYaml,
+  DockerFiles,
+  SettingsDockerGradle,
+  GitHubActionsYaml,
+  VerificationTerminal,
+  GitIgnore,
+} from '@site/src/components/docs/deployment/deployment-on-a-vps';
+import Youtube from '@site/src/components/youtube';
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+
+<GithubBranchInfo branch="feature/vps-coolify-deployment" />
+
+Deployar a tu propio VPS con [Coolify](https://coolify.io/) te da más control y evita las limitaciones de cold starts de los tiers gratuitos de PaaS. Sin embargo, este documento no va a entrar demasiado en detalle sobre cómo configurar un VPS + dominio + instancia de Coolify en sí.
+
+Para eso, te recomiendo chequear:
+
+- [Mi serie personal de blog sobre VPS setup](https://pollito.dev/en/categories/vps/), donde abordo ese desafío paso a paso
+- Dreams of Code: "Setting up a production ready VPS is a lot easier than I thought"
+  <Youtube id="F-9KWQByeU0" />
+
+Una vez que tenés tu instancia de Coolify up and running, deployemos tu aplicación Spring Boot.
+
+## Visión general de la arquitectura
+
+Acá te muestro exactamente qué pasa cuando hacés push de código a la branch `main`:
+
+<DeploymentFlowDiagramES />
+
+La idea clave acá es que **Coolify solo deploya si GitHub Actions pasa**. Esto previene que código roto llegue a producción. GitHub Actions maneja el heavy lifting de compilar y testear a través de las tres implementaciones de lenguaje, mientras Coolify se enfoca puramente en la orquestación del deployment.
+
+## Configuración del repositorio
+
+<Admonition type="info" title="Ejemplo de Monorepo">
+  Esta guía demuestra deployar un **monorepo que contiene tres proyectos Spring
+  Boot** (implementaciones Java, Kotlin y Groovy de la misma API). Si bien la
+  configuración es más compleja que un repo de proyecto único, los conceptos
+  principales se mantienen. Si estás trabajando con un repositorio más simple de
+  proyecto único, vas a saltear la configuración de Docker Compose y deployar un
+  solo servicio.
+</Admonition>
+
+Antes de configurar Coolify, necesitás preparar tu repositorio con configuraciones de Docker y CI/CD. Acá te muestro un resumen de los archivos nuevos y modificados:
+
+<FileTree />
+
+### docker-compose.yml
+
+Este archivo orquesta los tres servicios Spring Boot:
+
+<DockerComposeYaml />
+
+Cada servicio:
+
+- **Build desde su propio Dockerfile** ubicado en el respectivo directorio del módulo
+- **Mapea el puerto 8080** al puerto interno de Spring Boot (8080). El puerto externo coincide porque Coolify maneja el routing
+- **Activa el profile `prod`** para settings optimizados de producción
+- **Incluye un healthcheck** usando Spring Boot Actuator para asegurar que el contenedor esté realmente listo
+- **Restart automático** si el contenedor crashea
+
+### Dockerfiles
+
+Cada módulo obtiene su propio Dockerfile optimizado:
+
+<DockerFiles />
+
+Algunos detalles importantes sobre este build multi-stage:
+
+- **Stage 1 (Build)**: Usa la imagen full de Gradle con JDK 21 para compilar la aplicación. Saltamos tests y formateo de Spotless porque esos ya corrieron en GitHub Actions.
+- **`settings-docker.gradle` trick**: Cada módulo tiene un archivo de settings mínimo que solo se incluye a sí mismo. Esto previene que Docker intente buildear el monorepo entero cuando solo queremos un servicio.
+- **Stage 2 (Runtime)**: Usa una imagen slim solo JRE de Alpine para una superficie de ataque más pequeña y deployments más rápidos.
+- **`curl` installation**: Requerido para que funcione el healthcheck.
+
+### settings-docker.gradle
+
+Cada módulo necesita un archivo de settings standalone para builds de Docker:
+
+<SettingsDockerGradle />
+
+Esta configuración mínima le dice a Gradle que solo buildee el módulo específico, evitando compilación innecesaria del monorepo entero durante la fase de build de Docker.
+
+### Excepción de Gradle Wrapper en `.gitignore`
+
+`gradle/wrapper/gradle-wrapper.jar` actualmente es necesario para el deployment con Docker Compose porque:
+
+1. **Configuración actual de Docker**: Cada Dockerfile usa `gradlew` para buildear los JARs durante el proceso de build de Docker.
+2. **Builds multi-stage**: La etapa de build depende de Gradle para compilar y empaquetar las aplicaciones.
+3. **Personalización de settings**: Los Dockerfiles usan archivos de Gradle settings personalizados.
+
+Excluilo de ser ignorado:
+
+<GitIgnore />
+
+### .github/workflows/ci-cd.yml
+
+El workflow de GitHub Actions orquesta el pipeline CI/CD:
+
+<GitHubActionsYaml />
+
+Este workflow tiene dos jobs:
+
+1. **`build-and-test`**: Corre en cada push y pull request. Compila los tres módulos, corre tests y sube reportes de test como artifacts.
+2. **`deploy`**: Solo corre en pushes a `main` después de que `build-and-test` tenga éxito. Dispara el webhook de deployment de Coolify.
+
+El workflow usa dos secrets (`COOLIFY_DEPLOY_UUID` y `COOLIFY_API_TOKEN`) que vas a configurar después en GitHub.
+
+## Configuración de Coolify + GitHub Actions
+
+Ahora que tu repositorio está listo, configuremos Coolify para que trabaje con GitHub Actions.
+
+### Paso 1: Crear el recurso de Coolify
+
+1. Andá a tu proyecto en Coolify y clickeá **+ Add Resource**.
+
+   <Image
+     src={
+       require('@site/static/img/deployment/coolify-pollito-tech-project-p4wk08wwcw0g888ogk4w4kcw-environment-o8cckkoowsw0cgo84owsgsg0-2026-02-06-18_11_48.png')
+         .default
+     }
+   />
+
+2. Bajo **Git Based**, seleccioná **Private Repository (with GitHub App)**.
+
+   <Image
+     src={
+       require('@site/static/img/deployment/coolify-pollito-tech-project-p4wk08wwcw0g888ogk4w4kcw-environment-o8cckkoowsw0cgo84owsgsg0-new.png')
+         .default
+     }
+   />
+
+3. Seleccioná tu GitHub App conectada.
+
+   <Image
+     src={
+       require('@site/static/img/deployment/coolify-pollito-tech-project-p4wk08wwcw0g888ogk4w4kcw-environment-o8cckkoowsw0cgo84owsgsg0-new-2026-02-06-20_52_51.png')
+         .default
+     }
+   />
+
+4. Configurá la aplicación:
+   - **Repository**: Seleccioná tu repositorio (ej. `springboot-demo-projects`)
+   - **Branch**: `main`
+   - **Build Pack**: **Docker Compose**
+   - **Base Directory**: `/`
+   - **Docker Compose Location**: `/docker-compose.yml`
+
+   <Admonition type="warning" title="La Extensión del Archivo Importa">
+     Asegurate de que la ubicación de Docker Compose coincida con tu extensión
+     de archivo real. Es fácil confundir `.yml` y `.yaml`. Coolify va a fallar
+     en encontrar el archivo si no coinciden exactamente.
+   </Admonition>
+
+   <Image
+     src={
+       require('@site/static/img/deployment/coolify-pollito-tech-project-p4wk08wwcw0g888ogk4w4kcw-environment-o8cckkoowsw0cgo84owsgsg0-new-2026-02-06-20_53_57.png')
+         .default
+     }
+   />
+
+### Paso 2: Configurar los settings generales
+
+Una vez creada, andá a la pestaña **Configuration** y seteá tus servicios:
+
+1. **Domains**: Agregá tus dominios custom:
+   - `https://sakila-java.your-domain.com:8080`
+   - `https://sakila-kotlin.your-domain.com:8080`
+   - `https://sakila-groovy.your-domain.com:8080`
+
+   <Admonition type="caution" title="Configuración de Puertos">
+     **Esto es crucial**: Cada servicio está configurado para exponer el puerto
+     8080. El reverse proxy de Coolify va a manejar el routing de tráfico a cada
+     contenedor basado en el nombre de dominio. Si encontrás problemas de
+     routing, chequeá la [documentación de
+     Coolify](https://coolify.io/docs/knowledge-base/docker/compose#connect-to-predefined-networks)
+     para más detalles.
+   </Admonition>
+
+2. **Docker Compose Editor**: Verificá que el contenido de tu `docker-compose.yml` se muestre correctamente.
+
+   <Image
+     src={
+       require('@site/static/img/deployment/coolify-pollito-tech-project-p4wk08wwcw0g888ogk4w4kcw-environment-o8cckkoowsw0cgo84owsgsg0-application-mooo884gwccg0wosk88g8csw-2026-02-06-20_58_48.png')
+         .default
+     }
+   />
+
+### Paso 3: Deshabilitar Auto Deploy
+
+Navegá a la pestaña **Advanced** y **desmarcá Auto Deploy**.
+
+<Admonition type="danger" title="Deshabilitar Auto Deploy">
+  **Crítico**: Debés deshabilitar Auto Deploy. Si se deja habilitado, Coolify va
+  a deployar en cada git push, bypassing tu pipeline CI de GitHub Actions. Esto
+  derrota el propósito de tener tests como gate de tus deployments.
+</Admonition>
+
+<Image
+  src={
+    require('@site/static/img/deployment/coolify-pollito-tech-project-p4wk08wwcw0g888ogk4w4kcw-environment-o8cckkoowsw0cgo84owsgsg0-application-mooo884gwccg0wosk88g8csw-advanced-2026-02-06-20_54_38.png')
+      .default
+  }
+/>
+
+### Paso 4: Obtener el Deploy Webhook URL
+
+Navegá a la pestaña **Webhooks** para encontrar tu deployment trigger URL:
+
+<Image
+  src={
+    require('@site/static/img/deployment/coolify-pollito-tech-project-p4wk08wwcw0g888ogk4w4kcw-environment-o8cckkoowsw0cgo84owsgsg0-application-mooo884gwccg0wosk88g8csw-webhooks-2026-02-06-20_59_06.png')
+      .default
+  }
+/>
+
+Copiá el **Deploy Webhook URL**. Se ve así:
+
+```
+https://coolify.your-domain.com/api/v1/deploy?uuid=YOUR_UUID&force=false
+```
+
+El parámetro de query `uuid` es el identificador único para tu recurso de Coolify. Lo vas a guardar en GitHub como el secret `COOLIFY_DEPLOY_UUID`.
+
+### Paso 5: Generar API Token
+
+1. Andá a **Keys & Tokens** → **API Tokens** en la sidebar izquierda.
+2. Si la API está deshabilitada, habilitala en **Settings** primero.
+3. Creá un nuevo token:
+   - **Description**: `github-actions`
+   - **Permissions**: Solo marcar **`deploy`**
+
+   <Admonition type="info" title="Permisos Mínimos">
+     Solo otorgá el permiso `deploy`. El workflow de GitHub Actions solo
+     necesita disparar deployments, no leer datos sensibles o modificar
+     recursos.
+   </Admonition>
+
+   <Image
+     src={
+       require('@site/static/img/deployment/coolify-pollito-tech-security-api-tokens-2026-02-06-21_31_39.png')
+         .default
+     }
+   />
+
+4. Copiá el token generado. Lo vas a guardar en GitHub como el secret `COOLIFY_API_TOKEN`.
+
+### Paso 6: Configurar los secrets de GitHub
+
+Andá a tu repositorio de GitHub → **Settings** → **Secrets and variables** → **Actions**, y agregá estos repository secrets:
+
+- **`COOLIFY_API_TOKEN`**: El token de API que acabás de generar
+- **`COOLIFY_DEPLOY_UUID`**: El UUID del webhook URL (el valor del parámetro de query `uuid`)
+
+  <Image
+    src={
+      require('@site/static/img/deployment/github-franBec-springboot-demo-projects-settings-secrets-actions-2026-02-07-02_59_45.png')
+        .default
+    }
+  />
+
+## Verificación
+
+Hacé push de tus cambios a la branch `main` y mirá la magia suceder:
+
+1. **Chequeá la ejecución de GitHub Actions** para confirmar que el pipeline CI funciona:
+   - Tu workflow debería dispararse y mostrar ambos jobs `build-and-test` y `deploy`
+   - Buscá el checkmark verde indicando éxito
+
+   <Image
+     src={
+       require('@site/static/img/deployment/github-franBec-springboot-demo-projects-actions-runs-21766853844-2026-02-06-21_51_30.png')
+         .default
+     }
+   />
+
+2. **Después de un deployment exitoso** (usualmente 3-5 minutos), lo vas a ver en la pestaña Deployments:
+
+   <Image
+     src={
+       require('@site/static/img/deployment/coolify-pollito-tech-project-p4wk08wwcw0g888ogk4w4kcw-environment-o8cckkoowsw0cgo84owsgsg0-application-mooo884gwccg0wosk88g8csw-deployment-2026-02-06-21_51_58.png')
+         .default
+     }
+   />
+
+3. Finalmente, testeá tu API deployada:
+
+<VerificationTerminal />
+
+**¡Felicitaciones!** Configuraste exitosamente un pipeline CI/CD listo para producción para tu monorepo Spring Boot. Ahora cada push a `main` va a correr tests automáticamente antes de deployar, dándote confianza de que producción siempre esté en un estado funcional.

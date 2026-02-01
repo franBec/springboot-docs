@@ -1,0 +1,87 @@
+---
+sidebar_position: 5
+title: Compilación y Builds de la JVM
+---
+
+import {
+  CompilationFlowchart,
+  RuntimeFlowSequence,
+} from '@site/src/components/docs/prior-recommended-knowledge/core-concepts/jvm-compilation-and-builds';
+
+Si vas a construir algo serio en el ecosistema Java, ayuda entender qué pasa realmente con tu código después de que guardás. Conocés los lenguajes (Java, Kotlin, Groovy) y sabés que todos compilan a bytecode que corre en la JVM. ¿Pero qué pasa en el medio? Ahí es donde entran las herramientas de build y el proceso de compilación.
+
+## Herramientas de Build
+
+Las herramientas de build son gestores de proyecto. Se encargan del trabajo pesado:
+
+- Descargar bibliotecas/dependencias
+- Definir pasos (compilar código, correr tests, construir archivos JAR)
+- Mantener la estructura del proyecto estándar y organizada
+
+Típicamente vas a encontrarte con [Maven](https://maven.apache.org/) o [Gradle](https://gradle.org/). Para la mayoría de los proyectos Spring Boot, no importa cuál elijas. Ambos te llevan exactamente al mismo destino.
+
+| Aspecto       | Maven                                   | Gradle                                                 |
+| ------------- | --------------------------------------- | ------------------------------------------------------ |
+| Configuración | Usa XML (estructurado con `<tags>`)     | Usa Kotlin/Groovy (sintaxis tipo código)               |
+| Flexibilidad  | Convenciones estrictas y estandarizadas | Altamente customizable (soporta lógica como `if-else`) |
+| Casos de Uso  | Proyectos Java legacy o empresariales   | Apps Android, proyectos modernos Java/Kotlin           |
+
+Ambos descargan de [Maven Central](https://mvnrepository.com/), ambos compilan de la misma manera, ambos producen los mismos JARs.
+
+### El Directorio de Build
+
+Maven lo llama `target/`, Gradle lo llama `build/`. No importa. Es tu directorio de salida del build, y contiene:
+
+| Directorio           | Propósito                                                                 |
+| -------------------- | ------------------------------------------------------------------------- |
+| `classes/java/main/` | Clases de producción compiladas                                           |
+| `classes/resources/` | Recursos empaquetados con el JAR                                          |
+| `test-results/`      | Resultados de ejecución de tests                                          |
+| `generated-sources/` | Código generado por procesadores de anotaciones (Lombok, MapStruct, etc.) |
+| `my-app.jar`         | **Tu artefacto de producción**                                            |
+
+El directorio de build existe, pero para el desarrollo cotidiano, raramente necesitás ir ahí. Hay momentos raros en los que vas a querer explorar el directorio de build:
+
+1. **Debuggeando fallos de tests**: Abrí `test-results/` para ver reportes XML y entender qué salió mal
+2. **Entendiendo código generado**: Revisá `generated-sources/` cuando procesadores de anotaciones como Lombok están creando código que no entendés
+3. **Investigando fallos misteriosos de CI**: Verificá que el directorio de build contenga exactamente lo que esperás
+4. **Corriendo tests manuales**: Podés correr directamente `java -jar build/my-app.jar` sin herramientas de build
+
+### JAR
+
+Tu JAR de producción no tiene huellas digitales de Maven o Gradle. Son idénticos desde la perspectiva de la JVM.
+
+1. **El manejo de dependencias es idéntico**: La diferencia es la sintaxis (`pom.xml` vs `build.gradle`), no el comportamiento.
+2. **Los JARs generados son gemelos**:
+   - Misma disposición de clases
+   - Archivo `MANIFEST.MF` idéntico
+   - Mismos archivos de recursos
+   - Mismos metadatos
+3. **Los IDEs no les importa**: [IntelliJ IDEA](/docs/prior-recommended-knowledge/development-environment/ide#por-qué-todos-usan-intellij-idea) auto-detecta ambos y muestra la barra de herramientas correspondiente de Maven o Gradle.
+
+## Bytecode
+
+Aunque Java, Kotlin y Groovy todos compilan a bytecode de la JVM, la _calidad_ y _características_ de ese bytecode difieren significativamente.
+
+<CompilationFlowchart />
+
+| Aspecto              | Java                       | Kotlin                                     | Groovy                                                       |
+| -------------------- | -------------------------- | ------------------------------------------ | ------------------------------------------------------------ |
+| Compilación          | Directo a bytecode         | Directo a bytecode, luego optimizado       | Compilación dinámica, genera bytecode verboso                |
+| Overhead             | Ninguno (cuando compilado) | Mínimo (sin overhead de runtime)           | Alto (características dinámicas agregan chequeos de runtime) |
+| Transformaciones AST | ❌ Ninguna                 | ❌ Ninguna                                 | ✅ Sí (vía @Canonical, @Builder, etc.)                       |
+| Seguridad de Tipos   | En tiempo de compilación   | En tiempo de compilación (con null-safety) | En runtime (tipado dinámico)                                 |
+| Tamaño del Bytecode  | Compacto                   | Compacto                                   | Abultado (frames extra, chequeos, proxies)                   |
+| Visibilidad          | Claro en IDE               | Claro en IDE                               | A menudo invisible (código generado)                         |
+
+### ¿Qué Son las Transformaciones AST?
+
+Las [transformaciones AST (Abstract Syntax Tree)](https://github.com/ellegonzalez/52-technologies-in-2025/blob/master/32-groovy-ast-transformations/README.md) son mecanismos de generación de código en tiempo de compilación que modifican tu código fuente antes de que se convierta en bytecode. Son características poderosas que generan código boilerplate para vos.
+
+**Ejemplos comunes en Groovy:**
+
+- `@Canonical` → genera automáticamente métodos `equals`, `hashCode`, `toString`
+- `@Builder` → genera un patrón Builder completo con todos los métodos necesarios
+- `@Slf4j` → genera una instancia de logger para logging
+
+Estas transformaciones generan código Java real que se compila junto con tus archivos fuente. No podés verlo en tu editor, pero existe en el directorio de build.

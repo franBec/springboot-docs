@@ -1,0 +1,124 @@
+---
+sidebar_position: 3
+title: Primer endpoint
+---
+
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+import {
+  FilmJson,
+  GreclipseProperties,
+  BuildGradleJavaSpotless,
+  BuildGradleKtsSpotless,
+  BuildGradleGroovySpotless,
+  FilmJava,
+  FilmKt,
+  FilmGroovy,
+  PrimaryPort,
+  PrimaryAdapter,
+  FileTree,
+  Terminal,
+  ApplicationSequenceDiagram,
+} from '@site/src/components/docs/lets-create-a-spring-boot-project/first-endpoint';
+
+<GithubBranchInfo branch="feature/first-endpoint" />
+
+Vas a crear un endpoint simple que devuelve una película. Cuando visites [http://localhost:8080/api/films/42](http://localhost:8080/api/films/42), deberías obtener algo así:
+
+<FilmJson />
+
+<FileTree />
+
+## Agregá un Formateador (Spotless)
+
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+        1. Creá `greclipse.properties` para configurar opciones de formateo que afectan archivos `.gradle`:
+
+           <GreclipseProperties />
+        2. Agregá el plugin en `build.gradle`:
+
+           <BuildGradleJavaSpotless />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+        Agregá el plugin en `build.gradle.kts`:
+        <BuildGradleKtsSpotless />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+    1. Creá `greclipse.properties` para configurar opciones de formateo que afectan archivos `.gradle` y `.groovy`:
+
+       <GreclipseProperties />
+    2. Agregá el plugin en `build.gradle`:
+
+       <BuildGradleGroovySpotless />
+    </TabItem>
+
+</Tabs>
+
+Para más info sobre configuraciones, fijate el [repositorio GitHub de Spotless](https://github.com/diffplug/spotless). Ahora que todo está configurado, **ejecutá la tarea Build**.
+
+## Implementá el Caso de Uso
+
+### Modelo
+
+Un **modelo** es un blueprint para tus datos. Define la estructura de la información que maneja tu aplicación.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    Creá `Film.java`.
+    <FilmJava />
+
+    <Admonition type="info">
+      **Vamos a usar Lombok para evitar código boilerplate**. Lombok genera automáticamente código Java repetitivo en tiempo de compilación. Si tu IDE no tiene el plugin de Lombok instalado, vas a ver errores de compilación. Fijate en [Optimizando IntelliJ IDEA con Plugins (para Java)](/prior-recommended-knowledge/development-environment/ide#optimizing-intellij-idea-with-plugins-for-java) para saber cómo agregar el plugin de Lombok.
+    </Admonition>
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    Creá `Film.kt`.
+    <FilmKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    Creá `Film.groovy`.
+    <FilmGroovy />
+  </TabItem>
+</Tabs>
+
+### Puerto Primario y Su Implementación
+
+- `FindByIdPortIn` es el Puerto Primario, definiendo operaciones.
+- `FindByIdPortInImpl` es la implementación, conteniendo la lógica de dominio.
+
+<PrimaryPort />
+
+- Por el momento vas a devolver una película hardcodeada.
+- `@Service` le dice a Spring _acá hay una implementación de `FindByIdPortIn`_.
+- `@Override` indica que el método `public Film findById(Long id)` cumple con el contrato de la interfaz.
+
+### Adaptador Primario
+
+- `FilmResponse` contiene los datos a devolver como respuesta.
+- `FilmMapper` convierte entre modelos de dominio y DTOs.
+- `FilmRestController` actúa como adaptador primario que convierte requests HTTP a llamadas de servicio.
+
+<PrimaryAdapter />
+
+- El Controller solo depende de la interfaz de servicio (puerto), no de su implementación.
+- La lógica de mapeo se extrae a una clase mapper separada.
+- Los objetos de dominio no se filtran a los endpoints de la API.
+
+## Corré la Aplicación
+
+Buildá y ejecutá la aplicación. Después andá a [http://localhost:8080/api/films/42](http://localhost:8080/api/films/42).
+
+<Terminal />
+<ApplicationSequenceDiagram />
+
+1. **El cliente invoca al controller:** Un cliente externo hace un request GET al endpoint `/api/films/{id}`, que es manejado por el `FilmRestController`.
+2. **El controller invoca al servicio:** El `FilmRestController` llama al método `findById()` en la instancia inyectada de `FindByIdPortIn` (que es implementada por `FindByIdPortInImpl`).
+3. **El servicio devuelve al controller:** El `FindByIdPortInImpl` recupera o genera objetos de dominio `Film` y los devuelve al `FilmRestController`.
+4. **Nota sobre el controller:** El `FilmRestController` luego procesa los objetos `Film` recibidos.
+5. **Respuesta enviada al cliente:** Después del mapeo, el `FilmRestController` envuelve la respuesta en un `ResponseEntity.ok()` y devuelve la respuesta HTTP final (con status 200 OK) al cliente.
+
+¡Felicitaciones! Tu app Spring Boot está levantada, corriendo, y exponiendo un endpoint.

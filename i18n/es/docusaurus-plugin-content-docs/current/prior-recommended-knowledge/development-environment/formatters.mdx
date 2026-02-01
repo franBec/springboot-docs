@@ -1,0 +1,17 @@
+---
+sidebar_position: 4
+title: Formatters
+---
+
+import Youtube from '@site/src/components/youtube';
+
+Un **formateador** aplica estilos automáticamente a tu código (indentación, espacios, saltos de línea) para mantener la consistencia. Se acabaron los debates sobre _tabs vs. espacios_
+
+<Youtube id="V7PLxL8jIl8" />
+
+Antes de imponer un formateador, fijate el workflow de tu equipo:
+
+- **Consistencia > preferencia personal**: Si tu equipo ya usa un formateador (por ejemplo, [Checkstyle](https://checkstyle.org/), [Google Java Format](https://github.com/google/google-java-format)), quedate con esa configuración.
+- **Para proyectos existentes sin formateador**, consultá primero con el equipo. Un cambio abrupto de formato en una codebase compartida puede enterrar cambios significativos en medio del ruido. Si están de acuerdo, creá un commit dedicado exclusivamente al formateo (¡sin modificaciones de lógica!) para simplificar las revisiones de código.
+
+Te recomiendo [Spotless](https://github.com/diffplug/spotless). ¿Por qué? Preferencia personal, es el que siempre usé y nunca me dio por buscar otros.

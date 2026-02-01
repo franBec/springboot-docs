@@ -1,0 +1,38 @@
+---
+sidebar_position: 3
+title: ¿Es Full Stack Siquiera una Cosa?
+---
+
+import Youtube from '@site/src/components/youtube';
+
+Dado que esta guía es sobre Spring Boot, esta cita podría pegar diferente. ¿Significa enfocarse en Spring Boot que no sos full stack? ¿Es ser full stack algo que querés siquiera?
+
+> ¿Alguna vez te contrataron como “full-stack developer” y te diste cuenta de que significa que ahora sos legalmente responsable de cada bug en la codebase?
+
+<Youtube id="If90OuYRYeY" />
+
+## El Lado Full Stack Tradicional de Spring Boot
+
+Históricamente, especialmente en aplicaciones Java enterprise, era común que la misma aplicación manejara tanto la lógica de negocio como el renderizado de la interfaz de usuario. Cuando usás Spring Boot de esta manera, el código solía verse así:
+
+- **Backend Logic:** Manejado por controllers de Spring MVC, services, repositorios (lo que Spring Boot hace excelente).
+- **Frontend Rendering:** Usando motores de template como [Thymeleaf](https://www.thymeleaf.org/).
+- **Client-Side Interaction:** Interactividad básica agregada con librerías como [jQuery](https://jquery.com/) y estilos con frameworks como [Bootstrap](https://getbootstrap.com/), incluidos directamente como assets estáticos.
+
+Si construiste una aplicación de esta manera, estabas haciendo tareas tanto de "front" como de "back" end dentro de un solo proyecto. En muchos contextos, esto se consideraba "full stack" con Spring Boot.
+
+## El Debate Moderno sobre Full Stack
+
+El término "full stack" ha evolucionado significativamente, especialmente con el surgimiento de frameworks JavaScript. Hoy cuando escuchás a la gente decir "full stack" seguido se refieren a algo más cercano a frameworks como [Next.js](https://nextjs.org/), [Remix](https://remix.run/), [SvelteKit](https://svelte.dev/tutorial/kit/introducing-sveltekit), o [SolidStart](https://start.solidjs.com/). Estos frameworks seguido usan un solo lenguaje (como JavaScript/TypeScript) para construir aplicaciones que renderizan tanto en el servidor como en el cliente, proporcionando una developer experience fluida a través del stack.
+
+> Nos están llegando nuevos frameworks "fullstack" todo el tiempo. Desde Rails, a Laravel, a Next.js, a Tanstack Start, hay muchas opciones. Pero todos son muy diferentes, y necesitamos hablar de eso.
+
+<Youtube id="eBy6LJvv8B0" />
+
+## ¿Dónde Encaja Spring Boot?
+
+No te preocupes por definiciones arbitrarias de "full stack". Enfocate en volverte experto en construir sistemas backend confiables con Spring Boot.
+
+Si tu proyecto requiere que toques el frontend (ya sea el viejo Thymeleaf o un framework Javascript moderno), aprendé esa parte específica según sea necesario.
+
+El valor que traés es resolver todo el problema, incluso si te especializás en una capa. Spring Boot te posiciona perfectamente para dominar la pieza crítica del backend en prácticamente cualquier arquitectura.

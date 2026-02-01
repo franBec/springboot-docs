@@ -1,0 +1,209 @@
+---
+sidebar_position: 3
+title: First Tests
+---
+
+import {
+  MainFileTree,
+  FileTree,
+  BuildGradle,
+  FindByIdPortInTests,
+  ApiResponseMatchersJavaCode,
+  ApiResponseMatchersKtCode,
+  ApiResponseMatchersGroovyCode,
+  FilmRestControllerTests,
+  ControllerAdvice,
+  TestErrorLog,
+  MapperSpec,
+  JacocoReportJava,
+  JacocoReportKt,
+  JacocoReportGroovy,
+  ControllerAdviceTests,
+  LoggingIntegrationTests,
+} from '@site/src/components/docs/testing/first-tests';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+
+<GithubBranchInfo branch="feature/first-tests" />
+
+## Testing Strategy
+
+### Pick a Framework
+
+- For the **Java** Spring Boot App we are going to choose **JUnit + Mockito**: is the de-facto standard, the one always being asked in interviews, and the one you are expected to know.
+- For the **Kotlin** Spring Boot App we are going to choose **JUnit + MockK**: kotlin native tools + kotlin-first mocking.
+- For the **Groovy** Spring Boot Project we are going to choose **Spock**, as is the natural less friction choice.
+
+### JaCoCo
+
+[JaCoCo (Java Code Coverage)](https://www.jacoco.org/jacoco/) tells you which lines of code your tests execute. It is the standard coverage tool for JVM projects.
+
+When running the `test` or `jacocoTestReport` task, JaCoCo will generate reports in HTML (for humans) and XML (for CI tools) at `build/reports/jacoco/test`.
+
+### What Files To Test
+
+<MainFileTree />
+
+| Symbol | Test Type               | Description                                                        |
+| ------ | ----------------------- | ------------------------------------------------------------------ |
+| 🔴     | `@SpringBootTest`       | Full context integration test                                      |
+| 🟣     | `@ContextConfiguration` | Partial context (specific beans only) [Used in the GROOVY project] |
+| 🟡     | `@WebMvcTest`           | Web layer slice test                                               |
+| 🔶     | Standalone MockMvc      | MockMvc without full Spring context                                |
+| 🟢     | Unit Test               | Pure unit test                                                     |
+| ⚪     | Ignored                 | No test needed (config/interface/POJO)                             |
+
+```txt
+◀─────────────────────── TEST SPECTRUM ───────────────────────▶
+
+UNIT                                                INTEGRATION
+FAST                                                      SLOW
+ISOLATED                                              CONNECTED
+
+🟢────────🔶────────🟡────────🟣────────🔴
+ │         │         │         │         │
+ │         │         │         │         └── Full Spring Boot
+ │         │         │         └── Partial Context
+ │         │         └── Web Layer Only
+ │         └── MockMvc Standalone
+ └── Pure Unit Test
+
+⚪ = Not on spectrum (no test needed)
+```
+
+<FileTree />
+
+## Dependencies
+
+<BuildGradle />
+
+## 🟢 Unit Tests
+
+Unit tests don't involve Spring at all. These are faster to run and perfect for testing business logic in complete isolation.
+
+`FindByIdPortInImpl` is currently just returning a hardcoded film. There's not much point in doing deep testing here yet, but let's at least verify the service instantiates and returns something.
+
+<FindByIdPortInTests />
+
+## 🔶 🟡 Slice Tests
+
+### 🟡 Web Layer
+
+We're testing three things here:
+
+- **REST endpoint behavior**: Does the controller map requests correctly and return the expected responses?
+- **Exception handling**: When things go wrong, does our error response structure look right?
+- **JSON response structure**: Does the final JSON match what our API contract promises?
+
+To make our assertions more readable, we'll first create some custom matchers for our API response structure:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <ApiResponseMatchersJavaCode />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <ApiResponseMatchersKtCode />
+    <Admonition type="tip" title="Kotlin Extension Function">
+      By extending `MockMvcResultMatchersDsl`, our custom matchers integrate
+      seamlessly with Spring's Kotlin DSL. They can be called directly inside
+      the `andExpect` block, making the test code read like a native part of the
+      framework.
+    </Admonition>
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <ApiResponseMatchersGroovyCode />
+    <Admonition type="tip" title="Groovy Trait">
+      A trait is like an interface with implementation that can be mixed into
+      classes. By implementing this trait in your Spock specifications, the
+      matcher methods become available as if they were defined directly in your
+      test class, no static imports needed. Unlike abstract base classes, you
+      can implement multiple traits, keeping your test hierarchy flexible.
+    </Admonition>
+  </TabItem>
+</Tabs>
+
+Now let's write the actual `RestController` test using a slice testing approach with `@WebMvcTest`, which creates a minimal Spring context focused on the web layer.
+
+<FilmRestControllerTests />
+
+When we run the tests, we find this error:
+
+<TestErrorLog />
+
+We expected a 400 (Bad Request) when passing an invalid ID (0), but got a 500 instead. This tells us our `ControllerAdvice` isn't handling `ConstraintViolationException` properly. It's being caught by the generic `Exception` handler and returning a 500 status.
+
+Let's fix the `ControllerAdvice` by adding an explicit handler for `ConstraintViolationException` that returns `BAD_REQUEST` (400) instead of letting it fall through to the generic 500 handler:
+
+<ControllerAdvice />
+
+After this fix, we now have confidence that our controller handles happy paths, validation errors, and unexpected exceptions correctly.
+
+### 🔶 MockMvc Standalone
+
+The goal of these tests is to verify our `ControllerAdvice` handles different exception scenarios correctly. We test that validation errors return appropriate HTTP status codes and response structures, ensuring our API provides consistent error responses across different failure modes.
+
+<ControllerAdviceTests />
+
+## 🟣 🔴 Integration Tests
+
+### 🟣 Partial context
+
+<Admonition type="info" title="Groovy-Specific Example">
+  This section primarily applies to the Groovy project since it's the only one
+  where initializing the mapper partially makes sense conceptually. However,
+  this approach can be applied to Java and Kotlin projects in scenarios where
+  you need to test components with partial dependencies or when mocking certain
+  beans while testing others.
+</Admonition>
+
+The goal of this test is to demonstrate how to test mapper functionality with a partially initialized Spring context. We want to verify that our mapper can handle edge cases and invalid inputs correctly without needing the full application context.
+
+<MapperSpec />
+
+### 🔴 Full context integration test
+
+The goal of this test is to verify that our application's logging configuration works correctly and that all components properly log events as expected. We want to ensure that important events are captured and formatted correctly in our logs.
+
+<LoggingIntegrationTests />
+
+## Check the JaCoCo Report
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <JacocoReportJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <JacocoReportKt />
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <JacocoReportGroovy />
+    <Admonition
+      type="warning"
+      title="JaCoCo Limitations with Groovy Spring Boot Projects"
+    >
+      JaCoCo works at the bytecode level, but Groovy generates significantly
+      different bytecode than what you write in source code. For Groovy projects
+      (especially with Spring Boot), you should generally ignore the
+      "Instructions" and "Branches" columns and focus almost exclusively on Line
+      Coverage.
+    </Admonition>
+  </TabItem>
+</Tabs>
+
+Here's what each column in a JaCoCo coverage report means:
+
+| Column                   | Meaning                                                             | Notes / When to Care                            |
+| ------------------------ | ------------------------------------------------------------------- | ----------------------------------------------- |
+| **Name**                 | The package, class, file, or method being measured                  | The **Total** row aggregates all entries        |
+| **Instruction Coverage** | Percentage of JVM bytecode instructions executed                    | Very fine‑grained; can be misleading for Groovy |
+| **Branch Coverage**      | Percentage of conditional branches executed (`if`, `switch`, loops) | Great for catching untested logic paths         |
+| **Missed Complexity**    | Cyclomatic complexity not covered by tests                          | Indicates risky or untested control flow        |
+| **Total Complexity**     | Total cyclomatic complexity of the code                             | Higher values mean more complex logic           |
+| **Missed Lines**         | Number of executable source lines not run                           | Based on lines with bytecode                    |
+| **Total Lines**          | Total executable source lines                                       | Most intuitive coverage metric                  |
+| **Missed Methods**       | Methods never invoked by tests                                      | Good for spotting untested APIs                 |
+| **Total Methods**        | Total number of methods                                             | Includes constructors and lambdas               |
+| **Missed Classes**       | Classes never loaded during tests                                   | High‑level test completeness indicator          |
+| **Total Classes**        | Total number of classes                                             | Includes inner/anonymous classes                |

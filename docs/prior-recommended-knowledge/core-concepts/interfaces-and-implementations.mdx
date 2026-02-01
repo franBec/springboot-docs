@@ -1,0 +1,25 @@
+---
+sidebar_position: 6
+title: Interfaces and Implementations
+---
+
+- **An Interface is the "What."** It's a contract. A promise. It tells you _what_ a thing can do, but it has zero clue _how_ it's done. Think of a power outlet on your wall. You know you can plug a lamp into it and get electricity (the "what"). You don't need to know about the power plant, the transformers, or the squirrels running on a wheel that generate the power (the "how"). The outlet is the interface.
+- **An Implementation is the "How."** This is the messy reality. It's the actual code that does the work promised by the interface. It's the power plant, the wiring in your walls, and maybe even that poor squirrel. It's the concrete class that has the methods and logic.
+
+| Concept            | Analogy         | In Code                                               |
+| ------------------ | --------------- | ----------------------------------------------------- |
+| **Interface**      | The wall socket | `public interface LightSwitch`                        |
+| **Implementation** | The power grid  | `public class EdisonPowerGrid implements LightSwitch` |
+
+**Why Should I Care?**
+
+1.  **Your Code Becomes Flexible:**
+    Let's say you start by faking a `UserRepository` that just returns a hardcoded list of users. Your implementation is simple. But your application code doesn't care. It just talks to the `UserRepository` interface.
+    Later, when you're ready to use a real database, you just create a `PostgresUserRepository`. You swap out the _implementation_. The rest of your code? It doesn't change. At all. You just changed the "how" without touching the "what." This is huge.
+
+2.  **Testing Becomes Easy:**
+    If your `BillingService` needs a `PaymentGateway` to work, you don't want to hit a real credit card API every time you run a unit test. That's slow, expensive, and gets you angry emails from accounting.
+    Instead, you give it a _mock_ implementation of the `PaymentGateway` interface. A fake one that just pretends to work. This lets you test your `BillingService` in isolation, and it's fast and free.
+
+3.  **It Hides the Ugly Parts:**
+    Real-world code is messy. Implementations deal with database connections, weird API quirks, and all sorts of other headaches. An interface is a clean, beautiful facade that hides all that complexity. It lets other developers use your component without needing to know about the dumpster fire of complexity inside.

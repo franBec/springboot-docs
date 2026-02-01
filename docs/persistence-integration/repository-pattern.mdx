@@ -1,0 +1,73 @@
+---
+sidebar_position: 1
+title: Repository Pattern
+---
+
+import { SpringDataJpaFlowDiagram } from '@site/src/components/docs/persistence-integration/repository-pattern';
+
+## Understanding the Repository Pattern
+
+The Repository Pattern is an abstraction layer that sits between your application and your data storage. Think of it as a translator. Your application asks for what it wants in its own language, like "give me all the films released in 2024," and the repository handles the messy details of turning that request into actual database operations.
+
+You don't need to know if the data lives in PostgreSQL, MongoDB, or some external API. The repository handles that complexity so your business logic stays clean and focused on what it does best.
+
+## Spring Data JPA
+
+If you've been following along with the hexagonal architecture approach, you know to divide your application into a **Driver** side (the incoming requests, controllers) and a **Driven** side (external dependencies like databases).
+
+```txt
+┌──────────────────────────────────────────────────────────────────┐
+│                     HEXAGONAL ARCHITECTURE                       │
+├────────────────────┬──────────────────┬──────────────────────────┤
+│   DRIVER (Left)    │   APPLICATION    │     DRIVEN (Right)       │
+├────────────────────┼──────────────────┼──────────────────────────┤
+│                    │                  │                          │
+│   Adapters         │                  │                 Adapters │
+│   • REST API       │   ┌──────────┐   │                 • MySQL  │
+│   • CLI            │   │          │   │                 • Redis  │
+│   • GraphQL        │   │   USE    │   │                 • S3     │
+│                    │   │  CASES   │   │                          │
+│   "How external    │   │          │   │   "How app talks to      │
+│    actors call     │   └──────────┘   │    external services"    │
+│    the app"        │                  │                          │
+│                    │                  │                          │
+│              ══════╪══════════════════╪══════                    │
+│              PORTS │   (Interfaces)   │ PORTS                    │
+└────────────────────┴──────────────────┴──────────────────────────┘
+```
+
+When your Spring Boot app needs to talk to a database, Spring Data JPA steps in as a **secondary adapter** on that Driven side.
+
+### How It Works
+
+Here's what happens when your application says "I need all films":
+
+<SpringDataJpaFlowDiagram />
+
+Let's break down what's happening:
+
+1. **Application** calls a method on the repository interface, such as `filmRepository.findAll()`. This is pure business language. You're not writing SQL here.
+2. **Secondary Port** is just the interface definition. It declares what operations are possible without caring how they're implemented.
+3. **Secondary Adapter (Spring Data JPA)** does the heavy lifting. At runtime, Spring generates an implementation of your interface. It converts your method call into a SQL query, executes it against the database, and handles all the connection management.
+4. **Database** executes the query and returns raw rows.
+5. **Spring Data JPA** maps those rows back to Java objects your application understands.
+6. **Application** receives a nice, clean `List<Film>` and continues with its business logic, completely unaware of the SQL that just ran.
+
+The beauty here is separation of concerns. Your business logic stays database-agnostic. If you later decide to switch from PostgreSQL to MongoDB, you just swap the adapter. The application code doesn't change.
+
+### Entity Class
+
+An entity is a Java representation of a single row in a database table. When Spring Data JPA executes a query, it doesn't hand you back raw `ResultSet` data. Instead, it maps each row to an instance of your entity class.
+
+You'll mark a class as an entity using the `@Entity` annotation, define which field is the primary key with `@Id`, and optionally specify how columns map to fields. Spring Data JPA handles the rest.
+
+The entity sits right at the boundary between your application and the database. To the database, it's a row in a table. To your application, it's a plain Java object you can work with.
+
+### Beyond the Basics
+
+`JpaRepository` provides more than simple CRUD operations:
+
+- **Pagination and sorting capabilities**: Handle large datasets without loading everything into memory.
+- **Dynamic query generation from method names**: Name your method `findByTitleContainingAndYearGreaterThan` and Spring Data JPA figures out the SQL for you.
+- **Custom query support**: Use the `@Query` annotation when you need complex operations that method names can't express.
+- **Transaction management**: Spring handles the begin/commit/rollback dance automatically.

@@ -1,0 +1,280 @@
+---
+sidebar_position: 5
+title: Observabilidad
+---
+
+import Admonition from '@theme/Admonition';
+import Image from '@site/src/components/image';
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+import {
+  DockerComposeObservability,
+  BuildGradle,
+  ApplicationYaml,
+  LokiDockerfile,
+  LokiConfig,
+  PromtailDockerfile,
+  PromtailConfig,
+  TempoDockerfile,
+  TempoConfig,
+  PrometheusDockerfile,
+  PrometheusConfig,
+  GrafanaDockerfile,
+  GrafanaDatasources,
+  GrafanaDashboards,
+  ArchitectureFlowchart,
+} from '@site/src/components/docs/deployment/observability';
+
+<GithubBranchInfo branch="feature/observability" />
+
+La observabilidad se trata de entender qué está haciendo tu aplicación en producción sin tener que agregar print statements y redeployar. Cuando algo se rompe a las 3 de la mañana, necesitás rastrear requests entre servicios, ver logs de errores en contexto y entender cuellos de botella de performance sin adivinar.
+
+## Cómo funciona la instrumentación
+
+El proceso se divide en tres pasos lógicos:
+
+1. **Recolección de datos (La Aplicación)**: Modificás la app para incluir código especializado que recolecta varios tipos de datos sobre el estado interno de la app y el entorno del servidor host.
+
+2. **Almacenamiento de datos (Los Backends de Telemetría)**: Los datos recolectados se envían fuera del proceso de la aplicación y van a backends de telemetría correspondientes y optimizados, bases de datos diseñadas específicamente para logs, métricas o traces.
+
+3. **Visualización (El Dashboard)**: Usás una herramienta de visualización poderosa (como Grafana) para extraer los datos almacenados de los backends y presentarlos en dashboards coherentes y legibles.
+
+## Los tres pilares de los datos de telemetría
+
+La instrumentación se enfoca en recolectar tres tipos distintos de datos, a menudo referidos como "Los Tres Pilares" de la observabilidad:
+
+| Tipo de Dato | Definición                                                                                                    | Backend de Telemetría Común                     |
+| ------------ | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| **Logs**     | Registros de texto de eventos específicos o estados que ocurren dentro de la aplicación.                      | [Loki](https://grafana.com/docs/loki/latest/)   |
+| **Métricas** | Puntos de datos numéricos y agregados (ej., uso de CPU, conteos de latencia de requests, consumo de memoria). | [Prometheus](https://prometheus.io/)            |
+| **Traces**   | El viaje completo de un solo request a medida que fluye a través de las diversas partes de tu sistema.        | [Tempo](https://grafana.com/docs/tempo/latest/) |
+
+**[Grafana](https://grafana.com/)** actúa como el "único panel de vidrio" que unifica los tres tipos de datos. Es una plataforma de visualización basada en web que se conecta a múltiples backends de telemetría simultáneamente.
+
+Estas son las opciones más comunes en el ecosistema de Grafana, pero no son las únicas. Las alternativas incluyen [Elasticsearch](https://www.elastic.co/elasticsearch) para logs, [InfluxDB](https://www.influxdata.com/) para métricas, y [Jaeger](https://www.jaegertracing.io/) para traces.
+
+## Visión general de la arquitectura de observabilidad
+
+Así es como las partes móviles se integran entre sí:
+
+<ArchitectureFlowchart />
+
+El flujo funciona así:
+
+- **Las apps de Spring Boot** exponen métricas vía [Micrometer](https://micrometer.io/) y envían traces vía [OTLP](https://opentelemetry.io/docs/specs/otlp/) a Tempo
+- **[Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/)** scrapea los logs de contenedores Docker y los envía a Loki
+- **Prometheus** scrapea métricas del endpoint `/actuator/prometheus` de cada app
+- **Grafana** consulta los tres backends para mostrar dashboards unificados
+
+## Configuración del repositorio
+
+### Micrometer Registry Prometheus
+
+Agregá `micrometer-registry-prometheus` para exponer métricas en formato Prometheus en `/actuator/prometheus`
+
+<BuildGradle />
+
+### Configuración de la aplicación
+
+Habilitá los endpoints de observabilidad y configurá dónde enviar los traces.
+
+<ApplicationYaml />
+
+- **management.endpoints.web.exposure.include**: Expone los endpoints de health, info, prometheus y metrics
+- **management.tracing.sampling.probability**: Configurá en `1.0` para tracear el 100% de los requests (reducir en producción)
+- **management.otlp.tracing.endpoint**: Envía traces a Tempo vía protocolo OTLP HTTP
+- **logging.pattern.level**: Incrusta el contexto de trace (trace_id, span_id, trace_flags) en cada línea de log
+
+## Configuración de la observabilidad
+
+### Configuración de Docker Compose
+
+Agregá los servicios del stack de observabilidad a tu `docker-compose.yml`:
+
+<DockerComposeObservability />
+
+Cada servicio de Spring Boot recibe dos adiciones:
+
+- `depends_on`: Asegura que Tempo inicie antes que las apps
+- `networks`: Se une a la red `monitoring` para que las apps puedan llegar a Tempo
+
+El stack de observabilidad incluye:
+
+- **Prometheus**: Scrapea métricas de todos los servicios
+- **Loki**: Almacena e indexa datos de logs
+- **Promtail**: Recolecta logs de contenedores Docker y los reenvía a Loki
+- **Tempo**: Recibe y almacena traces distribuidos
+- **Grafana**: Visualiza métricas, logs y traces en dashboards unificados
+
+### Loki
+
+Loki es un sistema de agregación de logs horizontalmente escalable, altamente disponible y multi-tenant inspirado en Prometheus.
+
+**Dockerfile:**
+
+<LokiDockerfile />
+
+Usa un build multi-stage para crear directorios con permisos correctos (Loki corre como usuario 10001).
+
+**Configuración:**
+
+<LokiConfig />
+
+- **auth_enabled: false**: Deshabilita la autenticación para desarrollo local
+- **storage.filesystem**: Usa almacenamiento de filesystem local (adecuado para configuraciones de un solo nodo)
+- **retention_period**: Mantiene logs por 15 días (360 horas)
+- **analytics.reporting_enabled: false**: Deshabilita el reporte de uso anónimo
+
+### Promtail
+
+Promtail es un agente que envía el contenido de logs locales a Loki.
+
+**Dockerfile:**
+
+<PromtailDockerfile />
+
+**Configuración:**
+
+<PromtailConfig />
+
+- **docker_sd_configs**: Descubre contenedores Docker automáticamente
+- **relabel_configs**: Filtra solo servicios `spring-*` y renombra labels
+- **pipeline_stages**: Parsea líneas de log para extraer el nivel de log y crear labels indexadas
+
+El patrón regex `trace_id=\S+ span_id=\S+ trace_flags=\S+ (?P<type>\w+) \S+ ---` extrae el nivel de log de tu formato de log de Spring Boot, habilitando el filtrado por tipo de log (INFO, ERROR, DEBUG, etc.) en Grafana.
+
+### Tempo
+
+Tempo es un backend de tracing distribuido de alto volumen con dependencias mínimas.
+
+**Dockerfile:**
+
+<TempoDockerfile />
+
+Crea directorios requeridos con ownership apropiado antes de copiar el binario de Tempo.
+
+**Configuración:**
+
+<TempoConfig />
+
+- **distributor.receivers.otlp**: Acepta traces vía OTLP en los puertos 4317 (gRPC) y 4318 (HTTP)
+- **storage.trace.backend: local**: Usa filesystem local para almacenamiento de traces
+- **metrics_generator**: Habilita la generación de service graph y span metrics
+- **usage_report.reporting_enabled: false**: Deshabilita el reporte de telemetría
+
+### Prometheus
+
+Prometheus es un toolkit de monitoreo y alerting de sistemas que recolecta y almacena sus métricas como datos de series temporales.
+
+**Dockerfile:**
+
+<PrometheusDockerfile />
+
+**Configuración:**
+
+<PrometheusConfig />
+
+- **scrape_interval**: Recolecta métricas cada 60 segundos
+- **scrape_configs**: Define tres jobs para scrapear métricas de cada servicio de Spring Boot
+- **metrics_path**: Apunta a `/actuator/prometheus` donde Micrometer expone las métricas
+
+### Grafana
+
+Grafana provee visualización y análisis para tus datos de observabilidad.
+
+**Dockerfile:**
+
+<GrafanaDockerfile />
+
+Copia la configuración de provisioning de datasources y dashboards en tiempo de build.
+
+**Configuración de Datasources:**
+
+<GrafanaDatasources />
+
+Configura tres datasources:
+
+- **Prometheus**: Para métricas, marcado como default
+- **Loki**: Para logs, con extracción de trace ID para correlación
+- **Tempo**: Para traces, con links de vuelta a logs de Loki
+
+Las configuraciones `exemplarTraceIdDestinations` y `derivedFields` habilitan la correlación de trace a log. Cuando ves un pico de métrica, podés clickear para ver el trace; cuando ves logs, podés clickear el trace ID para ver el trace distribuido completo.
+
+**Configuración de Dashboards:**
+
+<GrafanaDashboards />
+
+Habilita la carga automática de dashboards desde `/var/lib/grafana/dashboards`.
+
+<Admonition type="info" title="Dashboards Pre-configurados">
+  El repositorio incluye dos dashboards pre-configurados adaptados de la
+  comunidad de Grafana:
+  <ul>
+    <li>
+      <strong>JVM Micrometer</strong> (
+      <a
+        href="https://grafana.com/grafana/dashboards/4701-jvm-micrometer/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        dashboard 4701
+      </a>
+      ): Métricas de JVM incluyendo memoria, threads, GC y carga de clases
+    </li>
+    <li>
+      <strong>Spring Boot Observability</strong> (
+      <a
+        href="https://grafana.com/grafana/dashboards/17175-spring-boot-observability/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        dashboard 17175
+      </a>
+      ): Métricas a nivel de aplicación con tasas de requests HTTP, tiempos de
+      respuesta y tasas de error
+    </li>
+  </ul>
+  <p style={{ marginTop: '0.5rem' }}>
+    Estos se omiten del patch debido a su tamaño (miles de líneas de JSON), pero
+    podés encontrarlos en el repositorio en{' '}
+    <code>observability/grafana/dashboards/</code>.
+  </p>
+</Admonition>
+
+## Deploy a producción con Coolify
+
+Cuando deployás a Coolify, la plataforma detecta automáticamente los nuevos servicios definidos en tu `docker-compose.yml` y los inicia junto con tus aplicaciones de Spring Boot. No necesitás configurar manualmente el stack de monitoreo.
+
+El único paso adicional es asignar un dominio a Grafana para que puedas acceder a los dashboards:
+
+1. En Coolify, encontrá el servicio de Grafana en tu proyecto
+2. Clickeá en él y configurá un dominio (ej., `grafana.tudominio.com`)
+3. Coolify se encargará de los certificados SSL y el routing
+
+## Acceso a Grafana
+
+Cuando accedés a Grafana por primera vez, usá estas credenciales default:
+
+- **Username**: `admin`
+- **Password**: `admin`
+
+<Admonition type="warning" title="Cambiá las Credenciales Default">
+  Dado que Grafana está expuesto en un dominio público, cambiá la contraseña
+  default inmediatamente después de tu primer login.
+</Admonition>
+
+Una vez logueado, los dashboards pre-configurados están disponibles en:
+
+```
+https://grafana-domain-you-have-set-in-coolify/dashboards
+```
+
+Vas a encontrar:
+
+- **JVM Micrometer**: Internals de JVM (pools de memoria, garbage collection, threads)
+- **Spring Boot Observability**: Métricas HTTP, tiempos de respuesta, tasas de error
+
+<Image
+  src={
+    require('@site/static/img/deployment/spring-boot-observability.png').default
+  }
+/>

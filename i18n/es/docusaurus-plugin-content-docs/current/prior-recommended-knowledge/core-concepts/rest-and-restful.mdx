@@ -1,0 +1,61 @@
+---
+sidebar_position: 3
+title: REST y RESTful
+---
+
+import Youtube from '@site/src/components/youtube';
+
+## ¿Qué es REST (y RESTful)?
+
+**REST** (Representational State Transfer / Transferencia de Estado Representacional) es un estilo arquitectónico definido por [Roy Fielding](https://roy.gbiv.com/), que enfatiza:
+
+1. Separación cliente-servidor
+2. Stateless (sin estado)
+3. Cacheable
+4. Sistema en capas
+5. Interfaz uniforme (recursos, representaciones)
+6. Código bajo demanda (opcional)
+
+Las APIs **RESTful** siguen estrictamente _todas_ estas restricciones. Pero acá va la cosa: **la mayoría de las APIs "REST" no son verdaderamente RESTful**, y eso está bien.
+
+Las APIs verdaderamente RESTful requieren [HATEOAS](https://restfulapi.net/hateoas/) (Hypermedia as the Engine of Application State / Hipermedia como Motor del Estado de la Aplicación), que consiste en embeber links a recursos relacionados en las respuestas:
+
+```json
+{
+  "id": 1,
+  "links": [
+    { "rel": "self", "href": "/users/1" },
+    { "rel": "orders", "href": "/users/1/orders" }
+  ]
+}
+```
+
+En la práctica esto no pasa:
+
+- Los equipos de frontend raramente usan los links embebidos.
+- Agrega complejidad sin valor inmediato.
+
+Una [Especificación OpenAPI](https://swagger.io/specification/) ya te da el 80% de los beneficios de REST:
+
+- **URLs centradas en recursos** (`/users/{id}`).
+- **Métodos HTTP estándar** (`GET`/`POST`/`PUT`/`DELETE`).
+- **Manejo de errores claro** (códigos `4xx`/`5xx`).
+
+A menos que estés construyendo sistemas hipermedia-driven, **REST está bien**. Enfocate en:
+
+- Especificaciones consistentes.
+- Manejo de errores predecible.
+- Documentación que humanos y máquinas puedan usar.
+
+A medida que tu API evolucione, podés agregar características RESTful más tarde si es necesario.
+
+**Realmente recomiendo** el video de High-Performance Programming "Rest API - Best Practices - Design".
+
+<Youtube id="1Wl-rtew1_E" />
+
+### Herramientas para Desarrollo de APIs REST
+
+- **[Postman](https://www.postman.com/)**: Es poderoso, con muchas características, y ubicuo. Todos lo conocen. Pero honestamente, se está volviendo un poco pesado. La creación forzada de cuenta y sincronización en la nube para funcionalidad básica es molesta si solo querés probar rápido un endpoint sin vender tu alma. Fue mi herramienta de elección por años, pero gradualmente estoy explorando otras opciones.
+- **[Insomnia](https://insomnia.rest/)**: Si sentís el peso de Postman, Insomnia es una alternativa fantástica y liviana. Hace prácticamente todo lo que necesitás para testing de APIs sin el equipaje extra. Dale una chance.
+- **Clientes REST integrados del IDE**: Muchos IDEs modernos (como IntelliJ IDEA, VS Code) tienen excelentes plugins que te dejan probar endpoints directamente desde tu ambiente de desarrollo. Esto te mantiene en el flujo y evita el cambio de contexto.
+- **Herramientas de línea de comandos** como [curl](https://curl.se/), [jq](https://jqlang.org/), y [w3m](https://git.sr.ht/~rkta/w3m). Son simples, rápidas, y la salida es solo texto. Es increíblemente simple copiar y pegar comandos y sus salidas, demostrando exactamente qué está pasando sin depender de screenshots de una herramienta GUI. Hace la documentación mucho más accionable y menos una búsqueda del tesoro visual.

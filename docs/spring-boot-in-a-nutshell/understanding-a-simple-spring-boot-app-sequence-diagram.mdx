@@ -1,0 +1,27 @@
+---
+sidebar_position: 3
+title: Understanding A Simple Spring Boot App Sequence Diagram
+---
+
+import { RequestFlowSequenceDiagram } from '@site/src/components/docs/spring-boot-in-a-nutshell/understanding-a-simple-spring-boot-app-sequence-diagram';
+
+Let's imagine a simple application that:
+
+1. Exposes a GET `/api/films/{filmId}` REST API endpoint.
+2. Gets the films information from a database.
+
+<RequestFlowSequenceDiagram />
+
+This diagram shows the life of a single request in a stereotypical, no-frills Spring Boot application. It's the classic path from the user's browser all the way down to the database and back again.
+
+- **Client:** It's whoever is asking for information (your user's web browser, a mobile app, or even another backend service). It doesn't know or care how the system works; it just knows it wants a film, and it's making a `GET` request to the URL it was told to use.
+
+- **Spring MVC (`FilmController`):**
+  - The `FilmController` lives inside the "Spring MVC" box because it's part of the web layer. Its job is to handle HTTP requests.
+  - It listens for incoming requests at specific endpoints (like `/api/films/{filmId}`). It validates the request, unpacks it, and then delegates the _actual work_ to the service layer. It should be kept lean; its main role is to manage web traffic, not to contain business logic.
+
+- **Spring Container (`FilmService` & `FilmRepository`):** The [Spring Container](/spring-boot-in-a-nutshell/spring-ioc-container) is the heart of your app, managing the lifecycle of your beans.
+  - **`FilmService`:** This is your workhorse. It contains the core business logic. It takes the request from the controller, orchestrates the steps needed to fulfill it (like fetching data), and might perform some logic (like checking permissions or transforming data).
+  - **`FilmRepository`:** This component's only job is to talk to the database. It fetches raw data and passes it back up. By separating this, you could swap out your database from Postgres to MongoDB and you'd only have to change the repository, not your business logic.
+
+- **Database:** The vault where all your data is stored. Just stores and retrieves data when the `FilmRepository` asks it to.

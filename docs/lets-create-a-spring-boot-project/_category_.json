@@ -1,8 +1,8 @@
 {
-  "label": "Let’s Create a Spring Boot Project",
+  "label": "Let's Create a Spring Boot Project",
   "position": 4,
   "link": {
     "type": "generated-index",
-    "description": "Starting a Spring Boot project is like ordering a pizza—you pick your toppings (dependencies), crust (settings), and let the oven (Spring Initializr) handle the rest. No coding required yet! Here’s how to spin up a project in seconds."
+    "description": "Starting a Spring Boot project is like ordering a pizza—you pick your toppings (dependencies), crust (settings), and let the oven (Spring Initializr) handle the rest. No coding required yet! Here's how to spin up a project in seconds."
   }
 }

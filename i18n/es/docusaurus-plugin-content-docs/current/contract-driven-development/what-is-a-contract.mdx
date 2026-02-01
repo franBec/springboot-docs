@@ -1,0 +1,34 @@
+---
+sidebar_position: 1
+title: ¿Qué es un contrato?
+---
+
+import Image from '@site/src/components/image';
+
+En el [artículo de Wikipedia sobre Design by contract](https://en.wikipedia.org/wiki/Design_by_contract), encontramos la siguiente afirmación:
+
+<Image
+  src={
+    require('@site/static/img/contract-driven-development/design-by-contract.png')
+      .default
+  }
+/>
+
+> […] los diseñadores de software deberían definir especificaciones de interfaz formales, precisas y verificables para los componentes de software, que extiendan la definición ordinaria de tipos de datos abstractos con precondiciones, postcondiciones e invariantes.
+
+A partir de eso, hice mi propia adaptación de la filosofía de Contract-Driven Development para backends:
+
+> Los backends deben cumplir con un contrato, que define inputs, outputs y errores.
+
+Entonces, **¿qué es un contrato?** Es un **conjunto de aserciones** que contienen la siguiente información:
+
+- **Valores de input válidos**, y su significado.
+- **Valores de retorno válidos**, y su significado.
+- **Valores de error que pueden ocurrir** y su significado.
+
+En un Contrato hay dos partes:
+
+- **Consumer**: provee los valores de input y espera el retorno.
+- **Provider**: espera los valores de input y provee el retorno.
+
+Fijate en la siguiente lectura para ver cómo escribir un contrato.

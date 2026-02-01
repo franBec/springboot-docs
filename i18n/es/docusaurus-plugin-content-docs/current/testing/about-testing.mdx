@@ -1,0 +1,104 @@
+---
+sidebar_position: 1
+title: Acerca de las pruebas
+---
+
+- En teoría, las pruebas deberían ser lo primero.
+- En la práctica, es más atractivo comenzar con un escenario práctico.
+
+¿Por qué ocurre esto?
+
+## Por qué las pruebas
+
+La mayoría de la gente dirá:
+
+- **Confianza:** Hacés tu cambio, ejecutás las pruebas, y si están verdes, podés desplegar sin esa ansiedad persistente de "¿acabo de romper algo?".
+- **Documentación viva:** Solo mira una prueba que muestra exactamente cómo se supone que se use ese método, qué entradas espera y qué salidas produce.
+
+Aquí está mi opinión personal: Las suites de pruebas deficientes te dan falsa confianza. Ves marcas de verificación verdes y piensas que todo está bien, pero en realidad, tus pruebas pasan incluso cuando el comportamiento real está roto.
+
+Para mí, sin embargo, el verdadero valor de las pruebas va más allá de la retroalimentación o la documentación. Te obliga a escribir **mejor código**. Para hacer algo testeable, tenés que:
+
+- Dividirlo en partes.
+- Separar las responsabilidades.
+- Inyectar dependencias.
+- Pensar en la interfaz de tu código antes de su implementación.
+
+Las pruebas te hacen practicar buen diseño de software quieras o no.
+
+## La Pirámide de Pruebas
+
+[Mike Cohn](https://en.wikipedia.org/wiki/Mike_Cohn), uno de los signatarios del [Manifiesto Ágil](https://agilemanifesto.org/), introdujo la **Pirámide de Pruebas** en su libro de 2009 "Succeeding with Agile" como una forma de demostrar la distribución ideal de tipos de pruebas en una suite de pruebas saludable.
+
+```txt
+        /\          ┌─────────────┬───────────┬───────────┬─────────────┐
+       /  \         │    Capa     │ Velocidad │ Cantidad  │    Costo    │
+      /E2E \        ├─────────────┼───────────┼───────────┼─────────────┤
+     /──────\       │ E2E / UI    │ Lenta     │ Pocas     │ $$$         │
+    /Service \      │ Integración │ Media     │ Algunas   │ $$          │
+   /──────────\     │ Unitaria    │ Rápida    │ Muchas    │ $           │
+  /   Unit     \    └─────────────┴───────────┴───────────┴─────────────┘
+ /______________\
+```
+
+La pirámide tiene tres niveles:
+
+- **Pruebas unitarias** forman la base amplia. Son rápidas, aisladas y prueban componentes individuales de forma aislada. Son tu primera línea de defensa y deberían constituir la mayoría de tu suite de pruebas.
+- **Pruebas de integración (Servicio)** están en el medio. Estas verifican que los componentes funcionen juntos al revisar interacciones con la base de datos, llamadas API entre servicios, o cómo tu capa de servicio se comunica con los repositorios. Son más lentas y complejas que las pruebas unitarias pero capturan una clase diferente de errores.
+- **Pruebas end-to-end (E2E / UI)** están en la cima. Estas simulan viajes reales de usuarios a través de toda tu aplicación, a menudo a través de la UI. Son lentas, frágiles y costosas de mantener, así que mantén pocas y enfocadas.
+
+## El Espectro de Pruebas
+
+Entender dónde vive cada prueba en este espectro es crucial porque impacta directamente tu ciclo de retroalimentación y el tiempo de ejecución del pipeline de CI.
+
+```txt
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  RÁPIDAS • BARATAS • AISLADAS                 LENTAS • COSTOSAS • REALISTAS │
+├────────────┬────────────┬──────────────────┬───────────────┬────────────────┤
+│   Unitaria │   Slice    │   Integración    │   Contrato    │      E2E       │
+│  (Mockito) │(@WebMvcTest│ (@SpringBootTest │  (WireMock)   │   (Cypress)    │
+│            │@DataJpaTest│  TestContainers) │               │                │
+├────────────┴────────────┴──────────────────┴───────────────┴────────────────┤
+│ ░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓████████████████████ │
+│ BAJA CONFIANZA ─────────────────────────────────────────── ALTA CONFIANZA  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+Como desarrollador de Spring Boot, estos son los tres que encontrarás más a menudo:
+
+- **Pruebas unitarias** (Generalmente con [Mockito](https://site.mockito.org/)): Todo está simulado. La prueba se ejecuta en milisegundos. Retroalimentación rápida, resultados determinísticos, sin dependencias externas de las que preocuparse.
+- **Pruebas de slice** (`@WebMvcTest`, `@DataJpaTest`): Spring arranca solo la porción relevante de tu aplicación. Estas son tus pruebas de "casi unitarias pero necesito la magia real de Spring".
+- **Pruebas de integración** (`@SpringBootTest`): Contexto completo. Todo lo gestionado por Spring se inicializa. Estas pruebas son más lentas (segundos, no milisegundos) pero capturan una clase diferente de problemas.
+
+| Aspecto                         | Pruebas Unitarias             | Pruebas de Slice            | Pruebas de Integración           |
+| ------------------------------- | ----------------------------- | --------------------------- | -------------------------------- |
+| **Velocidad**                   | Milisegundos                  | Segundos                    | Segundos a minutos               |
+| **Dependencias**                | Solo simuladas                | Slice real de Spring        | Contexto completo de Spring      |
+| **Cobertura**                   | Componente único              | Componente + framework      | Aplicación completa              |
+| **Tiempo de retroalimentación** | Inmediato                     | Rápido                      | Lento                            |
+| **Costo de Mantenimiento**      | Bajo                          | Medio                       | Alto                             |
+| **Nivel de Confianza**          | Bajo (aislado)                | Medio (parcial)             | Alto (realista)                  |
+| **Mejor Para**                  | Lógica de negocio, algoritmos | Controladores, repositorios | Flujos end-to-end, configuración |
+| **Entorno de Ejecución**        | En memoria                    | En proceso                  | Requiere aplicación en ejecución |
+| **Localización de Fallas**      | Precisa                       | A nivel de componente       | A nivel de sistema               |
+| **Ejecución Paralela**          | Excelente                     | Buena                       | Limitada                         |
+
+## Evita la Parálisis de Pruebas
+
+Hay un enfoque purista de las pruebas que aboga por _Si una línea de código puede ejecutarse, debe ser probada._
+
+Aunque esta filosofía suena exhaustiva, puede llevar a lo que yo llamo "parálisis de pruebas", donde los equipos pasan tanto tiempo escribiendo pruebas que la entrega real de funcionalidades se retrasa significativamente. E incluso con 100% de cobertura, nunca podés garantizar que un caso extremo no previsto no se cuelue.
+
+En mi rol actual, hemos encontrado una estrategia equilibrada que ofrece tanto calidad como puntualidad:
+
+- **Apunta a una cobertura realista**: Mientras que 100% de cobertura podría ser el ideal teórico, apuntamos a un umbral práctico de 80% de cobertura de líneas. Este punto de referencia asegura pruebas robustas mientras permite a los equipos mantener el momentum.
+- **Considera el contexto**: Cuanto más complejo o crítico es un componente, más exhaustivamente debe ser probado. No todo el código merece la misma atención en las pruebas.
+
+Incluso con un requisito de cobertura razonable, todavía enfrentamos desafíos de entrega. Esto es especialmente claro cuando trabajamos con bases de código antiguas y mal mantenidas donde:
+
+- Los métodos son a menudo extensos y complejos.
+- Las dependencias están fuertemente acopladas y difíciles de simular.
+- Los efectos secundarios son comunes e impredecibles.
+- La documentación es escasa u obsoleta.
+
+En estas situaciones, el refactoring podría ser necesario antes de que las pruebas efectivas puedan comenzar, lo cual destaca aún más cómo **las pruebas fomentan un mejor diseño de código**.

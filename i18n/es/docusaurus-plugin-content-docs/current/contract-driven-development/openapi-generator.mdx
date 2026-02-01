@@ -1,0 +1,158 @@
+---
+sidebar_position: 3
+title: OpenAPI Generator
+---
+
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+import Image from '@site/src/components/image';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+import {
+  FileTree,
+  JavaBuildGradle,
+  GroovyBuildGradle,
+  KotlinBuildGradle,
+  GroovyModelMapperConfig,
+  RestController,
+  RestControllerAdvice,
+  Mapper,
+  Terminal,
+} from '@site/src/components/docs/contract-driven-development/openapi-generator';
+
+<GithubBranchInfo branch="feature/openapi-generator" />
+
+## El Problema con los Primary Adapters Manuales
+
+A menos que trabajes en microservicios, un proyecto suele tener más que unos pocos endpoints. A medida que tu dominio crece, crear primary adapters manualmente se convierte en una tarea monumental. Viene con muchos inconvenientes:
+
+- **Consume mucho tiempo**: Cada endpoint, cada modelo, todo a mano. Es una molestia.
+- **Propenso a errores humanos**: Un typo, un campo olvidado, y de repente tu API no está haciendo lo que debería.
+- **Compromete la documentación y mantenibilidad**: En el momento en que tu código se desvía de tu spec, tu documentación es una mentira, y tu mantenibilidad se va al tacho.
+
+<Admonition type="info" title="Escenario de caso real">
+El proyecto [SIGEM](https://sigem.sanluislaciudad.gob.ar/sigem/) (un [monolito Grails](https://grails.apache.org/)) presume 76 controladores y una asombrosa cantidad de 1102 endpoints.
+
+    <Image
+      src={
+        require('@site/static/img/contract-driven-development/controllers-count-sigem.png')
+          .default
+      }
+    />
+
+</Admonition>
+
+<FileTree />
+
+## Generando Código
+
+Ahorrémosnos algunos problemas usando una de las mejores librerías que existen: [openapi-generator](https://github.com/OpenAPITools/openapi-generator).
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <JavaBuildGradle />
+    <Admonition type="info">
+
+      Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md).
+
+    </Admonition>
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <KotlinBuildGradle />
+    <Admonition type="info">
+
+      Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador kotlin-spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/kotlin-spring.md).
+
+    </Admonition>
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy" default>
+    <GroovyBuildGradle />
+    <Admonition type="info">
+
+      - Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md).
+      - Aunque existe un [generador groovy](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/groovy.md), es un generador de clientes. Para nuestro caso de uso (generar código del lado del servidor), no es lo que necesitamos. Por eso nos quedamos con el generador "spring", que genera clases `.java`.
+
+    </Admonition>
+
+  </TabItem>
+</Tabs>
+
+<Admonition type="warning">
+  `inputspec` debe estar apuntando al archivo YAML de OpenAPI Specification
+  deseado (`src/main/resources/openapi.yaml`).
+</Admonition>
+
+Ahora que todo está configurado, **ejecutá la tarea Build**. Cuando la tarea termine, revisá la carpeta `build\generated\sources\openapi`. Vas a encontrar la representación de la OpenAPI Specification (nuestro contrato) en clases, listas para ser usadas.
+
+## Entendiendo el Código Generado
+
+- **¿Qué hay adentro del código generado?**
+  - **Models**: Clases Java (o Kotlin) que reflejan tus schemas de OpenAPI (ej., `Film`). Estas incluyen anotaciones de validación, lógica de serialización y patrones builder.
+  - **API Interfaces**: Interfaces Spring `@RestController` (ej., `FilmApi`) que definen tus endpoints y sus firmas de métodos.
+- **¿Por qué se ve tan complicado?** El código generado incluye:
+  - **Boilerplate** para compatibilidad con OpenAPI/Spring (ej., anotaciones `@Validated`, `@Generated`).
+  - **Lógica de validación** (ej., `@NotNull`, `@Size`) para hacer cumplir tu contrato.
+  - **Soporte de serialización/deserialización** (ej., mapeo JSON ↔ objeto Java (o Kotlin)).
+- **¿Debería importarme?** No.
+  - **Es autogenerado**: Trátalo como una dependencia compilada. Lo usás, no lo modificás.
+  - **Filosofía contract-first**: El código coincide exactamente con tu spec de OpenAPI. Si necesitás cambios, actualizá el archivo YAML y regenerá.
+  - **Libre de mantenimiento**: El generador maneja las actualizaciones, así que evitás refactoring manual.
+
+## (Solo Groovy) Mapeando Clases Groovy a Clases Java
+
+Algunas bases:
+
+- El generador `openapi-spring` genera clases `.java`.
+- La lógica de dominio está en `.groovy`
+
+Vamos a necesitar un puente. Eso significa mapear clases Groovy a contrapartes Java.
+
+Aquí es donde nos encontramos con una pared: la característica `properties` de Groovy no juega bien con cómo los constructores de Java. Entonces, el [mapeo directo y trivial usando el manejo nativo de propiedades de Groovy](/optional-but-recommended-features/mapper#groovy-no-necesita-un-mapper-todavía) está fuera de la mesa aquí.
+
+Ahora, quizás estés pensando, "¿Y qué hay de [MapStruct](https://mapstruct.org/)? ¡Lo usamos para Java y Kotlin!" Para Groovy, MapStruct no es realmente una opción. [La naturaleza dinámica de Groovy choca con la generación de código en tiempo de compilación de MapStruct](https://stackoverflow.com/questions/72197127/mapstruct-with-groovy).
+
+Esto nos deja con:
+
+- Mapeo manual, que es una tarea tediosa y propensa a errores que estamos tratando de _evitar_ con la generación de código en primer lugar
+- Encontrar otra librería de mapeo.
+
+[ModelMapper](https://modelmapper.org/) es una solución pragmática que maneja el mapeo de objetos elegantemente en nuestro proyecto Groovy Spring Boot.
+
+1. Agregá la dependencia de ModelMapper (ya hecho en `build.gradle`)
+2. Creá la configuración de ModelMapper:
+
+   <GroovyModelMapperConfig />
+
+## Usando el Código Generado
+
+1. **Hacé que la clase `@RestController` implemente la interfaz `Api` generada:**
+
+   <RestController />
+
+2. **Actualizá la interfaz `Mapper` así retorna el modelo `Response` generado en lugar del escrito a mano:**
+
+   <Mapper />
+
+3. **Actualizá la clase `@RestControllerAdvice` así retorna el modelo `Error` generado (que modela `ProblemDetail`) para mantener consistencia:**
+
+   <RestControllerAdvice />
+
+4. **Borrá el `FilmResponse` escrito a mano, ya no es necesario.**
+
+Compilá y ejecutá la aplicación. Después andá a [http://localhost:8080/api/films/42](http://localhost:8080/api/films/42)
+
+<Terminal />
+
+## ¿Cuál Es El Punto De Generar Código?
+
+Configurar este OpenAPI Generator puede parecer como si estuvieras realizando rituales antiguos solo para sacar algo de código. Quizás estés pensando, _"¿No se suponía que esto debía *ahorrarme* tiempo?"_ Y a eso, te digo: Sí, estás invirtiendo un poco de esfuerzo inicial para evitar mucho dolor después.
+
+El OpenAPI Generator no solo genera código; actúa como un guardián muy estricto de tu contrato de API.
+
+- **No más creación manual de DTOs**: Olvidate de la tarea tediosa de escribir Data Transfer Objects (DTOs) a mano. Tu especificación de API los define, y el generador los construye perfectamente, cada vez. Esto elimina una categoría entera de typos e inconsistencias.
+- **Implementaciones triviales de controladores**: Tus interfaces Spring `@RestController`, con todas sus anotaciones de routing, también se generan. Esto significa que tus clases controller pasan de ser fábricas de boilerplate a componentes minimalistas que simplemente _implementan_ una interfaz predefinida.
+- **Contrato forzado por el compilador**: Como tus DTOs e interfaces de controller son reflejos directos de tu spec de OpenAPI, el compilador se convierte en tu aliado más estricto. Un campo faltante, un tipo cambiado, una firma de endpoint alterada, resultará en un error de compilación. Es imposible romper tu contrato de API sin feedback inmediato.
+
+Así que, sí, es un poco de configuración, pero ¿la recompensa? Absolutamente vale la pena.

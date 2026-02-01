@@ -1,0 +1,73 @@
+---
+sidebar_position: 1
+title: Patrón Repositorio
+---
+
+import { SpringDataJpaFlowDiagramES } from '@site/src/components/docs/persistence-integration/repository-pattern';
+
+## Entendiendo el Patrón Repositorio
+
+El Patrón Repositorio es una capa de abstracción que se sitúa entre tu aplicación y tu almacenamiento de datos. Piénsalo como un traductor. Tu aplicación pide lo que quiere en su propio lenguaje, como "dame todas las películas estrenadas en 2024", y el repositorio se encarga de los detalles complicados de convertir esa solicitud en operaciones reales de base de datos.
+
+No necesitas saber si los datos residen en PostgreSQL, MongoDB o alguna API externa. El repositorio maneja esa complejidad para que tu lógica de negocio se mantenga limpia y enfocada en lo que mejor hace.
+
+## Spring Data JPA
+
+Si has estado siguiendo el enfoque de arquitectura hexagonal, sabes que se divide tu aplicación en un lado **Driver** (las solicitudes entrantes, controladores) y un lado **Driven** (dependencias externas como bases de datos).
+
+```txt
+┌──────────────────────────────────────────────────────────────────┐
+│                     ARQUITECTURA HEXAGONAL                       │
+├────────────────────┬──────────────────┬──────────────────────────┤
+│ DRIVER (Izquierda) │    APLICACIÓN    │     DRIVEN (Derecha)     │
+├────────────────────┼──────────────────┼──────────────────────────┤
+│                    │                  │                          │
+│   Adaptadores      │                  │             Adaptadores  │
+│   • REST API       │   ┌──────────┐   │                 • MySQL  │
+│   • CLI            │   │          │   │                 • Redis  │
+│   • GraphQL        │   │ CASOS DE │   │                 • S3     │
+│                    │   │   USO    │   │                          │
+│   "Cómo actores    │   │          │   │   "Cómo la app se        │
+│    externos llaman │   └──────────┘   │    comunica con          │
+│    a la app"       │                  │    servicios externos"   │
+│                    │                  │                          │
+│              ══════╪══════════════════╪══════                    │
+│             PUERTOS│   (Interfaces)   │PUERTOS                   │
+└────────────────────┴──────────────────┴──────────────────────────┘
+```
+
+Cuando tu aplicación Spring Boot necesita hablar con una base de datos, Spring Data JPA interviene como un **adaptador secundario** en ese lado Driven.
+
+### Cómo Funciona
+
+Aquí está lo que sucede cuando tu aplicación dice "Necesito todas las películas":
+
+<SpringDataJpaFlowDiagramES />
+
+Analicemos lo que está pasando:
+
+1.  **Aplicación** llama a un método en la interfaz del repositorio, como `filmRepository.findAll()`. Esto es lenguaje de negocio puro. No estás escribiendo SQL aquí.
+2.  **Puerto Secundario** es solo la definición de la interfaz. Declara qué operaciones son posibles sin importarle cómo se implementan.
+3.  **Adaptador Secundario (Spring Data JPA)** hace el trabajo pesado. En tiempo de ejecución, Spring genera una implementación de tu interfaz. Convierte la llamada a tu método en una consulta SQL, la ejecuta contra la base de datos y maneja toda la gestión de la conexión.
+4.  **Base de Datos** ejecuta la consulta y devuelve filas en bruto.
+5.  **Spring Data JPA** mapea esas filas de vuelta a objetos Java que tu aplicación entiende.
+6.  **Aplicación** recibe una lista limpia `List<Film>` y continúa con su lógica de negocio, completamente ajena al SQL que acaba de ejecutarse.
+
+La belleza aquí es la separación de responsabilidades. Tu lógica de negocio se mantiene agnóstica a la base de datos. Si más tarde decides cambiar de PostgreSQL a MongoDB, solo tienes que intercambiar el adaptador. El código de la aplicación no cambia.
+
+### Clase Entidad
+
+Una entidad es una representación en Java de una sola fila en una tabla de base de datos. Cuando Spring Data JPA ejecuta una consulta, no te devuelve datos brutos de `ResultSet`. En su lugar, mapea cada fila a una instancia de tu clase de entidad.
+
+Marcarás una clase como entidad usando la anotación `@Entity`, definirás qué campo es la clave primaria con `@Id`, y opcionalmente especificarás cómo se mapean las columnas a los campos. Spring Data JPA se encarga del resto.
+
+La entidad se sitúa justo en el límite entre tu aplicación y la base de datos. Para la base de datos, es una fila en una tabla. Para tu aplicación, es un objeto Java simple con el que puedes trabajar.
+
+### Más Allá de lo Básico
+
+`JpaRepository` proporciona más que operaciones CRUD simples:
+
+- **Capacidades de paginación y ordenación**: Maneja grandes conjuntos de datos sin cargarlos todos en memoria.
+- **Generación dinámica de consultas a partir de nombres de métodos**: Nombra tu método `findByTitleContainingAndYearGreaterThan` y Spring Data JPA descubre el SQL por ti.
+- **Soporte para consultas personalizadas**: Usa la anotación `@Query` cuando necesites operaciones complejas que los nombres de los métodos no puedan expresar.
+- **Gestión de transacciones**: Spring maneja automáticamente el baile de begin/commit/rollback.

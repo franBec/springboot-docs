@@ -1,0 +1,56 @@
+---
+sidebar_position: 2
+title: Run the Application
+---
+
+import Image from '@site/src/components/image';
+import Admonition from '@theme/Admonition';
+import { WhitelabelErrorPage } from '@site/src/components/docs/lets-create-a-spring-boot-project/run-the-application';
+
+<Admonition type="info">
+  For this document, we assume that you created a Spring Boot project using
+  [Spring Initializr](https://start.spring.io/). If you didn't, you can clone
+  the monorepo I've prepared at
+  [https://github.com/franBec/springboot-demo-projects](https://github.com/franBec/springboot-demo-projects)
+  branch `feature/initial-commit`.
+</Admonition>
+
+1. **Open IntelliJ IDEA** → File → Open → Select the unzipped project folder.
+2. **First-time JDK setup** (if prompted):
+   - IntelliJ will ask you to download a JDK. Choose the **same version** you selected in Spring Initializr (e.g., Java 21).
+   - Click Download JDK and follow the prompts.
+3. **Wait for background tasks**:
+   - Look for progress indicators in the **lower-right corner** (e.g., "Downloading Gradle dependencies" or "Indexing").
+   - Let these finish, they set up your project's tools and libraries.
+4. **Run the application**:
+   - Search for the Gradle tool window (in IntelliJ it's usually a small elephant icon on the right side).
+   - Run the `build` command.
+   - Run the `bootRun` command.
+     <Image
+       src={
+         require('@site/static/img/lets-create-a-spring-boot-project/run-gradle-app.png')
+           .default
+       }
+     />
+5. **Check the run terminal:** After a few seconds, you'll see something similar to `Tomcat started on port 8080 (http) with context path '/'`. This means your Spring Boot app is live!
+6. **Test it out:** Go to [http://localhost:8080](http://localhost:8080). You'll see a Whitelabel Error Page. This is normal because we haven't done any development yet.
+
+   <WhitelabelErrorPage />
+
+Congratulations! Your Spring Boot app is up and running.
+
+Here's why this is a big deal:
+
+**Before Spring Boot**, getting a Java app to listen on a port like 8080 required hours of manual setup:
+
+- Configuring `XML` files (like `web.xml`).
+- Deploying `WAR` files to an external server (e.g., Tomcat).
+- Writing boilerplate code just to start the server.
+
+**Today with Spring Boot**:
+
+- The embedded Tomcat server starts automatically.
+- Zero code needed: the `main()` method does everything.
+- No `XML` or manual server setup.
+
+You just witnessed Spring Boot's magic: turning what used to be a days-long chore into a 10-second task. And we haven't even written a single line of our own code yet!

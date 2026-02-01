@@ -1,0 +1,94 @@
+---
+sidebar_position: 1
+title: Arquitectura de software
+---
+
+import Youtube from '@site/src/components/youtube';
+
+Cuando te metés en el diseño de software, seguido escuchás hablar de [Clean Architecture](https://medium.com/@DrunknCode/clean-architecture-simplified-and-in-depth-guide-026333c54454). Casi se convirtió en el blueprint de facto para diseñar sistemas mantenibles. Sin embargo, en mi ambiente de trabajo actual, [Hexagonal Architecture](https://medium.com/ssense-tech/hexagonal-architecture-there-are-always-two-sides-to-every-story-bc0780ed7d9c) surgió como una alternativa convincente. Echemos un vistazo más de cerca a ambas, sus matices, y por qué Hexagonal podría volverse aún más popular.
+
+## Clean Architecture
+
+Popularizada por [Uncle Bob](https://en.wikipedia.org/wiki/Robert_C._Martin), este patrón organiza el código en **cuatro capas concéntricas**:
+
+```txt
+┌─────────────────────────────────────────────────────────────────────┐
+│  Frameworks y Drivers (BD, Web, UI)                                 │
+│  ┌───────────────────────────────────────────────────────────────┐  │
+│  │  Adaptadores de Interfaz (Controladores, Gateways, Presenters)│  │
+│  │  ┌─────────────────────────────────────────────────────────┐  │  │
+│  │  │  Reglas de Negocio de Aplicación (Casos de Uso)         │  │  │
+│  │  │  ┌───────────────────────────────────────────────────┐  │  │  │
+│  │  │  │  Reglas de Negocio Empresariales (Entidades)      │  │  │  │
+│  │  │  └───────────────────────────────────────────────────┘  │  │  │
+│  │  └─────────────────────────────────────────────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Enterprise business rules**: Entidades que representan conceptos core del negocio.
+2. **Application business rules**: Casos de uso que orquestan la interacción entre entidades.
+3. **Interface adapters**: Convierte datos entre capas. Incluye controllers, presenters, y gateways.
+4. **Frameworks & drivers**: Detalles de infraestructura (DB, Web, UI).
+
+### Por qué te vas a encontrar con Clean Architecture a menudo
+
+- **Adopción generalizada:** Su clara demarcación de responsabilidades le valió un extenso soporte comunitario y empresarial.
+- **Facilidad de comprensión:** El enfoque por capas refleja sistemas tradicionales, haciéndolo accesible para quienes ya conocen patrones arquitectónicos clásicos.
+- **Separación de responsabilidades:** Al aislar la lógica de negocio en las capas internas, el sistema permanece resiliente ante la volatilidad externa.
+
+## Hexagonal Architecture
+
+También conocida como Ports & Adapters, este patrón de [Alistair Cockburn](https://alistair.cockburn.us/) cambia el foco a las interacciones entre el sistema y sus actores externos, organizando responsabilidades desde dos perspectivas distintas:
+
+```txt
+┌──────────────────────────────────────────────────────────────────┐
+│                     ARQUITECTURA HEXAGONAL                       │
+├────────────────────┬──────────────────┬──────────────────────────┤
+│ DRIVER (Izquierda) │    APLICACIÓN    │     DRIVEN (Derecha)     │
+├────────────────────┼──────────────────┼──────────────────────────┤
+│                    │                  │                          │
+│   Adaptadores      │                  │             Adaptadores  │
+│   • REST API       │   ┌──────────┐   │                 • MySQL  │
+│   • CLI            │   │          │   │                 • Redis  │
+│   • GraphQL        │   │ CASOS DE │   │                 • S3     │
+│                    │   │   USO    │   │                          │
+│   "Cómo actores    │   │          │   │   "Cómo la app se        │
+│    externos llaman │   └──────────┘   │    comunica con          │
+│    a la app"       │                  │    servicios externos"   │
+│                    │                  │                          │
+│              ══════╪══════════════════╪══════                    │
+│             PUERTOS│   (Interfaces)   │PUERTOS                   │
+└────────────────────┴──────────────────┴──────────────────────────┘
+```
+
+- **Driver side (Izquierda)**:
+  - **Driver ports**: Definen cómo los actores externos interactúan con la app.
+    _Ejemplo_: Endpoints de REST API.
+- **Use cases**: Lógica de negocio disparada por input externo.
+- **Driven side (Derecha)**:
+  - **Driven ports**: Definen cómo la app interactúa con servicios externos.
+    _Ejemplo_: Acceso a base de datos.
+  - **Adapters**: Detalles de implementación.
+    _Ejemplo_: Implementación MySQL de la interfaz de repositorio.
+
+### Qué Diferencia a Hexagonal
+
+- **Integración flexible:** Al separar claramente los roles del lado driver y driven, la arquitectura acomoda fácilmente varias interfaces y mecanismos de integración.
+- **Testabilidad mejorada:** Aislar las interacciones externas mediante puertos bien definidos simplifica el testing. Los casos de uso core pueden ejecutarse con mocks o stubs sin invocar sistemas externos reales.
+
+### Recurso Recomendado
+
+**Te recomiendo posta** el video de Alex Hyett "Hexagonal Architecture: What You Need To Know - Simple Explanation".
+
+<Youtube id="bDWApqAUjEI" />
+
+## Comparación
+
+| Aspecto               | Clean Architecture                                                                          | Hexagonal Architecture                                                                                                                           |
+| --------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Enfoque Conceptual    | Enfatiza dependencias direccionales claras                                                  | Se enfoca en segregar interacciones externas                                                                                                     |
+| Adaptabilidad         | Excelente para aplicaciones con capas bien demarcadas en setups empresariales tradicionales | Sobra en ambientes que requieren opciones de integración dinámica (APIs, sistemas de mensajería, GUIs) con clara separación de responsabilidades |
+| Adopción y Mentalidad | Ampliamente adoptada por su diseño intuitivo y clara separación de responsabilidades        | Crecientemente popular en ambientes dinámicos; ofrece un enfoque progresivo que se adapta a demandas de integración en evolución                 |
+
+Ambas arquitecturas buscan producir software resiliente y mantenible aislando las reglas de negocio core de cambios externos volátiles. Ya sea que elijas la claridad por capas de Clean Architecture o el enfoque en interacciones de Hexagonal Architecture, la clave es alinear tu diseño con las necesidades de tu equipo y las demandas de tu proyecto.

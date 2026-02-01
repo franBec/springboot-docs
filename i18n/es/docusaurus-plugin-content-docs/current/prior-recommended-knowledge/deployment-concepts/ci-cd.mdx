@@ -1,0 +1,51 @@
+---
+sidebar_position: 4
+title: Continuous Integration Continuous Deployment
+---
+
+import Image from '@site/src/components/image';
+
+# Continuous Integration Continuous Deployment
+
+Hacer que tu aplicación Spring Boot corra de forma confiable para tus usuarios es el paso final y crucial. Las estrategias de deployment varían mucho dependiendo del equipo, la madurez de la empresa y la escala del proyecto.
+
+## La forma manual "old school"
+
+En mi primer trabajo, deployar nuestra aplicación Spring Boot (empaquetada como un [`WAR` file](https://www.geeksforgeeks.org/java/servlet-war-file/)) era un ritual manual y tenso:
+
+1. **Escritorio remoto**: Conectarse a la virtual machine de producción usando un [cliente de Remote Desktop](https://en.wikipedia.org/wiki/Remote_desktop_software).
+2. **Detener el servidor**: Detener manualmente la instancia de [Apache Tomcat](https://tomcat.apache.org/) corriendo la versión actual de la aplicación. Esto significaba **downtime** para los usuarios.
+3. **Reemplazar el archivo**: Navegar el filesystem del server, borrar el archivo `app.war` viejo y copiar el archivo `app.war` nuevo (subido manualmente).
+4. **Iniciar el servidor**: Iniciar manualmente la instancia de Tomcat nuevamente.
+5. **Rezar para que funcione**: Esperar que todo funcione, chequear logs frenéticamente y testear manualmente features críticos.
+
+Este enfoque tiene problemas serios:
+
+- **Alto riesgo de error humano**: Copiar el archivo equivocado, borrar algo importante, configurar mal Tomcat. Los pasos manuales son propensos a errores.
+- **Downtime**: Detener el server significa que la aplicación no está disponible para los usuarios durante el deployment.
+- **No hay rollback fácil**: Si la nueva versión falla, hacer rollback involucra repetir el proceso manual en reversa, a menudo bajo presión.
+- **Falta de auditabilidad**: ¿Quién deployó qué, cuándo y cómo? Los procesos manuales dejan malos rastros.
+- **No es escalable**: Imaginate hacer esto para decenas o cientos de microservicios. No es sostenible.
+- **Estresante**: Los deployments manuales son a menudo eventos de alta presión, llevando al burnout y errores.
+
+Si bien esto puede funcionar para una pequeña herramienta interna, es completamente inadecuado para aplicaciones serias.
+
+## El Pipeline CI/CD
+
+La forma moderna de deployar aplicaciones Spring Boot involucra automatización a través de un [pipeline de Continuous Integration/Continuous Deployment (CI/CD)](https://www.redhat.com/en/topics/devops/what-is-ci-cd), a menudo aprovechando containerization. El pipeline sigue un loop continuo con ocho etapas:
+
+<Image
+  src={require('@site/static/img/deployment/cicd.png').default}
+  alt="CI/CD Pipeline"
+/>
+
+1. **Plan**: Decidir qué construir y por qué. Dividir el trabajo en piezas manejables y priorizar lo que entrega valor.
+2. **Code**: Escribir el software. Implementar features en branches de features y abrir pull requests cuando esté listo.
+3. **Build**: Compilar el código, empaquetar la aplicación y crear una imagen Docker con todas las dependencias.
+4. **Test**: Correr tests unitarios automatizados, tests de integración y análisis estático de código. Código defectuoso detiene el pipeline.
+5. **Release**: Taggear la imagen Docker con un número de versión y pushearla a un container registry como [Docker Hub](https://hub.docker.com/), [Google Artifact Registry](https://cloud.google.com/artifact-registry) o [AWS ECR](https://aws.amazon.com/ecr/).
+6. **Deploy**: Usar estrategias como [Blue-Green](https://www.redhat.com/en/topics/devops/what-is-blue-green-deployment) o [Canary](https://www.jetbrains.com/teamcity/ci-cd-guide/concepts/canary-release/) para minimizar riesgo. Deployar junto a la versión actual, desplazar el tráfico gradualmente y hacer rollback inmediatamente si surgen problemas.
+7. **Operate**: Mantener la aplicación corriendo, saludable y responsiva. Escalar según la demanda y manejar incidentes.
+8. **Measure**: Recolectar datos de producción a través de logs, métricas y traces. Alimentar los insights de vuelta a la planificación. El loop continúa.
+
+Este enfoque automatizado ofrece grandes ventajas: consistencia, confiabilidad, velocidad, auditabilidad y rollbacks automatizados.

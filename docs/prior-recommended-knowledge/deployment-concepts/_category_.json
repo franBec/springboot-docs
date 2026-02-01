@@ -1,0 +1,8 @@
+{
+  "label": "Deployment Concepts",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Fundamental concepts and tools for deploying applications in modern environments."
+  }
+}

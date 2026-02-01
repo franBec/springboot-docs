@@ -3,100 +3,100 @@
     "message": "Next",
     "description": "The label for version current"
   },
+  "sidebar.tutorialSidebar.category.Big Picture": {
+    "message": "La Idea General",
+    "description": "The label for category Big Picture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Big Picture.link.generated-index.description": {
+    "message": "Entendé las ideas y estructuras generales detrás del desarrollo de software.",
+    "description": "The generated-index page description for category Big Picture in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Core Concepts": {
+    "message": "Conceptos Fundamentales",
+    "description": "The label for category Core Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Core Concepts.link.generated-index.description": {
+    "message": "Metete en las ideas y teorías fundamentales que sustentan el desarrollo de software.",
+    "description": "The generated-index page description for category Core Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Development Environment": {
+    "message": "Ambiente de Desarrollo",
+    "description": "The label for category Development Environment in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Development Environment.link.generated-index.description": {
+    "message": "Prepará tu espacio de trabajo para una codificación y prácticas de desarrollo eficientes.",
+    "description": "The generated-index page description for category Development Environment in sidebar tutorialSidebar"
+  },
   "sidebar.tutorialSidebar.category.Prior Recommended Knowledge": {
-    "message": "Conocimientos previos recomendados",
+    "message": "Conocimientos Previos Recomendados",
     "description": "The label for category Prior Recommended Knowledge in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Prior Recommended Knowledge.link.generated-index.description": {
-    "message": "Antes de meternos en los detalles específicos de Spring Boot, vamos a repasar algunos conceptos, herramientas, y patrones del desarrollo backend.",
+    "message": "Antes de meternos en los detalles específicos de Spring Boot, vamos a repasar algunos conceptos, herramientas y patrones del desarrollo backend.",
     "description": "The generated-index page description for category Prior Recommended Knowledge in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Spring Boot in a Nutshell": {
-    "message": "Spring Boot en pocas palabras",
+    "message": "Spring Boot en Pocas Palabras",
     "description": "The label for category Spring Boot in a Nutshell in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Spring Boot in a Nutshell.link.generated-index.description": {
-    "message": "Si alguna vez intentaste hacer un pastel desde cero, sabés que hay que medir la harina, romper huevos y mezclar los ingredientes – ¡todo antes de encender el horno! El desarrollo tradicional en Java puede sentirse igual de tedioso. Ahí viene Spring Boot, la masa ya preparada del mundo del código. Vamos a ver de qué va y por qué a los desarrolladores les encanta.",
+    "message": "Si alguna vez intentaste hacer una torta desde cero, sabés que hay que medir la harina, romper huevos y mezclar los ingredientes. Todo eso antes de prender el horno. El desarrollo tradicional en Java puede sentirse igual de tedioso. Ahí entra Spring Boot, la masa ya preparada del mundo del código. Vamos a ver de qué se trata y por qué a los desarrolladores les encanta.",
     "description": "The generated-index page description for category Spring Boot in a Nutshell in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Let’s Create a Spring Boot Project": {
-    "message": "¡Vamos a crear un proyecto con Spring Boot!",
-    "description": "The label for category Let’s Create a Spring Boot Project in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Let's Create a Spring Boot Project": {
+    "message": "¡Creemos un Proyecto Spring Boot!",
+    "description": "The label for category Let's Create a Spring Boot Project in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Let’s Create a Spring Boot Project.link.generated-index.description": {
-    "message": "Empezar un proyecto Spring Boot es como pedir una pizza: elegís tus ingredientes (dependencias), la masa (configuración) y dejás que el horno (Spring Initializr) se encargue del resto. ¡Todavía no hay que escribir código! Acá te muestro cómo levantar un proyecto en cuestión de segundos.",
-    "description": "The generated-index page description for category Let’s Create a Spring Boot Project in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Let's Create a Spring Boot Project.link.generated-index.description": {
+    "message": "Empezar un proyecto Spring Boot es como pedir una pizza. Elegís tus ingredientes (dependencias), la masa (configuración) y dejás que el horno (Spring Initializr) se encargue del resto. ¡Todavía no hay que escribir código! Acá te muestro cómo levantar un proyecto en cuestión de segundos.",
+    "description": "The generated-index page description for category Let's Create a Spring Boot Project in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Optional but Recommended Features": {
-    "message": "Características opcionales, pero recomendadas",
+    "message": "Características Opcionales pero Recomendadas",
     "description": "The label for category Optional but Recommended Features in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Optional but Recommended Features.link.generated-index.description": {
-    "message": "Son cosas que quizás encontrés en algunos proyectos, pero siempre está bueno tenerlas.",
+    "message": "Son cosas que quizás encuentres en algunos proyectos, pero siempre está bueno tenerlas.",
     "description": "The generated-index page description for category Optional but Recommended Features in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Contract-Driven Development": {
-    "message": "Desarrollo basado en Contratos",
+    "message": "Desarrollo Basado en Contratos",
     "description": "The label for category Contract-Driven Development in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Contract-Driven Development.link.generated-index.description": {
-    "message": "Normalmente, al desarrollar primero armamos el endpoint y después escribimos la documentación con una Especificación OpenAPI. El problema surge cuando alguien modifica el endpoint y la documentación ya no coincide. Esto podría pasar desapercibido. Peor que no tener documentación es tenerla mal. ¿Y si primero escribimos la documentación y luego generamos el código? Te presento el Desarrollo basado en Contratos.",
+    "message": "Normalmente, al desarrollar primero armamos el endpoint y después escribimos la documentación con una Especificación OpenAPI. El problema surge cuando alguien modifica el endpoint y la documentación ya no coincide. Esto podría pasar desapercibido. Peor que no tener documentación es tenerla mal. ¿Y si primero escribimos la documentación y luego generamos el código? Te presento el Desarrollo Basado en Contratos.",
     "description": "The generated-index page description for category Contract-Driven Development in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Unit Testing": {
-    "message": "Pruebas unitarias",
-    "description": "The label for category Unit Testing in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Testing": {
+    "message": "Pruebas",
+    "description": "The label for category Testing in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Unit Testing.link.generated-index.description": {
-    "message": "Las pruebas unitarias consisten en testear partes individuales de tu código por separado para asegurarte de que funcionen bien. Es como revisar cada ingrediente antes de cocinar, en lugar de probar el plato final y adivinar qué salió mal.",
-    "description": "The generated-index page description for category Unit Testing in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.External API Integration": {
-    "message": "Integración de APIs externas",
-    "description": "The label for category External API Integration in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.External API Integration.link.generated-index.description": {
-    "message": "En el desarrollo backend moderno, los servicios muchas veces tienen que comunicarse con otros servicios web externos usando HTTP. Ya sea que necesites integrarte con plataformas, microservicios o sistemas heredados, aprende a interactuar sin complicaciones con APIs de terceros para extender la funcionalidad de tu aplicación.",
-    "description": "The generated-index page description for category External API Integration in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Persistence Integration": {
-    "message": "Integración con persistencia de datos",
-    "description": "The label for category Persistence Integration in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Persistence Integration.link.generated-index.description": {
-    "message": "Hasta ahora hemos obtenido los datos de los usuarios de una fuente externa. ¿Pero qué pasaría si tuviéramos datos en nuestra propia base de datos?",
-    "description": "The generated-index page description for category Persistence Integration in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Efficient Data Retrieval": {
-    "message": "Acceso a datos eficiente",
-    "description": "The label for category Efficient Data Retrieval in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Efficient Data Retrieval.link.generated-index.description": {
-    "message": "Explora técnicas para una paginación efectiva, un filtrado dinámico y una caché inteligente, asegurándote de que tus aplicaciones recuperen datos rápido y escalen sin problemas.",
-    "description": "The generated-index page description for category Efficient Data Retrieval in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Testing.link.generated-index.description": {
+    "message": "Aprendé a escribir pruebas confiables para tus aplicaciones Spring Boot, desde pruebas unitarias hasta estrategias de pruebas de integración que realmente importan.",
+    "description": "The generated-index page description for category Testing in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Deployment": {
     "message": "Despliegue",
     "description": "The label for category Deployment in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Deployment.link.generated-index.description": {
-    "message": "Entregar código es más que solo escribirlo. Aprendé a empaquetar, configurar y ejecutar tu aplicación Spring Boot de manera confiable en distintos entornos (desarrollo, pruebas y producción) usando herramientas como Docker y Spring Profiles.",
+    "message": "El despliegue es el proceso de hacer tu aplicación disponible para los usuarios. Esta sección cubre Docker, pipelines de CI/CD, ambientes, configuración de CORS, y estrategias modernas de despliegue para llevar tu aplicación Spring Boot de tu máquina local a producción.",
     "description": "The generated-index page description for category Deployment in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Real Talk Time": {
-    "message": "Hablemos en serio",
-    "description": "The label for category Real Talk Time in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Deployment Concepts": {
+    "message": "Conceptos de Despliegue",
+    "description": "The label for category Deployment Concepts in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Real Talk Time.link.generated-index.description": {
-    "message": "Empezar en el mundo de la programación es una adrenalina, pero el panorama tech está lleno de trampas que pueden descarrilar hasta los proyectos más prometedores. Pocas personas te lo contarán, pero la verdad es que laburar en Big Tech puede ser complicado. Desmenuzemos los desafíos comunes, los problemas sistémicos y las mentalidades laborales.",
-    "description": "The generated-index page description for category Real Talk Time in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Deployment Concepts.link.generated-index.description": {
+    "message": "Conceptos fundamentales y herramientas para desplegar aplicaciones en entornos modernos.",
+    "description": "The generated-index page description for category Deployment Concepts in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.About": {
     "message": "Acerca de",
     "description": "The label for category About in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.About.link.generated-index.description": {
-    "message": "Acerca del autor de esta página (Pollito) y agradecimientos.",
+    "message": "Acerca del autor de esta página (Pollito) y agradecimientos especiales.",
     "description": "The generated-index page description for category About in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Licenses": {
@@ -104,7 +104,7 @@
     "description": "The label for category Licenses in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Licenses.link.generated-index.description": {
-    "message": "Licencias de código y contenido.",
+    "message": "Licencias de código y contenido. Lo aburrido pero importante.",
     "description": "The generated-index page description for category Licenses in sidebar tutorialSidebar"
   }
 }

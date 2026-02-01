@@ -6,27 +6,29 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #61b673;
+  --ifm-color-primary-dark: #519963;
+  --ifm-color-primary-darker: #418753;
+  --ifm-color-primary-darkest: #346943;
+  --ifm-color-primary-light: #73d285;
+  --ifm-color-primary-lighter: #79da8f;
+  --ifm-color-primary-lightest: #95e0a9;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-background-color: #f4f4f4;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #61b673;
+  --ifm-color-primary-dark: #519963;
+  --ifm-color-primary-darker: #418753;
+  --ifm-color-primary-darkest: #346943;
+  --ifm-color-primary-light: #73d285;
+  --ifm-color-primary-lighter: #79da8f;
+  --ifm-color-primary-lightest: #95e0a9;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-background-color: #1b1b1d;
 }
 
 .video-container {
@@ -45,14 +47,73 @@
   height: 100%;
 }
 
-.image-container {
-  display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: center; /* Centers vertically */
-  margin: 1rem 0; /* Adds some spacing around the image */
+.markdown img {
+  display: block; /* Make image a block element */
+  margin-left: auto; /* Center image horizontally */
+  margin-right: auto; /* Center image horizontally */
+  margin-bottom: 1.5rem; /* Add vertical spacing below images */
+  max-width: 100%; /* Ensure images are responsive within their containers */
+  height: auto; /* Maintain aspect ratio */
 }
 
-.image-container img {
-  width: 144px; /* Ensures the image renders at its native width */
-  height: 144px; /* Ensures the image renders at its native height */
+/* Center tables horizontally in markdown content */
+.markdown table {
+  margin-left: auto;
+  margin-right: auto;
+  display: table; /* Ensures margin: auto works correctly */
+  width: auto; /* Overrides the default 100% width so you can actually see the centering */
+  min-width: 400px; /* Optional: prevents very small tables from looking awkward */
+}
+
+/* Optional: If you want to ensure the table cells don't get too squashed when centered */
+.markdown th,
+.markdown td {
+  padding: 0.75rem 1.5rem;
+}
+
+/* Center Mermaid diagrams */
+.docusaurus-mermaid-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem; /* Match the spacing of your .markdown img */
+}
+
+/* Diff code block line highlighting */
+.code-block-added-line {
+  background-color: rgba(40, 167, 69, 0.15);
+  border-left: 3px solid #28a745;
+  display: block;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  padding-left: 0.75rem;
+}
+
+.code-block-removed-line {
+  background-color: rgba(220, 53, 69, 0.15);
+  border-left: 3px solid #dc3545;
+  display: block;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  padding-left: 0.75rem;
+}
+
+.code-block-modified-line {
+  background-color: rgba(0, 123, 255, 0.15);
+  border-left: 3px solid #007bff;
+  display: block;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  padding-left: 0.75rem;
+}
+
+[data-theme='dark'] .code-block-added-line {
+  background-color: rgba(40, 167, 69, 0.25);
+}
+
+[data-theme='dark'] .code-block-removed-line {
+  background-color: rgba(220, 53, 69, 0.25);
+}
+
+[data-theme='dark'] .code-block-modified-line {
+  background-color: rgba(0, 123, 255, 0.25);
 }

@@ -1,0 +1,67 @@
+---
+sidebar_position: 2
+title: IDE
+---
+
+import Image from '@site/src/components/image';
+import Youtube from '@site/src/components/youtube';
+
+Técnicamente, podrías escribir aplicaciones Spring Boot en Notepad y compilarlas manualmente por línea de comandos, pero eso sería como construir una casa con un destornillador.
+
+Un IDE (Integrated Development Environment) es una herramienta que agiliza la codificación, detecta errores en tiempo real y organiza los archivos para que puedas enfocarte en qué construir en lugar de cómo construirlo.
+
+## ¿Por Qué Todos Usan IntelliJ IDEA?
+
+Si alguna vez viste codear a un compañero de trabajo o navegaste un tutorial de Spring en línea, probablemente viste este logo:
+
+<Image
+  src={
+    require('@site/static/img/prior-recommended-knowledge/intelliJ-IDEA-logo.png')
+      .default
+  }
+/>
+
+**IntelliJ IDEA** domina el desarrollo en Java y Spring Boot por cinco razones clave:
+
+1. **Superpoderes para Spring Boot**: Auto-configura proyectos y sugiere arreglos específicos de Spring.
+2. **Autocompletado de código**: Predice lo que vas a escribir después (como un buscador para código).
+3. **Todo con un clic**: Ejecutar, debuggear, testear y desplegar aplicaciones sin salir del IDE.
+4. **Velocidad y estabilidad**: Maneja proyectos grandes sin lag.
+5. **Gratis y poderoso**: La Community Edition cubre el 90% de las necesidades.
+
+¿Qué pasa con otros IDEs?
+
+- [VS Code](https://code.visualstudio.com/): Liviano pero necesita plugins para Spring Boot (setup extra).
+- [Eclipse/Spring Tool Suite](https://eclipseide.org/): Gratis pero torpe, con workflows desactualizados.
+- [NetBeans](https://netbeans.apache.org/front/main/index.html): Raramente usado para desarrollo moderno de Spring.
+
+Mi recomendación personal: descargá [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) (no es sponsored, lamentablemente).
+
+<Youtube id="jTZVx4TCmI4" />
+
+## Optimizando IntelliJ IDEA con Plugins (para Java)
+
+Antes de codear, vamos a sacar un poco de desorden y distracciones del IDE.
+
+### Desactivá Plugins que No Usás
+
+1. Andá a File → Settings → Plugins (Windows) o IntelliJ IDEA → Settings → Plugins (macOS).
+2. En la pestaña Installed, desactivá estos plugins:
+   - En **Deployment**: Remote Execution Agent.
+   - En **HTML and XML**: HTML Tools.
+   - Todo lo que esté en **IDE Localization** (como los paquetes de idioma chino, japonés, coreano).
+   - En **JVM Frameworks**: JavaFX.
+   - En **Languages**: Shell Script y TOML.
+   - En **Test Tools**: TestNG.
+   - En **Version Controls**: Mercurial, Perforce Helix Core, Subversion.
+   - En **Other Tools**: Code with me, Eclipse Interoperability, EditorConfig, Performance Testing, Qodana, Task Management, TextMate Bundles, WebP Support.
+
+**Cómo desactivar**: Desactivá el plugin con el toggle → Hacé clic en Apply → Reiniciá el IDE si te lo pide.
+
+### Instalá Plugins
+
+- [Lombok](https://plugins.jetbrains.com/plugin/6317-lombok): soporte para [Project Lombok](https://projectlombok.org/).
+- [CodeComplexity](https://plugins.jetbrains.com/plugin/21667-code-complexity): Este plugin calcula la métrica de complejidad del código.
+- [OpenAPI (Swagger) Editor](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor): Soporte para la [OpenAPI Specification (OAS)](https://swagger.io/specification/).
+
+Hacé clic en Apply → Reiniciá IntelliJ IDEA cuando te lo pida.

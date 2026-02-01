@@ -1,0 +1,92 @@
+---
+sidebar_position: 1
+---
+
+import Youtube from '@site/src/components/youtube';
+import Image from '@site/src/components/image';
+
+# Introduction: Why Spring Boot?
+
+_So, you’re considering backend development, and you’ve heard about Spring Boot. But you have your doubts…_
+
+## Who Is This Guide For?
+
+Back on June 21st 2022, I wrote in the University WhatsApp group:
+
+> Quick question, is it really worth it learning Java Spring? At work, I was put into a course, and I’m too lazy
+
+<Image src={require('@site/static/img/WhatsAppImage2025-02-27.jpeg').default} />
+
+I even made a typo, lol.
+
+This document is everything I wish someone had answered me. If you:
+
+- Know [Java](https://www.java.com/) (or another [OOP language](https://www.freecodecamp.org/news/what-is-object-oriented-programming/)) but have never built an [API](https://aws.amazon.com/what-is/api/),
+- Want to learn Spring Boot without drowning in jargon or legacy XML tutorials,
+- Prefer doing to theory (we’ll code fast and explain faster),
+
+… You’re in the right place. I won’t explain bean lifecycles, thread pools, or any of those things, because for 90% of practical scenarios, you won’t need that. This isn’t a Spring Boot encyclopedia. It’s a guide for devs who want to jump quickly into a codebase and ship code.
+
+You will notice that sometimes I put external link references. Feel free to check them to get a more in-depth explanation of that specific concept, but be careful of not going into [information overload](https://www.interaction-design.org/literature/article/information-overload-why-it-matters-and-how-to-combat-it).
+
+## Do You Need to Master All of Spring?
+
+Short answer: **No**.
+
+[Spring Framework](https://spring.io/projects/spring-framework) is like a sprawling toolkit with 20 different hammers. Spring Boot, however, hands you the right hammer for the job upfront. You don’t need to memorize every annotation or XML configuration.
+
+Most projects require just a fraction of Spring’s features, and Boot’s “starter” dependencies and autoconfiguration do the heavy lifting. Think of it as coding with training wheels, except the training wheels also write half your [boilerplate](https://aws.amazon.com/what-is/boilerplate-code/).
+
+## Is It Even Worth Learning in 2026?
+
+According to the [2025 Stack Overflow Developer Survey](https://survey.stackoverflow.co/2025/technology#most-popular-technologies-webframe-prof), within the professional developers Spring Boot sits at 15.6% adoption, trailing behind giants like [Express.js](https://expressjs.com/) (20.3%) and [ASP.NET Core](http://ASP.NET) (21.3%).
+
+<Image src={require('@site/static/img/stack-overflow-survey.png').default} />
+
+Does this mean it’s outdated? Absolutely not. Here’s why it’s still a powerhouse:
+
+- **Enterprise-grade muscle**: Behind those lower adoption numbers? A massive ecosystem trusted by Fortune 500 companies and startups alike.
+- **Java’s staying power**: With 30+ years of dominance, Java isn’t disappearing, and Spring Boot is its modern, opinionated soulmate.
+- **Scalability**: Need to handle 10 users or 10 million? Spring Boot scales without breaking a sweat.
+
+<Youtube id="8inhakY1q9w" />
+
+## But What About AI Taking Over?
+
+AI won’t replace developers, but it will amplify the value of those who understand messy human realities. Here’s why Spring Boot engineers will thrive in the AI era.
+
+### The "Clear Requirements" Myth
+
+> **Product owner request**: "Can you just make the API faster?"
+
+> **AI response**: Adds basic caching layer. Misses the real bottleneck: N+1 queries across three microservices, unindexed foreign keys, third-party API latency, and the fact that someone ran a batch job during peak hours.
+
+Until AI can trace execution paths, profile databases, and translate "make it pop" into technical specs, developers remain the human glue between ambition and reality. Spring Boot pros don’t just write code. They decode vague requests into maintainable systems.
+
+### The Spring Boot Advantage
+
+AI thrives in greenfield projects. The enterprise world? It’s a graveyard of:
+
+- 15-year-old monolithic Spring apps.
+- Legacy integrations that cough blood if you look at them wrong.
+- Compliance requirements are written in hieroglyphics.
+
+Spring Boot developers aren’t just writing code. They’re navigating dependency hell, patching vulnerabilities in 50K-line codebases, and making ancient systems dance with modern cloud infra. AI tools become helpers, not replacements, in this chaos.
+
+AI writes code. Developers solve problems. As long as businesses:
+
+- Prioritize "move fast" over "don’t break things",
+- Confuse "agile" with "vague",
+- Treat software as a cost center rather than living infrastructure...
+
+… Spring Boot experts will remain essential. The framework’s enterprise stronghold ensures you’re not just relevant, you’re the adult in a room full of AI-powered sugar-high toddlers.
+
+## Why Should You Care About This Guide?
+
+Spring Boot isn't always obvious at first glance.
+
+I had to learn it on the fly, solving tasks and navigating [Stack Overflow](https://stackoverflow.com/questions) (remember the pre-AI era?). While popular frameworks like the [MEAN](https://www.mongodb.com/resources/languages/mean-stack) or [MERN](https://www.mongodb.com/resources/languages/mern-stack) stack boast numerous 5+ hour tutorials, finding one solid source for Spring Boot, at least back in the day, was a challenge.
+
+Even though Spring Boot is a subset of Spring, it's vast. It uses some "magic words," it nudges you towards a particular way of thinking about code, yet it's surprisingly flexible about how you organize your code or name things. This often leads to everyone having their own approach, with no definitive "right" or "wrong," and sometimes, even within a project, there's no clear standard or leader defining the Spring Boot way. It's a weird mix of stability and flexibility.
+
+That's why, armed with "Real-World Insights" and a genuine love for simplicity, I believe this guide will be a welcoming "hello" to Spring Boot for any developer out there.

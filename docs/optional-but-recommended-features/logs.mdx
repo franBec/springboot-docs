@@ -1,0 +1,123 @@
+---
+sidebar_position: 2
+title: Logs
+---
+
+import {
+  ApplicationDevYaml,
+  ApplicationLogs,
+  ApplicationSequenceDiagram,
+  BuildGradleGroovy,
+  BuildGradleJava,
+  BuildGradleKts,
+  CurlRequest,
+  FileTree,
+  LogAspect,
+  Logback,
+  LogFilter,
+  MaskingPatternLayout,
+  TraceIdFilter,
+} from '@site/src/components/docs/optional-but-recommended-features/logs';
+import GithubBranchInfo from '@site/src/components/github-branch-info';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+
+<GithubBranchInfo branch="feature/logs" />
+
+## How Spring Boot Logs
+
+In Spring Boot, [SLF4J](https://slf4j.org/) and [Logback](https://logback.qos.ch/) work together to provide a logging setup.
+
+- **SLF4J** = **S**imple **L**ogging **F**acade for **J**ava. Think of it as a logging **API** (an abstraction layer). Your application code talks to SLF4J, not directly to a specific logging implementation. This is brilliant because it decouples your code from _how_ logs are written.
+- **Logback** = The actual logging **implementation** (the engine that does the heavy lifting). It's the default logging backend that SLF4J uses in a Spring Boot application.
+
+Even though Spring Boot includes SLF4J and Logback automatically and no setup is required to get basic logging working, improving the logging experience is highly recommended. Structured logging with trace IDs, centralized sensitive data masking, and consistent request/response logging make debugging production issues significantly easier.
+
+<FileTree />
+
+## Dependencies
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    <BuildGradleJava />
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    <BuildGradleKts />
+    <Admonition type="info" title="kotlin-logging">
+      [`kotlin-logging`](https://github.com/oshai/kotlin-logging) is a wrapper
+      around SLF4J that provides a more idiomatic Kotlin way to log messages. It
+      **does not replace** SLF4J or Logback; instead, it simplifies logging
+      calls in Kotlin by using extension functions and lazy evaluation for
+      messages. The logging hierarchy remains: Kotlin code → `kotlin-logging` →
+      SLF4J → Logback (Spring Boot default)
+    </Admonition>
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    <BuildGradleGroovy />
+  </TabItem>
+</Tabs>
+
+### Avoid Local OTLP Log Publishing
+
+When you add [`spring-boot-starter-opentelemetry`](https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/) to your dependencies, Spring Boot automatically configures OpenTelemetry exporters to publish metrics and traces via OTLP (OpenTelemetry Protocol).
+
+The problem is that on local development, you typically don't have an OTLP collector running. Spring Boot will repeatedly try to connect to the default OTLP endpoint and fail, spamming your console with connection error messages that drown out your actual application logs.
+
+To avoid this noise during local development, disable OTLP metrics export in your dev profile:
+
+<ApplicationDevYaml />
+
+From now on, run the `bootRun` Gradle task with the `SPRING_PROFILES_ACTIVE=dev` environment variable to activate the dev profile:
+
+```bash
+SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
+```
+
+## Log Aspect
+
+Using an Aspect for logging is a classic example of AOP in action. Instead of scattering log statements all over your business logic (which clutters the code and mixes concerns), you define the logging behavior once in a separate module. This aspect then automatically intercepts method calls you care about and applies the logging logic without the target code even knowing it's happening.
+
+For a deeper dive, check out the [AOP section on Cross-Cutting Concerns](/spring-boot-in-a-nutshell/cross-cutting-concerns#aspect-oriented-programming-aop).
+
+<LogAspect />
+
+## Log Filter
+
+Sometimes, a request might not even reach your Spring MVC controllers. By logging at the Servlet level, it grants you visibility into every incoming request and outgoing response, regardless of whether it hits your application's specific endpoints.
+
+This can be incredibly useful for debugging issues like authentication failures, routing problems, or requests that are blocked higher up in the filter chain.
+
+<LogFilter />
+
+## Tracing
+
+Ever tried to debug an issue in a busy system by trawling through a massive log file? It's like trying to find a specific needle in a haystack of needles.
+
+This is where tracing comes in. By assigning a unique ID (a 'Trace ID') to each incoming request, you can tag every single log entry generated during that request's lifecycle. Suddenly, you can filter the entire log file to see the journey of just one request across multiple methods, services, or threads.
+
+<TraceIdFilter />
+
+## Mask Sensitive Data in Logs With Logback
+
+It's important to mask sensitive details when logging (i.e., passwords, SSN, etc.). Let's mask the logs centrally by configuring masking rules for all log entries produced by Logback.
+
+1.  Create `MaskingPatternLayout`:
+
+    <MaskingPatternLayout />
+
+2.  Add regex patterns in `maskPattern` tags inside `logback.xml`:
+
+    <Logback />
+
+## Check How Logs Look Like
+
+Run the following `curl` command (with placeholder values) to see everything working: sensitive data masking, the aspect intercepting controller method invocations, how the logs contain the trace, and the filter printing the HTTP request and response.
+
+<CurlRequest />
+
+Logs should look something like this:
+
+<ApplicationLogs />
+
+<ApplicationSequenceDiagram />

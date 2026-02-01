@@ -1,0 +1,107 @@
+---
+sidebar_position: 5
+title: Project Structure
+---
+
+import Image from '@site/src/components/image';
+import Admonition from '@theme/Admonition';
+import {
+  DefaultProjectStructure,
+  CleanArchitectureStructure,
+  HexagonalArchitectureStructure,
+} from '@site/src/components/docs/spring-boot-in-a-nutshell/project-structure';
+
+Choosing a project structure is like picking a house blueprint. It dictates where your code "lives" and how it socializes with neighbors.
+
+Let's check how we can group related classes in Java and what are the recommended approaches.
+
+<Admonition type="info">
+  Throughout this document, all examples are Java-based. However, the concepts
+  discussed can be applied to Kotlin and Groovy projects.
+</Admonition>
+
+## Packages & the main Class Rule
+
+Packages are Java’s way of grouping classes (like folders).
+
+**Critical Rule**: Your main class (annotated with `@SpringBootApplication`) defines the root package.
+
+- All other packages you create must be subpackages of this root (e.g., if your main class is in `dev.pollito.spring_java`, create `dev.pollito.spring_java.domain`, not `dev.pollito.domain`).
+- **Why?** Spring Boot automatically scans classes in the root package and its subpackages. Classes outside won’t be detected unless explicitly configured.
+  - **Avoid fighting against this default unless necessary**: Spring Boot relies on this hierarchy.
+
+## Default Project Structure
+
+When you generate a Spring Boot project (more on how to generate a project in the [Spring Initializr section](/lets-create-a-spring-boot-project/spring-initializr)), you get a standardized folder and file structure.
+
+<DefaultProjectStructure />
+
+- `SpringJavaApplication.java`: The entry point of your app. Annotated with `@SpringBootApplication` to enable [autoconfiguration](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html).
+- `application.properties` (or `application.yml`): Central configuration file for database URLs, server ports, logging, etc.
+- `static/` and `templates/`, empty by default. Used for web assets:
+  - `static/`: Serves images, CSS, JS directly.
+  - `templates/`: Server-rendered HTML (if using [Thymeleaf](https://www.thymeleaf.org/), [Mustache](https://www.baeldung.com/spring-boot-mustache), etc.).
+- `pom.xml` (Maven) or `build.gradle` (Gradle): Defines dependencies and plugins.
+- `test/`: Preconfigured for JUnit tests (More about this in the [Unit Testing section](/category/unit-testing)). It has a skeleton test class `SpringJavaApplication.java` that verifies the app context loads.
+
+## Picking an Architecture
+
+Let's imagine a simple application that:
+
+1. Exposes a GET `/api/films/{filmId}` REST API endpoint.
+2. Gets the films information from a [Sakila](/prior-recommended-knowledge/sakila-sample-database) [H2 database](/persistence-integration/h2).
+3. Supplements that data with information from an external API via [FeignClient](/external-api-integration/what-is-a-web-client#feignclient-declarative-approach).
+
+<Admonition type="info">
+    All the "Sakila" logic will exist inside the `sakila` package, representing a bounded context.
+
+    - In larger systems, each domain can live in its own top‑level package following whatever architectural rules.
+
+</Admonition>
+
+### Follow Clean Architecture
+
+- Dependencies always point inward.
+- The domain being the most independent layer, and each outer layer depends on the inner ones.
+
+_`src/test` folder is omitted for simplicity._
+
+<CleanArchitectureStructure />
+
+<Image
+  src={
+    require('@site/static/img/spring-boot-in-a-nutshell/clean-arch-folder-structure.png')
+      .default
+  }
+/>
+
+### Follow Hexagonal Architecture
+
+- External actors interacting with the application (driver side).
+- Domain core implementing business logic.
+- External services used by the application (driven side).
+- The ports (interfaces) ensure loose coupling between these layers, making the application more maintainable and testable.
+
+_`src/test` folder is omitted for simplicity._
+
+<HexagonalArchitectureStructure />
+
+<Image
+  src={
+    require('@site/static/img/spring-boot-in-a-nutshell/hexagonal-arch-folder-structure.png')
+      .default
+  }
+/>
+
+## Is It Mandatory to Follow an Architecture?
+
+No. **Spring doesn’t enforce names or layers**. You could write everything in a single class. But these conventions solve the **readability problem**: developers instantly understand a class by its name.
+
+### Personal Recommendations
+
+I feel that **Hexagonal Architecture makes coding easier to understand** (or at least is the one that quickly clicked on me). Having said that, I don't follow it word by word, and that's fine.
+
+- **Nobody really follows one architecture to the finest details**: Every place I worked tried to follow Clean Architecture but deviated somewhere mid-development and now is whatever.
+- **Is ok to bend the rules**: Small projects might combine layers.
+- **Consistency > perfection**: Agree with your team on a structure and stick to it. Refactor later if needed.
+  - If your team uses different terms (e.g., `DataManager` instead of `Repository`), consistency matters more than the name itself.

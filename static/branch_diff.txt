@@ -1,0 +1,1557 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index 0bb5e3e..24a40c9 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -13,8 +13,8 @@ This guide provides essential information for agentic coding agents working in t
+ ### Run Tests
+ - `./gradlew test` - Run all tests across all modules
+ - `./gradlew :{module}:test` - Run tests for specific module
+-- `./gradlew :spring_java:test --tests "*FilmController.shouldReturnFilm*"` - Run single test method
+-- `./gradlew :spring_groovy:test --tests "*FilmController*"` - Run all tests for specific class
++- `./gradlew :spring_java:test --tests "*MovieController.shouldReturnMovie*"` - Run single test method
++- `./gradlew :spring_groovy:test --tests "*MovieController*"` - Run all tests for specific class
+ 
+ ### Code Formatting
+ - `./gradlew spotlessCheck` - Check code formatting
+@@ -43,14 +43,14 @@ This guide provides essential information for agentic coding agents working in t
+ - Spotless automatically removes unused imports
+ 
+ ### Naming Conventions
+-- **Classes**: PascalCase (`FilmController`, `FilmService`, `ControllerAdvice`)
+-- **Methods**: camelCase (`findById`, `getFilmById`, `findAll`)
+-- **Variables**: camelCase (`filmId`, `getFilmByIdPort`)
+-- **Constants**: UPPER_SNAKE_CASE (`MDC_TRACE_ID_KEY`, `FilmS_PATH`)
++- **Classes**: PascalCase (`MovieController`, `MovieService`, `ControllerAdvice`)
++- **Methods**: camelCase (`findById`, `getMovieById`, `findAll`)
++- **Variables**: camelCase (`movieId`, `getMovieByIdPort`)
++- **Constants**: UPPER_SNAKE_CASE (`MDC_TRACE_ID_KEY`, `MOVIES_PATH`)
+ - **Test Methods**:
+-  - Java: `shouldReturnFilm_whenGetFilmById()`
+-  - Groovy: `"getFilmById returns a film with the given id"()`
+-  - Kotlin: `` `getFilmById returns not null` ``
++  - Java: `shouldReturnMovie_whenGetMovieById()`
++  - Groovy: `"getMovieById returns a movie with the given id"()`
++  - Kotlin: `` `getMovieById returns not null` ``
+ 
+ ## Architecture
+ 
+diff --git a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmController.groovy b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmController.groovy
+deleted file mode 100644
+index be67ec6..0000000
+--- a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmController.groovy
++++ /dev/null
+@@ -1,32 +0,0 @@
+-package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
+-
+-import dev.pollito.spring_groovy.generated.api.FilmsApi
+-import dev.pollito.spring_groovy.generated.model.FilmListResponse
+-import dev.pollito.spring_groovy.generated.model.FilmResponse
+-import dev.pollito.spring_groovy.sakila.film.adapter.in.rest.mapper.FilmMapper
+-import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindFilmByIdPort
+-import groovy.transform.CompileStatic
+-import org.springframework.http.ResponseEntity
+-import org.springframework.web.bind.annotation.RestController
+-
+-@RestController
+-@CompileStatic
+-class FilmController implements FilmsApi {
+-  FindFilmByIdPort findFilmByIdPort
+-  FilmMapper filmMapper
+-
+-  FilmController(FindFilmByIdPort findFilmByIdPort, FilmMapper filmMapper) {
+-    this.findFilmByIdPort = findFilmByIdPort
+-    this.filmMapper = filmMapper
+-  }
+-
+-  @Override
+-  ResponseEntity<FilmListResponse> findAll() {
+-    throw new UnsupportedOperationException()
+-  }
+-
+-  @Override
+-  ResponseEntity<FilmResponse> findById(Long id) {
+-    ResponseEntity.ok(new FilmResponse(data: filmMapper.convert(findFilmByIdPort.findFilmById(id))))
+-  }
+-}
+diff --git a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/mapper/FilmMapper.groovy b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/mapper/FilmMapper.groovy
+deleted file mode 100644
+index 36ce6f4..0000000
+--- a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/mapper/FilmMapper.groovy
++++ /dev/null
+@@ -1,28 +0,0 @@
+-package dev.pollito.spring_groovy.sakila.film.adapter.in.rest.mapper
+-
+-import dev.pollito.spring_groovy.sakila.film.domain.model.Film
+-import groovy.transform.CompileStatic
+-import org.modelmapper.ModelMapper
+-import org.springframework.stereotype.Component
+-
+-@Component
+-@CompileStatic
+-class FilmMapper {
+-  private final ModelMapper modelMapper
+-
+-  FilmMapper(ModelMapper modelMapper) {
+-    this.modelMapper = modelMapper
+-  }
+-
+-  dev.pollito.spring_groovy.generated.model.Film convert(Film source) {
+-    if (!source) return null
+-
+-    def target = modelMapper.map(source, dev.pollito.spring_groovy.generated.model.Film)
+-
+-    if (source.rating) {
+-      target.rating = dev.pollito.spring_groovy.generated.model.Film.RatingEnum.fromValue(source.rating)
+-    }
+-
+-    target
+-  }
+-}
+diff --git a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindFilmByIdPort.groovy b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindFilmByIdPort.groovy
+deleted file mode 100644
+index c47758b..0000000
+--- a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindFilmByIdPort.groovy
++++ /dev/null
+@@ -1,7 +0,0 @@
+-package dev.pollito.spring_groovy.sakila.film.domain.port.in
+-
+-import dev.pollito.spring_groovy.sakila.film.domain.model.Film
+-
+-interface FindFilmByIdPort {
+-  Film findFilmById(Long id)
+-}
+diff --git a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/MovieController.groovy b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/MovieController.groovy
+new file mode 100644
+index 0000000..81c80a8
+--- /dev/null
++++ b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/MovieController.groovy
+@@ -0,0 +1,32 @@
++package dev.pollito.spring_groovy.sakila.movie.adapter.in.rest
++
++import dev.pollito.spring_groovy.generated.api.MoviesApi
++import dev.pollito.spring_groovy.generated.model.MovieListResponse
++import dev.pollito.spring_groovy.generated.model.MovieResponse
++import dev.pollito.spring_groovy.sakila.movie.adapter.in.rest.mapper.MovieMapper
++import dev.pollito.spring_groovy.sakila.movie.domain.port.in.GetMovieByIdPort
++import groovy.transform.CompileStatic
++import org.springframework.http.ResponseEntity
++import org.springframework.web.bind.annotation.RestController
++
++@RestController
++@CompileStatic
++class MovieController implements MoviesApi {
++  private final GetMovieByIdPort getMovieByIdPort
++  MovieMapper movieMapper
++
++  MovieController(GetMovieByIdPort getMovieByIdPort, MovieMapper movieMapper) {
++    this.getMovieByIdPort = getMovieByIdPort
++    this.movieMapper = movieMapper
++  }
++
++  @Override
++  ResponseEntity<MovieListResponse> findAll() {
++    throw new UnsupportedOperationException()
++  }
++
++  @Override
++  ResponseEntity<MovieResponse> findById(Long id) {
++    ResponseEntity.ok(new MovieResponse(data: movieMapper.convert(getMovieByIdPort.getMovieById(id))))
++  }
++}
+diff --git a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/mapper/MovieMapper.groovy b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/mapper/MovieMapper.groovy
+new file mode 100644
+index 0000000..4783981
+--- /dev/null
++++ b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/mapper/MovieMapper.groovy
+@@ -0,0 +1,28 @@
++package dev.pollito.spring_groovy.sakila.movie.adapter.in.rest.mapper
++
++import dev.pollito.spring_groovy.sakila.movie.domain.model.Movie
++import groovy.transform.CompileStatic
++import org.modelmapper.ModelMapper
++import org.springframework.stereotype.Component
++
++@Component
++@CompileStatic
++class MovieMapper {
++  private final ModelMapper modelMapper
++
++  MovieMapper(ModelMapper modelMapper) {
++    this.modelMapper = modelMapper
++  }
++
++  dev.pollito.spring_groovy.generated.model.Movie convert(Movie m) {
++    if (!m) return null
++
++    def dto = modelMapper.map(m, dev.pollito.spring_groovy.generated.model.Movie)
++
++    if (m.rating) {
++      dto.rating = dev.pollito.spring_groovy.generated.model.Movie.RatingEnum.fromValue(m.rating)
++    }
++
++    dto
++  }
++}
+diff --git a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/model/Movie.groovy
+similarity index 75%
+rename from spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy
+rename to spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/model/Movie.groovy
+index b262321..5cfc391 100644
+--- a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy
++++ b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/model/Movie.groovy
+@@ -1,11 +1,11 @@
+-package dev.pollito.spring_groovy.sakila.film.domain.model
++package dev.pollito.spring_groovy.sakila.movie.domain.model
+ 
+ import groovy.transform.Canonical
+ import groovy.transform.CompileStatic
+ 
+ @Canonical
+ @CompileStatic
+-class Film {
++class Movie {
+   Long id
+   String title
+   String description
+diff --git a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/port/in/GetMovieByIdPort.groovy b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/port/in/GetMovieByIdPort.groovy
+new file mode 100644
+index 0000000..5f33afc
+--- /dev/null
++++ b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/port/in/GetMovieByIdPort.groovy
+@@ -0,0 +1,7 @@
++package dev.pollito.spring_groovy.sakila.movie.domain.port.in
++
++import dev.pollito.spring_groovy.sakila.movie.domain.model.Movie
++
++interface GetMovieByIdPort {
++  Movie getMovieById(Long id)
++}
+diff --git a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmService.groovy b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/service/MovieService.groovy
+similarity index 57%
+rename from spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmService.groovy
+rename to spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/service/MovieService.groovy
+index 8af36f2..bd877de 100644
+--- a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmService.groovy
++++ b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/movie/domain/service/MovieService.groovy
+@@ -1,16 +1,16 @@
+-package dev.pollito.spring_groovy.sakila.film.domain.service
++package dev.pollito.spring_groovy.sakila.movie.domain.service
+ 
+-import dev.pollito.spring_groovy.sakila.film.domain.model.Film
+-import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindFilmByIdPort
++import dev.pollito.spring_groovy.sakila.movie.domain.model.Movie
++import dev.pollito.spring_groovy.sakila.movie.domain.port.in.GetMovieByIdPort
+ import groovy.transform.CompileStatic
+ import org.springframework.stereotype.Service
+ 
+ @Service
+ @CompileStatic
+-class FilmService implements FindFilmByIdPort {
++class MovieService implements GetMovieByIdPort {
+   @Override
+-  Film findFilmById(Long id) {
+-    new Film(
++  Movie getMovieById(Long id) {
++    new Movie(
+         id: id,
+         title: "ACADEMY DINOSAUR",
+         description: "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
+diff --git a/spring_groovy/src/main/resources/openapi.yaml b/spring_groovy/src/main/resources/openapi.yaml
+index e150589..eeb24c1 100644
+--- a/spring_groovy/src/main/resources/openapi.yaml
++++ b/spring_groovy/src/main/resources/openapi.yaml
+@@ -11,19 +11,19 @@ servers:
+     description: dev
+ 
+ paths:
+-  /films:
++  /movies:
+     get:
+       tags:
+-        - Films
++        - Movies
+       operationId: findAll
+-      summary: List all films
++      summary: List all movies
+       responses:
+         '200':
+           description: Successful response
+           content:
+             application/json:
+               schema:
+-                $ref: '#/components/schemas/FilmListResponse'
++                $ref: '#/components/schemas/MovieListResponse'
+         default:
+           description: Error
+           content:
+@@ -31,12 +31,12 @@ paths:
+               schema:
+                 $ref: '#/components/schemas/Error'
+ 
+-  /films/{id}:
++  /movies/{id}:
+     get:
+       tags:
+-        - Films
++        - Movies
+       operationId: findById
+-      summary: Get film by ID
++      summary: Get movie by ID
+       parameters:
+         - name: id
+           in: path
+@@ -51,7 +51,7 @@ paths:
+           content:
+             application/json:
+               schema:
+-                $ref: '#/components/schemas/FilmResponse'
++                $ref: '#/components/schemas/MovieResponse'
+         default:
+           description: Error
+           content:
+@@ -109,29 +109,29 @@ components:
+               example: "No static resource for request '/'."
+           required:
+             - title
+-    Film:
++    Movie:
+       type: object
+-      description: Represents a film available in the Sakila DVD rental catalog
++      description: Represents a movie available in the Sakila DVD rental catalog
+       properties:
+         id:
+           type: integer
+           format: int64
+-          description: Unique identifier of the film
++          description: Unique identifier of the movie
+           example: 42
+           minimum: 1
+         title:
+           type: string
+-          description: Title of the film
++          description: Title of the movie
+           example: 'ACADEMY DINOSAUR'
+           maxLength: 255
+         description:
+           type: string
+-          description: Short synopsis of the film
++          description: Short synopsis of the movie
+           example: 'An Epic Drama of a Feminist And a Mad Scientist'
+           maxLength: 255
+         releaseYear:
+           type: integer
+-          description: Year the film was released
++          description: Year the movie was released
+           example: 2006
+           minimum: 1800
+         rating:
+@@ -146,15 +146,15 @@ components:
+             - NC-17
+         lengthMinutes:
+           type: integer
+-          description: Duration of the film in minutes
++          description: Duration of the movie in minutes
+           example: 86
+           minimum: 0
+         language:
+           type: string
+-          description: Original language of the film
++          description: Original language of the movie
+           example: 'English'
+           maxLength: 255
+-    FilmListResponse:
++    MovieListResponse:
+       x-implements: [ 'dev.pollito.spring_groovy.config.response.ApiResponse' ]
+       allOf:
+         - $ref: '#/components/schemas/ResponseMetadata'
+@@ -163,16 +163,16 @@ components:
+             data:
+               type: array
+               items:
+-                $ref: '#/components/schemas/Film'
++                $ref: '#/components/schemas/Movie'
+           required:
+             - data
+-    FilmResponse:
++    MovieResponse:
+       x-implements: [ 'dev.pollito.spring_groovy.config.response.ApiResponse' ]
+       allOf:
+         - $ref: '#/components/schemas/ResponseMetadata'
+         - type: object
+           properties:
+             data:
+-              $ref: '#/components/schemas/Film'
++              $ref: '#/components/schemas/Movie'
+           required:
+             - data
+\ No newline at end of file
+diff --git a/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmControllerSpec.groovy b/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmControllerSpec.groovy
+deleted file mode 100644
+index 67c30ea..0000000
+--- a/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmControllerSpec.groovy
++++ /dev/null
+@@ -1,97 +0,0 @@
+-package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
+-
+-import org.springframework.boot.micrometer.tracing.test.autoconfigure.AutoConfigureTracing
+-
+-import static org.springframework.http.HttpStatus.*
+-import static org.springframework.http.MediaType.APPLICATION_JSON
+-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+-
+-import dev.pollito.spring_groovy.config.advice.ControllerAdvice
+-import dev.pollito.spring_groovy.config.cors.CorsConfigProperties
+-import dev.pollito.spring_groovy.config.cors.WebConfig
+-import dev.pollito.spring_groovy.config.mapper.ModelMapperConfig
+-import dev.pollito.spring_groovy.config.response.ApiResponseEnricher
+-import dev.pollito.spring_groovy.sakila.film.adapter.in.rest.mapper.FilmMapper
+-import dev.pollito.spring_groovy.sakila.film.domain.model.Film
+-import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindFilmByIdPort
+-import dev.pollito.spring_groovy.test.util.ApiResponseMatchers
+-import org.spockframework.spring.SpringBean
+-import org.springframework.beans.factory.annotation.Autowired
+-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
+-import org.springframework.context.annotation.Import
+-import org.springframework.test.web.servlet.MockMvc
+-import spock.lang.Specification
+-
+-@AutoConfigureTracing
+-@WebMvcTest(FilmController)
+-@Import([ControllerAdvice, ApiResponseEnricher, FilmMapper, ModelMapperConfig, WebConfig, CorsConfigProperties])
+-class FilmControllerSpec extends Specification implements ApiResponseMatchers {
+-
+-  private static final String FILM_PATH = "/api/films"
+-  private static final String FILM_BY_ID_TEMPLATE = FILM_PATH + "/{id}"
+-
+-  @Autowired
+-  MockMvc mockMvc
+-
+-  @SpringBean
+-  FindFilmByIdPort findFilmByIdPort = Mock()
+-
+-  private static String filmPath(Long id) {
+-    "${FILM_PATH}/${id}"
+-  }
+-
+-  def "when findById then returns film"() {
+-    given: "a film exists"
+-    def filmId = 1L
+-    def domainFilm = new Film(
+-            id: filmId,
+-            rating: "G"
+-    )
+-
+-    and: "the port returns it"
+-    findFilmByIdPort.findFilmById(filmId) >> domainFilm
+-
+-    when: "we request the film by id"
+-    def result = mockMvc.perform(
+-            get(FILM_BY_ID_TEMPLATE, filmId)
+-                    .accept(APPLICATION_JSON)
+-    )
+-
+-    then: "we get a successful response with the film"
+-    result
+-            .andExpect(status().isOk())
+-            .andExpect(content().contentType(APPLICATION_JSON))
+-            .andExpect(hasStandardApiResponseFields(filmPath(filmId), OK))
+-            .andExpect(jsonPath('$.data.id').value(filmId))
+-  }
+-
+-  def "when findById with invalid id then returns bad request"() {
+-    given: "an invalid film id"
+-    def invalidId = 0L
+-
+-    when: "we request the film"
+-    def result = mockMvc.perform(
+-            get(FILM_BY_ID_TEMPLATE, invalidId)
+-                    .accept(APPLICATION_JSON)
+-    )
+-
+-    then: "we get a bad request response"
+-    result
+-            .andExpect(hasStandardApiResponseFields(filmPath(invalidId), BAD_REQUEST))
+-            .andExpect(hasErrorFields(BAD_REQUEST))
+-  }
+-
+-  def "when findAll then throws unsupported operation exception"() {
+-    when: "we request all films"
+-    def result = mockMvc.perform(
+-            get(FILM_PATH)
+-                    .accept(APPLICATION_JSON)
+-    )
+-
+-    then: "we get an internal server error"
+-    result
+-            .andExpect(hasStandardApiResponseFields(FILM_PATH, INTERNAL_SERVER_ERROR))
+-            .andExpect(hasErrorFields(INTERNAL_SERVER_ERROR))
+-  }
+-}
+diff --git a/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmServiceSpec.groovy b/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmServiceSpec.groovy
+deleted file mode 100644
+index 7174c5e..0000000
+--- a/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmServiceSpec.groovy
++++ /dev/null
+@@ -1,22 +0,0 @@
+-package dev.pollito.spring_groovy.sakila.film.domain.service
+-
+-import spock.lang.Specification
+-import spock.lang.Subject
+-
+-class FilmServiceSpec extends Specification {
+-
+-  @Subject
+-  FilmService filmService = new FilmService()
+-
+-  def "findFilmById returns a film with the given id"() {
+-    given: "a film id"
+-    def filmId = 1L
+-
+-    when: "findFilmById is called"
+-    def result = filmService.findFilmById(filmId)
+-
+-    then: "a film is returned with correct data"
+-    result != null
+-    result.id == filmId
+-  }
+-}
+diff --git a/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/MovieControllerSpec.groovy b/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/MovieControllerSpec.groovy
+new file mode 100644
+index 0000000..2b67af6
+--- /dev/null
++++ b/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/movie/adapter/in/rest/MovieControllerSpec.groovy
+@@ -0,0 +1,96 @@
++package dev.pollito.spring_groovy.sakila.movie.adapter.in.rest
++
++import static org.springframework.http.HttpStatus.*
++import static org.springframework.http.MediaType.APPLICATION_JSON
++import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
++import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
++
++import dev.pollito.spring_groovy.config.advice.ControllerAdvice
++import dev.pollito.spring_groovy.config.cors.CorsConfigProperties
++import dev.pollito.spring_groovy.config.cors.WebConfig
++import dev.pollito.spring_groovy.config.mapper.ModelMapperConfig
++import dev.pollito.spring_groovy.config.response.ApiResponseEnricher
++import dev.pollito.spring_groovy.sakila.movie.adapter.in.rest.mapper.MovieMapper
++import dev.pollito.spring_groovy.sakila.movie.domain.model.Movie
++import dev.pollito.spring_groovy.sakila.movie.domain.port.in.GetMovieByIdPort
++import dev.pollito.spring_groovy.test.util.ApiResponseMatchers
++import org.spockframework.spring.SpringBean
++import org.springframework.beans.factory.annotation.Autowired
++import org.springframework.boot.micrometer.tracing.test.autoconfigure.AutoConfigureTracing
++import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
++import org.springframework.context.annotation.Import
++import org.springframework.test.web.servlet.MockMvc
++import spock.lang.Specification
++
++@AutoConfigureTracing
++@WebMvcTest(MovieController)
++@Import([ControllerAdvice, ApiResponseEnricher, MovieMapper, ModelMapperConfig, WebConfig, CorsConfigProperties])
++class MovieControllerSpec extends Specification implements ApiResponseMatchers {
++
++  private static final String MOVIES_PATH = "/api/movies"
++  private static final String MOVIE_BY_ID_TEMPLATE = MOVIES_PATH + "/{id}"
++
++  @Autowired
++  MockMvc mockMvc
++
++  @SpringBean
++  GetMovieByIdPort getMovieByIdPort = Mock()
++
++  private static String moviePath(Long id) {
++    "${MOVIES_PATH}/${id}"
++  }
++
++  def "when findById then returns movie"() {
++    given: "a movie exists"
++    def movieId = 1L
++    def domainMovie = new Movie(
++        id: movieId,
++        rating: "G"
++        )
++
++    and: "the port returns it"
++    getMovieByIdPort.getMovieById(movieId) >> domainMovie
++
++    when: "we request the movie by id"
++    def result = mockMvc.perform(
++        get(MOVIE_BY_ID_TEMPLATE, movieId)
++        .accept(APPLICATION_JSON)
++        )
++
++    then: "we get a successful response with the movie"
++    result
++        .andExpect(status().isOk())
++        .andExpect(content().contentType(APPLICATION_JSON))
++        .andExpect(hasStandardApiResponseFields(moviePath(movieId), OK))
++        .andExpect(jsonPath('$.data.id').value(movieId))
++  }
++
++  def "when findById with invalid id then returns bad request"() {
++    given: "an invalid movie id"
++    def invalidId = 0L
++
++    when: "we request the movie"
++    def result = mockMvc.perform(
++        get(MOVIE_BY_ID_TEMPLATE, invalidId)
++        .accept(APPLICATION_JSON)
++        )
++
++    then: "we get a bad request response"
++    result
++        .andExpect(hasStandardApiResponseFields(moviePath(invalidId), BAD_REQUEST))
++        .andExpect(hasErrorFields(BAD_REQUEST))
++  }
++
++  def "when findAll then throws unsupported operation exception"() {
++    when: "we request all movies"
++    def result = mockMvc.perform(
++        get(MOVIES_PATH)
++        .accept(APPLICATION_JSON)
++        )
++
++    then: "we get an internal server error"
++    result
++        .andExpect(hasStandardApiResponseFields(MOVIES_PATH, INTERNAL_SERVER_ERROR))
++        .andExpect(hasErrorFields(INTERNAL_SERVER_ERROR))
++  }
++}
+diff --git a/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/movie/domain/service/MovieServiceSpec.groovy b/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/movie/domain/service/MovieServiceSpec.groovy
+new file mode 100644
+index 0000000..fd28908
+--- /dev/null
++++ b/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/movie/domain/service/MovieServiceSpec.groovy
+@@ -0,0 +1,22 @@
++package dev.pollito.spring_groovy.sakila.movie.domain.service
++
++import spock.lang.Specification
++import spock.lang.Subject
++
++class MovieServiceSpec extends Specification {
++
++  @Subject
++  MovieService movieService = new MovieService()
++
++  def "getMovieById returns a movie with the given id"() {
++    given: "a movie id"
++    def movieId = 1L
++
++    when: "getMovieById is called"
++    def result = movieService.getMovieById(movieId)
++
++    then: "a movie is returned with correct data"
++    result != null
++    result.id == movieId
++  }
++}
+diff --git a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmController.java b/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmController.java
+deleted file mode 100644
+index c0abae5..0000000
+--- a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmController.java
++++ /dev/null
+@@ -1,28 +0,0 @@
+-package dev.pollito.spring_java.sakila.film.adapter.in.rest;
+-
+-import dev.pollito.spring_java.generated.api.FilmsApi;
+-import dev.pollito.spring_java.generated.model.FilmListResponse;
+-import dev.pollito.spring_java.generated.model.FilmResponse;
+-import dev.pollito.spring_java.sakila.film.adapter.in.rest.mapper.FilmMapper;
+-import dev.pollito.spring_java.sakila.film.domain.port.in.FindFilmByIdPort;
+-import lombok.RequiredArgsConstructor;
+-import org.springframework.http.ResponseEntity;
+-import org.springframework.web.bind.annotation.RestController;
+-
+-@RestController
+-@RequiredArgsConstructor
+-public class FilmController implements FilmsApi {
+-  private final FindFilmByIdPort findFilmByIdPort;
+-  private final FilmMapper filmMapper;
+-
+-  @Override
+-  public ResponseEntity<FilmListResponse> findAll() {
+-    throw new UnsupportedOperationException();
+-  }
+-
+-  @Override
+-  public ResponseEntity<FilmResponse> findById(Long id) {
+-    return ResponseEntity.ok(
+-        new FilmResponse().data(filmMapper.convert(findFilmByIdPort.findFilmById(id))));
+-  }
+-}
+diff --git a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/mapper/FilmMapper.java b/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/mapper/FilmMapper.java
+deleted file mode 100644
+index b594198..0000000
+--- a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/mapper/FilmMapper.java
++++ /dev/null
+@@ -1,13 +0,0 @@
+-package dev.pollito.spring_java.sakila.film.adapter.in.rest.mapper;
+-
+-import dev.pollito.spring_java.config.mapper.MapperSpringConfig;
+-import dev.pollito.spring_java.sakila.film.domain.model.Film;
+-import org.jspecify.annotations.Nullable;
+-import org.mapstruct.Mapper;
+-import org.springframework.core.convert.converter.Converter;
+-
+-@Mapper(config = MapperSpringConfig.class)
+-public interface FilmMapper extends Converter<Film, dev.pollito.spring_java.generated.model.Film> {
+-  @Override
+-  dev.pollito.spring_java.generated.model.Film convert(@Nullable Film source);
+-}
+diff --git a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FindFilmByIdPort.java b/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FindFilmByIdPort.java
+deleted file mode 100644
+index a5dfcea..0000000
+--- a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FindFilmByIdPort.java
++++ /dev/null
+@@ -1,7 +0,0 @@
+-package dev.pollito.spring_java.sakila.film.domain.port.in;
+-
+-import dev.pollito.spring_java.sakila.film.domain.model.Film;
+-
+-public interface FindFilmByIdPort {
+-  Film findFilmById(Long id);
+-}
+diff --git a/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/MovieController.java b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/MovieController.java
+new file mode 100644
+index 0000000..9786a7f
+--- /dev/null
++++ b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/MovieController.java
+@@ -0,0 +1,28 @@
++package dev.pollito.spring_java.sakila.movie.adapter.in.rest;
++
++import dev.pollito.spring_java.generated.api.MoviesApi;
++import dev.pollito.spring_java.generated.model.MovieListResponse;
++import dev.pollito.spring_java.generated.model.MovieResponse;
++import dev.pollito.spring_java.sakila.movie.adapter.in.rest.mapper.MovieMapper;
++import dev.pollito.spring_java.sakila.movie.domain.port.in.GetMovieByIdPort;
++import lombok.RequiredArgsConstructor;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.RestController;
++
++@RestController
++@RequiredArgsConstructor
++public class MovieController implements MoviesApi {
++  private final GetMovieByIdPort getMovieByIdPort;
++  private final MovieMapper movieMapper;
++
++  @Override
++  public ResponseEntity<MovieListResponse> findAll() {
++    throw new UnsupportedOperationException();
++  }
++
++  @Override
++  public ResponseEntity<MovieResponse> findById(Long id) {
++    return ResponseEntity.ok(
++        new MovieResponse().data(movieMapper.convert(getMovieByIdPort.getMovieById(id))));
++  }
++}
+diff --git a/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/mapper/MovieMapper.java b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/mapper/MovieMapper.java
+new file mode 100644
+index 0000000..a541c92
+--- /dev/null
++++ b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/mapper/MovieMapper.java
+@@ -0,0 +1,14 @@
++package dev.pollito.spring_java.sakila.movie.adapter.in.rest.mapper;
++
++import dev.pollito.spring_java.config.mapper.MapperSpringConfig;
++import dev.pollito.spring_java.sakila.movie.domain.model.Movie;
++import org.jspecify.annotations.Nullable;
++import org.mapstruct.Mapper;
++import org.springframework.core.convert.converter.Converter;
++
++@Mapper(config = MapperSpringConfig.class)
++public interface MovieMapper
++    extends Converter<Movie, dev.pollito.spring_java.generated.model.Movie> {
++  @Override
++  dev.pollito.spring_java.generated.model.Movie convert(@Nullable Movie m);
++}
+diff --git a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/model/Film.java b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/model/Movie.java
+similarity index 78%
+rename from spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/model/Film.java
+rename to spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/model/Movie.java
+index 80d730a..79ea204 100644
+--- a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/model/Film.java
++++ b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/model/Movie.java
+@@ -1,4 +1,4 @@
+-package dev.pollito.spring_java.sakila.film.domain.model;
++package dev.pollito.spring_java.sakila.movie.domain.model;
+ 
+ import lombok.*;
+ import lombok.experimental.FieldDefaults;
+@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
+ @NoArgsConstructor
+ @AllArgsConstructor
+ @FieldDefaults(level = AccessLevel.PRIVATE)
+-public class Film {
++public class Movie {
+   Long id;
+   String title;
+   String description;
+diff --git a/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/port/in/GetMovieByIdPort.java b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/port/in/GetMovieByIdPort.java
+new file mode 100644
+index 0000000..504ef85
+--- /dev/null
++++ b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/port/in/GetMovieByIdPort.java
+@@ -0,0 +1,7 @@
++package dev.pollito.spring_java.sakila.movie.domain.port.in;
++
++import dev.pollito.spring_java.sakila.movie.domain.model.Movie;
++
++public interface GetMovieByIdPort {
++  Movie getMovieById(Long id);
++}
+diff --git a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmService.java b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/service/MovieService.java
+similarity index 54%
+rename from spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmService.java
+rename to spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/service/MovieService.java
+index 33a1880..f1b4e1f 100644
+--- a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmService.java
++++ b/spring_java/src/main/java/dev/pollito/spring_java/sakila/movie/domain/service/MovieService.java
+@@ -1,14 +1,14 @@
+-package dev.pollito.spring_java.sakila.film.domain.service;
++package dev.pollito.spring_java.sakila.movie.domain.service;
+ 
+-import dev.pollito.spring_java.sakila.film.domain.model.Film;
+-import dev.pollito.spring_java.sakila.film.domain.port.in.FindFilmByIdPort;
++import dev.pollito.spring_java.sakila.movie.domain.model.Movie;
++import dev.pollito.spring_java.sakila.movie.domain.port.in.GetMovieByIdPort;
+ import org.springframework.stereotype.Service;
+ 
+ @Service
+-public class FilmService implements FindFilmByIdPort {
++public class MovieService implements GetMovieByIdPort {
+   @Override
+-  public Film findFilmById(Long id) {
+-    return Film.builder()
++  public Movie getMovieById(Long id) {
++    return Movie.builder()
+         .id(id)
+         .title("ACADEMY DINOSAUR")
+         .description(
+diff --git a/spring_java/src/main/resources/openapi.yaml b/spring_java/src/main/resources/openapi.yaml
+index 9c5b35f..083411c 100644
+--- a/spring_java/src/main/resources/openapi.yaml
++++ b/spring_java/src/main/resources/openapi.yaml
+@@ -11,19 +11,19 @@ servers:
+     description: dev
+ 
+ paths:
+-  /films:
++  /movies:
+     get:
+       tags:
+-        - Films
++        - Movies
+       operationId: findAll
+-      summary: List all films
++      summary: List all movies
+       responses:
+         '200':
+           description: Successful response
+           content:
+             application/json:
+               schema:
+-                $ref: '#/components/schemas/FilmListResponse'
++                $ref: '#/components/schemas/MovieListResponse'
+         default:
+           description: Error
+           content:
+@@ -31,12 +31,12 @@ paths:
+               schema:
+                 $ref: '#/components/schemas/Error'
+ 
+-  /films/{id}:
++  /movies/{id}:
+     get:
+       tags:
+-        - Films
++        - Movies
+       operationId: findById
+-      summary: Get film by ID
++      summary: Get movie by ID
+       parameters:
+         - name: id
+           in: path
+@@ -51,7 +51,7 @@ paths:
+           content:
+             application/json:
+               schema:
+-                $ref: '#/components/schemas/FilmResponse'
++                $ref: '#/components/schemas/MovieResponse'
+         default:
+           description: Error
+           content:
+@@ -109,29 +109,29 @@ components:
+               example: "No static resource for request '/'."
+           required:
+             - title
+-    Film:
++    Movie:
+       type: object
+-      description: Represents a film available in the Sakila DVD rental catalog
++      description: Represents a movie available in the Sakila DVD rental catalog
+       properties:
+         id:
+           type: integer
+           format: int64
+-          description: Unique identifier of the film
++          description: Unique identifier of the movie
+           example: 42
+           minimum: 1
+         title:
+           type: string
+-          description: Title of the film
++          description: Title of the movie
+           example: 'ACADEMY DINOSAUR'
+           maxLength: 255
+         description:
+           type: string
+-          description: Short synopsis of the film
++          description: Short synopsis of the movie
+           example: 'An Epic Drama of a Feminist And a Mad Scientist'
+           maxLength: 255
+         releaseYear:
+           type: integer
+-          description: Year the film was released
++          description: Year the movie was released
+           example: 2006
+           minimum: 1800
+         rating:
+@@ -146,15 +146,15 @@ components:
+             - NC-17
+         lengthMinutes:
+           type: integer
+-          description: Duration of the film in minutes
++          description: Duration of the movie in minutes
+           example: 86
+           minimum: 0
+         language:
+           type: string
+-          description: Original language of the film
++          description: Original language of the movie
+           example: 'English'
+           maxLength: 255
+-    FilmListResponse:
++    MovieListResponse:
+       x-implements: [ 'dev.pollito.spring_java.config.response.ApiResponse' ]
+       allOf:
+         - $ref: '#/components/schemas/ResponseMetadata'
+@@ -163,16 +163,16 @@ components:
+             data:
+               type: array
+               items:
+-                $ref: '#/components/schemas/Film'
++                $ref: '#/components/schemas/Movie'
+           required:
+             - data
+-    FilmResponse:
++    MovieResponse:
+       x-implements: [ 'dev.pollito.spring_java.config.response.ApiResponse' ]
+       allOf:
+         - $ref: '#/components/schemas/ResponseMetadata'
+         - type: object
+           properties:
+             data:
+-              $ref: '#/components/schemas/Film'
++              $ref: '#/components/schemas/Movie'
+           required:
+             - data
+\ No newline at end of file
+diff --git a/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmControllerTest.java b/spring_java/src/test/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/MovieControllerTest.java
+similarity index 54%
+rename from spring_java/src/test/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmControllerTest.java
+rename to spring_java/src/test/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/MovieControllerTest.java
+index f2a7562..3fb6a70 100644
+--- a/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmControllerTest.java
++++ b/spring_java/src/test/java/dev/pollito/spring_java/sakila/movie/adapter/in/rest/MovieControllerTest.java
+@@ -1,4 +1,4 @@
+-package dev.pollito.spring_java.sakila.film.adapter.in.rest;
++package dev.pollito.spring_java.sakila.movie.adapter.in.rest;
+ 
+ import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasErrorFields;
+ import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasStandardApiResponseFields;
+@@ -16,10 +16,10 @@ import dev.pollito.spring_java.config.advice.ControllerAdvice;
+ import dev.pollito.spring_java.config.cors.CorsConfigProperties;
+ import dev.pollito.spring_java.config.cors.WebConfig;
+ import dev.pollito.spring_java.config.response.ApiResponseEnricher;
+-import dev.pollito.spring_java.sakila.film.adapter.in.rest.mapper.FilmMapper;
+-import dev.pollito.spring_java.sakila.film.adapter.in.rest.mapper.FilmMapperImpl;
+-import dev.pollito.spring_java.sakila.film.domain.model.Film;
+-import dev.pollito.spring_java.sakila.film.domain.port.in.FindFilmByIdPort;
++import dev.pollito.spring_java.sakila.movie.adapter.in.rest.mapper.MovieMapper;
++import dev.pollito.spring_java.sakila.movie.adapter.in.rest.mapper.MovieMapperImpl;
++import dev.pollito.spring_java.sakila.movie.domain.model.Movie;
++import dev.pollito.spring_java.sakila.movie.domain.port.in.GetMovieByIdPort;
+ import org.jetbrains.annotations.Contract;
+ import org.jetbrains.annotations.NotNull;
+ import org.junit.jupiter.api.Test;
+@@ -32,45 +32,45 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+ import org.springframework.test.web.servlet.MockMvc;
+ 
+ @AutoConfigureTracing
+-@WebMvcTest(FilmController.class)
++@WebMvcTest(MovieController.class)
+ @Import({
+-    ControllerAdvice.class,
+-    ApiResponseEnricher.class,
+-    FilmMapperImpl.class,
+-    WebConfig.class,
+-    CorsConfigProperties.class
++  ControllerAdvice.class,
++  ApiResponseEnricher.class,
++  MovieMapperImpl.class,
++  WebConfig.class,
++  CorsConfigProperties.class
+ })
+-class FilmControllerTest {
++class MovieControllerTest {
+ 
+-  private static final String FILMS_PATH = "/api/films";
+-  private static final String FILM_BY_ID_TEMPLATE = FILMS_PATH + "/{id}";
++  private static final String MOVIES_PATH = "/api/movies";
++  private static final String MOVIE_BY_ID_TEMPLATE = MOVIES_PATH + "/{id}";
+ 
+   @Autowired private MockMvc mockMvc;
+-  @MockitoBean private FindFilmByIdPort findFilmByIdPort;
+-  @MockitoSpyBean private FilmMapper filmMapper;
++  @MockitoBean private GetMovieByIdPort getMovieByIdPort;
++  @MockitoSpyBean private MovieMapper movieMapper;
+ 
+   @Contract(pure = true)
+-  private static @NotNull String filmPath(Long id) {
+-    return FILMS_PATH + "/" + id;
++  private static @NotNull String moviePath(Long id) {
++    return MOVIES_PATH + "/" + id;
+   }
+ 
+   @Test
+-  void whenFindById_thenReturnsFilm() throws Exception {
+-    Long filmId = 1L;
+-    String filmTitle = "Test Film";
+-    Film domainFilm = mock(Film.class);
+-    when(domainFilm.getId()).thenReturn(filmId);
+-    when(domainFilm.getTitle()).thenReturn(filmTitle);
++  void whenFindById_thenReturnsMovie() throws Exception {
++    Long movieId = 1L;
++    String movieTitle = "Test Movie";
++    Movie domainMovie = mock(Movie.class);
++    when(domainMovie.getId()).thenReturn(movieId);
++    when(domainMovie.getTitle()).thenReturn(movieTitle);
+ 
+-    when(findFilmByIdPort.findFilmById(anyLong())).thenReturn(domainFilm);
++    when(getMovieByIdPort.getMovieById(anyLong())).thenReturn(domainMovie);
+ 
+     mockMvc
+-        .perform(get(FILM_BY_ID_TEMPLATE, filmId).accept(APPLICATION_JSON))
++        .perform(get(MOVIE_BY_ID_TEMPLATE, movieId).accept(APPLICATION_JSON))
+         .andExpect(status().isOk())
+         .andExpect(content().contentType(APPLICATION_JSON))
+-        .andExpect(hasStandardApiResponseFields(filmPath(filmId), OK))
+-        .andExpect(jsonPath("$.data.id").value(filmId))
+-        .andExpect(jsonPath("$.data.title").value(filmTitle));
++        .andExpect(hasStandardApiResponseFields(moviePath(movieId), OK))
++        .andExpect(jsonPath("$.data.id").value(movieId))
++        .andExpect(jsonPath("$.data.title").value(movieTitle));
+   }
+ 
+   @Test
+@@ -78,16 +78,16 @@ class FilmControllerTest {
+     Long invalidId = 0L;
+ 
+     mockMvc
+-        .perform(get(FILM_BY_ID_TEMPLATE, invalidId).accept(APPLICATION_JSON))
+-        .andExpect(hasStandardApiResponseFields(filmPath(invalidId), BAD_REQUEST))
++        .perform(get(MOVIE_BY_ID_TEMPLATE, invalidId).accept(APPLICATION_JSON))
++        .andExpect(hasStandardApiResponseFields(moviePath(invalidId), BAD_REQUEST))
+         .andExpect(hasErrorFields(BAD_REQUEST));
+   }
+ 
+   @Test
+   void whenFindAll_thenThrowsUnsupportedOperationException() throws Exception {
+     mockMvc
+-        .perform(get(FILMS_PATH).accept(APPLICATION_JSON))
+-        .andExpect(hasStandardApiResponseFields(FILMS_PATH, INTERNAL_SERVER_ERROR))
++        .perform(get(MOVIES_PATH).accept(APPLICATION_JSON))
++        .andExpect(hasStandardApiResponseFields(MOVIES_PATH, INTERNAL_SERVER_ERROR))
+         .andExpect(hasErrorFields(INTERNAL_SERVER_ERROR));
+   }
+ }
+diff --git a/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/domain/service/FilmServiceTest.java b/spring_java/src/test/java/dev/pollito/spring_java/sakila/movie/domain/service/MovieServiceTest.java
+similarity index 54%
+rename from spring_java/src/test/java/dev/pollito/spring_java/sakila/film/domain/service/FilmServiceTest.java
+rename to spring_java/src/test/java/dev/pollito/spring_java/sakila/movie/domain/service/MovieServiceTest.java
+index e700fb5..23b9200 100644
+--- a/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/domain/service/FilmServiceTest.java
++++ b/spring_java/src/test/java/dev/pollito/spring_java/sakila/movie/domain/service/MovieServiceTest.java
+@@ -1,4 +1,4 @@
+-package dev.pollito.spring_java.sakila.film.domain.service;
++package dev.pollito.spring_java.sakila.movie.domain.service;
+ 
+ import static org.junit.jupiter.api.Assertions.*;
+ 
+@@ -8,11 +8,11 @@ import org.mockito.InjectMocks;
+ import org.mockito.junit.jupiter.MockitoExtension;
+ 
+ @ExtendWith(MockitoExtension.class)
+-class FilmServiceTest {
+-  @InjectMocks private FilmService filmService;
++class MovieServiceTest {
++  @InjectMocks private MovieService movieService;
+ 
+   @Test
+-  void shouldReturnFilm_whenFindFilmById() {
+-    assertNotNull(filmService.findFilmById(1L));
++  void shouldReturnMovie_whenGetMovieById() {
++    assertNotNull(movieService.getMovieById(1L));
+   }
+ }
+diff --git a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmController.kt b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmController.kt
+deleted file mode 100644
+index ab55d66..0000000
+--- a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmController.kt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-package dev.pollito.spring_kotlin.sakila.film.adapter.`in`.rest
+-
+-import dev.pollito.spring_kotlin.config.log.TraceIdUtil.MDC_TRACE_ID_KEY
+-import dev.pollito.spring_kotlin.generated.api.FilmsApi
+-import dev.pollito.spring_kotlin.generated.model.FilmListResponse
+-import dev.pollito.spring_kotlin.generated.model.FilmResponse
+-import dev.pollito.spring_kotlin.sakila.film.adapter.`in`.rest.mapper.FilmMapper
+-import dev.pollito.spring_kotlin.sakila.film.domain.port.`in`.FindFilmByIdPort
+-import jakarta.servlet.http.HttpServletRequest
+-import java.time.OffsetDateTime.now
+-import java.util.UUID.fromString
+-import org.slf4j.MDC.get
+-import org.springframework.http.HttpStatus.OK
+-import org.springframework.http.ResponseEntity
+-import org.springframework.web.bind.annotation.RestController
+-
+-@RestController
+-class FilmController(
+-    private val findFilmByIdPort: FindFilmByIdPort,
+-    private val filmMapper: FilmMapper,
+-    private val request: HttpServletRequest,
+-) : FilmsApi {
+-  override fun findAll(): ResponseEntity<FilmListResponse> {
+-    TODO("Not yet implemented")
+-  }
+-
+-  override fun findById(id: Long): ResponseEntity<FilmResponse> {
+-    return ResponseEntity.ok(
+-        FilmResponse(
+-            data = filmMapper.convert(findFilmByIdPort.findFilmById(id)),
+-            instance = request.requestURI,
+-            timestamp = now(),
+-            trace = fromString(get(MDC_TRACE_ID_KEY)),
+-            status = OK.value(),
+-        )
+-    )
+-  }
+-}
+diff --git a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/mapper/FilmMapper.kt b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/mapper/FilmMapper.kt
+deleted file mode 100644
+index ed18122..0000000
+--- a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/mapper/FilmMapper.kt
++++ /dev/null
+@@ -1,11 +0,0 @@
+-package dev.pollito.spring_kotlin.sakila.film.adapter.`in`.rest.mapper
+-
+-import dev.pollito.spring_kotlin.config.mapper.MapperSpringConfig
+-import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
+-import org.mapstruct.Mapper
+-import org.springframework.core.convert.converter.Converter
+-
+-@Mapper(config = MapperSpringConfig::class)
+-interface FilmMapper : Converter<Film, dev.pollito.spring_kotlin.generated.model.Film> {
+-  override fun convert(source: Film): dev.pollito.spring_kotlin.generated.model.Film
+-}
+diff --git a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindFilmByIdPort.kt b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindFilmByIdPort.kt
+deleted file mode 100644
+index 786a1d7..0000000
+--- a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindFilmByIdPort.kt
++++ /dev/null
+@@ -1,7 +0,0 @@
+-package dev.pollito.spring_kotlin.sakila.film.domain.port.`in`
+-
+-import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
+-
+-interface FindFilmByIdPort {
+-  fun findFilmById(id: Long): Film
+-}
+diff --git a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/MovieController.kt b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/MovieController.kt
+new file mode 100644
+index 0000000..9661f58
+--- /dev/null
++++ b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/MovieController.kt
+@@ -0,0 +1,38 @@
++package dev.pollito.spring_kotlin.sakila.movie.adapter.`in`.rest
++
++import dev.pollito.spring_kotlin.config.log.TraceIdUtil.parseTraceId
++import dev.pollito.spring_kotlin.generated.api.MoviesApi
++import dev.pollito.spring_kotlin.generated.model.MovieListResponse
++import dev.pollito.spring_kotlin.generated.model.MovieResponse
++import dev.pollito.spring_kotlin.sakila.movie.adapter.`in`.rest.mapper.MovieMapper
++import dev.pollito.spring_kotlin.sakila.movie.domain.port.`in`.GetMovieByIdPort
++import io.opentelemetry.api.trace.Span.current
++import jakarta.servlet.http.HttpServletRequest
++import java.time.OffsetDateTime.now
++import org.springframework.http.HttpStatus.OK
++import org.springframework.http.ResponseEntity
++import org.springframework.web.bind.annotation.RestController
++
++@RestController
++class MovieController(
++    private val getMovieByIdPort: GetMovieByIdPort,
++    private val movieMapper: MovieMapper,
++    private val request: HttpServletRequest,
++) : MoviesApi {
++
++  override fun findAll(): ResponseEntity<MovieListResponse> {
++    TODO()
++  }
++
++  override fun findById(id: Long): ResponseEntity<MovieResponse> {
++    return ResponseEntity.ok(
++        MovieResponse(
++            data = movieMapper.convert(getMovieByIdPort.getMovieById(id)),
++            instance = request.requestURI,
++            timestamp = now(),
++            trace = parseTraceId(current().spanContext.traceId),
++            status = OK.value(),
++        )
++    )
++  }
++}
+diff --git a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/mapper/MovieMapper.kt b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/mapper/MovieMapper.kt
+new file mode 100644
+index 0000000..88b7e49
+--- /dev/null
++++ b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/mapper/MovieMapper.kt
+@@ -0,0 +1,11 @@
++package dev.pollito.spring_kotlin.sakila.movie.adapter.`in`.rest.mapper
++
++import dev.pollito.spring_kotlin.config.mapper.MapperSpringConfig
++import dev.pollito.spring_kotlin.sakila.movie.domain.model.Movie
++import org.mapstruct.Mapper
++import org.springframework.core.convert.converter.Converter
++
++@Mapper(config = MapperSpringConfig::class)
++interface MovieMapper : Converter<Movie, dev.pollito.spring_kotlin.generated.model.Movie> {
++  override fun convert(source: Movie): dev.pollito.spring_kotlin.generated.model.Movie
++}
+diff --git a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/model/Movie.kt
+similarity index 70%
+rename from spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt
+rename to spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/model/Movie.kt
+index 944cdaa..25110c8 100644
+--- a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt
++++ b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/model/Movie.kt
+@@ -1,6 +1,6 @@
+-package dev.pollito.spring_kotlin.sakila.film.domain.model
++package dev.pollito.spring_kotlin.sakila.movie.domain.model
+ 
+-data class Film(
++data class Movie(
+     val id: Long? = null,
+     val title: String,
+     val description: String,
+diff --git a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/port/in/GetMovieByIdPort.kt b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/port/in/GetMovieByIdPort.kt
+new file mode 100644
+index 0000000..f8fcf9d
+--- /dev/null
++++ b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/port/in/GetMovieByIdPort.kt
+@@ -0,0 +1,7 @@
++package dev.pollito.spring_kotlin.sakila.movie.domain.port.`in`
++
++import dev.pollito.spring_kotlin.sakila.movie.domain.model.Movie
++
++interface GetMovieByIdPort {
++  fun getMovieById(id: Long): Movie
++}
+diff --git a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmService.kt b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/service/MovieService.kt
+similarity index 53%
+rename from spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmService.kt
+rename to spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/service/MovieService.kt
+index 1907dc5..2b9a762 100644
+--- a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmService.kt
++++ b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/service/MovieService.kt
+@@ -1,13 +1,13 @@
+-package dev.pollito.spring_kotlin.sakila.film.domain.service
++package dev.pollito.spring_kotlin.sakila.movie.domain.service
+ 
+-import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
+-import dev.pollito.spring_kotlin.sakila.film.domain.port.`in`.FindFilmByIdPort
++import dev.pollito.spring_kotlin.sakila.movie.domain.model.Movie
++import dev.pollito.spring_kotlin.sakila.movie.domain.port.`in`.GetMovieByIdPort
+ import org.springframework.stereotype.Service
+ 
+ @Service
+-class FilmService : FindFilmByIdPort {
+-  override fun findFilmById(id: Long): Film {
+-    return Film(
++class MovieService : GetMovieByIdPort {
++  override fun getMovieById(id: Long): Movie {
++    return Movie(
+         id = id,
+         title = "ACADEMY DINOSAUR",
+         description =
+diff --git a/spring_kotlin/src/main/resources/openapi.yaml b/spring_kotlin/src/main/resources/openapi.yaml
+index d1dca0f..133516f 100644
+--- a/spring_kotlin/src/main/resources/openapi.yaml
++++ b/spring_kotlin/src/main/resources/openapi.yaml
+@@ -11,19 +11,19 @@ servers:
+     description: dev
+ 
+ paths:
+-  /films:
++  /movies:
+     get:
+       tags:
+-        - Films
++        - Movies
+       operationId: findAll
+-      summary: List all films
++      summary: List all movies
+       responses:
+         '200':
+           description: Successful response
+           content:
+             application/json:
+               schema:
+-                $ref: '#/components/schemas/FilmListResponse'
++                $ref: '#/components/schemas/MovieListResponse'
+         default:
+           description: Error
+           content:
+@@ -31,12 +31,12 @@ paths:
+               schema:
+                 $ref: '#/components/schemas/Error'
+ 
+-  /films/{id}:
++  /movies/{id}:
+     get:
+       tags:
+-        - Films
++        - Movies
+       operationId: findById
+-      summary: Get film by ID
++      summary: Get movie by ID
+       parameters:
+         - name: id
+           in: path
+@@ -51,7 +51,7 @@ paths:
+           content:
+             application/json:
+               schema:
+-                $ref: '#/components/schemas/FilmResponse'
++                $ref: '#/components/schemas/MovieResponse'
+         default:
+           description: Error
+           content:
+@@ -108,29 +108,29 @@ components:
+               example: "No static resource for request '/'."
+           required:
+             - title
+-    Film:
++    Movie:
+       type: object
+-      description: Represents a film available in the Sakila DVD rental catalog
++      description: Represents a movie available in the Sakila DVD rental catalog
+       properties:
+         id:
+           type: integer
+           format: int64
+-          description: Unique identifier of the film
++          description: Unique identifier of the movie
+           example: 42
+           minimum: 1
+         title:
+           type: string
+-          description: Title of the film
++          description: Title of the movie
+           example: 'ACADEMY DINOSAUR'
+           maxLength: 255
+         description:
+           type: string
+-          description: Short synopsis of the film
++          description: Short synopsis of the movie
+           example: 'An Epic Drama of a Feminist And a Mad Scientist'
+           maxLength: 255
+         releaseYear:
+           type: integer
+-          description: Year the film was released
++          description: Year the movie was released
+           example: 2006
+           minimum: 1800
+         rating:
+@@ -145,15 +145,15 @@ components:
+             - NC-17
+         lengthMinutes:
+           type: integer
+-          description: Duration of the film in minutes
++          description: Duration of the movie in minutes
+           example: 86
+           minimum: 0
+         language:
+           type: string
+-          description: Original language of the film
++          description: Original language of the movie
+           example: 'English'
+           maxLength: 255
+-    FilmListResponse:
++    MovieListResponse:
+       allOf:
+         - $ref: '#/components/schemas/ResponseMetadata'
+         - type: object
+@@ -161,15 +161,15 @@ components:
+             data:
+               type: array
+               items:
+-                $ref: '#/components/schemas/Film'
++                $ref: '#/components/schemas/Movie'
+           required:
+             - data
+-    FilmResponse:
++    MovieResponse:
+       allOf:
+         - $ref: '#/components/schemas/ResponseMetadata'
+         - type: object
+           properties:
+             data:
+-              $ref: '#/components/schemas/Film'
++              $ref: '#/components/schemas/Movie'
+           required:
+             - data
+\ No newline at end of file
+diff --git a/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmControllerTest.kt b/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/MovieControllerTest.kt
+similarity index 63%
+rename from spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmControllerTest.kt
+rename to spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/MovieControllerTest.kt
+index 8b650e4..0da344f 100644
+--- a/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmControllerTest.kt
++++ b/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/movie/adapter/in/rest/MovieControllerTest.kt
+@@ -1,12 +1,12 @@
+-package dev.pollito.spring_kotlin.sakila.film.adapter.`in`.rest
++package dev.pollito.spring_kotlin.sakila.movie.adapter.`in`.rest
+ 
+ import com.ninjasquad.springmockk.MockkBean
+ import dev.pollito.spring_kotlin.config.advice.ControllerAdvice
+ import dev.pollito.spring_kotlin.config.cors.CorsConfigProperties
+ import dev.pollito.spring_kotlin.config.cors.WebConfig
+-import dev.pollito.spring_kotlin.sakila.film.adapter.`in`.rest.mapper.FilmMapperImpl
+-import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
+-import dev.pollito.spring_kotlin.sakila.film.domain.port.`in`.FindFilmByIdPort
++import dev.pollito.spring_kotlin.sakila.movie.adapter.`in`.rest.mapper.MovieMapperImpl
++import dev.pollito.spring_kotlin.sakila.movie.domain.model.Movie
++import dev.pollito.spring_kotlin.sakila.movie.domain.port.`in`.GetMovieByIdPort
+ import dev.pollito.spring_kotlin.test.util.hasErrorFields
+ import dev.pollito.spring_kotlin.test.util.hasStandardApiResponseFields
+ import io.mockk.every
+@@ -27,20 +27,20 @@ import org.springframework.test.web.servlet.get
+ 
+ @AutoConfigureTracing
+ @ExtendWith(SpringExtension::class)
+-@WebMvcTest(FilmController::class)
+-@Import(ControllerAdvice::class, FilmMapperImpl::class, WebConfig::class)
++@WebMvcTest(MovieController::class)
++@Import(ControllerAdvice::class, MovieMapperImpl::class, WebConfig::class)
+ @EnableConfigurationProperties(CorsConfigProperties::class)
+-class FilmControllerTest {
+-  @MockkBean private lateinit var findFilmByIdPort: FindFilmByIdPort
++class MovieControllerTest {
++  @MockkBean private lateinit var getMovieByIdPort: GetMovieByIdPort
+   @Autowired private lateinit var mockMvc: MockMvc
+ 
+   @Test
+-  fun `when find by id then returns film`() {
+-    val filmId = 1L
+-    val film =
+-        Film(
+-            id = filmId,
+-            title = "Test Film",
++  fun `when find by id then returns movie`() {
++    val movieId = 1L
++    val movie =
++        Movie(
++            id = movieId,
++            title = "Test Movie",
+             description = "Test description",
+             releaseYear = 2000,
+             rating = "G",
+@@ -48,14 +48,14 @@ class FilmControllerTest {
+             language = "EN",
+         )
+ 
+-    every { findFilmByIdPort.findFilmById(filmId) } returns film
++    every { getMovieByIdPort.getMovieById(movieId) } returns movie
+ 
+     mockMvc
+-        .get("/api/films/$filmId") { accept = APPLICATION_JSON }
++        .get("/api/movies/$movieId") { accept = APPLICATION_JSON }
+         .andExpect {
+           status { isOk() }
+-          jsonPath("$.data.id") { value(filmId.toInt()) }
+-          hasStandardApiResponseFields("/api/films/$filmId", OK)
++          jsonPath("$.data.id") { value(movieId.toInt()) }
++          hasStandardApiResponseFields("/api/movies/$movieId", OK)
+         }
+   }
+ 
+@@ -64,10 +64,10 @@ class FilmControllerTest {
+     val invalidId = 0L
+ 
+     mockMvc
+-        .get("/api/films/$invalidId") { accept = APPLICATION_JSON }
++        .get("/api/movies/$invalidId") { accept = APPLICATION_JSON }
+         .andExpect {
+           status { isBadRequest() }
+-          hasStandardApiResponseFields("/api/films/$invalidId", BAD_REQUEST)
++          hasStandardApiResponseFields("/api/movies/$invalidId", BAD_REQUEST)
+           hasErrorFields(BAD_REQUEST)
+         }
+   }
+@@ -75,10 +75,10 @@ class FilmControllerTest {
+   @Test
+   fun `when find all then throws NotImplementedError`() {
+     mockMvc
+-        .get("/api/films") { accept = APPLICATION_JSON }
++        .get("/api/movies") { accept = APPLICATION_JSON }
+         .andExpect {
+           status { isInternalServerError() }
+-          hasStandardApiResponseFields("/api/films", INTERNAL_SERVER_ERROR)
++          hasStandardApiResponseFields("/api/movies", INTERNAL_SERVER_ERROR)
+           hasErrorFields(INTERNAL_SERVER_ERROR)
+         }
+   }
+diff --git a/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmServiceTest.kt b/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/service/MovieServiceTest.kt
+similarity index 50%
+rename from spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmServiceTest.kt
+rename to spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/service/MovieServiceTest.kt
+index c372a89..2ddeddd 100644
+--- a/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmServiceTest.kt
++++ b/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/movie/domain/service/MovieServiceTest.kt
+@@ -1,4 +1,4 @@
+-package dev.pollito.spring_kotlin.sakila.film.domain.service
++package dev.pollito.spring_kotlin.sakila.movie.domain.service
+ 
+ import io.mockk.impl.annotations.InjectMockKs
+ import io.mockk.junit5.MockKExtension
+@@ -7,12 +7,12 @@ import kotlin.test.assertNotNull
+ import org.junit.jupiter.api.extension.ExtendWith
+ 
+ @ExtendWith(MockKExtension::class)
+-class FilmServiceTest {
++class MovieServiceTest {
+ 
+-  @InjectMockKs private lateinit var filmService: FilmService
++  @InjectMockKs private lateinit var movieService: MovieService
+ 
+   @Test
+-  fun `findFilmById returns not null`() {
+-    assertNotNull(filmService.findFilmById(1L))
++  fun `getMovieById returns not null`() {
++    assertNotNull(movieService.getMovieById(1L))
+   }
+ }

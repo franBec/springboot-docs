@@ -1,0 +1,91 @@
+---
+sidebar_position: 1
+title: Entornos
+---
+
+import {
+  ApplicationYml,
+  ApplicationDevYml,
+  ApplicationProdYml,
+  ApplicationYmlWithProfile,
+} from '@site/src/components/docs/prior-recommended-knowledge/environments';
+
+Cuando desarrollás y deployás software como una aplicación Spring Boot, raramente hacés push del código directamente a los usuarios finales. En cambio, las aplicaciones típicamente pasan por varios **Entornos**. Entender estos entornos es crucial para flujos de trabajo de desarrollo seguros, confiables y eficientes.
+
+## ¿Qué Son los Entornos?
+
+Los entornos son configuraciones distintas y aisladas donde corre tu aplicación. Cada entorno sirve a un propósito específico en el ciclo de vida del desarrollo de software. Los entornos más comunes son:
+
+- **Development (dev):** Acá es donde los desarrolladores escriben y prueban código localmente en sus máquinas o a veces en un servidor de desarrollo compartido. El foco está en la iteración rápida, debugging e implementación de features. La configuración puede estar simplificada (ej. usando una base de datos en memoria).
+- **Testing (test / staging / QA):** Este entorno apunta a replicar lo más cerca posible la configuración de producción. Se usa para varios tipos de testing:
+  - **Integration Testing:** Verificar que diferentes partes de la aplicación (o diferentes microservicios) funcionen correctamente juntas.
+  - **User Acceptance Testing (UAT):** Permitir que stakeholders o equipos de QA prueben features antes de que vayan a producción.
+  - **Performance/Load Testing:** Chequear cómo se comporta la aplicación bajo estrés.
+    Los entornos de testing aíslan las actividades de testing de los usuarios reales y los datos de producción.
+- **Production (prod):** Este es el entorno en vivo donde tus usuarios finales interactúan con la aplicación. El foco principal acá es la estabilidad, performance, confiabilidad y seguridad. Las configuraciones apuntan a bases de datos reales, servicios externos y usan recursos a nivel de producción.
+
+```txt
+    ┌──────────────────────────────────────────────────────────────────┐
+    │                 Ciclo de Vida de la Aplicación                   │
+    └──────────────────────────────────────────────────────────────────┘
+
+    ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
+    │     DES     │──────▶│   PRUEBAS   │──────▶│    PROD     │
+    └─────────────┘       └─────────────┘       └─────────────┘
+          │                     │                     │
+          ▼                     ▼                     ▼
+    ┌─────────────┐       ┌──────────────┐       ┌─────────────┐
+    │ • Escribir  │       │ • Pruebas QA │       │ • Usuarios  │
+    │   código    │       │ • Integración│       │   reales    │
+    │ • Depurar   │       │ • BD de      │       │ • Datos en  │
+    │ • BD H2     │       │   pruebas    │       │   vivo      │
+    │ • Iteración │       │ • Staging    │       │ • BD de     │
+    │   rápida    │       │              │       │   producción│
+    └─────────────┘       └──────────────┘       └─────────────┘
+```
+
+## ¿Por Qué Existen los Entornos?
+
+Usar diferentes entornos es esencial por varias razones:
+
+1. **Aislamiento y Seguridad:** La razón más crítica es prevenir que código no testeado o roto afecte a usuarios reales. No testearías partes experimentales de un motor en un avión lleno de pasajeros; de la misma manera, no testeás código nuevo directamente en producción.
+2. **Diferencias de Configuración:** Cada entorno a menudo necesita diferentes settings. Por ejemplo:
+   - **Bases de datos:**
+     - En **dev**, puede que quieras una base de datos en memoria rápida y descartable como H2 para startups rápidos.
+     - En **test**, necesitás conectarte a una base de datos de test dedicada (quizás un clon del esquema de prod pero con datos de test).
+     - En **prod**, te conectás a la base de datos real y en vivo que contiene los datos reales de los usuarios.
+   - **Servicios externos & api keys**: Los entornos de Dev/Test pueden usar versiones sandbox de APIs de terceros con keys de test, mientras que producción usa APIs en vivo con keys reales y potencialmente diferentes límites de rate.
+   - **Logging**: Puede que quieras logging `DEBUG` verbose en dev, pero solo logging nivel `INFO` o `WARN` en producción para evitar ruido excesivo e impacto en performance.
+   - **Recursos**: Dev/Test pueden correr con límites de memoria/CPU más bajos, mientras que producción necesita recursos robustos.
+3. **Fidelidad de Testing**: Los entornos de test te permiten validar tu aplicación en una configuración que refleja de cerca la producción, aumentando la confianza de que va a funcionar correctamente cuando se deploye.
+4. **Rollouts Controlados**: Los features pueden habilitarse o testearse en staging antes de ser liberados a todos los usuarios en producción (a menudo usando feature flags).
+
+## Spring Boot Profiles
+
+Spring Boot provee una solución elegante para manejar configuraciones específicas de cada entorno usando [Profiles](https://docs.spring.io/spring-boot/reference/features/profiles.html). Un profile es esencialmente una etiqueta para un conjunto de configuraciones.
+
+Así es como típicamente funciona:
+
+1. **La configuración default** (`application.yml` o `application.properties`):
+   - Este archivo, ubicado en `src/main/resources`, contiene propiedades de configuración comunes a _todos_ los entornos o settings que sirven como baseline.
+
+     <ApplicationYml />
+
+2. **Configuraciones específicas de profile** (`application-{profile}.yml`):
+   - Estos archivos también se colocan en `src/main/resources`.
+   - Creás archivos de configuración adicionales nombrados `application-{profile}.yml` (o `.properties`) para cada entorno, reemplazando `{profile}` con el nombre del profile (ej. `dev`, `test`, `prod`).
+   - Las propiedades definidas en un archivo específico de profile **sobreescriben** las propiedades definidas en el `application.yml` default cuando ese profile está activo.
+
+     <ApplicationDevYml />
+     <ApplicationProdYml />
+
+3. **Activando profiles**:
+   - Le decís a Spring Boot qué profile(s) activar cuando la aplicación arranca. Spring va a cargar `application.yml` primero, y después cargar el `application-{profile}.yml` para el profile activo, sobreescribiendo cualquier propiedad que se superponga.
+   - Formas comunes de activar un profile:
+     - **Variable de Entorno:** `SPRING_PROFILES_ACTIVE=prod` (Muy común en scripts de deployment/containers).
+     - **Propiedad del Sistema JVM:** `-Dspring.profiles.active=prod` (Pasado durante el startup).
+     - **En `application.yml`:** (Menos común para _activar_ un env específico, pero posible).
+
+       <ApplicationYmlWithProfile />
+
+Usando profiles y archivos de configuración separados, podés manejar los diferentes settings requeridos para tus entornos de dev, test y producción, asegurando que tu aplicación se comporte correcta y seguramente en cada contexto.

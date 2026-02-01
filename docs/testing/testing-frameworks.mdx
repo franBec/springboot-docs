@@ -1,0 +1,79 @@
+---
+sidebar_position: 2
+title: Testing Frameworks
+---
+
+import {
+  JUnit5BasicStructure,
+  KotlinMockkExample,
+  SpockBasicStructure,
+  TestingFrameworkDecisionGraph,
+} from '@site/src/components/docs/testing/testing-frameworks';
+
+Doing testing requires two things working together:
+
+1. **A Testing Framework** serves as the conductor. It tells your tests when to run, how to organize them, and reports the results. Think of it as the test runner.
+2. **A Mocking Framework** acts as the understudy. It lets you replace real dependencies (databases, external services) with fake versions you control.
+
+## Spring Boot's Out-of-the-Box Solution
+
+Spring Boot gives you a solid foundation with `spring-boot-starter-webmvc-test` (`spring-boot-starter-test` if you're still on Spring Boot 3).
+
+This single dependency pulls in everything you need:
+
+| Framework                                               | Purpose     | Why It Matters                                                                                                                    |
+| ------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **[JUnit 5](https://docs.junit.org/5.0.0/user-guide/)** | Test runner | The de facto standard for Java testing. Runs your tests, handles lifecycle (before/after), integrates with IDEs and CI pipelines. |
+| **[Mockito](https://site.mockito.org/)**                | Mocking     | Creates fake objects that behave like real ones. Essential for isolating the code you're testing.                                 |
+| **[AssertJ](https://assertj.github.io/doc/)**           | Assertions  | "Fluent" assertions that read like English. `assertThat(x).isEqualTo(y)` beats `assertEquals(x, y)` any day.                      |
+| **[Hamcrest](https://hamcrest.org/)**                   | Matchers    | Another assertion library with expressive matchers. AssertJ is generally preferred.                                               |
+
+<JUnit5BasicStructure />
+
+This is your bread and butter. `@SpringBootTest` starts the full application context (useful for integration tests), `@MockBean` creates a Mockito mock and injects it where needed, and JUnit's `@Test` marks the method as a test.
+
+Notice the AssertJ chain: `assertThat(result.getTitle()).isEqualTo("ACADEMY DINOSAUR")`. It reads almost like a sentence, which makes debugging way less painful when you're staring at a failing test at 2 AM.
+
+## Kotlin MockK
+
+Mockito was designed for Java. Kotlin's language features create several friction points that Mockito simply wasn't built to handle.
+
+- **Final Classes by Default**: In Kotlin, all classes are `final` by default. Mockito (historically) couldn't mock final classes without plugins and workarounds.
+- **Coroutines**: If you're using Kotlin coroutines (suspend functions), Mockito has no idea what to do with them. It treats them as regular methods, which means your async code tests become synchronous by accident.
+- **The `when` Keyword**: `when` is a reserved keyword in Kotlin.
+- **Object/Static Mocking**: Kotlin `object` declarations are singletons. Mocking them in Mockito is painful.
+
+[MockK](https://mockk.io/) was created specifically for Kotlin, and it shows in every API decision:
+
+<KotlinMockkExample />
+
+Clean, readable, and no backticks needed. The `every` keyword replaces `when`, and everything feels Kotlin-native.
+
+## Groovy Spock
+
+If you're open to writing your tests in Groovy, [Spock](https://spockframework.org/) is a game-changer. Spock doesn't just replace Mockito, it replaces JUnit too. It's a complete testing framework that includes:
+
+1. **Test Runner** works like JUnit, but with superpowers
+2. **Mocking Engine** works like Mockito, but built into the language
+3. **Assertion Engine** provides capabilities unlike anything you've seen from Java libraries
+4. **BDD Structure** forces you to write tests as stories
+
+<SpockBasicStructure />
+
+Look at that structure: `given:`, `when:`, `then:`. It forces you to organize your tests into a narrative. Given some setup, when an action happens, then these are the expected outcomes. Your future self (or the poor developer who inherits your code) will thank you.
+
+The mocking syntax is refreshingly simple too:
+
+```groovy
+1 * filmRepository.findById(1L) >> Optional.of(mockFilm)
+```
+
+This reads as: "Expect exactly 1 call to `findById(1L)`, and return this mock film." No boilerplate, no verbosity.
+
+## Which One Should You Choose?
+
+There's no wrong choice, but there are better choices for your context.
+
+<TestingFrameworkDecisionGraph />
+
+The best test is the one you write. Pick the tool that makes you _want_ to write tests, and you'll end up with a better test suite than if you'd forced yourself to use the "correct" tool.

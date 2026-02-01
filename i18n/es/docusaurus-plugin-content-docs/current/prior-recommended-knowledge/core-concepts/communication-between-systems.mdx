@@ -1,0 +1,71 @@
+---
+sidebar_position: 2
+title: Comunicación entre Sistemas
+---
+
+Cuando los sistemas necesitan hablar, tienen dos formas fundamentales de comunicarse: **sincrónicamente** (esperando respuestas inmediatas) o **asincrónicamente** (disparar y olvidar). Entender esta división te va a ayudar a debuggear problemas, elegir tecnologías y explicar decisiones arquitectónicas a tu equipo.
+
+```txt
+SÍNCRONO                            ASÍNCRONO
+
+Cliente     Servidor                Cliente     Broker      Servidor
+  │             │                     │           │           │
+  ├──petición──▶│                     ├──publicar▶│           │
+  │   ......    │                     │◀── ✓ ─────┤           │
+  │  (espera)   │                     │           │ (después) │
+  │   ......    │                     │           ├──consumir▶│
+  │◀─respuesta──┤                     │           │◀── ✓ ─────┤
+  │             │                     │           │           │
+```
+
+## Sincrónico
+
+Una conversación directa en tiempo real donde el que llama espera una respuesta inmediata.
+
+| Protocolo                                                       | Ideal Para                  | Dolores de Cabeza            |
+| --------------------------------------------------------------- | --------------------------- | ---------------------------- |
+| [REST](https://www.redhat.com/en/topics/api/what-is-a-rest-api) | APIs web/móviles            | Versionado, overfetching     |
+| [GraphQL](https://graphql.org/)                                 | Datos complejos del cliente | Complejidad de queries       |
+| [gRPC](https://grpc.io/)                                        | Microservicios (internos)   | Debugging de formato binario |
+| [SOAP](https://www.w3.org/TR/soap/)                             | Integraciones empresariales | Complejidad XML              |
+
+- **Usalo para escenarios de éxito/fracaso**, como pasarelas de pago o flujos de autenticación de usuarios.
+- **Evitalo para tareas de larga duración**, imaginá esperar 10 minutos a que cargue una página web.
+
+## Asincrónico
+
+Comunicación async vía brokers de mensajes. Los sistemas tiran mensajes a un "buzón digital" y siguen de largo.
+
+| Tecnología                                            | Fortaleza                            | Peculiaridad             |
+| ----------------------------------------------------- | ------------------------------------ | ------------------------ |
+| [RabbitMQ](https://www.rabbitmq.com/)                 | Ruteo flexible de mensajes           | Necesita tuning de colas |
+| [Kafka](https://kafka.apache.org/)                    | Streaming de eventos de alto volumen | Setup complejo           |
+| [AWS SQS](https://aws.amazon.com/sqs/)                | Simplicidad serverless               | Vendor lock-in           |
+| [Redis Pub/Sub](https://redis.io/docs/manual/pubsub/) | Notificaciones en tiempo real        | Sin persistencia         |
+
+- Brilla en escenarios como:
+  - **Procesamiento de órdenes** ("Gracias por tu compra, te mandamos un mail cuando se envíe")
+  - **Sincronización de datos entre sistemas** ("Actualizar CRM esta noche")
+  - **Arquitecturas orientadas a eventos** ("Usuario se registró → mandar mail de bienvenida").
+- Estate atento a problemas como:
+  - **Duplicación de mensajes** ("¿Por qué les cobramos dos veces?")
+  - **Datos desactualizados** ("El inventario dice que queda 1, pero en realidad está agotado").
+
+## Comparación
+
+| Criterio              | Sincrónico                     | Asincrónico                    |
+| --------------------- | ------------------------------ | ------------------------------ |
+| **Latencia**          | Respuesta inmediata necesaria  | Delay tolerable (segundos-min) |
+| **Manejo de Errores** | Fallar rápido                  | Colas de reintento             |
+| **Acoplamiento**      | Fuerte (conoce al receptor)    | Débil (vía broker)             |
+| **Escalabilidad**     | Limitada por quien llama       | Escalado independiente         |
+| **Complejidad**       | Simple de implementar          | Garantías de entrega complejas |
+| **Costo**             | Pesado en recursos (esperando) | Eficiente (sin espera)         |
+
+La mayoría de los sistemas que te vas a encontrar usan una mezcla. Recordá:
+
+1. La infraestructura existente de tu compañía va a influir fuertemente en las elecciones (no vas a reescribir jobs batch de COBOL en streams de Kafka).
+2. Los patrones de comunicación suelen sobrevivir a los sistemas mismos.
+3. Cuando te sumes a un equipo, preguntá: _"¿Qué pasa cuando el Sistema A estornuda?"_ La respuesta revela la filosofía de comunicación de sus sistemas.
+
+Ahora que estás armado con este conocimiento, nunca vas a mirar un error de "Connection timed out" de la misma manera.

@@ -1,0 +1,61 @@
+---
+sidebar_position: 3
+title: REST and RESTful
+---
+
+import Youtube from '@site/src/components/youtube';
+
+## What's REST (and RESTful)?
+
+**REST** (Representational State Transfer) is an architectural style defined by [Roy Fielding](https://roy.gbiv.com/), emphasizing:
+
+1. Client-server separation
+2. Statelessness
+3. Cacheability
+4. Layered system
+5. Uniform interface (resources, representations)
+6. Code-on-demand (optional)
+
+**RESTful** APIs strictly follow _all_ these constraints. But here's the thing: **most "REST" APIs aren't truly RESTful**, and that's okay.
+
+True RESTful APIs require [HATEOAS](https://restfulapi.net/hateoas/) (Hypermedia as the Engine of Application State)—embedding links to related resources in responses:
+
+```json
+{
+  "id": 1,
+  "links": [
+    { "rel": "self", "href": "/users/1" },
+    { "rel": "orders", "href": "/users/1/orders" }
+  ]
+}
+```
+
+In practice this doesn't happen:
+
+- Frontend teams rarely use embedded links.
+- Adds complexity without immediate value.
+
+An [OpenAPI Specification](https://swagger.io/specification/) already gives you 80% of REST's benefits:
+
+- **Resource-centric URLs** (`/users/{id}`).
+- **Standard HTTP methods** (`GET`/`POST`/`PUT`/`DELETE`).
+- **Clear error handling** (`4xx`/`5xx` codes).
+
+Unless you're building hypermedia-driven systems, **REST is fine**. Focus on:
+
+- Consistent specifications.
+- Predictable error handling.
+- Documentation humans and machines can use.
+
+As your API evolves, you may add RESTful features later if required.
+
+**I really recommend** High-Performance Programming's video "Rest API - Best Practices - Design".
+
+<Youtube id="1Wl-rtew1_E" />
+
+### Tools for REST API Development
+
+- **[Postman](https://www.postman.com/)**: It's powerful, feature-rich, and ubiquitous. Everyone knows it. But honestly, it's getting a bit bloated. The forced account creation and cloud-syncing for basic functionality is annoying if you just want to quickly test an endpoint without selling your soul. It was my go-to for years, but I'm gradually exploring other options.
+- **[Insomnia](https://insomnia.rest/)**:If you're feeling the Postman bloat, Insomnia is a fantastic, lightweight alternative. It does pretty much everything you need for API testing without the extra baggage. Give it a shot.
+- **IDE's built-in REST clients**: Many modern IDEs (like IntelliJ IDEA, VS Code) have excellent plugins that let you test endpoints directly from your development environment. This keeps you in flow and avoids context switching.
+- **Command-line tools** like [curl](https://curl.se/), [jq](https://jqlang.org/), and [w3m](https://git.sr.ht/~rkta/w3m). They're simple, quick, and the output is just text. It's incredibly straightforward to copy-paste commands and their outputs, demonstrating exactly what's happening without relying on screenshots of a GUI tool. It makes the documentation much more actionable and less of a visual scavenger hunt.
