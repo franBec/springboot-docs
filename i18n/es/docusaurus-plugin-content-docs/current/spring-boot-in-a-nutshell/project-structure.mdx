@@ -43,15 +43,15 @@ Cuando generás un proyecto Spring Boot (más sobre cómo generar un proyecto en
   - `static/`: Sirve imágenes, CSS, JS directamente.
   - `templates/`: HTML renderizado en el servidor (si usás [Thymeleaf](https://www.thymeleaf.org/), [Mustache](https://www.baeldung.com/spring-boot-mustache), etc.).
 - `pom.xml` (Maven) o `build.gradle` (Gradle): Define dependencias y plugins.
-- `test/`: Preconfigurado para tests JUnit (Más sobre esto en la [sección de Unit Testing](/category/unit-testing)). Tiene una clase de test esqueleto `SpringJavaApplication.java` que verifica que el contexto de la app carga.
+- `test/`: Preconfigurado para tests JUnit (Más sobre esto en la [sección de Unit Testing](/testing/about-testing)). Tiene una clase de test esqueleto `SpringJavaApplication.java` que verifica que el contexto de la app carga.
 
 ## Elegiendo una Arquitectura
 
 Imaginemos una aplicación simple que:
 
 1. Expone un endpoint REST API GET `/api/films/{filmId}`.
-2. Obtiene la información de películas de una base de datos [Sakila](/prior-recommended-knowledge/sakila-sample-database) [H2](/persistence-integration/h2).
-3. Complementa esos datos con información de una API externa vía [FeignClient](/external-api-integration/what-is-a-web-client#feignclient-declarative-approach).
+2. Obtiene la información de películas de una base de datos [Sakila](/prior-recommended-knowledge/sakila-sample-database) [H2](/persistence-integration/h2-database).
+3. Complementa esos datos con información de una API externa vía FeignClient.
 
 <Admonition type="info">
     Toda la lógica de "Sakila" va a existir dentro del paquete `sakila`, representando un contexto acotado.

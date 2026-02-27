@@ -42,15 +42,15 @@ When you generate a Spring Boot project (more on how to generate a project in th
   - `static/`: Serves images, CSS, JS directly.
   - `templates/`: Server-rendered HTML (if using [Thymeleaf](https://www.thymeleaf.org/), [Mustache](https://www.baeldung.com/spring-boot-mustache), etc.).
 - `pom.xml` (Maven) or `build.gradle` (Gradle): Defines dependencies and plugins.
-- `test/`: Preconfigured for JUnit tests (More about this in the [Unit Testing section](/category/unit-testing)). It has a skeleton test class `SpringJavaApplication.java` that verifies the app context loads.
+- `test/`: Preconfigured for JUnit tests (More about this in the [Unit Testing section](/testing/about-testing)). It has a skeleton test class `SpringJavaApplication.java` that verifies the app context loads.
 
 ## Picking an Architecture
 
 Let's imagine a simple application that:
 
 1. Exposes a GET `/api/films/{filmId}` REST API endpoint.
-2. Gets the films information from a [Sakila](/prior-recommended-knowledge/sakila-sample-database) [H2 database](/persistence-integration/h2).
-3. Supplements that data with information from an external API via [FeignClient](/external-api-integration/what-is-a-web-client#feignclient-declarative-approach).
+2. Gets the films information from a [Sakila](/prior-recommended-knowledge/sakila-sample-database) [H2 database](/persistence-integration/h2-database).
+3. Supplements that data with information from an external API via FeignClient.
 
 <Admonition type="info">
     All the "Sakila" logic will exist inside the `sakila` package, representing a bounded context.
