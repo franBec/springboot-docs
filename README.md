@@ -1,41 +1,45 @@
-# Website
+# Spring Boot Docs
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+A practical, hands-on guide for developers learning Spring Boot.
 
-## Installation
+This documentation site is already deployed and accessible at: **https://springboot.pollito.tech/**
 
-```bash
-yarn
-```
+## Development Commands
 
-## Local Development
+### Build Commands
 
-```bash
-yarn start
-```
+- `pnpm run build` - Build the production site (all locales)
+- `pnpm run start` - Start the development server (default English locale)
+- `pnpm run start:es` - Start the Spanish locale development server
+- `pnpm run serve` - Serve the built site locally
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+### Linting & Formatting
 
-## Build
+- `pnpm run format` - Format code with Prettier
+- `pnpm run typecheck` - Run TypeScript type checking
 
-```bash
-yarn build
-```
+## Internationalization
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+This project supports multiple locales:
 
-## Deployment
+- **English (`en`)** - Default locale, source files in `docs/`
+- **Spanish (`es`)** - Translated files in `i18n/es/docusaurus-plugin-content-docs/current/`
 
-Using SSH:
+Pages not yet translated will show English (fallback behavior).
 
-```bash
-USE_SSH=true yarn deploy
-```
+## Contributing
 
-Not using SSH:
+While direct contributions to this demo repository are not actively sought, **feedback on the guide itself is always welcome**. If you find issues, have suggestions for improvement, or want to report inaccuracies, please feel free to open an issue or contact the maintainers.
 
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
+## Detailed Convention Documents
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+For comprehensive guidance on specific aspects, refer to the following convention documents:
+
+- **[AGENTS.md](./AGENTS.md)** - Agent instructions, project context, and global behavior constraints
+- **[CONVENTIONS-i18n.md](./CONVENTIONS-i18n.md)** - Internationalization guidelines and translation processes
+- **[CONVENTIONS-code-style-guidelines.md](./CONVENTIONS-code-style-guidelines.md)** - TypeScript, React patterns, and code formatting standards
+- **[CONVENTIONS-writing-style-guidelines.md](./CONVENTIONS-writing-style-guidelines.md)** - Writing persona, tone, and content structure guidelines
+
+---
+
+Built with [Docusaurus](https://docusaurus.io/).
