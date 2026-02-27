@@ -177,6 +177,7 @@ const config: Config = {
       {
         hashed: true,
         language: ['en', 'es'],
+        docsRouteBasePath: '/',
       },
     ],
   ],
