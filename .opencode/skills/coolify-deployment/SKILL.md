@@ -1,12 +1,31 @@
-# Deployment
+---
+name: coolify-deployment
+description: Deployment guide for the Docusaurus documentation site to Coolify. Covers application setup, build configuration, domain settings, and automatic deployments.
+license: MIT
+compatibility: opencode
+metadata:
+  scope: devops
+  platform: coolify
+  framework: docusaurus
+  buildpack: nixpacks
+---
 
-This guide explains how to deploy this Docusaurus project to [Coolify](https://coolify.io/).
+## What I do
+
+- Guide deployment of Docusaurus sites to Coolify
+- Configure Nixpacks build settings for static sites
+- Set up domains with automatic SSL via Let's Encrypt
+- Enable automatic deployments on git push
+
+## When to use me
+
+Use this when deploying a Docusaurus project to a Coolify instance.
 
 ## Prerequisites
 
 - A Coolify instance (self-hosted or cloud)
-- Your Docusaurus project pushed to a Git repository (GitHub, GitLab, etc.)
-- A domain configured in your DNS pointing to your Coolify server
+- Docusaurus project pushed to a Git repository (GitHub, GitLab, etc.)
+- A domain configured in DNS pointing to your Coolify server
 
 ## Deployment Steps
 
@@ -53,9 +72,9 @@ This guide explains how to deploy this Docusaurus project to [Coolify](https://c
 2. Monitor the build progress in the **"Deployments"** tab
 3. Check the logs if any issues occur
 
-## Updating `docusaurus.config.js`
+## Updating docusaurus.config.js
 
-Ensure your `docusaurus.config.js` has the correct URL settings for your deployment:
+Ensure your `docusaurus.config.js` has the correct URL settings:
 
 ```javascript
 export default {
@@ -72,9 +91,3 @@ Coolify automatically redeploys your site when you push changes to the configure
 - Trigger manual deployments from the dashboard
 - Configure webhooks for more control
 - Set up preview deployments for pull requests
-
-## Additional Resources
-
-- [Coolify Documentation](https://coolify.io/docs)
-- [Docusaurus Deployment Guide](https://docusaurus.io/docs/deployment)
-- [Nixpacks Documentation](https://nixpacks.com/docs)
