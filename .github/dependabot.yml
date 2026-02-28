@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'
+      time: '06:00'
+      timezone: 'UTC'
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: deps
+    groups:
+      minor-updates:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: '@docusaurus/*'
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@mdx-js/react'
+        update-types:
+          - version-update:semver-major
+      - dependency-name: react
+        update-types:
+          - version-update:semver-major
+      - dependency-name: react-dom
+        update-types:
+          - version-update:semver-major
