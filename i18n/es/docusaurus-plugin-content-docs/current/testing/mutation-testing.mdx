@@ -12,11 +12,11 @@ import {
   PitestCoverageReportJava,
   PitestCoverageReportKt,
 } from '@site/src/components/docs/testing/mutation-testing';
-import GithubBranchInfo from '@site/src/components/github-branch-info';
+import GithubTagInfo from '@site/src/components/github-tag-info';
 
-<GithubBranchInfo branch="feature/mutation-testing" />
+<GithubTagInfo branch="mutation-testing" />
 
-## ¿Qué es el Mutation Testing?
+## ¿Qué es Mutation Testing?
 
 [Pitest](https://pitest.org/) lo define así:
 
@@ -30,7 +30,7 @@ Mutation testing no se discute frecuentemente en círculos de Spring Boot. Algun
 
 Hay un interés lentamente creciente, particularmente entre equipos con prácticas de testing maduras, pero preparate para tiempos de build más largos.
 
-### Por qué el Mutation Testing No Tiene Sentido en Proyectos Groovy
+### Por qué Mutation Testing No Tiene Sentido en Proyectos Groovy
 
 El **tipado dinámico** de Groovy, el dispatch de métodos en runtime, el overloading de operadores, y el uso intensivo de **AST transformations** (`@Canonical`, `@Builder`, `@Slf4j`, Spock internals, etc.) significan que PIT muta bytecode generado que a menudo **no se parece al código fuente** que escribiste. Como resultado, muchos mutantes son insignificantes, inalcanzables, o sobreviven por razones no relacionadas con la calidad del test.
 

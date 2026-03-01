@@ -1,11 +1,11 @@
 {
-  "components.githubBranchInfo.title": {
+  "components.githubTagInfo.title": {
     "message": "Código Completo",
-    "description": "The title of the GitHub branch info admonition"
+    "description": "The title of the GitHub tag info admonition"
   },
-  "components.githubBranchInfo.description": {
-    "message": "El resultado final del código desarrollado en este documento se puede encontrar en el monorepo de GitHub {repoLink}, en la rama {branch}.",
-    "description": "The description text for the GitHub branch info admonition"
+  "components.githubTagInfo.description": {
+    "message": "El resultado final del código desarrollado en este documento se puede encontrar en el monorepo de GitHub {repoLink}, bajo el tag {tag}.",
+    "description": "The description text for the GitHub tag info admonition"
   },
   "file-tree-info.title": {
     "message": "Archivos a Crear/Modificar",

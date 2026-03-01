@@ -1,30 +1,30 @@
 import Translate, { translate } from '@docusaurus/Translate';
 import Admonition from '@theme/Admonition';
 
-export default function GithubBranchInfo({ branch }: { branch: string }) {
+export default function GithubTagInfo({ tag }: { tag: string }) {
   return (
     <Admonition
       type="info"
       title={translate({
-        id: 'components.githubBranchInfo.title',
+        id: 'components.githubTagInfo.title',
         message: 'Complete Code',
-        description: 'The title of the GitHub branch info admonition',
+        description: 'The title of the GitHub tag info admonition',
       })}
     >
       <Translate
-        id="components.githubBranchInfo.description"
-        description="The description text for the GitHub branch info admonition"
+        id="components.githubTagInfo.description"
+        description="The description text for the GitHub tag info admonition"
         values={{
           repoLink: (
             <a href="https://github.com/franBec/springboot-demo-projects">
               springboot-demo-projects
             </a>
           ),
-          branch: <code>{branch}</code>,
+          tag: <code>{tag}</code>,
         }}
       >
         {
-          'The end result of the code developed in this document can be found in the GitHub monorepo {repoLink}, under the branch {branch}.'
+          'The end result of the code developed in this document can be found in the GitHub monorepo {repoLink}, under the tag {tag}.'
         }
       </Translate>
     </Admonition>
