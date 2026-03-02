@@ -24,7 +24,7 @@ const FileTreeJava = () => (
                         │               └── rest
                         │                   ├── ...
 // highlight-modified
-                        │                   └── FilmMapper.java
+                        │                   └── FilmRestMapper.java
                         └── ...`}
   </CollapsibleCodeBlock>
 );
@@ -50,7 +50,7 @@ const FileTreeKt = () => (
                         │               └── rest
                         │                   ├── ...
 // highlight-modified
-                        │                   └── FilmMapper.kt
+                        │                   └── FilmRestMapper.kt
                         └── ...`}
   </CollapsibleCodeBlock>
 );
@@ -277,10 +277,10 @@ export const MapperSpringConfig = () => (
   </Tabs>
 );
 
-const FilmMapperJava = () => (
+const FilmRestMapperJava = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmMapper.java"
+    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
   >
     {`package dev.pollito.spring_java.sakila.film.adapter.in.rest;
 
@@ -296,7 +296,7 @@ import org.springframework.core.convert.converter.Converter;
 
 // highlight-added-start
 @Mapper(config = MapperSpringConfig.class)
-public interface FilmMapper extends Converter<Film, FilmResponse> {
+public interface FilmRestMapper extends Converter<Film, FilmResponse> {
   @Override
   FilmResponse convert(@Nullable Film source);
 // highlight-added-end
@@ -304,10 +304,10 @@ public interface FilmMapper extends Converter<Film, FilmResponse> {
   </CollapsibleCodeBlock>
 );
 
-const FilmMapperKt = () => (
+const FilmRestMapperKt = () => (
   <CollapsibleCodeBlock
     language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmMapper.kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
   >
     {`package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
 
@@ -322,20 +322,20 @@ import org.springframework.core.convert.converter.Converter
 
 // highlight-added-start
 @Mapper(config = MapperSpringConfig::class)
-interface FilmMapper : Converter<Film, FilmResponse> {
+interface FilmRestMapper : Converter<Film, FilmResponse> {
   override fun convert(source: Film): FilmResponse
 // highlight-added-end
 }`}
   </CollapsibleCodeBlock>
 );
 
-export const FilmMapper = () => (
+export const FilmRestMapper = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <FilmMapperJava />
+      <FilmRestMapperJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <FilmMapperKt />
+      <FilmRestMapperKt />
     </TabItem>
   </Tabs>
 );

@@ -37,7 +37,7 @@ const FileTreeJava = () => (
     │   │       │   │           ├── dto
 // highlight-added-start
     │   │       │   │           │   └── FilmResponse.java
-    │   │       │   │           ├── FilmMapper.java
+    │   │       │   │           ├── FilmRestMapper.java
     │   │       │   │           └── FilmRestController.java
 // highlight-added-end
     │   │       │   └── domain
@@ -74,7 +74,7 @@ const FileTreeKt = () => (
     │   │       │   │           ├── dto
 // highlight-added-start
     │   │       │   │           │   └── FilmResponse.kt
-    │   │       │   │           ├── FilmMapper.kt
+    │   │       │   │           ├── FilmRestMapper.kt
     │   │       │   │           └── FilmRestController.kt
 // highlight-added-end
     │   │       │   └── domain
@@ -113,7 +113,7 @@ const FileTreeGroovy = () => (
     │   │       │   │           ├── dto
 // highlight-added-start
     │   │       │   │           │   └── FilmResponse.groovy
-    │   │       │   │           ├── FilmMapper.groovy
+    │   │       │   │           ├── FilmRestMapper.groovy
     │   │       │   │           └── FilmRestController.groovy
 // highlight-added-end
     │   │       │   └── domain
@@ -627,10 +627,10 @@ public class FilmResponse {
   </CollapsibleCodeBlock>
 );
 
-const FilmMapperJava = () => (
+const FilmRestMapperJava = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmMapper.java"
+    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
   >
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.adapter.in.rest;
@@ -642,7 +642,7 @@ import dev.pollito.spring_java.sakila.film.domain.model.Film;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FilmMapper {
+public class FilmRestMapper {
   public FilmResponse convert(Film source) {
     if (isNull(source)) {
       return null;
@@ -683,11 +683,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FilmRestController {
   private final FindByIdPortIn findByIdPortIn;
-  private final FilmMapper filmMapper;
+  private final FilmRestMapper mapper;
 
   @GetMapping("/{id}")
   public FilmResponse findById(@PathVariable Long id) {
-    return filmMapper.convert(findByIdPortIn.findById(id));
+    return mapper.convert(findByIdPortIn.findById(id));
   }
 }
 // highlight-added-end`}
@@ -715,10 +715,10 @@ data class FilmResponse(
   </CollapsibleCodeBlock>
 );
 
-const FilmMapperKt = () => (
+const FilmRestMapperKt = () => (
   <CollapsibleCodeBlock
     language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmMapper.kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
   >
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
@@ -728,7 +728,7 @@ import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
 import org.springframework.stereotype.Component
 
 @Component
-class FilmMapper {
+class FilmRestMapper {
   fun convert(source: Film?): FilmResponse? {
     if (source == null) {
       return null
@@ -767,11 +767,11 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/films")
 class FilmRestController(
     private val findByIdPortIn: FindByIdPortIn,
-    private val filmMapper: FilmMapper,
+    private val mapper: FilmRestMapper,
 ) {
   @GetMapping("/{id}")
   fun findFilmById(@PathVariable id: Long): FilmResponse? {
-    return filmMapper.convert(findByIdPortIn.findById(id))
+    return mapper.convert(findByIdPortIn.findById(id))
   }
 }
 // highlight-added-end`}
@@ -804,10 +804,10 @@ class FilmResponse {
   </CollapsibleCodeBlock>
 );
 
-const FilmMapperGroovy = () => (
+const FilmRestMapperGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmMapper.groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy"
   >
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
@@ -818,8 +818,8 @@ import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 
 @CompileStatic
-final class FilmMapper {
-  private FilmMapper() {}
+final class FilmRestMapper {
+  private FilmRestMapper() {}
 
   @CompileDynamic
   static FilmResponse convert(Film source) {
@@ -842,7 +842,7 @@ const FilmRestControllerGroovy = () => (
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
 
-import static FilmMapper.convert
+import static FilmRestMapper.convert
 
 import dev.pollito.spring_groovy.sakila.film.adapter.in.rest.dto.FilmResponse
 import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindByIdPortIn
@@ -875,17 +875,17 @@ export const PrimaryAdapter = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
       <FilmResponseJava />
-      <FilmMapperJava />
+      <FilmRestMapperJava />
       <FilmRestControllerJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
       <FilmResponseKt />
-      <FilmMapperKt />
+      <FilmRestMapperKt />
       <FilmRestControllerKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
       <FilmResponseGroovy />
-      <FilmMapperGroovy />
+      <FilmRestMapperGroovy />
       <FilmRestControllerGroovy />
     </TabItem>
   </Tabs>
@@ -923,7 +923,7 @@ export const ApplicationSequenceDiagram = () => (
     FindByIdPortInImpl-->>FilmRestController: Film
     deactivate FindByIdPortInImpl
 
-    Note over FilmRestController: Map Film to FilmResponse using FilmMapper
+    Note over FilmRestController: Map Film to FilmResponse using FilmRestMapper
 
     FilmRestController-->>Client: FilmResponse (HTTP 200 OK)
     deactivate FilmRestController`}

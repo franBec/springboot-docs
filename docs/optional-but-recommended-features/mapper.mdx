@@ -9,7 +9,7 @@ import {
   FileTree,
   BuildGradle,
   MapperSpringConfig,
-  FilmMapper,
+  FilmRestMapper,
 } from '@site/src/components/docs/optional-but-recommended-features/mapper';
 
 <GithubTagInfo tag="mapper" />
@@ -38,11 +38,11 @@ You're going to create and modify these files:
 
    <MapperSpringConfig />
 
-3. Replace `FilmMapper` with MapStruct Interface:
+3. Replace `FilmRestMapper` with MapStruct Interface:
 
-   <FilmMapper />
+   <FilmRestMapper />
 
-- **At compile time**, MapStruct will generate an implementation of your `FilmMapper` interface.
+- **At compile time**, MapStruct will generate an implementation of your `FilmRestMapper` interface.
 - The generated class will be a Spring `@Component` that you can inject.
 - MapStruct will automatically handle the null check and field mappings based on matching field names.
 - The usage remains the same (`Controller` didn't realize something changed at all).

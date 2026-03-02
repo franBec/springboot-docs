@@ -29,7 +29,7 @@ const FileTreeJava = () => (
 // highlight-removed
     │   │               │       │           │   └── FilmResponse.java
 // highlight-modified-start
-    │   │               │       │           ├── FilmMapper.java
+    │   │               │       │           ├── FilmRestMapper.java
     │   │               │       │           └── FilmRestController.java
 // highlight-modified-end
     │   │               │       └── ...
@@ -65,7 +65,7 @@ const FileTreeKt = () => (
 // highlight-removed
     │   │               │       │           │   └── FilmResponse.kt
 // highlight-modified-start
-    │   │               │       │           ├── FilmMapper.kt
+    │   │               │       │           ├── FilmRestMapper.kt
     │   │               │       │           └── FilmRestController.kt
 // highlight-modified-end
     │   │               │       └── ...
@@ -103,7 +103,7 @@ const FileTreeGroovy = () => (
 // highlight-removed
     │   │               │       │           │   └── FilmResponse.groovy
 // highlight-modified-start
-    │   │               │       │           ├── FilmMapper.groovy
+    │   │               │       │           ├── FilmRestMapper.groovy
     │   │               │       │           └── FilmRestController.groovy
 // highlight-modified-end
     │   │               │       └── ...
@@ -547,7 +547,7 @@ import org.springframework.web.bind.annotation.RestController;
 // highlight-modified
 public class FilmRestController implements FilmsApi {
   private final FindByIdPortIn findByIdPortIn;
-  private final FilmMapper filmMapper;
+  private final FilmRestMapper mapper;
 // highlight-added-start
   private final HttpServletRequest request;
 
@@ -560,7 +560,7 @@ public class FilmRestController implements FilmsApi {
   public ResponseEntity<FilmResponse> findById(Long id) {
     return ok(
         new FilmResponse()
-            .data(filmMapper.convert(findByIdPortIn.findById(id)))
+            .data(mapper.convert(findByIdPortIn.findById(id)))
             .instance(request.getRequestURI())
             .timestamp(now())
             .trace(current().getSpanContext().getTraceId())
@@ -598,7 +598,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class FilmRestController(
     private val findByIdPortIn: FindByIdPortIn,
-    private val filmMapper: FilmMapper,
+    private val mapper: FilmRestMapper,
 // highlight-added-start
     private val request: HttpServletRequest,
 ) : FilmsApi {
@@ -609,7 +609,7 @@ class FilmRestController(
   override fun findById(id: Long): ResponseEntity<FilmResponse> {
     return ok(
         FilmResponse(
-            data = filmMapper.convert(findByIdPortIn.findById(id)),
+            data = mapper.convert(findByIdPortIn.findById(id)),
             instance = request.requestURI,
             timestamp = now(),
             trace = current().spanContext.traceId,
@@ -654,15 +654,15 @@ import org.springframework.web.bind.annotation.RestController
 class FilmRestController implements FilmsApi {
   FindByIdPortIn findByIdPortIn
 // highlight-added-start
-  FilmMapper filmMapper
+  FilmRestMapper mapper
   HttpServletRequest request
 // highlight-added-end
 
 // highlight-modified
-  FilmRestController(FindByIdPortIn findByIdPortIn, FilmMapper filmMapper, HttpServletRequest request) {
+  FilmRestController(FindByIdPortIn findByIdPortIn, FilmRestMapper mapper, HttpServletRequest request) {
     this.findByIdPortIn = findByIdPortIn
 // highlight-added-start
-    this.filmMapper = filmMapper
+    this.mapper = mapper
     this.request = request
   }
 
@@ -675,7 +675,7 @@ class FilmRestController implements FilmsApi {
   ResponseEntity<FilmResponse> findById(Long id) {
     ok(
         new FilmResponse(
-        data: filmMapper.convert(findByIdPortIn.findById(id)),
+        data: mapper.convert(findByIdPortIn.findById(id)),
         instance: request.requestURI,
         timestamp: now(),
         trace: Span.current().spanContext.traceId,
@@ -705,7 +705,7 @@ export const RestController = () => (
 const JavaMapper = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmMapper.java"
+    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
   >
     {`package dev.pollito.spring_java.sakila.film.adapter.in.rest;
 
@@ -717,7 +717,7 @@ import org.springframework.core.convert.converter.Converter;
 
 @Mapper(config = MapperSpringConfig.class)
 // highlight-modified
-public interface FilmMapper extends Converter<Film, dev.pollito.spring_java.generated.model.Film> {
+public interface FilmRestMapper extends Converter<Film, dev.pollito.spring_java.generated.model.Film> {
   @Override
 // highlight-modified
   dev.pollito.spring_java.generated.model.Film convert(@Nullable Film source);
@@ -728,7 +728,7 @@ public interface FilmMapper extends Converter<Film, dev.pollito.spring_java.gene
 const KotlinMapper = () => (
   <CollapsibleCodeBlock
     language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmMapper.kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
   >
     {`package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
 
@@ -739,7 +739,7 @@ import org.springframework.core.convert.converter.Converter
 
 @Mapper(config = MapperSpringConfig::class)
 // highlight-modified-start
-interface FilmMapper : Converter<Film, dev.pollito.spring_kotlin.generated.model.Film> {
+interface FilmRestMapper : Converter<Film, dev.pollito.spring_kotlin.generated.model.Film> {
   override fun convert(source: Film): dev.pollito.spring_kotlin.generated.model.Film
 // highlight-modified-end
 }`}
@@ -749,7 +749,7 @@ interface FilmMapper : Converter<Film, dev.pollito.spring_kotlin.generated.model
 const GroovyMapper = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/mapper/FilmMapper.groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/mapper/FilmRestMapper.groovy"
   >
     {`
 // highlight-added-start
@@ -762,17 +762,17 @@ import org.springframework.stereotype.Component
 
 @Component
 @CompileStatic
-class FilmMapper {
-  private final ModelMapper modelMapper
+class FilmRestMapper {
+  private final ModelMapper mapper
 
-  FilmMapper(ModelMapper modelMapper) {
-    this.modelMapper = modelMapper
+  FilmRestMapper(ModelMapper modelMapper) {
+    this.mapper = mapper
   }
 
   dev.pollito.spring_groovy.generated.model.Film convert(Film source) {
     if (!source) return null
 
-    def target = modelMapper.map(source, dev.pollito.spring_groovy.generated.model.Film)
+    def target = mapper.map(source, dev.pollito.spring_groovy.generated.model.Film)
 
     if (source.rating) {
       target.rating = dev.pollito.spring_groovy.generated.model.Film.RatingEnum.fromValue(source.rating)

@@ -22,7 +22,7 @@ const MainFileTreeJava = () => (
 └── sakila/
     └── film/
         ├── adapter/in/rest/
-        │   ├── FilmMapper.java             ← ⚪ Ignored (Inteface)
+        │   ├── FilmRestMapper.java         ← ⚪ Ignored (Inteface)
         │   └── FilmRestController.java     ← 🟡 @WebMvcTest
         └── domain/
             ├── model/
@@ -50,7 +50,7 @@ const MainFileTreeKt = () => (
 └── sakila/
     └── film/
         ├── adapter/in/rest/
-        │   ├── FilmMapper.kt               ← ⚪ Ignored (Interface)
+        │   ├── FilmRestMapper.kt           ← ⚪ Ignored (Interface)
         │   └── FilmRestController.kt       ← 🟡 @WebMvcTest
         └── domain/
             ├── model/
@@ -78,7 +78,7 @@ const MainFileTreeGroovy = () => (
 └── sakila/
     └── film/
         ├── adapter/in/rest/
-        │   ├── FilmMapper.groovy           ← 🟣 @ContextConfiguration (ModelMapper)
+        │   ├── FilmRestMapper.groovy       ← 🟣 @ContextConfiguration (ModelMapper)
         │   └── FilmRestController.groovy   ← 🟡 @WebMvcTest
         └── domain/
             ├── model/
@@ -1023,7 +1023,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(FilmRestController.class)
-@Import({ControllerAdvice.class, FilmMapperImpl.class})
+@Import({ControllerAdvice.class, FilmRestMapperImpl.class})
 class FilmRestControllerTest {
 
   private static final String FILMS_PATH = "/api/films";
@@ -1031,7 +1031,7 @@ class FilmRestControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @MockitoBean private FindByIdPortIn findByIdPortIn;
-  @MockitoSpyBean private FilmMapper filmMapper;
+  @MockitoSpyBean private FilmRestMapper mapper;
 
   private static String filmPath(Long id) {
     return FILMS_PATH + "/" + id;
@@ -1109,7 +1109,7 @@ import org.springframework.test.web.servlet.get
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(FilmRestController::class)
-@Import(ControllerAdvice::class, FilmMapperImpl::class)
+@Import(ControllerAdvice::class, FilmRestMapperImpl::class)
 class FilmRestControllerTest {
   companion object {
     private const val API_FILMS = "/api/films"
@@ -1197,7 +1197,7 @@ import org.springframework.test.web.servlet.MockMvc
 import spock.lang.Specification
 
 @WebMvcTest(FilmRestController)
-@Import([ControllerAdvice, FilmMapper, ModelMapperConfig])
+@Import([ControllerAdvice, FilmRestMapper, ModelMapperConfig])
 class FilmRestControllerSpec extends Specification implements ApiResponseMatchers {
 
   private static final String FILMS_PATH = "/api/films"
@@ -1928,7 +1928,7 @@ export const ControllerAdviceTests = () => (
 export const MapperSpec = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmMapperSpec.groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapperSpec.groovy"
   >
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
@@ -1943,18 +1943,18 @@ import spock.lang.Specification
 import spock.lang.Subject
 
 @ContextConfiguration(classes = [TestModelMapperConfig])
-class FilmMapperSpec extends Specification {
+class FilmRestMapperSpec extends Specification {
 
   @Subject
-  FilmMapper filmMapper
+  FilmRestMapper mapper
 
   def setup() {
-    filmMapper = new FilmMapper(new ModelMapper())
+    mapper = new FilmRestMapper(new ModelMapper())
   }
 
   def "convert with null input returns null"() {
     expect:
-    filmMapper.convert(null) == null
+    mapper.convert(null) == null
   }
 
   def "convert with valid film maps correctly using ModelMapper"() {
@@ -1970,7 +1970,7 @@ class FilmMapperSpec extends Specification {
         )
 
     when: "we convert the film"
-    def result = filmMapper.convert(domainFilm)
+    def result = mapper.convert(domainFilm)
 
     then: "the result is not null and basic fields are mapped"
     result != null
@@ -1993,7 +1993,7 @@ class FilmMapperSpec extends Specification {
         )
 
     when: "we convert the film"
-    def result = filmMapper.convert(domainFilm)
+    def result = mapper.convert(domainFilm)
 
     then: "the result has no rating issues"
     result.rating == null
