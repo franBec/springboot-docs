@@ -107,6 +107,7 @@ export default function ZoomContainer({ children, height = '300px' }) {
               </span>
             </div>
 
+            {/* @ts-expect-error - TransformComponent types incorrectly require children as prop */}
             <TransformComponent
               wrapperStyle={{ width: '100%', height: 'calc(100% - 50px)' }}
             >
