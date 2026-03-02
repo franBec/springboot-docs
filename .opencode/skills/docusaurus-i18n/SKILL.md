@@ -38,7 +38,7 @@ i18n/es/docusaurus-plugin-content-docs/current/intro.mdx
 ## Translation Files
 
 | Type                   | Path                                              |
-|------------------------|---------------------------------------------------|
+| ---------------------- | ------------------------------------------------- |
 | UI strings             | `i18n/es/code.json`                               |
 | Theme (navbar, footer) | `i18n/es/docusaurus-theme-classic/`               |
 | Document content       | `i18n/es/docusaurus-plugin-content-docs/current/` |

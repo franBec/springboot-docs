@@ -1,0 +1,37 @@
+---
+sidebar_position: 3
+title: Roadmap
+---
+
+While direct contributions to this demo repository are not actively sought, **feedback on the guide itself is always welcome**. If you find issues, have suggestions for improvement, or want to report inaccuracies, please feel free to open an issue or contact me on [LinkedIn](https://linkedin.com/in/franco-becvort/).
+
+## Things I have in mind
+
+### Translations
+
+- **Ukrainian and Russian**: My partner is native in both languages
+- **Portuguese**: I need to ask a Portuguese friend to help with this
+
+### New Content
+
+- **Deployment → Dependabot and CodeQL**: Create a new document under the Deployment section explaining how to set up Dependabot for automated dependency updates and GitHub Advanced Security with CodeQL for code scanning.
+
+- **Deployment → Docker Registry Alternative**: Add a section in `/deployment/deployment-on-a-vps.mdx` explaining the alternative approach of using a Docker registry (e.g., GitHub Container Registry) instead of having Coolify build the application. Compare pros and cons with the current approach where Coolify handles the build.
+
+- **Spring Security Section**: Create a dedicated section covering authentication, authorization, and security best practices in Spring Boot applications.
+
+- **Java Errors and Exceptions Document**: Currently in `/optional-but-recommended-features/normalize-errors` I start directly introducing the concept of a controller advice. Nevertheless, it is possible that people don't know how Java works around errors and exceptions. This document would probably go into the Prior Recommended Knowledge → Core Concepts section.
+
+### Restructuring
+
+- **Separate JVM-related content**: Prior Recommended Knowledge → Core Concepts is getting many documents. Maybe separate the JVM-related things into their own category under Prior Recommended Knowledge.
+
+- **Persistence Integration → Pagination**: Create a new document introducing pagination. Check [swaggerhub-spring-pagination](https://github.com/daniel-shuy/swaggerhub-spring-pagination) for reference.
+
+### Future Improvements
+
+- **AI Search Feature**: Currently the search bar has an AI feature that is disabled. Need to check how expensive and exploitable activating this could be. Probably an overkill but would be fancy.
+
+### Huge Maybe
+
+- **Template Engines Section**: Just for fun, create some basic views (login, table with pagination, forms) using Thymeleaf (templating) + HTMX (server interactions) + Alpine.js (UI state) + Tailwind CSS (styling). This would be a "modern vintage" approach—server-side rendering with a touch of modern interactivity.

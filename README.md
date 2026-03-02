@@ -29,7 +29,7 @@ Pages not yet translated will show English (fallback behavior).
 
 ## Contributing
 
-While direct contributions to this demo repository are not actively sought, **feedback on the guide itself is always welcome**. If you find issues, have suggestions for improvement, or want to report inaccuracies, please feel free to open an issue or contact the maintainers.
+While direct contributions to this demo repository are not actively sought, **feedback on the guide itself is always welcome**. If you find issues, have suggestions for improvement, or want to report inaccuracies, please feel free to open an issue or contact me on [LinkedIn](https://linkedin.com/in/franco-becvort/).
 
 ## Skills
 

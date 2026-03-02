@@ -4,14 +4,15 @@ description: TypeScript, React, and documentation code style conventions includi
 license: MIT
 compatibility: opencode
 metadata:
-   language: typescript
-   framework: react
-   type: conventions
+  language: typescript
+  framework: react
+  type: conventions
 ---
 
 ## When to use me
 
 Use this skill when:
+
 - Writing new React components
 - Creating or modifying documentation with code snippets
 - Adding images to documentation
@@ -31,7 +32,7 @@ Use this skill when:
 ## Naming Conventions
 
 | Type                | Case                   | Example                                            |
-|---------------------|------------------------|----------------------------------------------------|
+| ------------------- | ---------------------- | -------------------------------------------------- |
 | Components          | PascalCase             | `CollapsibleCodeBlock`, `ZoomContainer`            |
 | Functions           | camelCase              | `handleToggle`, `fetchData`                        |
 | Constants/Variables | camelCase              | `maxLines`, `isExpanded`                           |
