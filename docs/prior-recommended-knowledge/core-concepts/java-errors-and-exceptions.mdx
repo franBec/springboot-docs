@@ -1,0 +1,130 @@
+---
+sidebar_position: 7
+title: Java Errors and Exceptions
+---
+
+import Admonition from '@theme/Admonition';
+
+If you've been writing Java code for a while, you've probably seen your fair share of errors and exceptions. They're part of the deal. Let's break down what each term actually means in Java, because they're not interchangeable.
+
+<Admonition type="info" title="Source">
+  This document is based on Baeldung's article [Errors and Exceptions in
+  Java](https://www.baeldung.com/java-errors-vs-exceptions).
+</Admonition>
+
+## The Throwable Class Hierarchy
+
+In Java, everything that can be thrown inherits from the `Throwable` class. This hierarchy is split into two main branches:
+
+- **Error** – represents serious problems that applications shouldn't try to catch
+- **Exception** – represents conditions that applications might want to catch and handle
+
+```
+Throwable
+├── Error
+│   ├── OutOfMemoryError
+│   ├── StackOverflowError
+│   └── ... (other errors)
+└── Exception
+    ├── RuntimeException (unchecked)
+    │   ├── NullPointerException
+    │   ├── IllegalArgumentException
+    │   ├── IndexOutOfBoundsException
+    │   └── ... (other runtime exceptions)
+    └── Exception (checked)
+        ├── IOException
+        ├── SQLException
+        └── ... (other checked exceptions)
+```
+
+## Errors: When Things Go Really Wrong
+
+**Errors** indicate abnormal situations that should never happen in a well-functioning application. An error is thrown when a serious problem has occurred. Think of it as a fatal flaw in the system.
+
+Key points about errors:
+
+- They are **unchecked exceptions** (not required to be declared or caught)
+- They happen at **runtime**
+- They generally **cannot be recovered** from
+- Applications should **not try to catch and handle** them
+
+```java
+// Examples of errors you'll rarely (hopefully) see
+new StackOverflowError();      // Too much recursion
+new OutOfMemoryError();        // JVM ran out of memory
+new NoClassDefFoundError();    // Class was available at compile time but not runtime
+```
+
+When an `OutOfMemoryError` is thrown, your application is in serious trouble. Trying to catch it and continue as if nothing happened is usually a bad idea. The JVM is already in an unstable state.
+
+## Exceptions: Recoverable Problems
+
+**Exceptions** are abnormal conditions that applications might want to catch and handle. Unlike errors, exceptions can often be recovered from, and they can happen at both runtime and compile time.
+
+```java
+try {
+    String result = fetchDataFromApi();
+} catch (ConnectionException e) {
+    // Handle gracefully - retry, fallback, log, etc.
+}
+```
+
+The key distinction here is that exceptions represent conditions your code can reasonably anticipate and handle.
+
+### Runtime Exceptions (Unchecked)
+
+`RuntimeException` and its subclasses are exceptions that can be thrown while the JVM is running. They're called **unchecked exceptions** because:
+
+- They **don't need to be declared** in the method signature using the `throws` keyword
+- They can be thrown at any time during method execution
+- They propagate outside the method's scope automatically
+
+```java
+public void processUser(String name) {
+    // NullPointerException can be thrown here but no 'throws' needed
+    System.out.println(name.toUpperCase());
+}
+```
+
+Common runtime exceptions include:
+
+- `NullPointerException` – accessing a null reference
+- `IllegalArgumentException` – method received an invalid argument
+- `IndexOutOfBoundsException` – array or list index out of range
+- `IllegalStateException` – method called at wrong time
+
+### Checked Exceptions
+
+All exceptions that are **not** subclasses of `RuntimeException` are **checked exceptions**. These must be:
+
+- **Declared** in the method signature using the `throws` keyword
+- **Caught** or declared by the calling code
+
+```java
+public String readFile(String path) throws IOException {
+    // This method can throw IOException
+    // Caller MUST handle or declare it
+    return Files.readString(Path.of(path));
+}
+```
+
+Common checked exceptions include:
+
+- `IOException` – input/output operations fail
+- `SQLException` – database operations fail
+- `ClassNotFoundException` – class definition not found
+- `InterruptedException` – thread was interrupted
+
+## Quick Comparison
+
+| Feature                 | Error      | RuntimeException | Checked Exception |
+| ----------------------- | ---------- | ---------------- | ----------------- |
+| Catch/Handle?           | No         | Yes              | Yes               |
+| Declare with throws?    | No         | No               | Yes               |
+| Occurs at compile time? | No         | No               | Yes (sometimes)   |
+| Recoverable?            | Usually no | Usually yes      | Usually yes       |
+
+In Spring Boot applications (and Java in general), you'll mostly work with:
+
+- **Runtime exceptions** for programming errors (null pointers, bad arguments)
+- **Checked exceptions** for I/O operations, especially when dealing with external systems
