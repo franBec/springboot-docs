@@ -811,7 +811,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class FindByIdPortInImplTest {
-  @InjectMocks FindByIdPortInImpl findByIdPortIn;
+  @InjectMocks private FindByIdPortInImpl findByIdPortIn;
 
   @Test
   void shouldReturnFilm_whenFindFilmById() {
@@ -1029,9 +1029,17 @@ class FilmRestControllerTest {
   private static final String FILMS_PATH = "/api/films";
   private static final String FILM_BY_ID_TEMPLATE = FILMS_PATH + "/{id}";
 
-  @Autowired private MockMvc mockMvc;
-  @MockitoBean private FindByIdPortIn findByIdPortIn;
-  @MockitoSpyBean private FilmRestMapper mapper;
+  @SuppressWarnings("unused")
+  @Autowired
+  private MockMvc mockMvc;
+
+  @SuppressWarnings("unused")
+  @MockitoBean
+  private FindByIdPortIn findByIdPortIn;
+
+  @SuppressWarnings("unused")
+  @MockitoSpyBean
+  private FilmRestMapper mapper;
 
   private static String filmPath(Long id) {
     return FILMS_PATH + "/" + id;
@@ -1645,16 +1653,19 @@ class ControllerAdviceTest {
   static class FakeController {
 
     @GetMapping("/not-found")
+    @SuppressWarnings("unused")
     public void throwNoResourceFoundException() throws NoResourceFoundException {
       throw new NoResourceFoundException(GET, "/fake", "no-resource-found");
     }
 
     @GetMapping("/error")
+    @SuppressWarnings("unused")
     public void throwException() throws Exception {
       throw new Exception("Test exception");
     }
 
     @GetMapping("/bad-request")
+    @SuppressWarnings("unused")
     public void throwConstraintViolationException() {
       throw new ConstraintViolationException("Constraint violation", Set.of());
     }
@@ -1848,16 +1859,19 @@ class ControllerAdviceSpec extends Specification implements ApiResponseMatchers 
   static class FakeController {
 
     @GetMapping("/not-found")
+    @SuppressWarnings("unused")
     static void throwNoResourceFoundException() throws NoResourceFoundException {
       throw new NoResourceFoundException(GET, "/fake", "no-resource-found")
     }
 
     @GetMapping("/error")
+    @SuppressWarnings("unused")
     static void throwException() throws Exception {
       throw new Exception("Test exception")
     }
 
     @GetMapping("/bad-request")
+    @SuppressWarnings("unused")
     static void throwConstraintViolationException() {
       throw new ConstraintViolationException("Constraint violation", Set.of())
     }
@@ -2047,8 +2061,14 @@ class LoggingIntegrationTest {
 
   private static final String FILM_BY_ID_PATH = "/api/films/{id}";
 
-  @Autowired private MockMvc mockMvc;
-  @MockitoBean private FindByIdPortIn findByIdPortIn;
+  @SuppressWarnings("unused")
+  @Autowired
+  private MockMvc mockMvc;
+
+  @SuppressWarnings("unused")
+  @MockitoBean
+  private FindByIdPortIn findByIdPortIn;
+
 
   @Test
   void whenRequest_thenAllLoggingComponentsWorkTogether(@NonNull CapturedOutput output)
