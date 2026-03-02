@@ -1,0 +1,8 @@
+{
+  "label": "JVM",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Everything about the Java Virtual Machine, JVM languages, and build tools."
+  }
+}

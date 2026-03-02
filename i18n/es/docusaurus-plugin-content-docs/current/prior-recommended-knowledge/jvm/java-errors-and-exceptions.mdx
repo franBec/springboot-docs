@@ -1,0 +1,130 @@
+---
+sidebar_position: 3
+title: Errores y excepciones en Java
+---
+
+import Admonition from '@theme/Admonition';
+
+Si llevas un tiempo escribiendo código en Java, probablemente ya viste tu buena dosis de errores y excepciones. Son parte del trato. Vamos a ver qué significa cada término en Java, porque no son intercambiables.
+
+<Admonition type="info" title="Fuente">
+  Este documento está basado en el artículo de Baeldung [Errors and Exceptions
+  in Java](https://www.baeldung.com/java-errors-vs-exceptions).
+</Admonition>
+
+## La jerarquía de la clase Throwable
+
+En Java, todo lo que se puede lanzar hereda de la clase `Throwable`. Esta jerarquía se divide en dos ramas principales:
+
+- **Error** – representa problemas graves que las aplicaciones no deberían intentar capturar
+- **Exception** – representa condiciones que las aplicaciones podrían querer capturar y manejar
+
+```
+Throwable
+├── Error
+│   ├── OutOfMemoryError
+│   ├── StackOverflowError
+│   └── ... (other errors)
+└── Exception
+    ├── RuntimeException (unchecked)
+    │   ├── NullPointerException
+    │   ├── IllegalArgumentException
+    │   ├── IndexOutOfBoundsException
+    │   └── ... (other runtime exceptions)
+    └── Exception (checked)
+        ├── IOException
+        ├── SQLException
+        └── ... (other checked exceptions)
+```
+
+## Errores: cuando las cosas salen muy mal
+
+Los **errores** indican situaciones anormales que nunca deberían ocurrir en una aplicación que funciona correctamente. Se lanza un error cuando ha ocurrido un problema grave. Pensá en ello como un defecto fatal en el sistema.
+
+Puntos clave sobre los errores:
+
+- Son **excepciones no verificadas** (no es necesario declararlas ni capturarlas)
+- Ocurren en **tiempo de ejecución**
+- Generalmente **no se pueden recuperar**
+- Las aplicaciones **no deberían intentar capturarlos y manejarlos**
+
+```java
+// Examples of errors you'll rarely (hopefully) see
+new StackOverflowError();      // Too much recursion
+new OutOfMemoryError();        // JVM ran out of memory
+new NoClassDefFoundError();    // Class was available at compile time but not runtime
+```
+
+Cuando se lanza un `OutOfMemoryError`, tu aplicación está en serios problemas. Intentar capturarlo y continuar como si nada hubiera pasado suele ser una mala idea. La JVM ya está en un estado inestable.
+
+## Excepciones: problemas recuperables
+
+Las **excepciones** son condiciones anormales que las aplicaciones podrían querer capturar y manejar. A diferencia de los errores, las excepciones a menudo se pueden recuperar, y pueden ocurrir tanto en tiempo de ejecución como en tiempo de compilación.
+
+```java
+try {
+    String result = fetchDataFromApi();
+} catch (ConnectionException e) {
+    // Handle gracefully - retry, fallback, log, etc.
+}
+```
+
+La distinción clave aquí es que las excepciones representan condiciones que tu código puede anticipar y manejar razonablemente.
+
+### Excepciones de tiempo de ejecución (no verificadas)
+
+`RuntimeException` y sus subclases son excepciones que pueden ser lanzadas mientras la JVM está ejecutándose. Se les llama **excepciones no verificadas** porque:
+
+- **No necesitan ser declaradas** en la firma del método usando la palabra clave `throws`
+- Pueden lanzarse en cualquier momento durante la ejecución del método
+- Se propagan automáticamente fuera del alcance del método
+
+```java
+public void processUser(String name) {
+    // NullPointerException can be thrown here but no 'throws' needed
+    System.out.println(name.toUpperCase());
+}
+```
+
+Las excepciones comunes de tiempo de ejecución incluyen:
+
+- `NullPointerException` – acceder a una referencia nula
+- `IllegalArgumentException` – el método recibió un argumento inválido
+- `IndexOutOfBoundsException` – índice de array o lista fuera de rango
+- `IllegalStateException` – método llamado en el momento incorrecto
+
+### Excepciones verificadas
+
+Todas las excepciones que **no** son subclases de `RuntimeException` son **excepciones verificadas**. Estas deben ser:
+
+- **Declaradas** en la firma del método usando la palabra clave `throws`
+- **Capturadas** o declaradas por el código que llama
+
+```java
+public String readFile(String path) throws IOException {
+    // This method can throw IOException
+    // Caller MUST handle or declare it
+    return Files.readString(Path.of(path));
+}
+```
+
+Las excepciones verificadas comunes incluyen:
+
+- `IOException` – fallan las operaciones de entrada/salida
+- `SQLException` – fallan las operaciones de base de datos
+- `ClassNotFoundException` – no se encontró la definición de clase
+- `InterruptedException` – el hilo fue interrumpido
+
+## Comparación rápida
+
+| Característica          | Error             | RuntimeException  | Excepción verificada |
+| ----------------------- | ----------------- | ----------------- | -------------------- |
+| ¿Capturar/Manejar?      | No                | Sí                | Sí                   |
+| ¿Declarar con throws?   | No                | No                | Sí                   |
+| ¿Ocurre en compilación? | No                | No                | Sí (a veces)         |
+| ¿Recuperable?           | Por lo general no | Por lo general sí | Por lo general sí    |
+
+En aplicaciones Spring Boot (y Java en general), vas a trabajar principalmente con:
+
+- **Excepciones de tiempo de ejecución** para errores de programación (punteros nulos, argumentos incorrectos)
+- **Excepciones verificadas** para operaciones de E/S, especialmente al tratar con sistemas externos
