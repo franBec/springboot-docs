@@ -14,7 +14,7 @@ const MainFileTreeJava = () => (
 │   │   └── ControllerAdvice.java           ← 🔶 Standalone MockMvc
 │   ├── log/
 │   │   ├── LogAspect.java                  ┐
-│   │   ├── LogFilter.java                  ├─→ 🔴 @SpringBootTest (single test)
+│   │   ├── LogFilter.java                  │ 🔴 @SpringBootTest (single test)
 │   │   ├── MaskingPatternLayout.java       │
 │   │   └── TraceIdFilter.java              ┘
 │   └── mapper/
@@ -42,7 +42,7 @@ const MainFileTreeKt = () => (
 │   │   └── ControllerAdvice.kt             ← 🔶 Standalone MockMvc
 │   ├── log/
 │   │   ├── LogAspect.kt                    ┐
-│   │   ├── LogFilter.kt                    ├─→ 🔴 @SpringBootTest (single test)
+│   │   ├── LogFilter.kt                    │ 🔴 @SpringBootTest (single test)
 │   │   ├── MaskingPatternLayout.kt         │
 │   │   └── TraceIdFilter.kt                ┘
 │   └── mapper/
@@ -64,27 +64,27 @@ const MainFileTreeKt = () => (
 const MainFileTreeGroovy = () => (
   <CollapsibleCodeBlock language="log" title="File Tree">
     {`spring_groovy/
-├── SpringGroovyApplication.groovy          ← 🔴 @SpringBootTest (context loads)
+├── SpringGroovyApplication.groovy            ← 🔴 @SpringBootTest (context loads)
 ├── config/
 │   ├── advice/
-│   │   └── ControllerAdvice.groovy         ← 🔶 Standalone MockMvc
+│   │   └── ControllerAdvice.groovy           ← 🔶 Standalone MockMvc
 │   ├── log/
-│   │   ├── LogAspect.groovy                ┐
-│   │   ├── LogFilter.groovy                ├─→ 🔴 @SpringBootTest (single test)
-│   │   ├── MaskingPatternLayout.groovy     │
-│   │   └── TraceIdFilter.groovy            ┘
+│   │   ├── LogAspect.groovy                  ┐
+│   │   ├── LogFilter.groovy                  │ 🔴 @SpringBootTest (single test)
+│   │   ├── MaskingPatternLayout.groovy       │
+│   │   └── TraceIdFilter.groovy              ┘
 │   └── mapper/
-│       └── ModelMapperConfig.groovy        ← ⚪ Ignored (Config)
+│       └── ModelMapperConfig.groovy          ← ⚪ Ignored (Config)
 └── sakila/
     └── film/
         ├── adapter/in/rest/
-        │   ├── FilmRestMapper.groovy       ← 🟣 @ContextConfiguration (ModelMapper)
-        │   └── FilmRestController.groovy   ← 🟡 @WebMvcTest
+        │   ├── FilmRestMapper.groovy         ┐
+        │   └── FilmRestController.groovy     ┘ 🟡 @WebMvcTest (single test)
         └── domain/
             ├── model/
-            │   └── Film.groovy             ← ⚪ Ignored (POJO)
+            │   └── Film.groovy               ← ⚪ Ignored (POJO)
             └── port/in/
-                ├── FindByIdPortIn.groovy   ← ⚪ Ignored (Interface)
+                ├── FindByIdPortIn.groovy     ← ⚪ Ignored (Interface)
                 └── FindByIdPortInImpl.groovy ← 🟢 Unit Test`}
   </CollapsibleCodeBlock>
 );
