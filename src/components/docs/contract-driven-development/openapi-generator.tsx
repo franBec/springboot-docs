@@ -557,7 +557,7 @@ public class FilmRestController implements FilmsApi {
   }
 
   @Override
-  public ResponseEntity<FilmResponse> findById(Long id) {
+  public ResponseEntity<FilmResponse> findById(Integer id) {
     return ok(
         new FilmResponse()
             .data(mapper.convert(findByIdPortIn.findById(id)))
@@ -606,7 +606,7 @@ class FilmRestController(
     TODO("Not yet implemented")
   }
 
-  override fun findById(id: Long): ResponseEntity<FilmResponse> {
+  override fun findById(id: Int): ResponseEntity<FilmResponse> {
     return ok(
         FilmResponse(
             data = mapper.convert(findByIdPortIn.findById(id)),
@@ -672,7 +672,7 @@ class FilmRestController implements FilmsApi {
   }
 
   @Override
-  ResponseEntity<FilmResponse> findById(Long id) {
+  ResponseEntity<FilmResponse> findById(Integer id) {
     ok(
         new FilmResponse(
         data: mapper.convert(findByIdPortIn.findById(id)),
@@ -771,14 +771,7 @@ class FilmRestMapper {
 
   dev.pollito.spring_groovy.generated.model.Film convert(Film source) {
     if (!source) return null
-
-    def target = mapper.map(source, dev.pollito.spring_groovy.generated.model.Film)
-
-    if (source.rating) {
-      target.rating = dev.pollito.spring_groovy.generated.model.Film.RatingEnum.fromValue(source.rating)
-    }
-
-    target
+    mapper.map(source, dev.pollito.spring_groovy.generated.model.Film)
   }
 }
 // highlight-added-end`}

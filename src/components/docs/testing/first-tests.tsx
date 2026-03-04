@@ -814,8 +814,8 @@ class FindByIdPortInImplTest {
   @InjectMocks private FindByIdPortInImpl findByIdPortIn;
 
   @Test
-  void shouldReturnFilm_whenFindFilmById() {
-    assertNotNull(findByIdPortIn.findById(1L));
+  void findByIdReturnsADomainModel() {
+    assertNotNull(findByIdPortIn.findById(1));
   }
 }
 // highlight-added-end`}
@@ -841,8 +841,8 @@ class FindByIdPortInImplTest {
   @InjectMockKs private lateinit var findByIdPortInImpl: FindByIdPortInImpl
 
   @Test
-  fun \`findFilmById returns not null\`() {
-    assertNotNull(findByIdPortInImpl.findById(1L))
+  fun \`findById returns a domain model\`() {
+    assertNotNull(findByIdPortInImpl.findById(1))
   }
 }
 // highlight-added-end`}
@@ -863,16 +863,12 @@ import spock.lang.Subject
 class FindByIdPortInImplSpec extends Specification {
   @Subject FindByIdPortInImpl findByIdPortIn = new FindByIdPortInImpl()
 
-  def "findFilmById returns a film with the given id"() {
-    given: "a film id"
-    def filmId = 1L
+  def "findById returns a domain model"() {
+    when: "findById is called"
+    def result = findByIdPortIn.findById(1)
 
-    when: "findFilmById is called"
-    def result = findByIdPortIn.findById(filmId)
-
-    then: "a film is returned with correct data"
+    then: "a domain model is returned"
     result != null
-    result.id == filmId
   }
 }
 // highlight-added-end`}
@@ -1000,7 +996,7 @@ package dev.pollito.spring_java.sakila.film.adapter.in.rest;
 
 import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasErrorFields;
 import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasStandardApiResponseFields;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.*;
@@ -1041,32 +1037,29 @@ class FilmRestControllerTest {
   @MockitoSpyBean
   private FilmRestMapper mapper;
 
-  private static String filmPath(Long id) {
+  private static String filmPath(Integer id) {
     return FILMS_PATH + "/" + id;
   }
 
   @Test
-  void whenFindById_thenReturnsFilm() throws Exception {
-    Long filmId = 1L;
-    String filmTitle = "Test Film";
-    Film domainFilm = mock(Film.class);
-    when(domainFilm.getId()).thenReturn(filmId);
-    when(domainFilm.getTitle()).thenReturn(filmTitle);
+  void findByIdReturnsOK() throws Exception {
+    Integer filmId = 1;
+    Film film = mock(Film.class);
+    when(film.getId()).thenReturn(filmId);
 
-    when(findByIdPortIn.findById(anyLong())).thenReturn(domainFilm);
+    when(findByIdPortIn.findById(anyInt())).thenReturn(film);
 
     mockMvc
         .perform(get(FILM_BY_ID_TEMPLATE, filmId).accept(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(hasStandardApiResponseFields(filmPath(filmId), OK))
-        .andExpect(jsonPath("$.data.id").value(filmId))
-        .andExpect(jsonPath("$.data.title").value(filmTitle));
+        .andExpect(jsonPath("$.data.id").value(filmId));
   }
 
   @Test
-  void whenFindByIdWithInvalidId_thenReturnsBadRequest() throws Exception {
-    Long invalidId = 0L;
+  void findByIdWithInvalidIdReturnsBAD_REQUEST() throws Exception {
+    Integer invalidId = 0;
     HttpStatus status = BAD_REQUEST;
     mockMvc
         .perform(get(FILM_BY_ID_TEMPLATE, invalidId).accept(APPLICATION_JSON))
@@ -1075,7 +1068,7 @@ class FilmRestControllerTest {
   }
 
   @Test
-  void whenFindAll_thenThrowsUnsupportedOperationException() throws Exception {
+  void findAllReturnsINTERNAL_SERVER_ERROR() throws Exception {
     HttpStatus status = INTERNAL_SERVER_ERROR;
     mockMvc
         .perform(get(FILMS_PATH).accept(APPLICATION_JSON))
@@ -1102,6 +1095,7 @@ import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindByIdPortIn
 import dev.pollito.spring_kotlin.test.util.hasErrorFields
 import dev.pollito.spring_kotlin.test.util.hasStandardApiResponseFields
 import io.mockk.every
+import io.mockk.mockk
 import kotlin.test.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -1127,32 +1121,23 @@ class FilmRestControllerTest {
   @Autowired private lateinit var mockMvc: MockMvc
 
   @Test
-  fun \`when find by id then returns film\`() {
-    val filmId = 1L
-    val film =
-        Film(
-            id = filmId,
-            title = "Test Film",
-            description = "Test description",
-            releaseYear = 2000,
-            rating = "G",
-            lengthMinutes = 100,
-            language = "EN",
-        )
-
+  fun \`findById returns OK\`() {
+    val filmId = 1
+    val film = mockk<Film>(relaxed = true)
+    every { film.id } returns filmId
     every { findByIdPortIn.findById(filmId) } returns film
 
     mockMvc
         .get("$API_FILMS/$filmId") { accept = APPLICATION_JSON }
         .andExpect {
           status { isOk() }
-          jsonPath("$.data.id") { value(filmId.toInt()) }
+          jsonPath("$.data.id") { value(filmId) }
           hasStandardApiResponseFields("$API_FILMS/$filmId", OK)
         }
   }
 
   @Test
-  fun \`when find by invalid id then returns bad request\`() {
+  fun \`findById with invalid id returns BAD_REQUEST\`() {
     val invalidId = 0L
 
     mockMvc
@@ -1165,7 +1150,7 @@ class FilmRestControllerTest {
   }
 
   @Test
-  fun \`when find all then throws NotImplementedError\`() {
+  fun \`findAll returns INTERNAL_SERVER_ERROR\`() {
     mockMvc
         .get(API_FILMS) { accept = APPLICATION_JSON }
         .andExpect {
@@ -1217,28 +1202,23 @@ class FilmRestControllerSpec extends Specification implements ApiResponseMatcher
   @SpringBean
   FindByIdPortIn findByIdPortIn = Mock()
 
-  private static String filmPath(Long id) {
+  private static String filmPath(Integer id) {
     "\${FILMS_PATH}/\${id}"
   }
 
-  def "when findById then returns film"() {
-    given: "a film exists"
-    def filmId = 1L
-    def domainFilm = new Film(
-        id: filmId,
-        rating: "G"
-        )
+  def "findById returns OK"() {
+    given: "a mocked domain model and primary port behavior"
+    def filmId = 1
+    def film = Stub(Film) {getId() >> filmId}
+    findByIdPortIn.findById(filmId) >> film
 
-    and: "the port returns it"
-    findByIdPortIn.findById(filmId) >> domainFilm
-
-    when: "we request the film by id"
+    when: "findById is requested"
     def result = mockMvc.perform(
         get(FILM_BY_ID_TEMPLATE, filmId)
         .accept(APPLICATION_JSON)
         )
 
-    then: "we get a successful response with the film"
+    then: "response is OK"
     result
         .andExpect(status().isOk())
         .andExpect(content().contentType(APPLICATION_JSON))
@@ -1246,30 +1226,30 @@ class FilmRestControllerSpec extends Specification implements ApiResponseMatcher
         .andExpect(jsonPath('$.data.id').value(filmId))
   }
 
-  def "when findById with invalid id then returns bad request"() {
+  def "findById with invalid id returns BAD_REQUEST"() {
     given: "an invalid film id"
-    def invalidId = 0L
+    def invalidId = 0
 
-    when: "we request the film"
+    when: "findById is requested"
     def result = mockMvc.perform(
         get(FILM_BY_ID_TEMPLATE, invalidId)
         .accept(APPLICATION_JSON)
         )
 
-    then: "we get a bad request response"
+    then: "response is BAD_REQUEST"
     result
         .andExpect(hasStandardApiResponseFields(filmPath(invalidId), BAD_REQUEST))
         .andExpect(hasErrorFields(BAD_REQUEST))
   }
 
-  def "when findAll then throws unsupported operation exception"() {
-    when: "we request all films"
+  def "findAll returns INTERNAL_SERVER_ERROR"() {
+    when: "findAll is requested"
     def result = mockMvc.perform(
         get(FILMS_PATH)
         .accept(APPLICATION_JSON)
         )
 
-    then: "we get an internal server error"
+    then: "response is INTERNAL_SERVER_ERROR"
     result
         .andExpect(hasStandardApiResponseFields(FILMS_PATH, INTERNAL_SERVER_ERROR))
         .andExpect(hasErrorFields(INTERNAL_SERVER_ERROR))
@@ -1634,8 +1614,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Set;
+import java.util.stream.Stream;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -1650,7 +1634,7 @@ class ControllerAdviceTest {
 
   @RestController
   @RequestMapping("/fake")
-  static class FakeController {
+  private static class FakeController {
 
     @GetMapping("/not-found")
     @SuppressWarnings("unused")
@@ -1679,43 +1663,23 @@ class ControllerAdviceTest {
             .build();
   }
 
-  @Test
-  void whenNoResourceFoundException_thenReturnsNotFound() throws Exception {
-    HttpStatus status = NOT_FOUND;
-    String expectedInstance = "/fake/not-found";
-
-    when(request.getRequestURI()).thenReturn(expectedInstance);
-    mockMvc
-        .perform(get(expectedInstance))
-        .andExpect(status().isNotFound())
-        .andExpect(hasStandardApiResponseFields(expectedInstance, status))
-        .andExpect(hasErrorFields(status));
+  static @NonNull Stream<Arguments> testCases() {
+    return Stream.of(
+        Arguments.of("/fake/not-found", NOT_FOUND),
+        Arguments.of("/fake/error", INTERNAL_SERVER_ERROR),
+        Arguments.of("/fake/bad-request", BAD_REQUEST));
   }
 
-  @Test
-  void whenException_thenReturnsInternalServerError() throws Exception {
-    HttpStatus status = INTERNAL_SERVER_ERROR;
-    String expectedInstance = "/fake/error";
-
-    when(request.getRequestURI()).thenReturn(expectedInstance);
+  @ParameterizedTest
+  @MethodSource("testCases")
+  void exceptionHandlingReturnsCorrectStatus(String path, @NonNull HttpStatus expectedStatus)
+      throws Exception {
+    when(request.getRequestURI()).thenReturn(path);
     mockMvc
-        .perform(get(expectedInstance))
-        .andExpect(status().isInternalServerError())
-        .andExpect(hasStandardApiResponseFields(expectedInstance, status))
-        .andExpect(hasErrorFields(status));
-  }
-
-  @Test
-  void whenConstraintViolationException_thenReturnsBadRequest() throws Exception {
-    HttpStatus status = BAD_REQUEST;
-    String expectedInstance = "/fake/bad-request";
-
-    when(request.getRequestURI()).thenReturn(expectedInstance);
-    mockMvc
-        .perform(get(expectedInstance))
-        .andExpect(status().isBadRequest())
-        .andExpect(hasStandardApiResponseFields(expectedInstance, status))
-        .andExpect(hasErrorFields(status));
+        .perform(get(path))
+        .andExpect(status().is(expectedStatus.value()))
+        .andExpect(hasStandardApiResponseFields(path, expectedStatus))
+        .andExpect(hasErrorFields(expectedStatus));
   }
 }
 // highlight-added-end`}
@@ -1736,9 +1700,13 @@ import io.mockk.every
 import io.mockk.mockk
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
-import kotlin.test.Test
+import java.util.stream.Stream
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
@@ -1751,7 +1719,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 class ControllerAdviceTest {
 
   private lateinit var mockMvc: MockMvc
-  private val request: HttpServletRequest = mockk(relaxed = true)
+  private val request = mockk<HttpServletRequest>()
 
   @RestController
   @RequestMapping("/fake")
@@ -1773,49 +1741,29 @@ class ControllerAdviceTest {
     }
   }
 
+  companion object {
+    @JvmStatic
+    fun testCases(): Stream<Arguments> =
+        Stream.of(
+            Arguments.of("/fake/not-found", NOT_FOUND),
+            Arguments.of("/fake/error", INTERNAL_SERVER_ERROR),
+            Arguments.of("/fake/bad-request", BAD_REQUEST),
+        )
+  }
+
   @BeforeEach
   fun setUp() {
     mockMvc =
         standaloneSetup(FakeController()).setControllerAdvice(ControllerAdvice(request)).build()
   }
 
-  @Test
-  fun \`when NoResourceFoundException then returns NotFound\`() {
-    val status = NOT_FOUND
-    val expectedInstance = "/fake/not-found"
-
+  @ParameterizedTest(name = "{1}")
+  @MethodSource("testCases")
+  fun \`exception handling returns correct status\`(expectedInstance: String, status: HttpStatus) {
     every { request.requestURI } returns expectedInstance
 
     mockMvc.get(expectedInstance).andExpect {
-      status { isNotFound() }
-      hasStandardApiResponseFields(expectedInstance, status)
-      hasErrorFields(status)
-    }
-  }
-
-  @Test
-  fun \`when Exception then returns InternalServerError\`() {
-    val status = INTERNAL_SERVER_ERROR
-    val expectedInstance = "/fake/error"
-
-    every { request.requestURI } returns expectedInstance
-
-    mockMvc.get(expectedInstance).andExpect {
-      status { isInternalServerError() }
-      hasStandardApiResponseFields(expectedInstance, status)
-      hasErrorFields(status)
-    }
-  }
-
-  @Test
-  fun \`when ConstraintViolationException then returns BadRequest\`() {
-    val status = BAD_REQUEST
-    val expectedInstance = "/fake/bad-request"
-
-    every { request.requestURI } returns expectedInstance
-
-    mockMvc.get(expectedInstance).andExpect {
-      status { isBadRequest() }
+      status { isEqualTo(status.value()) }
       hasStandardApiResponseFields(expectedInstance, status)
       hasErrorFields(status)
     }
@@ -1842,13 +1790,13 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 import dev.pollito.spring_groovy.test.util.ApiResponseMatchers
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
-import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.resource.NoResourceFoundException
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class ControllerAdviceSpec extends Specification implements ApiResponseMatchers {
   MockMvc mockMvc
@@ -1883,42 +1831,22 @@ class ControllerAdviceSpec extends Specification implements ApiResponseMatchers 
         .build()
   }
 
-  def "when NoResourceFoundException then returns NOT_FOUND"() {
+  @Unroll
+  def "#exceptionType returns #httpStatus"() {
     given:
-    HttpStatus httpStatus = NOT_FOUND
-    String expectedInstance = "/fake/not-found"
-    request.getRequestURI() >> expectedInstance
+    request.getRequestURI() >> endpoint
 
     expect:
-    mockMvc.perform(get(expectedInstance))
-        .andExpect(status().isNotFound())
-        .andExpect(hasStandardApiResponseFields(expectedInstance, httpStatus))
+    mockMvc.perform(get(endpoint))
+        .andExpect(status().is(httpStatus.value()))
+        .andExpect(hasStandardApiResponseFields(endpoint, httpStatus))
         .andExpect(hasErrorFields(httpStatus))
-  }
 
-  def "when Exception then returns INTERNAL_SERVER_ERROR"() {
-    given:
-    HttpStatus httpStatus = INTERNAL_SERVER_ERROR
-    String expectedInstance = "/fake/error"
-    request.getRequestURI() >> expectedInstance
-
-    expect:
-    mockMvc.perform(get(expectedInstance))
-        .andExpect(status().isInternalServerError())
-        .andExpect(hasStandardApiResponseFields(expectedInstance, httpStatus))
-        .andExpect(hasErrorFields(httpStatus))
-  }
-
-  def "when ConstraintViolationException then returns BAD_REQUEST"() {
-    HttpStatus httpStatus = BAD_REQUEST
-    String expectedInstance = "/fake/bad-request"
-    request.getRequestURI() >> expectedInstance
-
-    expect:
-    mockMvc.perform(get(expectedInstance))
-        .andExpect(status().isBadRequest())
-        .andExpect(hasStandardApiResponseFields(expectedInstance, httpStatus))
-        .andExpect(hasErrorFields(httpStatus))
+    where:
+    endpoint            | httpStatus            || exceptionType
+    "/fake/not-found"   | NOT_FOUND             || "NoResourceFoundException"
+    "/fake/error"       | INTERNAL_SERVER_ERROR || "Exception"
+    "/fake/bad-request" | BAD_REQUEST           || "ConstraintViolationException"
   }
 }
 // highlight-added-end`}
@@ -1937,94 +1865,6 @@ export const ControllerAdviceTests = () => (
       <ControllerAdviceSpec />
     </TabItem>
   </Tabs>
-);
-
-export const MapperSpec = () => (
-  <CollapsibleCodeBlock
-    language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapperSpec.groovy"
-  >
-    {`// highlight-added-start
-package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
-
-import dev.pollito.spring_groovy.generated.model.Film.RatingEnum
-import dev.pollito.spring_groovy.sakila.film.domain.model.Film
-import org.modelmapper.ModelMapper
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
-import spock.lang.Subject
-
-@ContextConfiguration(classes = [TestModelMapperConfig])
-class FilmRestMapperSpec extends Specification {
-
-  @Subject
-  FilmRestMapper mapper
-
-  def setup() {
-    mapper = new FilmRestMapper(new ModelMapper())
-  }
-
-  def "convert with null input returns null"() {
-    expect:
-    mapper.convert(null) == null
-  }
-
-  def "convert with valid film maps correctly using ModelMapper"() {
-    given: "a domain film"
-    def domainFilm = new Film(
-        id: 1L,
-        title: "Test Film",
-        description: "A test film",
-        releaseYear: 2023,
-        rating: "PG",
-        lengthMinutes: 120,
-        language: "English"
-        )
-
-    when: "we convert the film"
-    def result = mapper.convert(domainFilm)
-
-    then: "the result is not null and basic fields are mapped"
-    result != null
-    result.id == 1L
-    result.title == "Test Film"
-    result.description == "A test film"
-    result.releaseYear == 2023
-    result.lengthMinutes == 120
-    result.language == "English"
-
-    and: "rating is converted to enum"
-    result.rating == RatingEnum.PG
-  }
-
-  def "convert handles domain film without rating"() {
-    given: "a domain film without rating"
-    def domainFilm = new Film(
-        id: 5L,
-        title: "No Rating Film"
-        )
-
-    when: "we convert the film"
-    def result = mapper.convert(domainFilm)
-
-    then: "the result has no rating issues"
-    result.rating == null
-    result.id == 5L
-    result.title == "No Rating Film"
-  }
-}
-
-@TestConfiguration
-class TestModelMapperConfig {
-  @Bean
-  ModelMapper modelMapper() {
-    return new ModelMapper()
-  }
-}
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
 );
 
 const LoggingIntegrationTestJava = () => (
@@ -2069,14 +1909,12 @@ class LoggingIntegrationTest {
   @MockitoBean
   private FindByIdPortIn findByIdPortIn;
 
-
   @Test
-  void whenRequest_thenAllLoggingComponentsWorkTogether(@NonNull CapturedOutput output)
+  void whenRequestThenAllLoggingComponentsWorkTogether(@NonNull CapturedOutput output)
       throws Exception {
-    Long filmId = 1L;
+    Integer filmId = 1;
     Film film = mock(Film.class);
     when(film.getId()).thenReturn(filmId);
-    when(film.getTitle()).thenReturn("Test Film");
     when(findByIdPortIn.findById(filmId)).thenReturn(film);
 
     mockMvc
@@ -2139,6 +1977,7 @@ import com.ninjasquad.springmockk.MockkBean
 import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
 import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindByIdPortIn
 import io.mockk.every
+import io.mockk.mockk
 import kotlin.test.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -2160,22 +1999,13 @@ class LoggingIntegrationTest {
   }
 
   @Autowired private lateinit var mockMvc: MockMvc
-
   @MockkBean private lateinit var findByIdPortIn: FindByIdPortIn
 
   @Test
   fun \`when request then all logging components work together\`(output: CapturedOutput) {
-    val filmId = 1L
-    val film =
-        Film(
-            id = filmId,
-            title = "Test Film",
-            description = "A test film description",
-            releaseYear = 2024,
-            rating = "PG",
-            lengthMinutes = 120,
-            language = "English",
-        )
+    val filmId = 1
+    val film = mockk<Film>(relaxed = true)
+    every { film.id } returns filmId
     every { findByIdPortIn.findById(filmId) } returns film
 
     mockMvc
@@ -2286,11 +2116,8 @@ class LoggingIntegrationSpec extends Specification {
 
   def "when request then all logging components work together"() {
     given:
-    def filmId = 1L
-    def film = Stub(Film) {
-      getId() >> filmId
-      getTitle() >> "Test Film"
-    }
+    def filmId = 1
+    def film = Stub(Film) {getId() >> filmId}
     findByIdPortIn.findById(filmId) >> film
 
     when:
@@ -2346,7 +2173,7 @@ export const JacocoReportJava = () => (
       {
         name: 'dev.pollito.spring_java.config.advice',
         instructionCoverage: 93,
-        branchCoverage: 52,
+        branchCoverage: 66,
         missedComplexity: 1,
         totalComplexity: 7,
         missedLines: 1,
@@ -2431,7 +2258,7 @@ export const JacocoReportKt = () => (
       },
       {
         name: 'dev.pollito.spring_kotlin.config.log',
-        instructionCoverage: 92,
+        instructionCoverage: 93,
         branchCoverage: 57,
         missedComplexity: 15,
         totalComplexity: 38,
@@ -2440,7 +2267,7 @@ export const JacocoReportKt = () => (
         missedMethods: 3,
         totalMethods: 24,
         missedClasses: 0,
-        totalClasses: 2,
+        totalClasses: 6,
       },
       {
         name: 'dev.pollito.spring_kotlin.sakila.film.adapter.in.rest',
@@ -2513,46 +2340,46 @@ export const JacocoReportGroovy = () => (
         missedMethods: 1,
         totalMethods: 13,
         missedClasses: 0,
-        totalClasses: 1,
+        totalClasses: 4,
       },
       {
         name: 'dev.polito.spring_groovy.sakila.film.adapter.in.rest',
         instructionCoverage: 100,
         branchCoverage: undefined,
         missedComplexity: 0,
-        totalComplexity: 3,
+        totalComplexity: 5,
         missedLines: 0,
-        totalLines: 13,
+        totalLines: 16,
         missedMethods: 0,
-        totalMethods: 3,
+        totalMethods: 5,
         missedClasses: 0,
-        totalClasses: 1,
+        totalClasses: 2,
       },
       {
         name: 'dev.polito.spring_groovy.sakila.film.domain.port.in',
         instructionCoverage: 100,
         branchCoverage: undefined,
         missedComplexity: 0,
-        totalComplexity: 2,
+        totalComplexity: 1,
         missedLines: 0,
-        totalLines: 9,
+        totalLines: 8,
         missedMethods: 0,
-        totalMethods: 2,
+        totalMethods: 1,
         missedClasses: 0,
         totalClasses: 1,
       },
       {
         name: 'Total',
-        instructionCoverage: 93,
-        branchCoverage: 59,
-        missedComplexity: 18,
-        totalComplexity: 55,
-        missedLines: 4,
-        totalLines: 99,
-        missedMethods: 5,
-        totalMethods: 39,
+        instructionCoverage: 95,
+        branchCoverage: 60,
+        missedComplexity: 19,
+        totalComplexity: 47,
+        missedLines: 6,
+        totalLines: 96,
+        missedMethods: 1,
+        totalMethods: 25,
         missedClasses: 0,
-        totalClasses: 10,
+        totalClasses: 8,
         isTotal: true,
       },
     ]}

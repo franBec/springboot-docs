@@ -13,7 +13,7 @@ export const FilmJson = () => (
   "description": "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
   "releaseYear": 2006,
   "rating": "PG",
-  "lengthMinutes": 86,
+  "length": 86,
   "language": "English"
 }`}
   </CollapsibleCodeBlock>
@@ -376,12 +376,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = PRIVATE)
 public class Film {
-  Long id;
+  Integer id;
   String title;
   String description;
   Integer releaseYear;
   String rating;
-  Integer lengthMinutes;
+  Integer length;
   String language;
 }
 // highlight-added-end`}
@@ -397,12 +397,12 @@ export const FilmKt = () => (
 package dev.pollito.spring_kotlin.sakila.film.domain.model
 
 data class Film(
-    val id: Long? = null,
+    val id: Int,
     val title: String,
     val description: String,
     val releaseYear: Int,
     val rating: String,
-    val lengthMinutes: Int,
+    val length: Int,
     val language: String,
 )
 // highlight-added-end`}
@@ -423,12 +423,12 @@ import groovy.transform.CompileStatic
 @Canonical
 @CompileStatic
 class Film {
-  Long id
+  Integer id
   String title
   String description
   Integer releaseYear
   String rating
-  Integer lengthMinutes
+  Integer length
   String language
 }
 // highlight-added-end`}
@@ -446,7 +446,7 @@ package dev.pollito.spring_java.sakila.film.domain.port.in;
 import dev.pollito.spring_java.sakila.film.domain.model.Film;
 
 public interface FindByIdPortIn {
-  Film findById(Long id);
+  Film findById(Integer id);
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
@@ -466,7 +466,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class FindByIdPortInImpl implements FindByIdPortIn {
   @Override
-  public Film findById(Long id) {
+  public Film findById(Integer id) {
     return Film.builder()
         .id(id)
         .title("ACADEMY DINOSAUR")
@@ -474,7 +474,7 @@ public class FindByIdPortInImpl implements FindByIdPortIn {
             "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies")
         .releaseYear(2006)
         .rating("PG")
-        .lengthMinutes(86)
+        .length(86)
         .language("English")
         .build();
   }
@@ -494,7 +494,7 @@ package dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`
 import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
 
 interface FindByIdPortIn {
-  fun findById(id: Long): Film
+  fun findById(id: Int): Film
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
@@ -513,7 +513,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class FindByIdPortInImpl : FindByIdPortIn {
-  override fun findById(id: Long): Film {
+  override fun findById(id: Int): Film {
     return Film(
         id = id,
         title = "ACADEMY DINOSAUR",
@@ -521,7 +521,7 @@ class FindByIdPortInImpl : FindByIdPortIn {
             "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
         releaseYear = 2006,
         rating = "PG",
-        lengthMinutes = 86,
+        length = 86,
         language = "English",
     )
   }
@@ -541,7 +541,7 @@ package dev.pollito.spring_groovy.sakila.film.domain.port.in
 import dev.pollito.spring_groovy.sakila.film.domain.model.Film
 
 interface FindByIdPortIn {
-  Film findById(Long id)
+  Film findById(Integer id)
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
@@ -563,14 +563,14 @@ import org.springframework.stereotype.Service
 @CompileStatic
 class FindByIdPortInImpl implements FindByIdPortIn {
   @Override
-  Film findById(Long id) {
+  Film findById(Integer id) {
     new Film(
         id: id,
         title: "ACADEMY DINOSAUR",
         description: "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
         releaseYear: 2006,
         rating: "PG",
-        lengthMinutes: 86,
+        length: 86,
         language: "English"
         )
   }
@@ -615,12 +615,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = PRIVATE)
 public class FilmResponse {
-  Long id;
+  Integer id;
   String title;
   String description;
   Integer releaseYear;
   String rating;
-  Integer lengthMinutes;
+  Integer length;
   String language;
 }
 // highlight-added-end`}
@@ -653,7 +653,7 @@ public class FilmRestMapper {
         .description(source.getDescription())
         .releaseYear(source.getReleaseYear())
         .rating(source.getRating())
-        .lengthMinutes(source.getLengthMinutes())
+        .length(source.getLength())
         .language(source.getLanguage())
         .build();
   }
@@ -686,7 +686,7 @@ public class FilmRestController {
   private final FilmRestMapper mapper;
 
   @GetMapping("/{id}")
-  public FilmResponse findById(@PathVariable Long id) {
+  public FilmResponse findById(@PathVariable Integer id) {
     return mapper.convert(findByIdPortIn.findById(id));
   }
 }
@@ -703,12 +703,12 @@ const FilmResponseKt = () => (
 package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest.dto
 
 data class FilmResponse(
-    val id: Long?,
+    val id: Int,
     val title: String,
     val description: String,
     val releaseYear: Int,
     val rating: String,
-    val lengthMinutes: Int,
+    val length: Int,
     val language: String,
 )
 // highlight-added-end`}
@@ -739,7 +739,7 @@ class FilmRestMapper {
         description = source.description,
         releaseYear = source.releaseYear,
         rating = source.rating,
-        lengthMinutes = source.lengthMinutes,
+        length = source.length,
         language = source.language,
     )
   }
@@ -770,7 +770,7 @@ class FilmRestController(
     private val mapper: FilmRestMapper,
 ) {
   @GetMapping("/{id}")
-  fun findFilmById(@PathVariable id: Long): FilmResponse? {
+  fun findFilmById(@PathVariable id: Int): FilmResponse? {
     return mapper.convert(findByIdPortIn.findById(id))
   }
 }
@@ -792,12 +792,12 @@ import groovy.transform.CompileStatic
 @Canonical
 @CompileStatic
 class FilmResponse {
-  Long id
+  Integer id
   String title
   String description
   Integer releaseYear
   String rating
-  Integer lengthMinutes
+  Integer length
   String language
 }
 // highlight-added-end`}
@@ -863,7 +863,7 @@ class FilmRestController {
   }
 
   @GetMapping("/{id}")
-  FilmResponse findById(@PathVariable("id") Long id) {
+  FilmResponse findById(@PathVariable("id") Integer id) {
     convert(findByIdPortIn.findById(id))
   }
 }

@@ -14,7 +14,6 @@ import {
   FilmRestControllerTests,
   ControllerAdvice,
   TestErrorLog,
-  MapperSpec,
   JacocoReportJava,
   JacocoReportKt,
   JacocoReportGroovy,
@@ -49,25 +48,23 @@ Cuando corrés la tarea `test` o `jacocoTestReport`, JaCoCo va a generar reporte
 | Símbolo | Tipo de Prueba          | Descripción                                                             |
 | ------- | ----------------------- | ----------------------------------------------------------------------- |
 | 🔴      | `@SpringBootTest`       | Prueba de integración con contexto completo                             |
-| 🟣      | `@ContextConfiguration` | Contexto parcial (solo beans específicos) [Usado en el proyecto GROOVY] |
 | 🟡      | `@WebMvcTest`           | Prueba de capa web (slice test)                                         |
 | 🔶      | MockMvc Standalone      | MockMvc sin contexto completo de Spring                                 |
 | 🟢      | Prueba Unitaria         | Prueba unitaria pura                                                    |
 | ⚪      | Ignorado                | No requiere prueba (config/interfaz/POJO)                               |
 
 ```txt
-◀─────────────────────── ESPECTRO DE PRUEBAS ───────────────────────▶
+◀─────────────────── ESPECTRO DE PRUEBAS ───────────────────▶
 
-UNITARIO                                                INTEGRACIÓN
-RÁPIDO                                                        LENTO
-AISLADO                                                    CONECTADO
+UNITARIO                                            INTEGRACIÓN
+RÁPIDO                                                    LENTO
+AISLADO                                               CONECTADO
 
-🟢────────🔶────────🟡────────🟣────────🔴
- │         │         │         │         │
- │         │         │         │         └── Spring Boot Completo
- │         │         │         └── Contexto Parcial
- │         │         └── Solo Capa Web
- │         └── MockMvc Independiente
+🟢──────────🔶──────────🟡──────────🔴
+ │           │           │           │
+ │           │           │           └── Spring Boot Completo
+ │           │           └── Solo Capa Web
+ │           └── MockMvc Independiente
  └── Prueba Unitaria Pura
 
 ⚪ = Fuera del espectro (no necesita prueba)
@@ -147,23 +144,7 @@ El objetivo de estos tests es verificar que nuestro `ControllerAdvice` maneja di
 
 <ControllerAdviceTests />
 
-## 🟣 🔴 Integration Tests
-
-### 🟣 Contexto parcial
-
-<Admonition type="info" title="Ejemplo específico de Groovy">
-  Esta sección aplica principalmente al proyecto Groovy ya que es el único donde
-  inicializar el mapper parcialmente tiene sentido conceptualmente. Sin embargo,
-  este enfoque puede aplicarse a proyectos Java y Kotlin en escenarios donde
-  necesitás testear componentes con dependencias parciales o cuando mockeamos
-  ciertos beans mientras testeamos otros.
-</Admonition>
-
-El objetivo de este test es demostrar cómo testear la funcionalidad del mapper con un contexto de Spring parcialmente inicializado. Queremos verificar que nuestro mapper pueda manejar casos extremos y entradas inválidas correctamente sin necesidad del contexto completo de la aplicación.
-
-<MapperSpec />
-
-### 🔴 Test de integración con contexto completo
+## 🔴 Integration Tests
 
 El objetivo de este test es verificar que la configuración de logging de nuestra aplicación funciona correctamente y que todos los componentes registran eventos como se espera. Queremos asegurar que los eventos importantes sean capturados y formateados correctamente en nuestros logs.
 

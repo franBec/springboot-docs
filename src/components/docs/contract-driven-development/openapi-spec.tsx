@@ -79,7 +79,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int64
             minimum: 1
       responses:
         '200':
@@ -149,7 +148,6 @@ components:
       properties:
         id:
           type: integer
-          format: int64
           description: Unique identifier of the film
           example: 42
           minimum: 1
@@ -172,20 +170,14 @@ components:
           type: string
           description: Motion Picture Association (MPA) rating
           example: 'PG'
-          enum:
-            - G
-            - PG
-            - PG-13
-            - R
-            - NC-17
-        lengthMinutes:
+        length:
           type: integer
           description: Duration of the film in minutes
           example: 86
           minimum: 0
         language:
           type: string
-          description: Original language of the film
+          description: Language of the film
           example: 'English'
           maxLength: 255
     FilmListResponse:

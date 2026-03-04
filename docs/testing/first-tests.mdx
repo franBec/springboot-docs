@@ -14,7 +14,6 @@ import {
   FilmRestControllerTests,
   ControllerAdvice,
   TestErrorLog,
-  MapperSpec,
   JacocoReportJava,
   JacocoReportKt,
   JacocoReportGroovy,
@@ -47,13 +46,12 @@ When running the `test` or `jacocoTestReport` task, JaCoCo will generate reports
 <MainFileTree />
 
 | Symbol | Test Type               | Description                                                        |
-| ------ | ----------------------- | ------------------------------------------------------------------ |
+|--------|-------------------------|--------------------------------------------------------------------|
 | 🔴     | `@SpringBootTest`       | Full context integration test                                      |
-| 🟣     | `@ContextConfiguration` | Partial context (specific beans only) [Used in the GROOVY project] |
 | 🟡     | `@WebMvcTest`           | Web layer slice test                                               |
 | 🔶     | Standalone MockMvc      | MockMvc without full Spring context                                |
 | 🟢     | Unit Test               | Pure unit test                                                     |
-| ⚪     | Ignored                 | No test needed (config/interface/POJO)                             |
+| ⚪      | Ignored                 | No test needed (config/interface/POJO)                             |
 
 ```txt
 ◀─────────────────────── TEST SPECTRUM ───────────────────────▶
@@ -62,12 +60,11 @@ UNIT                                                INTEGRATION
 FAST                                                      SLOW
 ISOLATED                                              CONNECTED
 
-🟢────────🔶────────🟡────────🟣────────🔴
- │         │         │         │         │
- │         │         │         │         └── Full Spring Boot
- │         │         │         └── Partial Context
- │         │         └── Web Layer Only
- │         └── MockMvc Standalone
+🟢──────────🔶──────────🟡──────────🔴
+ │           │           │           │
+ │           │           │           └── Full Spring Boot
+ │           │           └── Web Layer Only
+ │           └── MockMvc Standalone
  └── Pure Unit Test
 
 ⚪ = Not on spectrum (no test needed)
@@ -146,23 +143,7 @@ The goal of these tests is to verify our `ControllerAdvice` handles different ex
 
 <ControllerAdviceTests />
 
-## 🟣 🔴 Integration Tests
-
-### 🟣 Partial context
-
-<Admonition type="info" title="Groovy-Specific Example">
-  This section primarily applies to the Groovy project since it's the only one
-  where initializing the mapper partially makes sense conceptually. However,
-  this approach can be applied to Java and Kotlin projects in scenarios where
-  you need to test components with partial dependencies or when mocking certain
-  beans while testing others.
-</Admonition>
-
-The goal of this test is to demonstrate how to test mapper functionality with a partially initialized Spring context. We want to verify that our mapper can handle edge cases and invalid inputs correctly without needing the full application context.
-
-<MapperSpec />
-
-### 🔴 Full context integration test
+## 🔴 Integration Tests
 
 The goal of this test is to verify that our application's logging configuration works correctly and that all components properly log events as expected. We want to ensure that important events are captured and formatted correctly in our logs.
 
