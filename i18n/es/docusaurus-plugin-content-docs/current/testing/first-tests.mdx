@@ -45,13 +45,13 @@ Cuando corrés la tarea `test` o `jacocoTestReport`, JaCoCo va a generar reporte
 
 <MainFileTree />
 
-| Símbolo | Tipo de Prueba          | Descripción                                                             |
-| ------- | ----------------------- | ----------------------------------------------------------------------- |
-| 🔴      | `@SpringBootTest`       | Prueba de integración con contexto completo                             |
-| 🟡      | `@WebMvcTest`           | Prueba de capa web (slice test)                                         |
-| 🔶      | MockMvc Standalone      | MockMvc sin contexto completo de Spring                                 |
-| 🟢      | Prueba Unitaria         | Prueba unitaria pura                                                    |
-| ⚪      | Ignorado                | No requiere prueba (config/interfaz/POJO)                               |
+| Símbolo | Tipo de Prueba     | Descripción                                 |
+| ------- | ------------------ | ------------------------------------------- |
+| 🔴      | `@SpringBootTest`  | Prueba de integración con contexto completo |
+| 🟡      | `@WebMvcTest`      | Prueba de capa web (slice test)             |
+| 🔶      | MockMvc Standalone | MockMvc sin contexto completo de Spring     |
+| 🟢      | Prueba Unitaria    | Prueba unitaria pura                        |
+| ⚪      | Ignorado           | No requiere prueba (config/interfaz/POJO)   |
 
 ```txt
 ◀─────────────────── ESPECTRO DE PRUEBAS ───────────────────▶

@@ -45,13 +45,13 @@ When running the `test` or `jacocoTestReport` task, JaCoCo will generate reports
 
 <MainFileTree />
 
-| Symbol | Test Type               | Description                                                        |
-|--------|-------------------------|--------------------------------------------------------------------|
-| 🔴     | `@SpringBootTest`       | Full context integration test                                      |
-| 🟡     | `@WebMvcTest`           | Web layer slice test                                               |
-| 🔶     | Standalone MockMvc      | MockMvc without full Spring context                                |
-| 🟢     | Unit Test               | Pure unit test                                                     |
-| ⚪      | Ignored                 | No test needed (config/interface/POJO)                             |
+| Symbol | Test Type          | Description                            |
+| ------ | ------------------ | -------------------------------------- |
+| 🔴     | `@SpringBootTest`  | Full context integration test          |
+| 🟡     | `@WebMvcTest`      | Web layer slice test                   |
+| 🔶     | Standalone MockMvc | MockMvc without full Spring context    |
+| 🟢     | Unit Test          | Pure unit test                         |
+| ⚪     | Ignored            | No test needed (config/interface/POJO) |
 
 ```txt
 ◀─────────────────────── TEST SPECTRUM ───────────────────────▶
