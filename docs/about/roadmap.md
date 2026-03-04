@@ -14,6 +14,10 @@ While direct contributions to this demo repository are not actively sought, **fe
 
 ### New Content
 
+- **Persistence Integration**:
+  - **Reverse Engineering JPA Entities**: Work in progress. Document about how to set up [Hibernate Tools → Reverse engineering from a database](https://hibernate.org/tools/).
+  - **Database Integration**: Work in progress. Document about using `JPARepository`. Full request/response cycle complete with database calls.
+
 - **Deployment → Dependabot and CodeQL**: Create a new document under the Deployment section explaining how to set up Dependabot for automated dependency updates and GitHub Advanced Security with CodeQL for code scanning.
 
 - **Deployment → Docker Registry Alternative**: Add a section in `/deployment/deployment-on-a-vps.mdx` explaining the alternative approach of using a Docker registry (e.g., GitHub Container Registry) instead of having Coolify build the application. Compare pros and cons with the current approach where Coolify handles the build.
@@ -26,8 +30,8 @@ While direct contributions to this demo repository are not actively sought, **fe
 
 ### Future Improvements
 
-- **AI Search Feature**: Currently the search bar has an AI feature that is disabled. Need to check how expensive and exploitable activating this could be. Probably an overkill but would be fancy.
+- **AI Search Feature**: Currently the search bar has an [AI feature](https://github.com/easyops-cn/docusaurus-search-local?tab=readme-ov-file#-ask-ai-support) that is disabled. Need to check how expensive and exploitable activating this could be. Probably an overkill but would be fancy.
 
 ### Huge Maybe
 
-- **Template Engines Section**: Just for fun, create some basic views (login, table with pagination, forms) using Thymeleaf (templating) + HTMX (server interactions) + Alpine.js (UI state) + Tailwind CSS (styling). This would be a "modern vintage" approach—server-side rendering with a touch of modern interactivity.
+- **Template Engines Section**: Just for fun, create some basic views (login, table with pagination, forms) using [Thymeleaf](https://www.thymeleaf.org/) (templating) + [HTMX](https://htmx.org/) (server interactions) + [Alpine.js](https://alpinejs.dev/) (UI state) + [Tailwind CSS](https://tailwindcss.com/) (styling). This would be a "modern vintage" approach, server-side rendering with a touch of modern interactivity.
