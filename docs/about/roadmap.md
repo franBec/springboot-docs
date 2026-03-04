@@ -26,6 +26,16 @@ While direct contributions to this demo repository are not actively sought, **fe
 
 ### Restructuring
 
+- **First Tests**: Doing Integration Tests for `LoggingIntegrationTest` has produced some out of memory errors when running the `verify` task alongside new `JPA` development. Rewrite into a `@WebMvcTest` approach
+  ```java
+  @WebMvcTest(controllers = FilmController.class) // Specify your controller
+  @Import({LogFilter.class, LogAspect.class, TraceIdFilter.class, MaskingPatternLayout.class})
+  @ExtendWith(OutputCaptureExtension.class)
+  class LoggingIntegrationTest {
+      // ...
+  }
+  ```
+ 
 - **Persistence Integration → Pagination**: Create a new document introducing pagination. Check [swaggerhub-spring-pagination](https://github.com/daniel-shuy/swaggerhub-spring-pagination) for reference.
 
 ### Future Improvements
