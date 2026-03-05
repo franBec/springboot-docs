@@ -4,6 +4,7 @@ title: The Sakila Sample Database
 ---
 
 import { SakilaSchemaDiagram } from '@site/src/components/docs/prior-recommended-knowledge/sakila-sample-database';
+import Admonition from '@theme/Admonition';
 
 Ever heard of [Lorem Ipsum](http://en.wikipedia.org/wiki/Lorem_ipsum)? It's that nonsensical Latin filler content designers use when they don't have real copy yet.
 
@@ -12,6 +13,22 @@ Now, imagine that, but for relational databases. You need to test a query, build
 [Sakila](https://dev.mysql.com/doc/sakila/en/) is a complete, pre-fabricated sample database schema. Its original incarnation was created by [MySQL](https://www.mysql.com/) to showcase their database's features.
 
 <SakilaSchemaDiagram />
+
+| Symbol | Meaning      |
+| ------ | ------------ |
+| `\|\|` | Exactly one  |
+| `o\|`  | Zero or one  |
+| `\|{`  | One or more  |
+| `o{`   | Zero or more |
+
+<Admonition type="info" title="FILM_TEXT Table">
+  The `FILM_TEXT` table is a **denormalized copy** of the `FILM` table's text
+  columns (`title`, `description`). In the original MySQL Sakila database, this
+  table uses the [MyISAM engine](https://en.wikipedia.org/wiki/MyISAM) with a
+  `FULLTEXT` index to enable fast natural language searches. It is kept
+  synchronized with the `FILM` table via triggers. If you're not using MySQL's
+  full-text search capabilities, this table can be safely ignored.
+</Admonition>
 
 The genius is in the theme: it's built around a DVD rental store. It's familiar, slightly fun, and has just enough complexity (with things like many-to-many relationships, foreign keys, and dated records) to be useful for realistic practice.
 

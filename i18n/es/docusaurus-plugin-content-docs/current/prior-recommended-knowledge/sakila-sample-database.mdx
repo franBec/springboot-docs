@@ -4,6 +4,7 @@ title: La Base de Datos de Ejemplo Sakila
 ---
 
 import { SakilaSchemaDiagram } from '@site/src/components/docs/prior-recommended-knowledge/sakila-sample-database';
+import Admonition from '@theme/Admonition';
 
 ¿Alguna vez escuchaste hablar de [Lorem Ipsum](http://en.wikipedia.org/wiki/Lorem_ipsum)? Es ese contenido de relleno en latín sin sentido que usan los diseñadores cuando todavía no tienen texto real.
 
@@ -12,6 +13,23 @@ Ahora, imaginate eso, pero para bases de datos relacionales. Necesitás probar u
 [Sakila](https://dev.mysql.com/doc/sakila/en/) es un esquema de base de datos de ejemplo completo y prefabricado. Su encarnación original fue creada por [MySQL](https://www.mysql.com/) para mostrar las características de su base de datos.
 
 <SakilaSchemaDiagram />
+
+| Símbolo | Significado     |
+| ------- | --------------- |
+| `\|\|`  | Exactamente uno |
+| `o\|`   | Cero o uno      |
+| `\|{`   | Uno o más       |
+| `o{`    | Cero o más      |
+
+<Admonition type="info" title="Tabla FILM_TEXT">
+  La tabla `FILM_TEXT` es una copia **desnormalizada** de las columnas de texto
+  de la tabla `FILM` (`title`, `description`). En la base de datos Sakila
+  original de MySQL, esta tabla utiliza el motor
+  [MyISAM](https://en.wikipedia.org/wiki/MyISAM) con un índice `FULLTEXT` para
+  habilitar búsquedas rápidas en lenguaje natural. Se mantiene sincronizada con
+  la tabla `FILM` mediante triggers. Si no estás usando las capacidades de
+  búsqueda de texto completo de MySQL, podés ignorar esta tabla sin problemas.
+</Admonition>
 
 La genialidad está en la temática: está construido alrededor de una tienda de alquiler de DVDs. Es familiar, un poco divertido y tiene justo la complejidad suficiente (con cosas como relaciones muchos a muchos, claves foráneas y registros con fechas) para ser útil para práctica realista.
 
