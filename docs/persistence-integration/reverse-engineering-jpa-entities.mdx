@@ -2,3 +2,114 @@
 sidebar_position: 2
 title: Reverse Engineering JPA Entities
 ---
+
+import {
+  FileTree,
+  HibernateRevengXml,
+  HibernateToolsProperties,
+  HibernatePojo,
+  BuildGradle,
+} from '@site/src/components/docs/persistence-integration/reverse-engineering-jpa-entities';
+
+## The Problem
+
+Writing JPA entity classes by hand from an existing database schema is tedious. If your schema has 20 tables you get 20 entity files to create, annotate, and keep in sync whenever the schema changes. Miss a column, get a nullable wrong, or forget a relationship and you're debugging at runtime.
+
+The alternative: generate the entities at build time directly from the SQL schema. No running database required. No manual entity writing. The build reads the schema, spins up an in-memory H2 instance, introspects it, and writes the entity source files before your code even compiles.
+
+## How It Works
+
+1. A dedicated `hibernateTools` Gradle dependency configuration pulls in the code generation tooling, completely isolated from your compile and runtime classpath.
+2. The `generateEntities` Gradle task loads your SQL schema into an in-memory H2 database, connects via JDBC, and uses Hibernate Tools to introspect the schema and write entity source files into `build/generated/sources/hibernate/`.
+3. That generated directory is registered as an additional source root, so entities compile transparently alongside your hand-written code.
+4. The task is wired to run before `compileJava` / `compileKotlin` / `compileGroovy`, so generated types are always available at compilation time.
+
+## New Files
+
+<FileTree />
+
+The highlighted additions fall into two groups: resource files that drive the generation (`hibernate.reveng.xml`, `hibernate-tools.properties`, `Pojo.ftl`, the SQL schema and data files) and the `build.gradle` changes that wire everything together.
+
+## Step 1 — Add Resource Files
+
+### `sakila-schema.sql`
+
+This is the source of truth. The ongoing example in this guide uses the [Sakila sample database](https://dev.mysql.com/doc/sakila/en/), but the same setup applies to whatever schema you're working with. Just swap `sakila-schema.sql` for your own DDL file and update the task accordingly.
+
+Hibernate Tools never connects to your real database. It only reads this SQL file, loads it into an in-memory H2 instance, and introspects that. This file must accurately reflect the production schema. If production has a column your SQL file doesn't, the generated entity won't have it. If the types don't match, the generated mappings will be wrong. Treat this file with the same care you'd give the database itself.
+
+### `hibernate.reveng.xml`
+
+<HibernateRevengXml />
+
+The `<type-mapping>` block overrides the default JDBC-to-Java type mappings. Without it, Hibernate Tools would map `TIMESTAMP` to a raw `java.sql.Timestamp` and `TINYINT` to a primitive `byte`. The overrides give you clean `java.time.*` equivalents and proper boxed types instead.
+
+The `<table-filter>` line tells Hibernate Tools to reverse-engineer every table in the `PUBLIC` schema, which is all of Sakila.
+
+### `hibernate-tools.properties`
+
+<HibernateToolsProperties />
+
+This file supplies the static JDBC connection details. Notice there's no `hibernate.connection.url` here. That property is injected dynamically by the Gradle task at generation time, pointing at the SQL schema file via an H2 `INIT=RUNSCRIPT` connection string. Keeping it out of this file avoids hardcoding an absolute path.
+
+### `Pojo.ftl`
+
+<HibernatePojo />
+
+A [FreeMarker](https://freemarker.apache.org/) template that controls the exact shape of each generated entity class. Hibernate Tools calls it once per table and passes a `pojo` object describing the table's columns and relationships. The template decides what annotations to emit, how to handle composite keys, and how to wire up `@OneToMany` and `@ManyToOne` relationships.
+
+All three language variants share the same structural logic — composite key detection, `@Id` / `@EmbeddedId` / `@ManyToOne` / `@OneToMany` / `@Column` handling — but differ in what they emit:
+
+- **Java** uses Lombok (`@Getter`, `@Setter`, `@Builder`, etc.) and `private` fields.
+- **Kotlin** has a `toKotlinType()` FreeMarker helper that converts Java type names to Kotlin equivalents (`Integer` → `Int`, `Set<X>` → `MutableSet<X>`). Composite key classes become `data class` for structural equality; regular entities are plain `class` to avoid JPA proxying issues.
+- **Groovy** swaps Lombok for Groovy AST transforms (`@CompileStatic`, `@Builder`, `@EqualsAndHashCode`) and drops explicit field visibility since Groovy's property mechanism handles that.
+
+Because Hibernate Tools always emits `.java` files, the Kotlin and Groovy tasks include a post-generation rename step that converts `.java` to `.kt` and `.java` to `.groovy` respectively. The Java task skips this entirely.
+
+## Step 2 — Wire Up `build.gradle`
+
+<BuildGradle />
+
+A few things worth calling out in the diff:
+
+**`hibernateTools` configuration** is a separate Gradle dependency bucket that exists only for code generation. It holds the Hibernate Tools Ant runner, Hibernate ORM core, and H2, none of which belong in your application's compile or runtime classpath. Keeping them here means they do their job at build time and disappear.
+
+**Runtime and compile dependencies** add the standard Spring Data JPA and H2 jars your application needs at runtime. The Kotlin variant also requires the `kotlin("plugin.jpa")` Gradle plugin, which generates the no-arg constructors that JPA needs under the hood, something Kotlin classes don't provide by default.
+
+**`generateEntities` task** does the work in three steps:
+
+1. Reads `hibernate-tools.properties`, appends a dynamic `hibernate.connection.url` that points H2 at the schema SQL file via `INIT=RUNSCRIPT FROM '...'`, and writes the merged properties to a temp file.
+2. Calls the `HibernateToolTask` Ant task, passing that temp properties file, `hibernate.reveng.xml`, the output directory, and the FreeMarker template directory. Hibernate Tools does the rest.
+3. Renames the emitted `.java` files to `.kt` or `.groovy` where needed (Kotlin and Groovy only).
+
+**Source set registration** adds `build/generated/sources/hibernate/` to the appropriate source set so the compiler picks it up. Kotlin wires `generateEntities` before both `compileKotlin` and the kapt stub generation task, since annotation processing runs even earlier and also needs the generated types available.
+
+## What Gets Generated
+
+After running `./gradlew generateEntities` (or any task that depends on it, like `build`), you'll find entity source files under:
+
+```
+build/generated/sources/hibernate/<group>/<name>/generated/entity/
+```
+
+Every table in the schema becomes one entity class, compiled transparently alongside your hand-written code. You don't reference this directory manually. The source set registration takes care of it.
+
+## Schema Changes in the Real World
+
+Say production needs a new column, `last_updated` on the `film` table. How that change flows through your codebase depends on which approach your team uses.
+
+**The code-first approach** is common in greenfield Spring projects. The entity class is the source of truth. You add the field to the entity, and on next startup Hibernate reads the entity and issues the `ALTER TABLE` against the database (when `spring.jpa.hibernate.ddl-auto` is set to `update` or `create`). The schema follows the code. This works well when your team owns the database entirely, but it can get risky in production. Hibernate's schema updates are not always reversible and don't give you fine-grained control over migrations.
+
+**The database-first approach** is more common in teams that treat the database as the real source of truth, especially when a DBA or a migration tool like Flyway or Liquibase controls schema changes. Someone runs an `ALTER TABLE film ADD COLUMN last_updated TIMESTAMP` directly against the database, then manually edits the entity class to add the corresponding field. The database leads; the code catches up. This is safer for production deployments because the migration is an explicit, reviewable SQL script.
+
+**With reverse engineering,** the flow is closer to that second approach, but the "catch up" step is automated. You update `sakila-schema.sql` to include the new column, then run `./gradlew generateEntities` (or just `build`). The task re-introspects the schema and regenerates all entity files. The new field appears automatically in the entity — you don't touch it by hand.
+
+The tradeoff is that you own the SQL file. When the real database changes, you need to keep `sakila-schema.sql` in sync, otherwise the generated entities drift from reality. In practice this means your schema migration (Flyway, Liquibase, or a plain SQL script) and the update to your local SQL file should happen together, ideally in the same commit.
+
+## Honest Take: You Probably Won't See This in the Wild
+
+Across every real codebase encountered in the field, entities were written by hand. The reverse engineering approach appeared exactly once in a production project. That's not a knock on the technique — it works well — but it reflects how the industry actually operates.
+
+Most teams either started their project from scratch (schema and entities grow together) or inherited a legacy codebase where someone already wrote the entities years ago. The use case for generating them from SQL at build time is genuinely narrow: you have an existing schema you don't own, you need JPA entities fast, and you don't want to write hundreds of fields manually.
+
+So keep this in your toolkit. Understand what the tooling does and how to set it up. Just don't be surprised if you spend an entire career and never encounter it in a team codebase.
