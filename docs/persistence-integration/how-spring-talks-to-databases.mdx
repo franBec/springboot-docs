@@ -1,0 +1,130 @@
+---
+sidebar_position: 1
+title: How Spring Talks to Databases
+---
+
+import Admonition from '@theme/Admonition';
+import {
+  RawJdbcExample,
+  HibernateEntityExample,
+  EntityManagerExample,
+  SpringDataJpaInterfaceExample,
+} from '@site/src/components/docs/persistence-integration/how-spring-talks-to-databases';
+
+Before writing repositories and entity classes, it helps to understand what's happening in the layers below. Spring Boot makes database access feel effortless, but there's a real stack underneath. Knowing it saves you when things go wrong, and they will.
+
+## JDBC: The Foundation
+
+[JDBC (Java Database Connectivity)](https://en.wikipedia.org/wiki/Java_Database_Connectivity) is the raw Java API for talking to a relational database. Here's what a basic query looks like in plain JDBC:
+
+<RawJdbcExample />
+
+It works. But notice what you're managing yourself: the connection lifecycle, the parameter binding, the `ResultSet` iteration, and closing everything in the right order. Forget to close a connection and you've got a resource leak. Forget a `try/catch` and a checked `SQLException` blows up at the worst possible moment. Do this for every query in an application and you'll spend more time on plumbing than on business logic.
+
+This is the problem Hibernate was built to solve.
+
+## Hibernate: ORM on Top of JDBC
+
+[Hibernate](https://hibernate.org/orm/) is an **ORM (Object-Relational Mapper)**. Its job is to bridge the gap between the relational world (tables, rows, foreign keys) and the object-oriented world (classes, instances, references). Instead of writing SQL and mapping `ResultSet` columns to fields yourself, you describe the mapping once with annotations, and Hibernate handles the rest.
+
+<HibernateEntityExample />
+
+With this in place, Hibernate loads a `Film` object from the database without you writing a line of SQL. It generates the query, executes it via JDBC, and maps the result back to the object automatically.
+
+The key annotations you'll see throughout this section:
+
+| Annotation                  | What It Does                                                     |
+| --------------------------- | ---------------------------------------------------------------- |
+| `@Entity`                   | Marks the class as a JPA-managed entity (maps to a table)        |
+| `@Table`                    | Specifies the table name (optional if it matches the class name) |
+| `@Id`                       | Marks the primary key field                                      |
+| `@Column`                   | Maps a field to a specific column name                           |
+| `@ManyToOne` / `@OneToMany` | Maps relationships between tables                                |
+| `@EmbeddedId`               | Marks a composite primary key                                    |
+
+Hibernate still uses JDBC under the hood. It manages connection pooling, translates your object operations into SQL, and executes them through the same `java.sql.*` API you saw above. You just never have to touch it directly.
+
+<Admonition type="info" title="SessionFactory and Session">
+  Hibernate's own API revolves around `SessionFactory` (created once at startup)
+  and `Session` (one per unit of work). You'll see these names in older code and
+  Hibernate documentation. In a Spring Boot project you'll rarely interact with
+  them directly, Spring wraps them in a higher-level abstraction.
+</Admonition>
+
+## JPA: The Standard Specification
+
+Hibernate was so widely adopted that the Java community standardized its ideas into a specification: **[JPA (Jakarta Persistence API)](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-intro/persistence-intro.html)**. JPA defines the annotations (`@Entity`, `@Id`, `@Column`, and so on) and a core API — the `EntityManager` — that any compliant ORM must implement.
+
+Hibernate is the most common JPA implementation, but others exist (EclipseLink, OpenJPA). Your code targets the `jakarta.persistence.*` interfaces, not Hibernate directly.
+
+`EntityManager` is JPA's main handle for database operations:
+
+<EntityManagerExample />
+
+No `ResultSet`, no connection management, no checked exceptions. But you're still writing repository classes by hand for every entity. Spring Data JPA eliminates that too.
+
+## Spring Data JPA: Repositories Without Boilerplate
+
+[Spring Data JPA](https://spring.io/projects/spring-data-jpa) sits on top of JPA and Hibernate. Instead of implementing a repository class yourself, you declare an interface and Spring generates the implementation at runtime.
+
+<SpringDataJpaInterfaceExample />
+
+No class, no `EntityManager`, no SQL. Spring sees the interface, wires up the implementation, and `findByReleaseYear` generates the correct query from the method name automatically.
+
+The [Repository Pattern](./repository-pattern) document covers Spring Data JPA in depth.
+
+## Schema Migrations
+
+Your schema will change. A new feature needs a column, a performance fix requires an index, a refactor renames a table. How you manage those changes matters as much as the code itself.
+
+### Code-First
+
+The entity class is the source of truth. You add a field to the entity, and on next startup Hibernate reads it and issues the `ALTER TABLE` against the database, when `spring.jpa.hibernate.ddl-auto` is set to `update` or `create`.
+
+The schema follows the code. This works well when your team owns the database entirely and you're moving fast on a greenfield project. The downside: Hibernate's schema updates aren't always reversible, you get no migration history, and a bad `ddl-auto` setting in production can cause data loss.
+
+### Database-First
+
+The database is the source of truth. Schema changes are explicit SQL scripts, written and reviewed before anything runs. A migration tool applies them in order and tracks what's already been applied, so the same script never runs twice.
+
+**[Flyway](https://github.com/flyway/flyway)** uses versioned SQL files: `V1__create_film_table.sql`, `V2__add_last_updated_column.sql`. On startup, Flyway checks which scripts have already run and applies any new ones. Simple and transparent.
+
+**[Liquibase](https://www.liquibase.com/)** takes the same idea further. Changesets can be written in XML, YAML, JSON, or SQL. It supports rollback definitions, more complex diff operations, and is more database-agnostic. More power, more configuration.
+
+|                       | Code-First              | Flyway                        | Liquibase                       |
+| --------------------- | ----------------------- | ----------------------------- | ------------------------------- |
+| **Source of truth**   | Entity class            | SQL migration files           | Changeset files                 |
+| **Migration history** | None                    | `flyway_schema_history` table | `databasechangelog` table       |
+| **Rollback**          | Not supported           | Manual                        | Built-in (optional)             |
+| **Format**            | Java/Kotlin annotations | SQL                           | SQL, XML, YAML, JSON            |
+| **Best for**          | Local dev / prototyping | Most production teams         | Complex / multi-DB environments |
+
+<Admonition type="warning" title="Never Use ddl-auto=update in Production">
+  It's tempting to leave `spring.jpa.hibernate.ddl-auto=update` running
+  everywhere. Don't. It can drop columns, silently ignore type mismatches, and
+  gives you zero audit trail of what changed and when. Use `validate` in
+  production, it checks that entities match the schema but changes nothing, and
+  let Flyway or Liquibase own the actual migrations.
+</Admonition>
+
+## The Full Stack
+
+Here's what sits between your business logic and the actual database:
+
+```
+Your Code  (Spring Data JPA — JpaRepository interfaces)
+     ↓
+Spring Data JPA  (generates repository implementations at runtime)
+     ↓
+JPA / jakarta.persistence  (EntityManager, @Entity, @Id, @Column…)
+     ↓
+Hibernate  (ORM — translates objects ↔ SQL)
+     ↓
+JDBC  (java.sql — raw database protocol)
+     ↓
+JDBC Driver  (PostgreSQL driver, H2 driver, MySQL driver…)
+     ↓
+Database
+```
+
+Each layer adds a level of abstraction. You almost always work at the top. When something breaks (a query performs badly, a mapping is wrong, a transaction doesn't behave as expected) knowing this stack tells you where to look.

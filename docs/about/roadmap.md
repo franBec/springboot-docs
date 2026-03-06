@@ -19,7 +19,7 @@ While direct contributions to this demo repository are not actively sought, **fe
   - **Database Integration**: Work in progress. Document about using `JPARepository`. Full request/response cycle complete with H2 Database.
   - **Database Deployment**: Create a new document about adding a Postgres database to the docker-compose + deployment to coolify.
   - **CRUD**: Create a new document doing whole CRUD of films. Introduce the concept of pagination. Check [swaggerhub-spring-pagination](https://github.com/daniel-shuy/swaggerhub-spring-pagination) for reference.
-
+  - **Schema Migrations**: Maybe creating a new document about this, exploring [Flyway](https://github.com/flyway/flyway) or [Liquibase](https://www.liquibase.com/). Not that confident in these areas though.
 - **Deployment → Dependabot and CodeQL**: Create a new document under the Deployment section explaining how to set up Dependabot for automated dependency updates and GitHub Advanced Security with CodeQL for code scanning.
 
 - **Deployment → Docker Registry Alternative**: Add a section in `/deployment/deployment-on-a-vps.mdx` explaining the alternative approach of using a Docker registry (e.g., GitHub Container Registry) instead of having Coolify build the application. Compare pros and cons with the current approach where Coolify handles the build.

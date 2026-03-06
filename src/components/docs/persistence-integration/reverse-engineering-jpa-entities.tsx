@@ -1,7 +1,7 @@
 import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import {FileTreeInfo} from "@site/src/components/file-tree-info";
+import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 export const FileTree = () => (
   <FileTreeInfo>

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: Reverse Engineering JPA Entities
 ---
 
@@ -96,19 +96,15 @@ Every table in the schema becomes one entity class, compiled transparently along
 
 ## Schema Changes in the Real World
 
-Say production needs a new column, `last_updated` on the `film` table. How that change flows through your codebase depends on which approach your team uses.
+[How Spring Talks to Databases](./how-spring-talks-to-databases#schema-migrations) covers code-first vs. database-first approaches in detail. The short version: code-first is convenient for local development, database-first (Flyway, Liquibase) is safer for production.
 
-**The code-first approach** is common in greenfield Spring projects. The entity class is the source of truth. You add the field to the entity, and on next startup Hibernate reads the entity and issues the `ALTER TABLE` against the database (when `spring.jpa.hibernate.ddl-auto` is set to `update` or `create`). The schema follows the code. This works well when your team owns the database entirely, but it can get risky in production. Hibernate's schema updates are not always reversible and don't give you fine-grained control over migrations.
-
-**The database-first approach** is more common in teams that treat the database as the real source of truth, especially when a DBA or a migration tool like Flyway or Liquibase controls schema changes. Someone runs an `ALTER TABLE film ADD COLUMN last_updated TIMESTAMP` directly against the database, then manually edits the entity class to add the corresponding field. The database leads; the code catches up. This is safer for production deployments because the migration is an explicit, reviewable SQL script.
-
-**With reverse engineering,** the flow is closer to that second approach, but the "catch up" step is automated. You update `sakila-schema.sql` to include the new column, then run `./gradlew generateEntities` (or just `build`). The task re-introspects the schema and regenerates all entity files. The new field appears automatically in the entity — you don't touch it by hand.
+With reverse engineering, the flow sits closest to the database-first approach — but the "catch up" step is automated. Say production needs a new column, `last_updated` on the `film` table. You update `sakila-schema.sql` to include the new column, then run `./gradlew generateEntities` (or just `build`). The task re-introspects the schema and regenerates all entity files. The new field appears automatically in the entity — you don't touch it by hand.
 
 The tradeoff is that you own the SQL file. When the real database changes, you need to keep `sakila-schema.sql` in sync, otherwise the generated entities drift from reality. In practice this means your schema migration (Flyway, Liquibase, or a plain SQL script) and the update to your local SQL file should happen together, ideally in the same commit.
 
 ## Honest Take: You Probably Won't See This in the Wild
 
-Across every real codebase encountered in the field, entities were written by hand. The reverse engineering approach appeared exactly once in a production project. That's not a knock on the technique — it works well — but it reflects how the industry actually operates.
+Across every real codebase encountered in the field, entities were written by hand. The reverse engineering approach appeared exactly once in a production project.
 
 Most teams either started their project from scratch (schema and entities grow together) or inherited a legacy codebase where someone already wrote the entities years ago. The use case for generating them from SQL at build time is genuinely narrow: you have an existing schema you don't own, you need JPA entities fast, and you don't want to write hundreds of fields manually.
 
