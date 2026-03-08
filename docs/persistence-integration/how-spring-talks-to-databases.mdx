@@ -65,13 +65,28 @@ No `ResultSet`, no connection management, no checked exceptions. But you're stil
 
 ## Spring Data JPA: Repositories Without Boilerplate
 
+### The Repository Pattern
+
+The Repository Pattern is an abstraction layer that sits between your application and your data storage. Think of it as a translator. Your application asks for what it wants in its own language, like "give me all the films released in 2024," and the repository handles the messy details of turning that request into actual database operations.
+
+You don't need to know if the data lives in PostgreSQL, MongoDB, or some external API. The repository handles that complexity so your business logic stays clean and focused on what it does best.
+
+### Declaring a Repository
+
 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) sits on top of JPA and Hibernate. Instead of implementing a repository class yourself, you declare an interface and Spring generates the implementation at runtime.
 
 <SpringDataJpaInterfaceExample />
 
 No class, no `EntityManager`, no SQL. Spring sees the interface, wires up the implementation, and `findByReleaseYear` generates the correct query from the method name automatically.
 
-The [Repository Pattern](./repository-pattern) document covers Spring Data JPA in depth.
+### Beyond the Basics
+
+`JpaRepository` provides more than simple CRUD operations:
+
+- **Pagination and sorting capabilities:** Handle large datasets without loading everything into memory.
+- **Dynamic query generation from method names:** Name your method `findByTitleContainingAndYearGreaterThan` and Spring Data JPA figures out the SQL for you.
+- **Custom query support:** Use the `@Query` annotation when you need complex operations that method names can't express.
+- **Transaction management:** Spring handles the begin/commit/rollback dance automatically.
 
 ## Schema Migrations
 
