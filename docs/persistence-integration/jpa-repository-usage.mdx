@@ -26,7 +26,7 @@ import {
 
 <GithubTagInfo tag="persistence-integration" />
 
-In the [previous document](./reverse-engineering-jpa-entities) we set up build-time entity generation from the Sakila schema. The JPA entities exist now, but nothing in the application uses them yet. This document wires them into the hexagonal architecture so the app can actually query the database, convert results to domain models, and handle the "not found" case cleanly.
+In the [previous document](./reverse-engineering-jpa-entities) we set up build-time entity generation from the Sakila schema. The JPA entities exist now, but nothing in the application uses them yet. This document wires them into the hexagonal architecture so the app can query the database, convert results to domain models, and handle the "not found" case cleanly.
 
 No new dependencies are being added here. Everything we need (Spring Data JPA, H2, MapStruct / ModelMapper) was already pulled in during the reverse engineering setup.
 
@@ -117,7 +117,7 @@ Tests targeting the JPA layer use `@DataJpaTest`, a Spring slice that loads only
 
 <PortOutImplIntegrationTest />
 
-A few things worth calling out:
+A few things worth noting:
 
 - **`@DataJpaTest`** loads only the JPA slice. No web layer, no full context.
 - **`@ActiveProfiles("test")`** picks up `application-test.yaml` with `sql.init.mode: never`.
