@@ -15,8 +15,6 @@ While direct contributions to this demo repository are not actively sought, **fe
 ### New Content
 
 - **Persistence Integration**:
-  - **Reverse Engineering JPA Entities**: Work in progress. Document about how to set up [Hibernate Tools → Reverse engineering from a database](https://hibernate.org/tools/).
-  - **Database Integration**: Work in progress. Document about using `JPARepository`. Full request/response cycle complete with H2 Database.
   - **Database Deployment**: Create a new document about adding a Postgres database to the docker-compose + deployment to coolify.
   - **CRUD**: Create a new document doing whole CRUD of films. Introduce the concept of pagination. Check [swaggerhub-spring-pagination](https://github.com/daniel-shuy/swaggerhub-spring-pagination) for reference.
   - **Schema Migrations**: Maybe creating a new document about this, exploring [Flyway](https://github.com/flyway/flyway) or [Liquibase](https://www.liquibase.com/). Not that confident in these areas though.

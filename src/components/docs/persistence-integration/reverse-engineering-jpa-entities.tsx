@@ -31,6 +31,7 @@ export const FileTree = () => (
     </CollapsibleCodeBlock>
   </FileTreeInfo>
 );
+
 export const HibernateRevengXml = () => (
   <CollapsibleCodeBlock language="xml" title="resources/hibernate.reveng.xml">
     {`// highlight-added-start

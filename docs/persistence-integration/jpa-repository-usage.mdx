@@ -1,0 +1,155 @@
+---
+sidebar_position: 4
+title: JPA Repository Usage
+---
+
+import GithubTagInfo from '@site/src/components/github-tag-info';
+import Admonition from '@theme/Admonition';
+
+import {
+  FileTree,
+  ApplicationYamlDev,
+  SakilaSchema,
+  PortOut,
+  JpaMapper,
+  JpaRepositoryInterface,
+  PortOutImplementation,
+  ApplicationTestYaml,
+  PortOutImplIntegrationTest,
+  PortInImplTest,
+  ControllerAdvice,
+  ControllerAdviceTest,
+  RequestFlowSequenceDiagram,
+  TerminalCurl,
+} from '@site/src/components/docs/persistence-integration/jpa-repository-usage';
+
+<GithubTagInfo tag="persistence-integration" />
+
+In the [previous document](./reverse-engineering-jpa-entities) we set up build-time entity generation from the Sakila schema. The JPA entities exist now, but nothing in the application uses them yet. This document wires them into the hexagonal architecture so the app can actually query the database, convert results to domain models, and handle the "not found" case cleanly.
+
+No new dependencies are being added here. Everything we need (Spring Data JPA, H2, MapStruct / ModelMapper) was already pulled in during the reverse engineering setup.
+
+## New Files
+
+<FileTree />
+
+The highlighted additions span both `src/main` and `src/test`. On the main side you're creating the secondary port, its implementation, the JPA repository, the entity-to-domain mapper, and configuring the dev profile to talk to an in-memory H2 database. On the test side you're adding a test profile, reduced SQL seed data, an integration test for the JPA layer, and updating existing tests to account for the new port.
+
+## Configure the Dev Profile
+
+Each module has an `application-dev.yaml` that activates when the `dev` Spring profile is active. This is where you tell Spring Boot how to connect to the database, how to initialize it, and how JPA should behave.
+
+<ApplicationYamlDev />
+
+A few things to notice:
+
+- **In-memory H2** (`jdbc:h2:mem:sakila`) means no external database to install or manage for local development.
+- **`ddl-auto: none`** is deliberate. The schema is fully controlled by `sakila-schema.sql`, not by Hibernate. Hibernate doesn't create or alter tables.
+- **`sql.init.mode: always`** tells Spring to run both the schema and data SQL scripts on every startup, so the database is always in a known state.
+- The **H2 console** is enabled at `/h2-console` for quick ad-hoc queries during development.
+- Kotlin additionally sets **`jpa.open-in-view: false`** to disable the [open-session-in-view anti-pattern](https://vladmihalcea.com/the-open-session-in-view-anti-pattern/). Java and Groovy leave it at the default (enabled), which is a Spring Boot default worth knowing about.
+
+The `sakila-schema.sql` file was added during [reverse engineering](./reverse-engineering-jpa-entities) and doubles as the DDL that H2 loads at startup:
+
+<SakilaSchema />
+
+## Wire the Secondary Port
+
+### Define the Port Interface
+
+The domain layer declares **what** it needs without knowing JPA exists. `FindByIdPortOut` is that contract: give me a film by ID, return a domain model.
+
+<PortOut />
+
+### Create the JPA Repository
+
+`FilmJpaRepository` is the secondary adapter. Spring Data JPA generates the full implementation at runtime from this minimal interface. No custom query methods needed, the inherited `findById` is enough.
+
+<JpaRepositoryInterface />
+
+The `Film` type parameter here is the **generated JPA entity** (`dev.pollito.{module}.generated.entity.Film`), not the domain model. That distinction matters and is exactly why the mapper exists.
+
+### Map Entities to Domain Models
+
+The mapper converts JPA entities into domain models. Field names don't match one-to-one (`filmId` → `id`, `languageByLanguageId.name` → `language`, `releaseYear` as `LocalDate` → `Integer` year), so the mapper handles that translation.
+
+<JpaMapper />
+
+<Admonition type="info" title="MapStruct vs. ModelMapper">
+Java and Kotlin use **MapStruct**, which generates mapping code at compile time via annotation processing. The mapper interface extends Spring's `Converter<EntityFilm, DomainFilm>` and is registered automatically.
+
+Groovy uses **ModelMapper** (runtime reflection) instead, because Groovy has limited annotation processor support. The mapper is a regular `@Component` that configures a `TypeMap` in its constructor.
+
+</Admonition>
+
+### Implement the Port
+
+`FindByIdPortOutImpl` implements `FindByIdPortOut` and orchestrates the repository and mapper. It's a `@Service` that lives alongside the port interface.
+
+<PortOutImplementation />
+
+The key line is `repository.findById(id).orElseThrow()`. When the requested film doesn't exist, `Optional.orElseThrow()` raises a `NoSuchElementException`. The implementation doesn't catch it. It lets the exception propagate up the call stack, where the web layer decides how to represent it.
+
+## Handle the "Not Found" Case
+
+Rather than catching `NoSuchElementException` inside the adapter (which would drag HTTP concerns into the domain layer), each module's `ControllerAdvice` handles it globally and maps it to an HTTP `404 NOT_FOUND`:
+
+<ControllerAdvice />
+
+This is the same `ControllerAdvice` from the [error normalization setup](/optional-but-recommended-features/normalize-errors), with one new `@ExceptionHandler` added. The secondary port stays clean of HTTP logic, and the error response format stays consistent across the entire API.
+
+## Test the Integration
+
+### application-test.yaml
+
+A separate test profile configures the database for tests. The important difference from the dev profile: `sql.init.mode: never`. Scripts aren't loaded on startup. Instead, each test class loads them explicitly via `@Sql`, which gives you fine-grained control over test data.
+
+<ApplicationTestYaml />
+
+Both `src/test/resources/` contains its own copies of `sakila-schema.sql` and `sakila-data.sql`. The schema file is identical to the one in `main/resources`. The data file is intentionally much smaller (around 238 lines vs ~47,400 in the full dataset). Since `@DataJpaTest` runs these scripts before every test class that declares `@Sql`, loading the full dataset on every test run would be needlessly slow.
+
+### Integration Test — @DataJpaTest
+
+Tests targeting the JPA layer use `@DataJpaTest`, a Spring slice that loads only JPA infrastructure (repositories, entity manager, datasource) without the full application context.
+
+<PortOutImplIntegrationTest />
+
+A few things worth calling out:
+
+- **`@DataJpaTest`** loads only the JPA slice. No web layer, no full context.
+- **`@ActiveProfiles("test")`** picks up `application-test.yaml` with `sql.init.mode: never`.
+- **`@Import(...)`** manually imports `FindByIdPortOutImpl` and the mapper. `@DataJpaTest` doesn't component-scan outside the JPA slice, so anything beyond repositories needs explicit importing.
+- **`@Sql(executionPhase = BEFORE_TEST_CLASS)`** runs the schema and data scripts once before all methods in the class, not before each individual test.
+- The test autowires **`FindByIdPortOut`** (the interface), not the concrete implementation, staying true to the port abstraction.
+
+The `@Import` list differs by module: Java and Kotlin import `FilmJpaMapperImpl` (the MapStruct-generated class), while Groovy imports `FilmJpaMapper` directly plus `ModelMapperConfig` to supply the `ModelMapper` bean.
+
+### Unit Test — Mocked Secondary Port
+
+`FindByIdPortInImpl` (the primary port implementation) is tested in isolation by mocking `FindByIdPortOut`. These tests have zero database involvement. They verify that the primary port correctly delegates to the secondary port and returns the result.
+
+<PortInImplTest />
+
+Each module uses its native mocking approach:
+
+| Module | Framework         | Mock Style                            |
+| ------ | ----------------- | ------------------------------------- |
+| Java   | JUnit 5 + Mockito | `@Mock`, `when(...).thenReturn(...)`  |
+| Kotlin | JUnit 5 + MockK   | `@MockK`, `every { ... } returns ...` |
+| Groovy | Spock             | `Mock()`, `>>` stubbing               |
+
+### ControllerAdvice Test Update
+
+The existing `ControllerAdvice` test gets a new test case for `NoSuchElementException` → `404 NOT_FOUND`. The structure is the same parameterized test from before, just with one more entry in the data set.
+
+<ControllerAdviceTest />
+
+## The Complete Flow
+
+With everything wired up, here's what happens when a request hits the application. The project follows hexagonal architecture. JPA sits entirely outside the domain layer, reachable only through a port interface:
+
+<RequestFlowSequenceDiagram />
+
+Build and run the application with the `dev` profile, then hit the endpoint:
+
+<TerminalCurl />
