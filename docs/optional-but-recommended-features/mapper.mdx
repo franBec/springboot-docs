@@ -4,59 +4,67 @@ title: Mapper
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
-import Admonition from '@theme/Admonition';
 import {
   FileTree,
   BuildGradle,
-  MapperSpringConfig,
+    MapperConfig,
   FilmRestMapper,
+    FilmRestControllerGroovy
 } from '@site/src/components/docs/optional-but-recommended-features/mapper';
 
 <GithubTagInfo tag="mapper" />
 
-<Admonition type="info">
-  For Groovy Spring Boot projects with only `.groovy` files, mappers are
-  redundant. Check out the [Groovy Does Not Need a
-  Mapper](#groovy-does-not-need-a-mapper-yet) section below to understand why.
-</Admonition>
+Imagine a big project with a few dozen APIs, and hundreds of Model → DTO conversions... Doing this manually can quickly create much boilerplate code, be prone to error, and consume a lot of time. Luckily for us, there are multiple [object mapping frameworks](https://www.baeldung.com/java-performance-mapping-frameworks).
 
-Imagine a big project with a few dozen APIs, and hundreds of Model → DTO conversions... Doing this manually can quickly create much boilerplate code, be prone to error, and consume a lot of time. Luckily for us, there are multiple object mapping frameworks for Java.
+## How Does A Mapper Work?
 
-Mappers are a [“choose your own adventure”](https://www.baeldung.com/java-performance-mapping-frameworks) situation. The one I recommend is [MapStruct Spring Extensions](https://mapstruct.org/documentation/spring-extensions/reference/html/), an annotation processor designed to complement the core MapStruct project with features specific to the Spring Framework.
+### MapStruct Spring Extensions
 
-You're going to create and modify these files:
+**For Java/Kotlin Spring Boot apps**, I recommend [MapStruct Spring Extensions](https://mapstruct.org/documentation/spring-extensions/reference/html/), an annotation processor designed to complement the core [MapStruct project](https://mapstruct.org/) with features specific to the Spring Framework.
+
+MapStruct works through **compile-time code generation**. When you build your project, the MapStruct annotation processor scans your mapper interfaces and generates concrete implementation classes with plain getter/setter calls (the same boilerplate code you would write by hand, but automated).
+
+This approach offers several advantages:
+
+- **Performance**: No runtime overhead since mappings are resolved during compilation
+- **Type safety**: Mapping errors are caught at compile time, not in production
+- **Debuggable**: Generated code is readable and can be stepped through in a debugger
+
+### ModelMapper
+
+**For Groovy Spring Boot apps**, [Groovy's dynamic nature conflicts with MapStruct's compile-time code generation](https://stackoverflow.com/questions/72197127/mapstruct-with-groovy). That's why I recommend [ModelMapper](https://modelmapper.org/).
+
+Instead of generating code at compile time, it inspects the source and destination objects at runtime using [Java's Reflection API](https://www.baeldung.com/java-reflection) to discover fields, match them by name/convention, and copy values.
+
+At runtime, ModelMapper:
+
+1. Inspects the source class to find: id, title, releaseYear, ...
+2. Inspects the target class to find: id, title, releaseYear, ...
+3. Matches properties by naming convention
+4. Creates mapping and copies values via reflection
+
+This approach offers different trade-offs:
+
+- **Flexibility**: Works seamlessly with Groovy's dynamic typing and metaprogramming
+- **Less configuration**: Automatically matches properties by convention without explicit field mapping
+- **Runtime cost**: Reflection is slower than direct method calls, though ModelMapper caches mappings to minimize overhead
+
+## Adding a Mapper to the Spring Boot App
 
 <FileTree />
 
-## MapStruct Spring Extensions
-
-1. Add MapStruct Dependencies:
+1. Add Dependencies:
 
    <BuildGradle />
 
-2. Create MapStruct Configuration:
+2. Configure the Mapper:
 
-   <MapperSpringConfig />
+   <MapperConfig />
 
-3. Replace `FilmRestMapper` with MapStruct Interface:
+3. Replace handwritten mapper with MapStruct/ModelMapper interface:
 
    <FilmRestMapper />
 
-- **At compile time**, MapStruct will generate an implementation of your `FilmRestMapper` interface.
-- The generated class will be a Spring `@Component` that you can inject.
-- MapStruct will automatically handle the null check and field mappings based on matching field names.
-- The usage remains the same (`Controller` didn't realize something changed at all).
+4. **Groovy only**: Update `RestController` class to inject mapper, it no longer uses static import approach.
 
-The MapStruct generated implementation is equivalent to your manual mapper, with the added benefit of compile-time safety and less boilerplate code.
-
-## Groovy Does Not Need a Mapper (Yet)
-
-Groovy's `properties` [gives you a map of all properties](https://www.javathinking.com/blog/how-to-get-all-property-names-of-a-groovy-class/), and [a constructor can accept a map](https://blog.nareshak.com/groovy-intention-revealing-code-with-map-constructors/). These language features reduce the need for mapping libraries.
-
-Technically Groovy can use MapStruct, but:
-
-- MapStruct is designed for Java.
-- [Groovy's dynamic nature conflicts with MapStruct's compile-time code generation](https://stackoverflow.com/questions/72197127/mapstruct-with-groovy).
-- You're fighting against [Groovy's strengths](https://en.wikipedia.org/wiki/Apache_Groovy#Features).
-
-However, if you ever find yourself in the scenario of needing to map between a `.groovy` class and a `.java` class (which might never happen depending on your project setup), then a runtime reflection-based mapper like [ModelMapper](https://modelmapper.org/) is your choice.
+    <FilmRestControllerGroovy />

@@ -4,59 +4,67 @@ title: Mapper
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
-import Admonition from '@theme/Admonition';
 import {
   FileTree,
   BuildGradle,
-  MapperSpringConfig,
+  MapperConfig,
   FilmRestMapper,
+  FilmRestControllerGroovy,
 } from '@site/src/components/docs/optional-but-recommended-features/mapper';
 
 <GithubTagInfo tag="mapper" />
 
-<Admonition type="info">
-  Para proyectos Spring Boot en Groovy con solo archivos `.groovy`, los mappers
-  son redundantes. Fijate en la sección [Groovy No Necesita un
-  Mapper](#groovy-no-necesita-un-mapper-todavía) abajo para entender por qué.
-</Admonition>
+Imaginate un proyecto grande con algunas docenas de APIs, y cientos de conversiones Model → DTO... Hacer esto manualmente puede rápidamente crear mucho código boilerplate, ser propenso a errores, y consumir mucho tiempo. Por suerte para nosotros, hay múltiples [frameworks de mapeo de objetos](https://www.baeldung.com/java-performance-mapping-frameworks).
 
-Imaginate un proyecto grande con algunas docenas de APIs, y cientos de conversiones Model → DTO... Hacer esto manualmente puede rápidamente crear mucho código boilerplate, ser propenso a errores, y consumir mucho tiempo. Por suerte para nosotros, hay múltiples frameworks de mapeo de objetos para Java.
+## ¿Cómo funciona un Mapper?
 
-Los mappers son una situación de ["elegí tu propia aventura"](https://www.baeldung.com/java-performance-mapping-frameworks). El que recomiendo es [MapStruct Spring Extensions](https://mapstruct.org/documentation/spring-extensions/reference/html/), un procesador de anotaciones diseñado para complementar el proyecto core de MapStruct con características específicas del Spring Framework.
+### MapStruct Spring Extensions
 
-Vas a crear y modificar estos archivos:
+**Para aplicaciones Spring Boot en Java/Kotlin**, recomiendo [MapStruct Spring Extensions](https://mapstruct.org/documentation/spring-extensions/reference/html/), un procesador de anotaciones diseñado para complementar el proyecto core de [MapStruct](https://mapstruct.org/) con características específicas del Spring Framework.
+
+MapStruct funciona a través de **generación de código en tiempo de compilación**. Cuando construís tu proyecto, el procesador de anotaciones de MapStruct escanea tus interfaces de mapper y genera clases de implementación concretas con llamadas plain getter/setter (el mismo código boilerplate que escribirías a mano, pero automatizado).
+
+Este enfoque ofrece varios beneficios:
+
+- **Rendimiento**: Sin overhead en tiempo de ejecución ya que los mapeos se resuelven durante la compilación
+- **Seguridad de tipos**: Los errores de mapeo se capturan en tiempo de compilación, no en producción
+- **Debuggeable**: El código generado es legible y se puede debuggear paso a paso
+
+### ModelMapper
+
+**Para aplicaciones Groovy Spring Boot**, [la naturaleza dinámica de Groovy entra en conflicto con la generación de código en tiempo de compilación de MapStruct](https://stackoverflow.com/questions/72197127/mapstruct-with-groovy). Por eso recomiendo [ModelMapper](https://modelmapper.org/).
+
+En lugar de generar código en tiempo de compilación, inspecciona los objetos de origen y destino en tiempo de ejecución usando [Java's Reflection API](https://www.baeldung.com/java-reflection) para descubrir campos, compararlos por nombre/convención, y copiar valores.
+
+En tiempo de ejecución, ModelMapper:
+
+1. Inspecciona la clase de origen para encontrar: id, title, releaseYear, ...
+2. Inspecciona la clase de destino para encontrar: id, title, releaseYear, ...
+3. Compara propiedades por convención de nombres
+4. Crea el mapeo y copia valores via reflection
+
+Este enfoque ofrece diferentes compensaciones:
+
+- **Flexibilidad**: Funciona sin problemas con el tipado dinámico y metaprogramming de Groovy
+- **Menos configuración**: Automáticamente compara propiedades por convención sin mapeo de campos explícito
+- **Costo en tiempo de ejecución**: La reflection es más lenta que las llamadas de método directo, aunque ModelMapper cachea mapeos para minimizar overhead
+
+## Agregando un Mapper a la aplicación Spring Boot
 
 <FileTree />
 
-## MapStruct Spring Extensions
-
-1. Agregá las dependencias de MapStruct:
+1. Agregá las dependencias:
 
    <BuildGradle />
 
-2. Creá la Configuración de MapStruct:
+2. Configurá el Mapper:
 
-   <MapperSpringConfig />
+   <MapperConfig />
 
-3. Reemplazá `FilmRestMapper` con la Interface de MapStruct:
+3. Reemplazá el mapper manual con la interface de MapStruct/ModelMapper:
 
    <FilmRestMapper />
 
-- **En tiempo de compilación**, MapStruct va a generar una implementación de tu interface `FilmRestMapper`.
-- La clase generada va a ser un `@Component` de Spring que podés inyectar.
-- MapStruct va a manejar automáticamente el null check y mapeos de campos basados en nombres de campos coincidentes.
-- El uso permanece igual (`Controller` no se dio cuenta de que algo cambió en absoluto).
+4. **Solo Groovy**: Actualiza la clase `RestController` para inyectar el mapper, ya no usa el enfoque de static import.
 
-La implementación generada por MapStruct es equivalente a tu mapper manual, con el beneficio agregado de seguridad en tiempo de compilación y menos código boilerplate.
-
-## Groovy No Necesita un Mapper (Todavía)
-
-El `properties` de Groovy [te da un mapa de todas las propiedades](https://www.javathinking.com/blog/how-to-get-all-property-names-of-a-groovy-class/), y [un constructor puede aceptar un mapa](https://blog.nareshak.com/groovy-intention-revealing-code-with-map-constructors/). Estas características del lenguaje reducen la necesidad de librerías de mapeo.
-
-Técnicamente, Groovy puede usar MapStruct, pero:
-
-- MapStruct está diseñado para Java.
-- [La naturaleza dinámica de Groovy entra en conflicto con la generación de código en tiempo de compilación de MapStruct](https://stackoverflow.com/questions/72197127/mapstruct-with-groovy).
-- Estás luchando contra las [fortalezas de Groovy](https://en.wikipedia.org/wiki/Apache_Groovy#Features).
-
-Sin embargo, si alguna vez te encontrás en el escenario de necesitar mapear entre una clase `.groovy` y una clase `.java` (que puede que nunca pase dependiendo de la configuración de tu proyecto), entonces un mapper basado en reflexión en tiempo de ejecución como [ModelMapper](https://modelmapper.org/) es tu elección.
+   <FilmRestControllerGroovy />

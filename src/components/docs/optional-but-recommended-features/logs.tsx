@@ -305,6 +305,8 @@ dependencies {
   testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+  implementation 'org.modelmapper:modelmapper:3.2.6'
+
 // highlight-added-start
   implementation 'org.aspectj:aspectjtools:1.9.25.1'
   implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'

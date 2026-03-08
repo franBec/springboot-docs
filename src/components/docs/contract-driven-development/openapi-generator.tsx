@@ -90,10 +90,7 @@ const FileTreeGroovy = () => (
     │   │               │   ├── advice
 // highlight-modified
     │   │               │   │   └── ControllerAdvice.groovy
-    │   │               │   ├── ...
-    │   │               │   └── mapper
-// highlight-added
-    │   │               │       └── ModelMapperConfig.groovy
+    │   │               │   └── ...
     │   │               ├── sakila
     │   │               │   └── film
     │   │               │       ├── adapter
@@ -422,6 +419,8 @@ dependencies {
   testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+  implementation 'org.modelmapper:modelmapper:3.2.6'
+
   implementation 'org.aspectj:aspectjtools:1.9.25.1'
   implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
 
@@ -429,8 +428,6 @@ dependencies {
   implementation 'io.swagger.core.v3:swagger-annotations:2.2.41'
   implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
   implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-  implementation 'org.modelmapper:modelmapper:3.2.6'
 // highlight-added-end
 }
 
@@ -486,31 +483,6 @@ sourceSets {
 
 tasks.named('compileJava') {
   dependsOn 'openApiGenerate'
-}
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
-export const GroovyModelMapperConfig = () => (
-  <CollapsibleCodeBlock
-    language="groovy"
-    title="groovy/dev/pollito/spring_groovy/config/mapper/ModelMapperConfig.groovy"
-  >
-    {`// highlight-added-start
-package dev.pollito.spring_groovy.config.mapper
-
-import groovy.transform.CompileStatic
-import org.modelmapper.ModelMapper
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-
-@Configuration
-@CompileStatic
-class ModelMapperConfig {
-  @Bean
-  ModelMapper modelMapper() {
-    new ModelMapper()
-  }
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
@@ -751,11 +723,12 @@ const GroovyMapper = () => (
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/mapper/FilmRestMapper.groovy"
   >
-    {`
-// highlight-added-start
-package dev.pollito.spring_groovy.sakila.film.adapter.in.rest.mapper
+    {`package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
 
-import dev.pollito.spring_groovy.sakila.film.domain.model.Film
+// highlight-modified-start
+import dev.pollito.spring_groovy.generated.model.Film as RestDtoFilm
+import dev.pollito.spring_groovy.sakila.film.domain.model.Film as DomainFilm
+// highlight-modified-end
 import groovy.transform.CompileStatic
 import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Component
@@ -765,16 +738,16 @@ import org.springframework.stereotype.Component
 class FilmRestMapper {
   private final ModelMapper mapper
 
-  FilmRestMapper(ModelMapper modelMapper) {
+  FilmRestMapper(ModelMapper mapper) {
     this.mapper = mapper
   }
 
-  dev.pollito.spring_groovy.generated.model.Film convert(Film source) {
-    if (!source) return null
-    mapper.map(source, dev.pollito.spring_groovy.generated.model.Film)
+// highlight-modified-start
+  RestDtoFilm convert(DomainFilm source) {
+    mapper.map(source, RestDtoFilm)
+// highlight-modified-end
   }
-}
-// highlight-added-end`}
+}`}
   </CollapsibleCodeBlock>
 );
 

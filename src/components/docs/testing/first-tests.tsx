@@ -647,14 +647,14 @@ dependencies {
   testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+  implementation 'org.modelmapper:modelmapper:3.2.6'
+
   implementation 'org.aspectj:aspectjtools:1.9.25.1'
   implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
 
   implementation 'io.swagger.core.v3:swagger-annotations:2.2.41'
   implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
   implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-  implementation 'org.modelmapper:modelmapper:3.2.6'
   
 // highlight-added-start
   testImplementation 'org.spockframework:spock-core:2.4-groovy-5.0'

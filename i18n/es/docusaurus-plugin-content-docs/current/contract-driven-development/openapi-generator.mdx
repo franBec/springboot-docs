@@ -13,7 +13,6 @@ import {
   JavaBuildGradle,
   GroovyBuildGradle,
   KotlinBuildGradle,
-  GroovyModelMapperConfig,
   RestController,
   RestControllerAdvice,
   Mapper,
@@ -99,31 +98,6 @@ Ahora que todo está configurado, **ejecutá la tarea Build**. Cuando la tarea t
   - **Es autogenerado**: Trátalo como una dependencia compilada. Lo usás, no lo modificás.
   - **Filosofía contract-first**: El código coincide exactamente con tu spec de OpenAPI. Si necesitás cambios, actualizá el archivo YAML y regenerá.
   - **Libre de mantenimiento**: El generador maneja las actualizaciones, así que evitás refactoring manual.
-
-## (Solo Groovy) Mapeando Clases Groovy a Clases Java
-
-Algunas bases:
-
-- El generador `openapi-spring` genera clases `.java`.
-- La lógica de dominio está en `.groovy`
-
-Vamos a necesitar un puente. Eso significa mapear clases Groovy a contrapartes Java.
-
-Aquí es donde nos encontramos con una pared: la característica `properties` de Groovy no juega bien con cómo los constructores de Java. Entonces, el [mapeo directo y trivial usando el manejo nativo de propiedades de Groovy](/optional-but-recommended-features/mapper#groovy-no-necesita-un-mapper-todavía) está fuera de la mesa aquí.
-
-Ahora, quizás estés pensando, "¿Y qué hay de [MapStruct](https://mapstruct.org/)? ¡Lo usamos para Java y Kotlin!" Para Groovy, MapStruct no es realmente una opción. [La naturaleza dinámica de Groovy choca con la generación de código en tiempo de compilación de MapStruct](https://stackoverflow.com/questions/72197127/mapstruct-with-groovy).
-
-Esto nos deja con:
-
-- Mapeo manual, que es una tarea tediosa y propensa a errores que estamos tratando de _evitar_ con la generación de código en primer lugar
-- Encontrar otra librería de mapeo.
-
-[ModelMapper](https://modelmapper.org/) es una solución pragmática que maneja el mapeo de objetos elegantemente en nuestro proyecto Groovy Spring Boot.
-
-1. Agregá la dependencia de ModelMapper (ya hecho en `build.gradle`)
-2. Creá la configuración de ModelMapper:
-
-   <GroovyModelMapperConfig />
 
 ## Usando el Código Generado
 
