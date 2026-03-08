@@ -1878,11 +1878,33 @@ export const TerminalCurl = () => (
     "description": "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
     "id": 1,
     "language": "English",
-    "length": 86,
-    "rating": "PG",
-    "releaseYear": 2006,
-    "title": "ACADEMY DINOSAUR"
+     "length": 86,
+     "rating": "PG",
+     "releaseYear": 2006,
+     "title": "ACADEMY DINOSAUR"
+   }
+ }`}
+  </CollapsibleCodeBlock>
+);
+
+export const BuildGradleGroovySpotlessExclude = () => (
+  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+    {`// ...
+spotless {
+  groovy {
+// highlight-added-start
+    target 'src/*/groovy/**/*.groovy'
+    targetExclude 'build/**/*.groovy', '**/FilmJpaMapper.groovy'
+// highlight-added-end
+    importOrder()
+    removeSemicolons()
+    greclipse().configFile('greclipse.properties')
   }
-}`}
+  groovyGradle {
+    target '*.gradle'
+    greclipse().configFile('greclipse.properties')
+  }
+}
+// ...`}
   </CollapsibleCodeBlock>
 );

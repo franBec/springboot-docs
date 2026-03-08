@@ -21,6 +21,7 @@ import {
   ControllerAdviceTest,
   RequestFlowSequenceDiagram,
   TerminalCurl,
+  BuildGradleGroovySpotlessExclude,
 } from '@site/src/components/docs/persistence-integration/jpa-repository-usage';
 
 <GithubTagInfo tag="persistence-integration" />
@@ -75,10 +76,12 @@ The mapper converts JPA entities into domain models. Field names don't match one
 
 <JpaMapper />
 
-<Admonition type="info" title="MapStruct vs. ModelMapper">
-Java and Kotlin use **MapStruct**, which generates mapping code at compile time via annotation processing. The mapper interface extends Spring's `Converter<EntityFilm, DomainFilm>` and is registered automatically.
+<Admonition type="warning" title="Groovy Spotless Configuration">
+The Groovy implementation's `FilmJpaMapper` uses a syntax that Spotless cannot properly format. Exclude this file from Spotless checks by updating your `build.gradle`:
 
-Groovy uses **ModelMapper** (runtime reflection) instead, because Groovy has limited annotation processor support. The mapper is a regular `@Component` that configures a `TypeMap` in its constructor.
+<BuildGradleGroovySpotlessExclude />
+
+This exclusion is necessary because the mapper's closure-based configuration in the `configureTypeMap()` method doesn't comply with the standard formatting rules that Spotless applies. The file remains functional and follows clean code principles; it's just excluded from automatic formatting to prevent Spotless from rejecting or mishandling it.
 
 </Admonition>
 
