@@ -1,0 +1,158 @@
+---
+sidebar_position: 3
+title: Uso de repositorios JPA
+---
+
+import GithubTagInfo from '@site/src/components/github-tag-info';
+import Admonition from '@theme/Admonition';
+
+import {
+  FileTree,
+  ApplicationYamlDev,
+  SakilaSchema,
+  PortOut,
+  JpaMapper,
+  JpaRepositoryInterface,
+  PortOutImplementation,
+  ApplicationTestYaml,
+  PortOutImplIntegrationTest,
+  PortInImplTest,
+  ControllerAdvice,
+  ControllerAdviceTest,
+  RequestFlowSequenceDiagram,
+  TerminalCurl,
+  BuildGradleGroovySpotlessExclude,
+} from '@site/src/components/docs/persistence-integration/jpa-repository-usage';
+
+<GithubTagInfo tag="persistence-integration" />
+
+En el [documento anterior](./reverse-engineering-jpa-entities) configuramos la generación de entidades en tiempo de build desde el esquema Sakila. Las entidades JPA existen ahora, pero nada en la aplicación las usa todavía. Este documento las conecta en la arquitectura hexagonal para que la app pueda consultar la base de datos, convertir resultados a modelos de dominio, y manejar el caso "no encontrado" limpiamente.
+
+No hay nuevas dependencias siendo agregadas acá. Todo lo que necesitamos (Spring Data JPA, H2, MapStruct / ModelMapper) ya fue incorporado durante la configuración de ingeniería inversa.
+
+## Archivos Nuevos
+
+<FileTree />
+
+Las adiciones resaltadas abarcan tanto `src/main` como `src/test`. Del lado de main estás creando el puerto secundario, su implementación, el repository JPA, el mapper entidad-a-dominio, y configurando el perfil dev para hablar con una base de datos H2 in-memory. Del lado test estás agregando un perfil de test, datos SQL de prueba reducidos, un integration test para la capa JPA, y actualizando tests existentes para contabilizar el nuevo puerto.
+
+## Configurá el Perfil Dev
+
+Cada módulo tiene un `application-dev.yaml` que se activa cuando el perfil Spring `dev` está activo. Este es el lugar dónde le decís a Spring Boot cómo conectarse a la base de datos, cómo inicializarla, y cómo JPA debería comportarse.
+
+<ApplicationYamlDev />
+
+Hay algunos detalles que vale la pena notar:
+
+- **H2 in-memory** (`jdbc:h2:mem:sakila`) significa que no necesitás instalar ni manejar una base de datos externa para desarrollo local.
+- **`ddl-auto: none`** es deliberado. El esquema está completamente controlado por `sakila-schema.sql`, no por Hibernate. Hibernate no crea ni altera tablas.
+- **`sql.init.mode: always`** le dice a Spring que corra ambos scripts de esquema y data SQL en cada startup, entonces la base de datos siempre está en un estado conocido.
+- La **consola H2** está habilitada en `/h2-console` para consultas ad-hoc rápidas durante desarrollo.
+- Kotlin además setea **`jpa.open-in-view: false`** para deshabilitar el [open-session-in-view anti-pattern](https://vladmihalcea.com/the-open-session-in-view-anti-pattern/). Java y Groovy lo dejan en el default (habilitado), que es un default de Spring Boot que conviene conocer.
+
+El archivo `sakila-schema.sql` fue agregado durante [ingeniería inversa](./reverse-engineering-jpa-entities) y dobla como el DDL que H2 carga en startup:
+
+<SakilaSchema />
+
+## Conectá el Puerto Secundario
+
+### Definí la Interfaz del Puerto
+
+La capa de dominio declara **qué** necesita sin saber que JPA existe. `FindByIdPortOut` es ese contrato: dame una película por ID, devolvé un modelo de dominio.
+
+<PortOut />
+
+### Creá el Repository JPA
+
+`FilmJpaRepository` es el adaptador secundario. Spring Data JPA genera la implementación completa en runtime desde esta interfaz mínima. No hay métodos de consulta personalizados necesarios, el `findById` heredado es suficiente.
+
+<JpaRepositoryInterface />
+
+El parámetro de tipo `Film` acá es la **entidad JPA generada** (`dev.pollito.{module}.generated.entity.Film`), no el modelo de dominio. Esa distinción importa y es exactamente por qué el mapper existe.
+
+### Mapá Entidades a Modelos de Dominio
+
+El mapper convierte entidades JPA en modelos de dominio. Los nombres de campos no coinciden uno-a-uno (`filmId` → `id`, `languageByLanguageId.name` → `language`, `releaseYear` como `LocalDate` → `Integer` año), entonces el mapper maneja esa traducción.
+
+<JpaMapper />
+
+<Admonition type="warning" title="Configuración Groovy Spotless">
+La implementación de Groovy de `FilmJpaMapper` usa una sintaxis que Spotless no puede formatear apropiadamente. Excluí este archivo de chequeos Spotless actualizando tu `build.gradle`:
+
+<BuildGradleGroovySpotlessExclude />
+
+Esta exclusión es necesaria porque la configuración basada en closures del mapper en el método `configureTypeMap()` no cumple con las reglas de formateo estándar que Spotless aplica. El archivo permanece funcional y sigue principios de código limpio; solo es excluido de formateo automático para prevenir que Spotless lo rechace o lo maneje mal.
+
+</Admonition>
+
+### Implementá el Puerto
+
+`FindByIdPortOutImpl` implementa `FindByIdPortOut` y orquesta el repository y el mapper. Es un `@Service` que vive junto a la interfaz del puerto.
+
+<PortOutImplementation />
+
+La línea clave es `repository.findById(id).orElseThrow()`. Cuando la película solicitada no existe, `Optional.orElseThrow()` levanta una `NoSuchElementException`. La implementación no la atrapa. La deja propagarse por la call stack, dónde la capa web decide cómo representarla.
+
+## Manejá el Caso "No Encontrado"
+
+En lugar de atrapar `NoSuchElementException` dentro del adaptador (que arrastraría preocupaciones HTTP a la capa de dominio), el `ControllerAdvice` de cada módulo lo maneja globalmente y lo mapea a una HTTP `404 NOT_FOUND`:
+
+<ControllerAdvice />
+
+Este es el mismo `ControllerAdvice` del [setup de normalización de errores](/es/optional-but-recommended-features/normalize-errors), con un nuevo `@ExceptionHandler` agregado. El puerto secundario se mantiene limpio de lógica HTTP, y el formato de respuesta de error se mantiene consistente a través de toda la API.
+
+## Probá la Integración
+
+### application-test.yaml
+
+Un perfil de test separado configura la base de datos para tests. La diferencia importante del perfil dev: `sql.init.mode: never`. Los scripts no se cargan en startup. En su lugar, cada clase de test los carga explícitamente vía `@Sql`, que te da control granular sobre datos de test.
+
+<ApplicationTestYaml />
+
+Ambos `src/test/resources/` contienen sus propias copias de `sakila-schema.sql` y `sakila-data.sql`. El archivo de esquema es idéntico al de `main/resources`. El archivo de data es intencionalmente mucho más pequeño (alrededor de 238 líneas vs ~47,400 en el dataset completo). Ya que `@DataJpaTest` corre estos scripts antes de cada clase de test que declara `@Sql`, cargar el dataset completo en cada corrida de tests sería innecesariamente lento.
+
+### Integration Test — @DataJpaTest
+
+Los tests apuntando a la capa JPA usan `@DataJpaTest`, un Spring slice que carga solo infraestructura JPA (repositories, entity manager, datasource) sin el contexto completo de la aplicación.
+
+<PortOutImplIntegrationTest />
+
+Hay algunos detalles que vale la pena notar:
+
+- **`@DataJpaTest`** carga solo el slice JPA. No hay capa web, no hay contexto completo.
+- **`@ActiveProfiles("test")`** levanta `application-test.yaml` con `sql.init.mode: never`.
+- **`@Import(...)`** manualmente importa `FindByIdPortOutImpl` y el mapper. `@DataJpaTest` no hace component-scan fuera del slice JPA, entonces cualquier cosa más allá de los repositories necesita importación explícita.
+- **`@Sql(executionPhase = BEFORE_TEST_CLASS)`** corre el esquema y los scripts de data una sola vez antes de todos los métodos en la clase, no antes de cada test individual.
+- El test inyecta **`FindByIdPortOut`** (la interfaz), no la implementación concreta, manteniéndose leal a la abstracción del puerto.
+
+La lista `@Import` difiere por módulo: Java y Kotlin importan `FilmJpaMapperImpl` (la clase generada por MapStruct), mientras que Groovy importa `FilmJpaMapper` directamente más `ModelMapperConfig` para suministrar el bean `ModelMapper`.
+
+### Unit Test — Mocked Secondary Port
+
+`FindByIdPortInImpl` (la implementación del puerto primario) se prueba en aislamiento mockeando `FindByIdPortOut`. Estos tests no tienen ningún involucramiento de base de datos. Verifican que el puerto primario correctamente delega al puerto secundario y devuelve el resultado.
+
+<PortInImplTest />
+
+Cada módulo usa su enfoque de mocking nativo:
+
+| Módulo | Framework         | Estilo de Mock                        |
+| ------ | ----------------- | ------------------------------------- |
+| Java   | JUnit 5 + Mockito | `@Mock`, `when(...).thenReturn(...)`  |
+| Kotlin | JUnit 5 + MockK   | `@MockK`, `every { ... } returns ...` |
+| Groovy | Spock             | `Mock()`, `>>` stubbing               |
+
+### Actualización de Test ControllerAdvice
+
+El test `ControllerAdvice` existente obtiene un nuevo test case para `NoSuchElementException` → `404 NOT_FOUND`. La estructura es el mismo test parametrizado de antes, solo con una entrada más en el dataset.
+
+<ControllerAdviceTest />
+
+## El Flujo Completo
+
+Con todo conectado, acá está qué pasa cuando un request le pega a la aplicación. El proyecto sigue la arquitectura hexagonal. JPA se sienta enteramente afuera de la capa de dominio, reachable solo a través de una interfaz de puerto:
+
+<RequestFlowSequenceDiagram />
+
+Buildeá y corré la aplicación con el perfil `dev`, entonces le pegas al endpoint:
+
+<TerminalCurl />

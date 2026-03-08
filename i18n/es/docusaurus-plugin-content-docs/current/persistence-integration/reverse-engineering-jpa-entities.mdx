@@ -1,0 +1,114 @@
+---
+sidebar_position: 2
+title: Ingeniería inversa de entidades JPA
+---
+
+import GithubTagInfo from '@site/src/components/github-tag-info';
+import {
+  FileTree,
+  HibernateRevengXml,
+  HibernateToolsProperties,
+  HibernatePojo,
+  BuildGradle,
+} from '@site/src/components/docs/persistence-integration/reverse-engineering-jpa-entities';
+
+<GithubTagInfo tag="persistence-integration" />
+
+## El Problema
+
+Escribir clases de entidades JPA a mano desde un esquema de base de datos existente es tedioso. Si tu esquema tiene 20 tablas conseguís 20 archivos de entidades para crear, anotar, y mantener sincronizados cada vez que el esquema cambia. Faltá una columna, obtené un nullable incorrecto, u olvídáte una relación y estás debuggeando en runtime.
+
+La alternativa: generar las entidades en tiempo de compilación directamente desde el esquema SQL. Sin necesidad de una base de datos corriendo. Sin escritura de entidades manual. El build lee el esquema, levanta una instancia H2 in-memory, la introspecciona, y escribe los archivos fuente de entidades antes de que tu código ni siquiera compile.
+
+## Cómo Funciona
+
+1. Una configuración de dependencias Gradle dedicada `hibernateTools` trae las herramientas de generación de código, completamente aislada de tu classpath de compilación y runtime.
+2. La tarea Gradle `generateEntities` carga tu esquema SQL en una base de datos H2 in-memory, conecta vía JDBC, y usa Hibernate Tools para introspeccionar el esquema y escribir archivos fuente de entidades en `build/generated/sources/hibernate/`.
+3. Ese directorio generado se registra como una root de fuente adicional, entonces las entidades compilan transparentemente junto a tu código escrito a mano.
+4. La tarea se configura para correr antes de `compileJava` / `compileKotlin` / `compileGroovy`, entonces los tipos generados siempre están disponibles en tiempo de compilación.
+
+## Archivos Nuevos
+
+<FileTree />
+
+Las adiciones resaltadas caen en dos grupos: archivos de recursos que conducen la generación (`hibernate.reveng.xml`, `hibernate-tools.properties`, `Pojo.ftl`, los archivos de esquema SQL y data) y los cambios en `build.gradle` que conectan todo.
+
+## Paso 1 — Agregá Archivos de Recursos
+
+### `sakila-schema.sql`
+
+Esta es la fuente de verdad. El ejemplo que venimos siguiendo en esta guía usa la [base de datos de muestra Sakila](https://dev.mysql.com/doc/sakila/en/), pero el setup mismo aplica a cualquier esquema con el que estés trabajando. Solo reemplazá `sakila-schema.sql` por tu propio archivo DDL y actualizá la tarea en consecuencia.
+
+Hibernate Tools nunca se conecta a tu base de datos real. Solo lee este archivo SQL, lo carga en una instancia H2 in-memory, y la introspecciona. Este archivo debe reflejar fielmente el esquema de producción. Si producción tiene una columna que tu archivo SQL no tiene, la entidad generada no la tendrá. Si los tipos no coinciden, los mapeos generados estarán mal. Tratá este archivo con el cuidado que le darías a la base de datos misma.
+
+### `hibernate.reveng.xml`
+
+<HibernateRevengXml />
+
+El bloque `<type-mapping>` sobreescribe los mapeos de tipo JDBC-a-Java por defecto. Sin él, Hibernate Tools mapearía `TIMESTAMP` a un raw `java.sql.Timestamp` y `TINYINT` a un primitive `byte`. Las sobreescrituras te dan equivalentes `java.time.*` limpios y tipos boxed apropiados en su lugar.
+
+La línea `<table-filter>` le dice a Hibernate Tools que haga reverse-engineer de cada tabla en el esquema `PUBLIC`, que es todo de Sakila.
+
+### `hibernate-tools.properties`
+
+<HibernateToolsProperties />
+
+Este archivo suministra los detalles de conexión JDBC estáticos. Fijate que no hay `hibernate.connection.url` acá. Esa propiedad se inyecta dinámicamente por la tarea Gradle en tiempo de generación, apuntando al archivo de esquema SQL vía una connection string H2 `INIT=RUNSCRIPT`. Mantenerlo fuera de este archivo evita hardcodear una ruta absoluta.
+
+### `Pojo.ftl`
+
+<HibernatePojo />
+
+Un template [FreeMarker](https://freemarker.apache.org/) que controla la forma exacta de cada clase de entidad generada. Hibernate Tools lo llama una vez por tabla y pasa un objeto `pojo` describiendo las columnas y relaciones de la tabla. El template decide qué anotaciones emitir, cómo manejar claves compuestas, y cómo conectar relaciones `@OneToMany` y `@ManyToOne`.
+
+Los tres variantes de lenguaje comparten la misma lógica estructural — detección de clave compuesta, manejo de `@Id` / `@EmbeddedId` / `@ManyToOne` / `@OneToMany` / `@Column` — pero difieren en qué emiten:
+
+- **Java** usa Lombok (`@Getter`, `@Setter`, `@Builder`, etc.) y campos `private`.
+- **Kotlin** tiene un helper FreeMarker `toKotlinType()` que convierte nombres de tipos Java a equivalentes Kotlin (`Integer` → `Int`, `Set<X>` → `MutableSet<X>`). Las clases de claves compuestas se vuelven `data class` para igualdad estructural; las entidades regulares son plain `class` para evitar problemas de proxying de JPA.
+- **Groovy** reemplaza Lombok por Groovy AST transforms (`@CompileStatic`, `@Builder`, `@EqualsAndHashCode`) y elimina la visibilidad explícita de campo ya que el mecanismo de propiedad de Groovy maneja eso.
+
+Porque Hibernate Tools siempre emite archivos `.java`, las tareas de Kotlin y Groovy incluyen un paso post-generación que convierte `.java` a `.kt` y `.java` a `.groovy` respectivamente. La tarea de Java se saltea esto enteramente.
+
+## Paso 2 — Conectá `build.gradle`
+
+<BuildGradle />
+
+Hay algunas cosas que vale la pena destacar en el diff:
+
+**Configuración `hibernateTools`** es un bucket de dependencias Gradle separado que existe solo para generación de código. Contiene el Hibernate Tools Ant runner, Hibernate ORM core, y H2, ninguno de los cuales pertenece en el classpath de compilación o runtime de tu aplicación. Mantenerlos acá significa que hacen su trabajo en tiempo de build y desaparecen.
+
+**Dependencias de runtime y compilación** agregan los jars estándares de Spring Data JPA y H2 que tu aplicación necesita en runtime. La variante Kotlin también requiere el plugin Gradle `kotlin("plugin.jpa")`, que genera los constructores no-arg que JPA necesita internamente, algo que las clases Kotlin no proveen por defecto.
+
+**Tarea `generateEntities`** hace el trabajo en tres pasos:
+
+1. Lee `hibernate-tools.properties`, agrega una `hibernate.connection.url` dinámica que apunta H2 al archivo de esquema SQL vía `INIT=RUNSCRIPT FROM '...'`, y escribe las propiedades combinadas a un archivo temporal.
+2. Llama a la tarea Ant `HibernateToolTask`, pasando ese archivo temporal de propiedades, `hibernate.reveng.xml`, el directorio de salida, y el directorio de templates FreeMarker. Hibernate Tools hace el resto.
+3. Renombra los archivos `.java` generados a `.kt` o `.groovy` donde sea necesario (solo Kotlin y Groovy).
+
+**Registro de source set** agrega `build/generated/sources/hibernate/` al source set apropiado para que el compilador lo detecte. Kotlin conecta `generateEntities` antes de `compileKotlin` y la tarea de generación de kapt stub, ya que el procesamiento de anotaciones corre incluso más temprano y también necesita los tipos generados disponibles.
+
+## Qué se Genera
+
+Después de correr `./gradlew generateEntities` (o cualquier tarea que dependa de ella, como `build`), encontrarás archivos fuente de entidades bajo:
+
+```
+build/generated/sources/hibernate/<group>/<name>/generated/entity/
+```
+
+Cada tabla en el esquema se vuelve una clase de entidad, compilada transparentemente junto a tu código escrito a mano. No referencías este directorio manualmente. El registro del source set se encarga de eso.
+
+## Cambios de Esquema en el Mundo Real
+
+[Cómo Spring habla con las bases de datos](./how-spring-talks-to-databases#migraciones-de-esquema) cubre enfoques code-first vs. database-first en detalle. La versión corta: code-first es cómodo para desarrollo local, database-first (Flyway, Liquibase) es más seguro para producción.
+
+Con ingeniería inversa, el proceso se acerca más al enfoque database-first — pero el paso de "ponerse al día" es automatizado. Supongamos que producción necesita una columna nueva, `last_updated` en la tabla `film`. Actualizás `sakila-schema.sql` para incluir la columna nueva, entonces corrés `./gradlew generateEntities` (o solo `build`). La tarea re-introspecciona el esquema y regenera todos los archivos de entidades. El nuevo campo aparece automáticamente en la entidad — no lo tocás a mano.
+
+La contrapartida es que vos sos el dueño del archivo SQL. Cuando la base de datos real cambia, necesitás mantener `sakila-schema.sql` sincronizado, sino las entidades generadas se desvían de la realidad. En la práctica esto significa que tu migración de esquema (Flyway, Liquibase, o un script SQL plano) y la actualización a tu archivo SQL local deberían pasar juntos, idealmente en el mismo commit.
+
+## Visión Honesta: Probablemente No Verás Esto en la Naturaleza
+
+En todos los codebases reales que se cruzan en el camino, las entidades fueron escritas a mano. El enfoque de ingeniería inversa apareció exactamente una vez en un proyecto de producción.
+
+La mayoría de equipos o comenzaron su proyecto desde cero (esquema y entidades crecen juntos) o heredaron un codebase legacy donde alguien ya escribió las entidades años atrás. El caso de uso para generarlas desde SQL en tiempo de build es genuinamente acotado: tenés un esquema existente que no controlás, necesitás entidades JPA rápido, y no querés escribir cientos de campos a mano.
+
+Entonces mantené esto en tu toolkit. Entendé qué hace el tooling y cómo se configura. Solo no te sorprendas si pasás una carrera entera y nunca lo encontrás en un codebase.

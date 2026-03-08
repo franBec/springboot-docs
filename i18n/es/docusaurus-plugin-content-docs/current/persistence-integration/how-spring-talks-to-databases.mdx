@@ -1,0 +1,146 @@
+---
+sidebar_position: 1
+title: Cómo Spring habla con las bases de datos
+---
+
+import Admonition from '@theme/Admonition';
+import {
+  RawJdbcExample,
+  HibernateEntityExample,
+  EntityManagerExample,
+  SpringDataJpaInterfaceExample,
+} from '@site/src/components/docs/persistence-integration/how-spring-talks-to-databases';
+
+Antes de escribir repositories y clases de entidades, es útil entender qué está pasando en las capas inferiores. Spring Boot hace que el acceso a bases de datos se sienta sin esfuerzo, pero hay un verdadero stack debajo. Conocerlo te salva cuando las cosas se rompen, y se van a romper.
+
+## JDBC: El Fundamento
+
+[JDBC (Java Database Connectivity)](https://en.wikipedia.org/wiki/Java_Database_Connectivity) es la API cruda de Java para hablar con una base de datos relacional. Acá está cómo se ve una consulta básica en JDBC plano:
+
+<RawJdbcExample />
+
+Funciona. Pero fijate qué estás manejando vos mismo: el ciclo de vida de la conexión, el binding de parámetros, la iteración sobre `ResultSet`, y cerrar todo en el orden correcto. Olvidarte de cerrar una conexión y tenés una fuga de recursos. Olvidate de un `try/catch` y una `SQLException` verificada te explota en el peor momento posible. Hacé esto para cada consulta en una aplicación y pasarás más tiempo con tuberías que con lógica de negocio.
+
+Este es el problema que Hibernate fue construido para resolver.
+
+## Hibernate: ORM en Top de JDBC
+
+[Hibernate](https://hibernate.org/orm/) es un **ORM (Object-Relational Mapper)**. Su trabajo es hacer puente entre el mundo relacional (tablas, filas, claves externas) y el mundo orientado a objetos (clases, instancias, referencias). En lugar de escribir SQL y mapear columnas de `ResultSet` a campos vos mismo, describís el mapeo una sola vez con anotaciones, e Hibernate se encarga del resto.
+
+<HibernateEntityExample />
+
+Con esto en lugar, Hibernate carga un objeto `Film` desde la base de datos sin que escribas una línea de SQL. Genera la consulta, la ejecuta vía JDBC, y mapea el resultado de vuelta al objeto automáticamente.
+
+Las anotaciones clave que verás en esta sección:
+
+| Anotación                   | Qué Hace                                                                          |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| `@Entity`                   | Marca la clase como una entidad gestionada por JPA (mapea a una tabla)            |
+| `@Table`                    | Especifica el nombre de la tabla (opcional si coincide con el nombre de la clase) |
+| `@Id`                       | Marca el campo de clave primaria                                                  |
+| `@Column`                   | Mapea un campo a un nombre de columna específico                                  |
+| `@ManyToOne` / `@OneToMany` | Mapea relaciones entre tablas                                                     |
+| `@EmbeddedId`               | Marca una clave primaria compuesta                                                |
+
+Hibernate sigue usando JDBC por debajo. Gestiona connection pooling, traduce tus operaciones de objetos a SQL, y las ejecuta a través de la misma API `java.sql.*` que viste arriba. Simplemente nunca tenés que tocarla directamente.
+
+<Admonition type="info" title="SessionFactory y Session">
+  La API de Hibernate gira alrededor de `SessionFactory` (creada una sola vez al
+  iniciar) y `Session` (una por unidad de trabajo). Verás estos nombres en
+  código más viejo y en la documentación de Hibernate. En un proyecto Spring
+  Boot raramente interactuarás con ellos directamente, Spring los envuelve en
+  una abstracción de más alto nivel.
+</Admonition>
+
+## JPA: La Especificación Estándar
+
+Hibernate fue adoptado tan ampliamente que la comunidad Java estandarizó sus ideas en una especificación: **[JPA (Jakarta Persistence API)](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-intro/persistence-intro.html)**. JPA define las anotaciones (`@Entity`, `@Id`, `@Column`, y demás) y una API central — el `EntityManager` — que cualquier ORM compatible debe implementar.
+
+Hibernate es la implementación de JPA más común, pero existen otras (EclipseLink, OpenJPA). Tu código apunta a las interfaces `jakarta.persistence.*`, no a Hibernate directamente.
+
+`EntityManager` es el handle principal de JPA para operaciones de base de datos:
+
+<EntityManagerExample />
+
+Sin `ResultSet`, sin gestión de conexiones, sin excepciones verificadas. Pero todavía estás escribiendo clases repository a mano para cada entidad. Spring Data JPA elimina eso también.
+
+## Spring Data JPA: Repositories Sin Boilerplate
+
+### El Patrón Repository
+
+El Patrón Repository es una capa de abstracción que se sienta entre tu aplicación y tu almacenamiento de datos. Pensalo como un traductor. Tu aplicación pide lo que quiere en su propio lenguaje, como "dame todas las películas lanzadas en 2024", y el repository maneja los detalles desordenados de convertir eso en operaciones reales de base de datos.
+
+No necesitás saber si los datos viven en PostgreSQL, MongoDB, o alguna API externa. El repository maneja esa complejidad para que tu lógica de negocio se mantenga limpia y enfocada en qué hace mejor.
+
+### Declarando un Repository
+
+[Spring Data JPA](https://spring.io/projects/spring-data-jpa) se sienta en top de JPA e Hibernate. En lugar de implementar una clase repository vos mismo, declarás una interfaz y Spring genera la implementación en runtime.
+
+<SpringDataJpaInterfaceExample />
+
+Sin clase, sin `EntityManager`, sin SQL. Spring ve la interfaz, conecta la implementación, y `findByReleaseYear` genera la consulta correcta del nombre del método automáticamente.
+
+### Más Allá de lo Básico
+
+`JpaRepository` proporciona más que operaciones CRUD simples:
+
+- **Capacidades de paginación y ordenamiento:** Manejá conjuntos de datos grandes sin cargar todo en memoria.
+- **Generación dinámica de consultas desde nombres de métodos:** Llamá a tu método `findByTitleContainingAndYearGreaterThan` y Spring Data JPA resuelve el SQL por vos.
+- **Soporte de consultas personalizadas:** Usá la anotación `@Query` cuando necesites operaciones complejas que los nombres de métodos no puedan expresar.
+- **Gestión de transacciones:** Spring maneja el dance begin/commit/rollback automáticamente.
+
+## Migraciones de Esquema
+
+Tu esquema va a cambiar. Una nueva feature necesita una columna, un fix de performance requiere un índice, un refactor renombra una tabla. Cómo manejás esos cambios importa tanto como el código mismo.
+
+### Code-First
+
+La clase de entidad es la fuente de verdad. Agregás un campo a la entidad, y en el siguiente arranque Hibernate lo lee y emite el `ALTER TABLE` contra la base de datos, cuando `spring.jpa.hibernate.ddl-auto` está seteado a `update` o `create`.
+
+El esquema sigue al código. Esto funciona bien cuando tu equipo es dueño de la base de datos completamente y te estás moviendo rápido en un proyecto greenfield. La desventaja: las actualizaciones de esquema de Hibernate no siempre son reversibles, no conseguís un historial de migraciones, y un bad `ddl-auto` setting en producción puede causar pérdida de datos.
+
+### Database-First
+
+La base de datos es la fuente de verdad. Los cambios de esquema son scripts SQL explícitos, escritos y revisados antes de que anything ejecute. Una herramienta de migración los aplica en orden y rastrea cuáles ya han sido aplicados, entonces el mismo script nunca corre dos veces.
+
+**[Flyway](https://github.com/flyway/flyway)** usa archivos SQL versionados: `V1__create_film_table.sql`, `V2__add_last_updated_column.sql`. En el startup, Flyway chequea qué scripts ya han corrido y aplica cualquiera nuevo. Simple y transparente.
+
+**[Liquibase](https://www.liquibase.com/)** lleva la misma idea más lejos. Los conjuntos de cambios se pueden escribir en XML, YAML, JSON, o SQL. Soporta definiciones de rollback, operaciones diff más complejas, y es más agnóstico de base de datos. Más poder, más configuración.
+
+|                            | Code-First              | Flyway                        | Liquibase                     |
+| -------------------------- | ----------------------- | ----------------------------- | ----------------------------- |
+| **Fuente de verdad**       | Clase de entidad        | Archivos de migración SQL     | Archivos changeset            |
+| **Historial de migración** | Ninguno                 | Tabla `flyway_schema_history` | Tabla `databasechangelog`     |
+| **Rollback**               | No soportado            | Manual                        | Built-in (opcional)           |
+| **Formato**                | Anotaciones Java/Kotlin | SQL                           | SQL, XML, YAML, JSON          |
+| **Mejor para**             | Dev local / prototyping | La mayoría de equipos de prod | Entornos complejos / multi-DB |
+
+<Admonition type="warning" title="Nunca Uses ddl-auto=update en Producción">
+  Es tentador dejar `spring.jpa.hibernate.ddl-auto=update` corriendo en todos
+  lados. No lo hagas. Puede dropear columnas, ignorar silenciosamente desajustes
+  de tipo, y te da cero trazabilidad de qué cambió y cuándo. Usá `validate` en
+  producción, chequea que las entidades coincidan con el esquema pero no cambia
+  nada, y dejá que Flyway o Liquibase sean dueños de las migraciones actuales.
+</Admonition>
+
+## El Stack Completo
+
+Acá está qué se sienta entre tu lógica de negocio y la base de datos actual:
+
+```
+Tu Código  (Spring Data JPA — interfaces JpaRepository)
+      ↓
+Spring Data JPA  (genera implementaciones de repository en runtime)
+      ↓
+JPA / jakarta.persistence  (EntityManager, @Entity, @Id, @Column…)
+      ↓
+Hibernate  (ORM — traduce objetos ↔ SQL)
+      ↓
+JDBC  (java.sql — protocolo de base de datos crudo)
+      ↓
+JDBC Driver  (PostgreSQL driver, H2 driver, MySQL driver…)
+      ↓
+Base de Datos
+```
+
+Cada capa suma un nivel de abstracción. Casi siempre trabajás en la parte de arriba. Cuando algo se rompe (una consulta rinde mal, un mapeo está incorrecto, una transacción no se comporta como se espera) conocer este stack te dice dónde buscar.

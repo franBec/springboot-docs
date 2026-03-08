@@ -106,5 +106,13 @@
   "sidebar.tutorialSidebar.category.Licenses.link.generated-index.description": {
     "message": "Licencias de código y contenido. Lo aburrido pero importante.",
     "description": "The generated-index page description for category Licenses in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Persistence Integration": {
+    "message": "Integración de Persistencia",
+    "description": "The label for category Persistence Integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Persistence Integration.link.generated-index.description": {
+    "message": "Aprendé cómo integrar bases de datos e implementar patrones de persistencia en Spring Boot.",
+    "description": "The generated-index page description for category Persistence Integration in sidebar tutorialSidebar"
   }
 }
