@@ -1846,7 +1846,8 @@ export const RequestFlowSequenceDiagram = () => (
 
         FilmJpaRepository->>H2 Database: SELECT * FROM FILM WHERE FILM_ID = 1
         H2 Database-->>FilmJpaRepository: Row data
-
+        
+        FilmJpaRepository-->>FindByIdPortOutImpl: FilmEntity
         deactivate FilmJpaRepository
 
         FindByIdPortOutImpl->>FilmJpaMapper: convert(entity)
