@@ -8,7 +8,6 @@ import Image from '@site/src/components/image';
 import {
   FilmStructureJson,
   FileTree,
-  OpenApiSpecYaml,
   ErrorResponseJson,
   FilmsListResponseJson,
   FilmResponseJson,
@@ -33,11 +32,7 @@ We want our Spring Boot application to expose these endpoints:
 
 An [OpenAPI Specification](https://swagger.io/specification/) complies with the definition of contract I gave before: Is a set of assertions containing **valid input values** and their meaning, **valid return values** and their meaning, and **error values that can occur** and their meaning.
 
-An OpenAPI Specification that would represent the desired behavior would look something like this:
-
-<OpenApiSpecYaml />
-
-For better visualization you can copy-paste the YAML file into [Swagger Editor](https://editor.swagger.io/) or use [OpenAPI (Swagger) Editor
+For better visualization you can copy-paste the OpenAPI Specification YAML file from the codebase into [Swagger Editor](https://editor.swagger.io/) or use [OpenAPI (Swagger) Editor
 in IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor).
 
 <Image

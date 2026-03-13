@@ -31,6 +31,7 @@ This is a documentation site without tests. No test commands are available.
 
 - The environment is running **BusyBox**, which provides a lightweight version of common Unix tools.
 - The `pgrep` command is a "stripped down" version and **does not support the `-g` flag**.
+- Don't rebuild the project after simple trivial change, it kills my development server, which becomes annoying and time-consuming.
 
 ## TypeScript and LSP Warnings
 

@@ -250,17 +250,13 @@ The only additional step is to assign a domain to Grafana so you can access the 
 2. Click on it and set a domain (e.g., `grafana.yourdomain.com`)
 3. Coolify will handle SSL certificates and routing
 
-## Grafana Access
-
-When you first access Grafana, use these default credentials:
-
-- **Username**: `admin`
-- **Password**: `admin`
-
-<Admonition type="warning" title="Change Default Credentials">
-  Since Grafana is exposed on a public domain, change the default password
-  immediately after your first login.
+<Admonition type="warning" title="Grafana Environment Variables">
+  Grafana expects the environment variables <code>GF_SECURITY_ADMIN_USER</code>{' '}
+  and <code>GF_SECURITY_ADMIN_PASSWORD</code> to be set. Make sure to define
+  them in your Coolify service configuration before starting the stack.
 </Admonition>
+
+## Grafana Access
 
 Once logged in, the pre-configured dashboards are available at:
 

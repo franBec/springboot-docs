@@ -232,63 +232,11 @@ export const FileTree = () => (
 const BuildGradleJava = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
     {`plugins {
-  id 'java'
-  id 'org.springframework.boot' version '4.0.1'
-  id 'io.spring.dependency-management' version '1.1.7'
-  id 'com.diffplug.spotless' version '8.1.0'
-  id 'org.openapi.generator' version '7.17.0'
+  // ...
 // highlight-added
   id 'jacoco'
 }
-
-group = 'dev.pollito'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot with Java'
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
-}
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-  compileOnly 'org.projectlombok:lombok'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  annotationProcessor 'org.projectlombok:lombok'
-  testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-  def mapstructVersion = '1.6.3'
-  def mapstructSpringExtensionsVersion = '2.0.0'
-  implementation "org.mapstruct:mapstruct:\${mapstructVersion}"
-  annotationProcessor "org.mapstruct:mapstruct-processor:\${mapstructVersion}"
-  implementation "org.mapstruct.extensions.spring:mapstruct-spring-annotations:\${mapstructSpringExtensionsVersion}"
-  annotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-extensions:\${mapstructSpringExtensionsVersion}"
-  testImplementation "org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:\${mapstructSpringExtensionsVersion}"
-  testAnnotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-extensions:\${mapstructSpringExtensionsVersion}"
-
-  implementation 'org.aspectj:aspectjtools:1.9.25.1'
-  implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
-
-  implementation 'io.swagger.core.v3:swagger-annotations:2.2.41'
-  implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
-  implementation 'org.springframework.boot:spring-boot-starter-validation'
-}
-
+// ...
 // highlight-added-start
 jacoco {
   toolVersion = "0.8.14"
@@ -359,129 +307,26 @@ tasks.named('test') {
   finalizedBy jacocoTestReport
 // highlight-added-end
 }
-
-spotless {
-  java {
-    target 'src/*/java/**/*.java'
-    googleJavaFormat()
-    removeUnusedImports()
-    cleanthat()
-    formatAnnotations()
-  }
-  groovyGradle {
-    target '*.gradle'
-    greclipse().configFile('greclipse.properties')
-  }
-}
-
-tasks.named("build") {
-  dependsOn 'spotlessApply'
-  dependsOn 'spotlessGroovyGradleApply'
-}
-
-openApiGenerate {
-  generatorName = "spring"
-  inputSpec = layout.projectDirectory.file("src/main/resources/openapi.yaml").asFile.toString()
-  outputDir = layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString()
-
-  def basePackage = "\${project.group}.\${project.name}.generated".toString()
-  apiPackage = "\${basePackage}.api"
-  modelPackage = "\${basePackage}.model"
-
-  configOptions = [
-    interfaceOnly             : "true",
-    requestMappingMode        : "api_interface",
-    skipDefaultInterface      : "true",
-    useJakartaEe              : "true",
-    useSpringBoot3            : "true",
-    useTags                   : "true",
-  ]
-}
-
-sourceSets {
-  main {
-    java {
-      srcDir(layout.buildDirectory.dir("generated/sources/openapi/src/main/java"))
-    }
-  }
-}
-
-tasks.named('compileJava') {
-  dependsOn 'openApiGenerate'
-}`}
+// ...`}
   </CollapsibleCodeBlock>
 );
 
 const BuildGradleKts = () => (
   <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
-  kotlin("jvm") version "2.2.21"
-  kotlin("plugin.spring") version "2.2.21"
-  id("org.springframework.boot") version "4.0.1"
-  id("io.spring.dependency-management") version "1.1.7"
-  id("com.diffplug.spotless") version "8.1.0"
-  kotlin("kapt") version "2.3.0"
-  id("org.openapi.generator") version "7.17.0"
+  // ...
 // highlight-added
   jacoco
 }
-
-group = "dev.pollito"
-
-version = "0.0.1-SNAPSHOT"
-
-description = "Demo project for Spring Boot with Kotlin"
-
-java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
-
-configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
-
-repositories { mavenCentral() }
-
+// ...
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-actuator")
-  implementation("org.springframework.boot:spring-boot-starter-webmvc")
-  implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("tools.jackson.module:jackson-module-kotlin")
-  developmentOnly("org.springframework.boot:spring-boot-devtools")
-  annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-  testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-  val mapstructVersion = "1.6.3"
-  val mapstructSpringExtensionsVersion = "2.0.0"
-  implementation("org.mapstruct:mapstruct:$mapstructVersion")
-  kapt("org.mapstruct:mapstruct-processor:$mapstructVersion")
-  implementation(
-      "org.mapstruct.extensions.spring:mapstruct-spring-annotations:$mapstructSpringExtensionsVersion"
-  )
-  kapt(
-      "org.mapstruct.extensions.spring:mapstruct-spring-extensions:$mapstructSpringExtensionsVersion"
-  )
-
-  implementation("io.github.oshai:kotlin-logging-jvm:7.0.13")
-  implementation("org.aspectj:aspectjtools:1.9.25.1")
-  implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
-
-  val swaggerCoreVersion = "2.2.41"
-  implementation("io.swagger.core.v3:swagger-annotations:$swaggerCoreVersion")
-  implementation("io.swagger.core.v3:swagger-models:$swaggerCoreVersion")
-  implementation("org.springframework.boot:spring-boot-starter-validation")
-
+  // ...
 // highlight-added-start
   testImplementation("com.ninja-squad:springmockk:5.0.1")
   testImplementation("io.mockk:mockk:1.14.7")
 // highlight-added-end
 }
-
-kotlin {
-  compilerOptions {
-    freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
-  }
-}
-
+// ...
 // highlight-added-start
 tasks.withType<Test> {
   useJUnitPlatform()
@@ -544,118 +389,20 @@ tasks.jacocoTestCoverageVerification {
 
 tasks.named("check") { dependsOn(tasks.jacocoTestCoverageVerification) }
 // highlight-added-end
-
-configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-  kotlin {
-    target("src/**/*.kt")
-    targetExclude("build/**/*.kt")
-    ktfmt()
-  }
-  kotlinGradle {
-    target("*.gradle.kts")
-    ktfmt()
-  }
-}
-
-tasks.named("build") {
-  dependsOn("spotlessKotlinApply")
-  dependsOn("spotlessKotlinGradleApply")
-}
-
-val openApiSpecPath = "$projectDir/src/main/resources/openapi.yaml"
-val openApiGeneratedSourcesDir = "\${layout.buildDirectory.get().asFile}/generated/source/openapi"
-
-tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateOpenApi") {
-  generatorName.set("kotlin-spring")
-  generateApiTests.set(false)
-  generateApiDocumentation.set(false)
-  generateModelTests.set(false)
-  generateModelDocumentation.set(false)
-
-  inputSpec.set(openApiSpecPath)
-  outputDir.set(openApiGeneratedSourcesDir)
-
-  val basePackage = "\${project.group}.\${project.name}.generated"
-  apiPackage.set("$basePackage.api")
-  modelPackage.set("$basePackage.model")
-
-  configOptions.set(
-      mapOf(
-          "gradleBuildFile" to "false",
-          "interfaceOnly" to "true",
-          "modelMutable" to "true",
-          "requestMappingMode" to "api_interface",
-          "skipDefaultInterface" to "true",
-          "useJakartaEe" to "true",
-          "useSpringBoot3" to "true",
-          "useTags" to "true",
-      )
-  )
-}
-
-kotlin.sourceSets["main"].kotlin.srcDir("$openApiGeneratedSourcesDir/src/main/kotlin")
-
-tasks.named("compileKotlin") { dependsOn("generateOpenApi") }
-
-tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask> {
-  dependsOn("generateOpenApi")
-}
-
-tasks.named("clean") { doFirst { delete(openApiGeneratedSourcesDir) } }`}
+// ...`}
   </CollapsibleCodeBlock>
 );
 
 const BuildGradleSpock = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
     {`plugins {
-  id 'groovy'
-  id 'org.springframework.boot' version '4.0.1'
-  id 'io.spring.dependency-management' version '1.1.7'
-  id 'com.diffplug.spotless' version '8.1.0'
-  id 'org.openapi.generator' version '7.17.0'
+  // ...
 // highlight-added
   id 'jacoco'
 }
-
-group = 'dev.pollito'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot with Groovy'
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
-}
-
-repositories {
-  mavenCentral()
-}
-
+// ...
 dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-  implementation 'org.apache.groovy:groovy'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-  implementation 'org.modelmapper:modelmapper:3.2.6'
-
-  implementation 'org.aspectj:aspectjtools:1.9.25.1'
-  implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
-
-  implementation 'io.swagger.core.v3:swagger-annotations:2.2.41'
-  implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
-  implementation 'org.springframework.boot:spring-boot-starter-validation'
-  
+// ...  
 // highlight-added-start
   testImplementation 'org.spockframework:spock-core:2.4-groovy-5.0'
   testImplementation 'org.spockframework:spock-spring:2.4-groovy-5.0'
@@ -724,59 +471,7 @@ tasks.named('check') {
   dependsOn jacocoTestCoverageVerification
 }
 // highlight-added-end
-
-tasks.named('test') {
-  useJUnitPlatform()
-}
-
-spotless {
-  groovy {
-    importOrder()
-    removeSemicolons()
-    greclipse().configFile('greclipse.properties')
-    excludeJava()
-  }
-  groovyGradle {
-    target '*.gradle'
-    greclipse().configFile('greclipse.properties')
-  }
-}
-
-tasks.named("build") {
-  dependsOn 'spotlessGroovyApply'
-  dependsOn 'spotlessGroovyGradleApply'
-}
-
-openApiGenerate {
-  generatorName = "spring"
-  inputSpec = layout.projectDirectory.file("src/main/resources/openapi.yaml").asFile.toString()
-  outputDir = layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString()
-
-  def basePackage = "\${project.group}.\${project.name}.generated".toString()
-  apiPackage = "\${basePackage}.api"
-  modelPackage = "\${basePackage}.model"
-
-  configOptions = [
-    interfaceOnly             : "true",
-    requestMappingMode        : "api_interface",
-    skipDefaultInterface      : "true",
-    useJakartaEe              : "true",
-    useSpringBoot3            : "true",
-    useTags                   : "true",
-  ]
-}
-
-sourceSets {
-  main {
-    java {
-      srcDir(layout.buildDirectory.dir("generated/sources/openapi/src/main/java"))
-    }
-  }
-}
-
-tasks.named('compileJava') {
-  dependsOn 'openApiGenerate'
-}`}
+// ...`}
   </CollapsibleCodeBlock>
 );
 
@@ -1097,7 +792,6 @@ import dev.pollito.spring_kotlin.test.util.hasStandardApiResponseFields
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
@@ -1105,11 +799,9 @@ import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 
-@ExtendWith(SpringExtension::class)
 @WebMvcTest(FilmRestController::class)
 @Import(ControllerAdvice::class, FilmRestMapperImpl::class)
 class FilmRestControllerTest {
@@ -1350,68 +1042,16 @@ const ControllerAdviceJava = () => (
     language="java"
     title="java/dev/pollito/spring_java/config/advice/ControllerAdvice.java"
   >
-    {`package dev.pollito.spring_java.config.advice;
-
-import static io.opentelemetry.api.trace.Span.current;
-import static java.time.OffsetDateTime.now;
-import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.ResponseEntity.status;
-
-import dev.pollito.spring_java.generated.model.Error;
-import jakarta.servlet.http.HttpServletRequest;
+    {`// ...
 // highlight-added
 import jakarta.validation.ConstraintViolationException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-@RestControllerAdvice
-@RequiredArgsConstructor
-@Slf4j
+// ...
 public class ControllerAdvice {
-  private final HttpServletRequest request;
-
-  private @NonNull ResponseEntity<Error> buildProblemDetail(
-      @NonNull Exception e, @NonNull HttpStatus status) {
-    String exceptionSimpleName = e.getClass().getSimpleName();
-    String logMessage = "{} being handled";
-
-    switch (status.series()) {
-      case SERVER_ERROR -> log.error(logMessage, exceptionSimpleName, e);
-      case CLIENT_ERROR -> log.warn(logMessage, exceptionSimpleName, e);
-      default -> log.info(logMessage, exceptionSimpleName, e);
-    }
-
-    return status(status)
-        .body(
-            new Error()
-                .detail(e.getLocalizedMessage())
-                .instance(request.getRequestURI())
-                .status(status.value())
-                .timestamp(now())
-                .title(status.getReasonPhrase())
-                .trace(current().getSpanContext().getTraceId()));
-  }
-
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<Error> handle(Exception e) {
-    return buildProblemDetail(e, INTERNAL_SERVER_ERROR);
-  }
-
-  @ExceptionHandler(NoResourceFoundException.class)
-  public ResponseEntity<Error> handle(NoResourceFoundException e) {
-    return buildProblemDetail(e, NOT_FOUND);
-  }
-
+  // ...
 // highlight-added-start
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<Error> handle(ConstraintViolationException e) {
-    return buildProblemDetail(e, BAD_REQUEST);
+    // ...
   }
 // highlight-added-end
 }`}
@@ -1423,68 +1063,16 @@ const ControllerAdviceKt = () => (
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdvice.kt"
   >
-    {`package dev.pollito.spring_kotlin.config.advice
-
-import dev.pollito.spring_kotlin.generated.model.Error
-import io.github.oshai.kotlinlogging.KotlinLogging
-import io.opentelemetry.api.trace.Span.current
-import jakarta.servlet.http.HttpServletRequest
+    {`// ...
 // highlight-added
 import jakarta.validation.ConstraintViolationException
-import java.time.OffsetDateTime.now
-import org.springframework.http.HttpStatus
-// highlight-added
-import org.springframework.http.HttpStatus.BAD_REQUEST
-import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import org.springframework.http.HttpStatus.NOT_FOUND
-import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.status
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.servlet.resource.NoResourceFoundException
-
-private val log = KotlinLogging.logger {}
-
-@RestControllerAdvice
+// ...
 class ControllerAdvice(private val request: HttpServletRequest) {
-
-  private fun buildProblemDetail(e: Exception, status: HttpStatus): ResponseEntity<Error> {
-    val exceptionSimpleName = e.javaClass.simpleName
-    val logMessage = "\$exceptionSimpleName being handled"
-
-    when {
-      status.is5xxServerError -> log.error(e) { logMessage }
-      status.is4xxClientError -> log.warn(e) { logMessage }
-      else -> log.info(e) { logMessage }
-    }
-
-    return status(status)
-        .body(
-            Error(
-                detail = e.localizedMessage,
-                instance = request.requestURI,
-                timestamp = now(),
-                title = status.reasonPhrase,
-                trace = current().spanContext.traceId,
-                status = status.value(),
-            )
-        )
-  }
-
-  @ExceptionHandler(Exception::class)
-  fun handle(e: Exception): ResponseEntity<Error> {
-    return buildProblemDetail(e, INTERNAL_SERVER_ERROR)
-  }
-
-  @ExceptionHandler(NoResourceFoundException::class)
-  fun handle(e: NoResourceFoundException): ResponseEntity<Error> {
-    return buildProblemDetail(e, NOT_FOUND)
-  }
-
+  // ...
 // highlight-added-start
   @ExceptionHandler(ConstraintViolationException::class)
   fun handle(e: ConstraintViolationException): ResponseEntity<Error> {
-    return buildProblemDetail(e, BAD_REQUEST)
+    // ...
   }
 // highlight-added-end
 }`}
@@ -1496,83 +1084,16 @@ const ControllerAdviceGroovy = () => (
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdvice.groovy"
   >
-    {`package dev.pollito.spring_groovy.config.advice
-
-import static java.time.OffsetDateTime.now
-// highlight-added
-import static org.springframework.http.HttpStatus.BAD_REQUEST
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR
-
-import dev.pollito.spring_groovy.generated.model.Error
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
-import io.opentelemetry.api.trace.Span
-import jakarta.servlet.http.HttpServletRequest
+    {`// ...
 // highlight-added
 import jakarta.validation.ConstraintViolationException
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.servlet.resource.NoResourceFoundException
-
-@RestControllerAdvice
-@Slf4j
-@CompileStatic
+// ...
 class ControllerAdvice {
-
-  private final HttpServletRequest request
-
-  ControllerAdvice(HttpServletRequest request) {
-    this.request = request
-  }
-
-  private ResponseEntity<Error> buildProblemDetail(Exception e, HttpStatus status) {
-    def exceptionSimpleName = e.class.simpleName
-    def logMessage = "\${exceptionSimpleName} being handled"
-
-    switch (status.series()) {
-      case SERVER_ERROR:
-        log.error(logMessage, e)
-        break
-      case CLIENT_ERROR:
-        log.warn(logMessage, e)
-        break
-      default:
-        log.info(logMessage, e)
-        break
-    }
-
-    ResponseEntity.status(status)
-        .body(
-        new Error(
-        detail: e.localizedMessage,
-        instance: request.requestURI,
-        timestamp: now(),
-        title: status.reasonPhrase,
-        trace: Span.current().spanContext.traceId,
-        status: status.value(),
-        )
-        )
-  }
-
-  @ExceptionHandler(Exception.class)
-  ResponseEntity<Error> handle(Exception e) {
-    buildProblemDetail(e, INTERNAL_SERVER_ERROR)
-  }
-
-  @ExceptionHandler(NoResourceFoundException)
-  ResponseEntity<Error> handle(NoResourceFoundException e) {
-    buildProblemDetail(e, NOT_FOUND)
-  }
-
+  // ...
 // highlight-added-start
   @ExceptionHandler(ConstraintViolationException)
   ResponseEntity<Error> handle(ConstraintViolationException e) {
-    buildProblemDetail(e, BAD_REQUEST)
+    // ...
   }
 // highlight-added-end
 }`}

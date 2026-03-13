@@ -213,11 +213,9 @@ export const FileTree = () => (
   </FileTreeInfo>
 );
 
-const ApplicationDevYamlJava = () => (
+const ApplicationDevYamlJavaAndGroovy = () => (
   <CollapsibleCodeBlock language="yaml" title="resources/application-dev.yaml">
-    {`spring:
-  application:
-    name: spring_java
+    {`# ...
 // highlight-added-start
   datasource:
     url: jdbc:h2:mem:sakila;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -244,19 +242,13 @@ const ApplicationDevYamlJava = () => (
       settings:
         web-allow-others: false
 // highlight-added-end
-management:
-  otlp:
-    metrics:
-      export:
-        enabled: false`}
+# ...`}
   </CollapsibleCodeBlock>
 );
 
 const ApplicationDevYamlKt = () => (
   <CollapsibleCodeBlock language="yaml" title="resources/application-dev.yaml">
-    {`spring:
-  application:
-    name: spring_kotlin
+    {`# ...
 // highlight-added-start
   datasource:
     url: jdbc:h2:mem:sakila;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -284,258 +276,22 @@ const ApplicationDevYamlKt = () => (
       settings:
         web-allow-others: false
 // highlight-added-end
-management:
-  otlp:
-    metrics:
-      export:
-        enabled: false`}
-  </CollapsibleCodeBlock>
-);
-
-const ApplicationDevYamlGroovy = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/application-dev.yaml">
-    {`spring:
-  application:
-    name: spring_groovy
-// highlight-added-start
-  datasource:
-    url: jdbc:h2:mem:sakila;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:sakila-schema.sql
-      data-locations: classpath:sakila-data.sql
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: false
-// highlight-added-end
-management:
-  otlp:
-    metrics:
-      export:
-        enabled: false`}
+# ...`}
   </CollapsibleCodeBlock>
 );
 
 export const ApplicationYamlDev = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <ApplicationDevYamlJava />
+      <ApplicationDevYamlJavaAndGroovy />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
       <ApplicationDevYamlKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <ApplicationDevYamlGroovy />
+      <ApplicationDevYamlJavaAndGroovy />
     </TabItem>
   </Tabs>
-);
-
-export const SakilaSchema = () => (
-  <CollapsibleCodeBlock language="sql" title="resources/sakila-schema.sql">
-    {`// highlight-added-start
-CREATE USER IF NOT EXISTS "SA" SALT 'f5e66a2f36519569' HASH '40c5f0ccb9a5d48c8b0d1848c77bb5da7bc5bc8d200823efabfa0dd72260364e' ADMIN;
-CREATE CACHED TABLE "PUBLIC"."ACTOR"(
-    "ACTOR_ID" SMALLINT NOT NULL,
-    "FIRST_NAME" VARCHAR(45) NOT NULL,
-    "LAST_NAME" VARCHAR(45) NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);   
-ALTER TABLE "PUBLIC"."ACTOR" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_3" PRIMARY KEY("ACTOR_ID");   
--- 200 +/- SELECT COUNT(*) FROM PUBLIC.ACTOR;  
-
-CREATE CACHED TABLE "PUBLIC"."ADDRESS"(
-    "ADDRESS_ID" SMALLINT NOT NULL,
-    "ADDRESS" VARCHAR(50) NOT NULL,
-    "ADDRESS2" VARCHAR(50),
-    "DISTRICT" VARCHAR(20) NOT NULL,
-    "CITY_ID" SMALLINT NOT NULL,
-    "POSTAL_CODE" VARCHAR(10),
-    "PHONE" VARCHAR(20) NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);     
-ALTER TABLE "PUBLIC"."ADDRESS" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_E" PRIMARY KEY("ADDRESS_ID");               
--- 603 +/- SELECT COUNT(*) FROM PUBLIC.ADDRESS;
-
-CREATE INDEX "PUBLIC"."IDX_FK_CITY_ID" ON "PUBLIC"."ADDRESS"("CITY_ID");    
-CREATE CACHED TABLE "PUBLIC"."CATEGORY"(
-    "CATEGORY_ID" TINYINT NOT NULL,
-    "NAME" VARCHAR(25) NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);          
-ALTER TABLE "PUBLIC"."CATEGORY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_31" PRIMARY KEY("CATEGORY_ID");            
--- 16 +/- SELECT COUNT(*) FROM PUBLIC.CATEGORY;
-
-CREATE CACHED TABLE "PUBLIC"."COUNTRY"(
-    "COUNTRY_ID" SMALLINT NOT NULL,
-    "COUNTRY" VARCHAR(50) NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);        
-ALTER TABLE "PUBLIC"."COUNTRY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_63" PRIMARY KEY("COUNTRY_ID");              
--- 109 +/- SELECT COUNT(*) FROM PUBLIC.COUNTRY;
-
-CREATE CACHED TABLE "PUBLIC"."LANGUAGE"(
-    "LANGUAGE_ID" TINYINT NOT NULL,
-    "NAME" VARCHAR(20) NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);          
-ALTER TABLE "PUBLIC"."LANGUAGE" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_C" PRIMARY KEY("LANGUAGE_ID");             
--- 6 +/- SELECT COUNT(*) FROM PUBLIC.LANGUAGE; 
-
-CREATE CACHED TABLE "PUBLIC"."CITY"(
-    "CITY_ID" SMALLINT NOT NULL,
-    "CITY" VARCHAR(50) NOT NULL,
-    "COUNTRY_ID" SMALLINT NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);             
-ALTER TABLE "PUBLIC"."CITY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_1" PRIMARY KEY("CITY_ID");     
--- 600 +/- SELECT COUNT(*) FROM PUBLIC.CITY;   
-
-CREATE CACHED TABLE "PUBLIC"."CUSTOMER"(
-    "CUSTOMER_ID" SMALLINT NOT NULL,
-    "STORE_ID" TINYINT NOT NULL,
-    "FIRST_NAME" VARCHAR(45) NOT NULL,
-    "LAST_NAME" VARCHAR(45) NOT NULL,
-    "EMAIL" VARCHAR(50),
-    "ADDRESS_ID" SMALLINT NOT NULL,
-    "ACTIVE" BOOLEAN NOT NULL,
-    "CREATE_DATE" TIMESTAMP NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);          
-ALTER TABLE "PUBLIC"."CUSTOMER" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_5" PRIMARY KEY("CUSTOMER_ID");             
--- 599 +/- SELECT COUNT(*) FROM PUBLIC.CUSTOMER;               
-
-CREATE CACHED TABLE "PUBLIC"."FILM"(
-    "FILM_ID" SMALLINT NOT NULL,
-    "TITLE" VARCHAR(255) NOT NULL,
-    "DESCRIPTION" LONGVARCHAR,
-    "RELEASE_YEAR" DATE,
-    "LANGUAGE_ID" TINYINT NOT NULL,
-    "ORIGINAL_LANGUAGE_ID" TINYINT,
-    "RENTAL_DURATION" TINYINT NOT NULL,
-    "RENTAL_RATE" DECIMAL(4, 2) NOT NULL,
-    "LENGTH" SMALLINT,
-    "REPLACEMENT_COST" DECIMAL(5, 2) NOT NULL,
-    "RATING" VARCHAR(5),
-    "SPECIAL_FEATURES" VARCHAR(54),
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);          
-ALTER TABLE "PUBLIC"."FILM" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_2" PRIMARY KEY("FILM_ID");     
--- 1000 +/- SELECT COUNT(*) FROM PUBLIC.FILM;  
-
-CREATE INDEX "PUBLIC"."IDX_TITLE" ON "PUBLIC"."FILM"("TITLE"); 
-CREATE CACHED TABLE "PUBLIC"."STORE"(
-    "STORE_ID" TINYINT NOT NULL,
-    "MANAGER_STAFF_ID" TINYINT NOT NULL,
-    "ADDRESS_ID" SMALLINT NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);    
-ALTER TABLE "PUBLIC"."STORE" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4" PRIMARY KEY("STORE_ID");   
--- 2 +/- SELECT COUNT(*) FROM PUBLIC.STORE;    
-
-CREATE CACHED TABLE "PUBLIC"."INVENTORY"(
-    "INVENTORY_ID" INTEGER NOT NULL SELECTIVITY 100,
-    "FILM_ID" SMALLINT NOT NULL SELECTIVITY 20,
-    "STORE_ID" TINYINT NOT NULL SELECTIVITY 1,
-    "LAST_UPDATE" TIMESTAMP NOT NULL SELECTIVITY 1
-);            
-ALTER TABLE "PUBLIC"."INVENTORY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_2D" PRIMARY KEY("INVENTORY_ID");          
--- 4581 +/- SELECT COUNT(*) FROM PUBLIC.INVENTORY;             
-
-CREATE CACHED TABLE "PUBLIC"."STAFF"(
-    "STAFF_ID" TINYINT NOT NULL,
-    "FIRST_NAME" VARCHAR(45) NOT NULL,
-    "LAST_NAME" VARCHAR(45) NOT NULL,
-    "ADDRESS_ID" SMALLINT NOT NULL,
-    "PICTURE" LONGVARBINARY,
-    "EMAIL" VARCHAR(50),
-    "STORE_ID" TINYINT NOT NULL,
-    "ACTIVE" BOOLEAN NOT NULL,
-    "USERNAME" VARCHAR(16) NOT NULL,
-    "PASSWORD" VARCHAR(40),
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);         
-ALTER TABLE "PUBLIC"."STAFF" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4B" PRIMARY KEY("STAFF_ID");  
--- 2 +/- SELECT COUNT(*) FROM PUBLIC.STAFF;    
-
-CREATE CACHED TABLE "PUBLIC"."RENTAL"(
-    "RENTAL_ID" INTEGER NOT NULL SELECTIVITY 100,
-    "RENTAL_DATE" TIMESTAMP NOT NULL SELECTIVITY 99,
-    "INVENTORY_ID" INTEGER NOT NULL SELECTIVITY 42,
-    "CUSTOMER_ID" SMALLINT NOT NULL SELECTIVITY 5,
-    "RETURN_DATE" TIMESTAMP SELECTIVITY 99,
-    "STAFF_ID" TINYINT NOT NULL SELECTIVITY 1,
-    "LAST_UPDATE" TIMESTAMP NOT NULL SELECTIVITY 1
-);          
-ALTER TABLE "PUBLIC"."RENTAL" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_8" PRIMARY KEY("RENTAL_ID"); 
--- 16044 +/- SELECT COUNT(*) FROM PUBLIC.RENTAL;               
-
-CREATE CACHED TABLE "PUBLIC"."FILM_ACTOR"(
-    "ACTOR_ID" SMALLINT NOT NULL SELECTIVITY 3,
-    "FILM_ID" SMALLINT NOT NULL SELECTIVITY 42,
-    "LAST_UPDATE" TIMESTAMP NOT NULL SELECTIVITY 1
-);               
-ALTER TABLE "PUBLIC"."FILM_ACTOR" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_7" PRIMARY KEY("ACTOR_ID", "FILM_ID");   
--- 5462 +/- SELECT COUNT(*) FROM PUBLIC.FILM_ACTOR;            
-
-CREATE CACHED TABLE "PUBLIC"."FILM_CATEGORY"(
-    "FILM_ID" SMALLINT NOT NULL,
-    "CATEGORY_ID" TINYINT NOT NULL,
-    "LAST_UPDATE" TIMESTAMP NOT NULL
-);     
-ALTER TABLE "PUBLIC"."FILM_CATEGORY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4E" PRIMARY KEY("CATEGORY_ID", "FILM_ID");            
--- 1000 +/- SELECT COUNT(*) FROM PUBLIC.FILM_CATEGORY;         
-
-CREATE CACHED TABLE "PUBLIC"."PAYMENT"(
-    "PAYMENT_ID" SMALLINT NOT NULL SELECTIVITY 100,
-    "CUSTOMER_ID" SMALLINT NOT NULL SELECTIVITY 3,
-    "STAFF_ID" TINYINT NOT NULL SELECTIVITY 1,
-    "RENTAL_ID" INTEGER SELECTIVITY 99,
-    "AMOUNT" DECIMAL(5, 2) NOT NULL SELECTIVITY 1,
-    "PAYMENT_DATE" TIMESTAMP NOT NULL SELECTIVITY 98,
-    "LAST_UPDATE" TIMESTAMP NOT NULL SELECTIVITY 2
-);           
-ALTER TABLE "PUBLIC"."PAYMENT" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_F" PRIMARY KEY("PAYMENT_ID");               
--- 16049 +/- SELECT COUNT(*) FROM PUBLIC.PAYMENT;              
-
-ALTER TABLE "PUBLIC"."FILM" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_20" FOREIGN KEY("LANGUAGE_ID") REFERENCES "PUBLIC"."LANGUAGE"("LANGUAGE_ID") NOCHECK;          
-ALTER TABLE "PUBLIC"."FILM_ACTOR" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_798" FOREIGN KEY("ACTOR_ID") REFERENCES "PUBLIC"."ACTOR"("ACTOR_ID") NOCHECK;            
-ALTER TABLE "PUBLIC"."INVENTORY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_2DA8" FOREIGN KEY("FILM_ID") REFERENCES "PUBLIC"."FILM"("FILM_ID") NOCHECK;               
-ALTER TABLE "PUBLIC"."PAYMENT" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_FBE7" FOREIGN KEY("RENTAL_ID") REFERENCES "PUBLIC"."RENTAL"("RENTAL_ID") NOCHECK;           
-ALTER TABLE "PUBLIC"."CUSTOMER" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_52" FOREIGN KEY("ADDRESS_ID") REFERENCES "PUBLIC"."ADDRESS"("ADDRESS_ID") NOCHECK;         
-ALTER TABLE "PUBLIC"."PAYMENT" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_FBE" FOREIGN KEY("CUSTOMER_ID") REFERENCES "PUBLIC"."CUSTOMER"("CUSTOMER_ID") NOCHECK;      
-ALTER TABLE "PUBLIC"."RENTAL" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_8F" FOREIGN KEY("STAFF_ID") REFERENCES "PUBLIC"."STAFF"("STAFF_ID") NOCHECK; 
-ALTER TABLE "PUBLIC"."ADDRESS" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_E6" FOREIGN KEY("CITY_ID") REFERENCES "PUBLIC"."CITY"("CITY_ID") NOCHECK;   
-ALTER TABLE "PUBLIC"."CUSTOMER" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_52C" FOREIGN KEY("STORE_ID") REFERENCES "PUBLIC"."STORE"("STORE_ID") NOCHECK;              
-ALTER TABLE "PUBLIC"."FILM" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_20E" FOREIGN KEY("ORIGINAL_LANGUAGE_ID") REFERENCES "PUBLIC"."LANGUAGE"("LANGUAGE_ID") NOCHECK;
-ALTER TABLE "PUBLIC"."FILM_CATEGORY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4E8" FOREIGN KEY("FILM_ID") REFERENCES "PUBLIC"."FILM"("FILM_ID") NOCHECK;            
-ALTER TABLE "PUBLIC"."STORE" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4B90" FOREIGN KEY("ADDRESS_ID") REFERENCES "PUBLIC"."ADDRESS"("ADDRESS_ID") NOCHECK;          
-ALTER TABLE "PUBLIC"."STAFF" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4B8C" FOREIGN KEY("STORE_ID") REFERENCES "PUBLIC"."STORE"("STORE_ID") NOCHECK;
-ALTER TABLE "PUBLIC"."FILM_CATEGORY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4E85" FOREIGN KEY("CATEGORY_ID") REFERENCES "PUBLIC"."CATEGORY"("CATEGORY_ID") NOCHECK;               
-ALTER TABLE "PUBLIC"."RENTAL" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_8FD" FOREIGN KEY("CUSTOMER_ID") REFERENCES "PUBLIC"."CUSTOMER"("CUSTOMER_ID") NOCHECK;       
-ALTER TABLE "PUBLIC"."RENTAL" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_8FDE" FOREIGN KEY("INVENTORY_ID") REFERENCES "PUBLIC"."INVENTORY"("INVENTORY_ID") NOCHECK;   
-ALTER TABLE "PUBLIC"."FILM_ACTOR" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_79" FOREIGN KEY("FILM_ID") REFERENCES "PUBLIC"."FILM"("FILM_ID") NOCHECK;
-ALTER TABLE "PUBLIC"."INVENTORY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_2DA" FOREIGN KEY("STORE_ID") REFERENCES "PUBLIC"."STORE"("STORE_ID") NOCHECK;             
-ALTER TABLE "PUBLIC"."STAFF" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4B8" FOREIGN KEY("ADDRESS_ID") REFERENCES "PUBLIC"."ADDRESS"("ADDRESS_ID") NOCHECK;           
-ALTER TABLE "PUBLIC"."PAYMENT" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_FB" FOREIGN KEY("STAFF_ID") REFERENCES "PUBLIC"."STAFF"("STAFF_ID") NOCHECK;
-ALTER TABLE "PUBLIC"."STORE" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_4B9" FOREIGN KEY("MANAGER_STAFF_ID") REFERENCES "PUBLIC"."STAFF"("STAFF_ID") NOCHECK;         
-ALTER TABLE "PUBLIC"."CITY" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_1F" FOREIGN KEY("COUNTRY_ID") REFERENCES "PUBLIC"."COUNTRY"("COUNTRY_ID") NOCHECK;             
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
 );
 
 const PortOutJava = () => (
@@ -888,7 +644,7 @@ export const PortOutImplementation = () => (
   </Tabs>
 );
 
-const ApplicationTestYamlJava = () => (
+const ApplicationTestYamlJavaAndGroovy = () => (
   <CollapsibleCodeBlock language="yaml" title="resources/application-test.yaml">
     {`// highlight-added-start
 spring:
@@ -931,37 +687,16 @@ spring:
   </CollapsibleCodeBlock>
 );
 
-const ApplicationTestYamlGroovy = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/application-test.yaml">
-    {`// highlight-added-start
-spring:
-  datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-  sql:
-    init:
-      mode: never
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
 export const ApplicationTestYaml = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <ApplicationTestYamlJava />
+      <ApplicationTestYamlJavaAndGroovy />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
       <ApplicationTestYamlKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <ApplicationTestYamlGroovy />
+      <ApplicationTestYamlJavaAndGroovy />
     </TabItem>
   </Tabs>
 );
@@ -1259,74 +994,16 @@ const ControllerAdviceJava = () => (
     language="java"
     title="java/dev/pollito/spring_java/config/advice/ControllerAdvice.java"
   >
-    {`package dev.pollito.spring_java.config.advice;
-
-import static io.opentelemetry.api.trace.Span.current;
-import static java.time.OffsetDateTime.now;
-import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.ResponseEntity.status;
-
-import dev.pollito.spring_java.generated.model.Error;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
+    {`// ...
 // highlight-added
 import java.util.NoSuchElementException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-@RestControllerAdvice
-@RequiredArgsConstructor
-@Slf4j
+// ...
 public class ControllerAdvice {
-  private final HttpServletRequest request;
-
-  private @NonNull ResponseEntity<Error> buildProblemDetail(
-      @NonNull Exception e, @NonNull HttpStatus status) {
-    String exceptionSimpleName = e.getClass().getSimpleName();
-    String logMessage = "{} being handled";
-
-    switch (status.series()) {
-      case SERVER_ERROR -> log.error(logMessage, exceptionSimpleName, e);
-      case CLIENT_ERROR -> log.warn(logMessage, exceptionSimpleName, e);
-      default -> log.info(logMessage, exceptionSimpleName, e);
-    }
-
-    return status(status)
-        .body(
-            new Error()
-                .detail(e.getLocalizedMessage())
-                .instance(request.getRequestURI())
-                .status(status.value())
-                .timestamp(now())
-                .title(status.getReasonPhrase())
-                .trace(current().getSpanContext().getTraceId()));
-  }
-
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<Error> handle(Exception e) {
-    return buildProblemDetail(e, INTERNAL_SERVER_ERROR);
-  }
-
-  @ExceptionHandler(NoResourceFoundException.class)
-  public ResponseEntity<Error> handle(NoResourceFoundException e) {
-    return buildProblemDetail(e, NOT_FOUND);
-  }
-
-  @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<Error> handle(ConstraintViolationException e) {
-    return buildProblemDetail(e, BAD_REQUEST);
-  }
-
+  // ...
 // highlight-added-start
   @ExceptionHandler(NoSuchElementException.class)
   public ResponseEntity<Error> handle(NoSuchElementException e) {
-    return buildProblemDetail(e, NOT_FOUND);
+    // ...
   }
 // highlight-added-end
 }
@@ -1339,71 +1016,13 @@ const ControllerAdviceKt = () => (
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdvice.kt"
   >
-    {`package dev.pollito.spring_kotlin.config.advice
-
-import dev.pollito.spring_kotlin.generated.model.Error
-import io.github.oshai.kotlinlogging.KotlinLogging
-import io.opentelemetry.api.trace.Span.current
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.validation.ConstraintViolationException
-import java.time.OffsetDateTime.now
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatus.BAD_REQUEST
-import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import org.springframework.http.HttpStatus.NOT_FOUND
-import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.status
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.servlet.resource.NoResourceFoundException
-
-private val log = KotlinLogging.logger {}
-
-@RestControllerAdvice
+    {`// ...
 class ControllerAdvice(private val request: HttpServletRequest) {
-
-  private fun buildProblemDetail(e: Exception, status: HttpStatus): ResponseEntity<Error> {
-    val exceptionSimpleName = e.javaClass.simpleName
-    val logMessage = "$exceptionSimpleName being handled"
-
-    when {
-      status.is5xxServerError -> log.error(e) { logMessage }
-      status.is4xxClientError -> log.warn(e) { logMessage }
-      else -> log.info(e) { logMessage }
-    }
-
-    return status(status)
-        .body(
-            Error(
-                detail = e.localizedMessage,
-                instance = request.requestURI,
-                timestamp = now(),
-                title = status.reasonPhrase,
-                trace = current().spanContext.traceId,
-                status = status.value(),
-            )
-        )
-  }
-
-  @ExceptionHandler(Exception::class)
-  fun handle(e: Exception): ResponseEntity<Error> {
-    return buildProblemDetail(e, INTERNAL_SERVER_ERROR)
-  }
-
-  @ExceptionHandler(NoResourceFoundException::class)
-  fun handle(e: NoResourceFoundException): ResponseEntity<Error> {
-    return buildProblemDetail(e, NOT_FOUND)
-  }
-
-  @ExceptionHandler(ConstraintViolationException::class)
-  fun handle(e: ConstraintViolationException): ResponseEntity<Error> {
-    return buildProblemDetail(e, BAD_REQUEST)
-  }
-
+  // ...
 // highlight-added-start
   @ExceptionHandler(NoSuchElementException::class)
   fun handle(e: NoSuchElementException): ResponseEntity<Error> {
-    return buildProblemDetail(e, NOT_FOUND)
+    // ...
   }
 // highlight-added-end
 }`}
@@ -1415,86 +1034,13 @@ const ControllerAdviceGroovy = () => (
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdvice.groovy"
   >
-    {`package dev.pollito.spring_groovy.config.advice
-
-import static java.time.OffsetDateTime.now
-import static org.springframework.http.HttpStatus.BAD_REQUEST
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR
-
-import dev.pollito.spring_groovy.generated.model.Error
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
-import io.opentelemetry.api.trace.Span
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.validation.ConstraintViolationException
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.servlet.resource.NoResourceFoundException
-
-@RestControllerAdvice
-@Slf4j
-@CompileStatic
+    {`// ...
 class ControllerAdvice {
-
-  private final HttpServletRequest request
-
-  ControllerAdvice(HttpServletRequest request) {
-    this.request = request
-  }
-
-  private ResponseEntity<Error> buildProblemDetail(Exception e, HttpStatus status) {
-    def exceptionSimpleName = e.class.simpleName
-    def logMessage = "\${exceptionSimpleName} being handled"
-
-    switch (status.series()) {
-      case SERVER_ERROR:
-        log.error(logMessage, e)
-        break
-      case CLIENT_ERROR:
-        log.warn(logMessage, e)
-        break
-      default:
-        log.info(logMessage, e)
-        break
-    }
-
-    ResponseEntity.status(status)
-        .body(
-        new Error(
-        detail: e.localizedMessage,
-        instance: request.requestURI,
-        timestamp: now(),
-        title: status.reasonPhrase,
-        trace: Span.current().spanContext.traceId,
-        status: status.value(),
-        )
-        )
-  }
-
-  @ExceptionHandler(Exception.class)
-  ResponseEntity<Error> handle(Exception e) {
-    buildProblemDetail(e, INTERNAL_SERVER_ERROR)
-  }
-
-  @ExceptionHandler(NoResourceFoundException)
-  ResponseEntity<Error> handle(NoResourceFoundException e) {
-    buildProblemDetail(e, NOT_FOUND)
-  }
-
-  @ExceptionHandler(ConstraintViolationException)
-  ResponseEntity<Error> handle(ConstraintViolationException e) {
-    buildProblemDetail(e, BAD_REQUEST)
-  }
-
+  // ...
 // highlight-added-start
   @ExceptionHandler(NoSuchElementException)
   ResponseEntity<Error> handle(NoSuchElementException e) {
-    buildProblemDetail(e, NOT_FOUND)
+    // ...
   }
 // highlight-added-end
 }`}
@@ -1520,63 +1066,13 @@ const ControllerAdviceTestJava = () => (
     language="java"
     title="java/dev/pollito/spring_java/config/advice/ControllerAdviceTest.java"
   >
-    {`package dev.pollito.spring_java.config.advice;
-
-import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasErrorFields;
-import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasStandardApiResponseFields;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
+    {`// ...
 // highlight-added
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Stream;
-import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
-
+// ...
 class ControllerAdviceTest {
-
-  private MockMvc mockMvc;
-  private final HttpServletRequest request = mock(HttpServletRequest.class);
-
-  @RestController
-  @RequestMapping("/fake")
+  // ...
   private static class FakeController {
-
-    @GetMapping("/not-found")
-    @SuppressWarnings("unused")
-    public void throwNoResourceFoundException() throws NoResourceFoundException {
-      throw new NoResourceFoundException(GET, "/fake", "no-resource-found");
-    }
-
-    @GetMapping("/error")
-    @SuppressWarnings("unused")
-    public void throwException() throws Exception {
-      throw new Exception("Test exception");
-    }
-
-    @GetMapping("/bad-request")
-    @SuppressWarnings("unused")
-    public void throwConstraintViolationException() {
-      throw new ConstraintViolationException("Constraint violation", Set.of());
-    }
-
 // highlight-added-start
     @GetMapping("/no-such-element")
     @SuppressWarnings("unused")
@@ -1585,35 +1081,14 @@ class ControllerAdviceTest {
     }
 // highlight-added-end
   }
-
-  @BeforeEach
-  void setUp() {
-    mockMvc =
-        standaloneSetup(new FakeController())
-            .setControllerAdvice(new ControllerAdvice(request))
-            .build();
-  }
-
+  // ...
   static @NonNull Stream<Arguments> testCases() {
     return Stream.of(
-        Arguments.of("/fake/not-found", NOT_FOUND),
-        Arguments.of("/fake/error", INTERNAL_SERVER_ERROR),
-        Arguments.of("/fake/bad-request", BAD_REQUEST),
+        // ...
 // highlight-added
         Arguments.of("/fake/no-such-element", NOT_FOUND));
   }
-
-  @ParameterizedTest
-  @MethodSource("testCases")
-  void exceptionHandlingReturnsCorrectStatus(String path, @NonNull HttpStatus expectedStatus)
-      throws Exception {
-    when(request.getRequestURI()).thenReturn(path);
-    mockMvc
-        .perform(get(path))
-        .andExpect(status().is(expectedStatus.value()))
-        .andExpect(hasStandardApiResponseFields(path, expectedStatus))
-        .andExpect(hasErrorFields(expectedStatus));
-  }
+  // ...
 }`}
   </CollapsibleCodeBlock>
 );
@@ -1623,54 +1098,11 @@ const ControllerAdviceTestKt = () => (
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdviceTest.kt"
   >
-    {`package dev.pollito.spring_kotlin.config.advice
-
-import dev.pollito.spring_kotlin.test.util.hasErrorFields
-import dev.pollito.spring_kotlin.test.util.hasStandardApiResponseFields
-import io.mockk.every
-import io.mockk.mockk
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.validation.ConstraintViolationException
-import java.util.stream.Stream
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import org.springframework.http.HttpMethod.GET
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatus.*
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.servlet.resource.NoResourceFoundException
-
+    {`// ...
 class ControllerAdviceTest {
-
-  private lateinit var mockMvc: MockMvc
-  private val request = mockk<HttpServletRequest>()
-
-  @RestController
-  @RequestMapping("/fake")
+  // ...
   class FakeController {
-
-    @GetMapping("/not-found")
-    fun throwNoResourceFoundException() {
-      throw NoResourceFoundException(GET, "/fake/not-found", "no-resource-found")
-    }
-
-    @GetMapping("/error")
-    fun throwException() {
-      throw Exception("Test exception")
-    }
-
-    @GetMapping("/bad-request")
-    fun throwConstraintViolationException() {
-      throw ConstraintViolationException("Constraint violation", emptySet())
-    }
-
+    // ...
 // highlight-added-start
     @GetMapping("/no-such-element")
     fun throwNoSuchElementException() {
@@ -1683,31 +1115,12 @@ class ControllerAdviceTest {
     @JvmStatic
     fun testCases(): Stream<Arguments> =
         Stream.of(
-            Arguments.of("/fake/not-found", NOT_FOUND),
-            Arguments.of("/fake/error", INTERNAL_SERVER_ERROR),
-            Arguments.of("/fake/bad-request", BAD_REQUEST),
+            // ...
 // highlight-added
             Arguments.of("/fake/no-such-element", NOT_FOUND),
         )
   }
-
-  @BeforeEach
-  fun setUp() {
-    mockMvc =
-        standaloneSetup(FakeController()).setControllerAdvice(ControllerAdvice(request)).build()
-  }
-
-  @ParameterizedTest(name = "{1}")
-  @MethodSource("testCases")
-  fun \`exception handling returns correct status\`(expectedInstance: String, status: HttpStatus) {
-    every { request.requestURI } returns expectedInstance
-
-    mockMvc.get(expectedInstance).andExpect {
-      status { isEqualTo(status.value()) }
-      hasStandardApiResponseFields(expectedInstance, status)
-      hasErrorFields(status)
-    }
-  }
+  // ...
 }`}
   </CollapsibleCodeBlock>
 );
@@ -1717,51 +1130,11 @@ const ControllerAdviceSpecGroovy = () => (
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdviceSpec.groovy"
   >
-    {`package dev.pollito.spring_groovy.config.advice
-
-import static org.springframework.http.HttpMethod.GET
-import static org.springframework.http.HttpStatus.*
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-
-import dev.pollito.spring_groovy.test.util.ApiResponseMatchers
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.validation.ConstraintViolationException
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.servlet.resource.NoResourceFoundException
-import spock.lang.Specification
-import spock.lang.Unroll
-
+    {`// ...
 class ControllerAdviceSpec extends Specification implements ApiResponseMatchers {
-  MockMvc mockMvc
-  HttpServletRequest request = Mock()
-
-  @RestController
-  @RequestMapping("/fake")
+  // ...
   static class FakeController {
-
-    @GetMapping("/not-found")
-    @SuppressWarnings("unused")
-    static void throwNoResourceFoundException() throws NoResourceFoundException {
-      throw new NoResourceFoundException(GET, "/fake", "no-resource-found")
-    }
-
-    @GetMapping("/error")
-    @SuppressWarnings("unused")
-    static void throwException() throws Exception {
-      throw new Exception("Test exception")
-    }
-
-    @GetMapping("/bad-request")
-    @SuppressWarnings("unused")
-    static void throwConstraintViolationException() {
-      throw new ConstraintViolationException("Constraint violation", Set.of())
-    }
-
+    // ...
 // highlight-added-start
     @GetMapping("/no-such-element")
     @SuppressWarnings("unused")
@@ -1770,29 +1143,18 @@ class ControllerAdviceSpec extends Specification implements ApiResponseMatchers 
     }
 // highlight-added-end
   }
-
-  def setup() {
-    mockMvc = standaloneSetup(new FakeController())
-        .setControllerAdvice(new ControllerAdvice(request))
-        .build()
-  }
-
+  // ...
   @Unroll
   def "#exceptionType returns #httpStatus"() {
     given:
     request.getRequestURI() >> endpoint
 
     expect:
-    mockMvc.perform(get(endpoint))
-        .andExpect(status().is(httpStatus.value()))
-        .andExpect(hasStandardApiResponseFields(endpoint, httpStatus))
-        .andExpect(hasErrorFields(httpStatus))
+    // ...
 
     where:
     endpoint                | httpStatus            || exceptionType
-    "/fake/not-found"       | NOT_FOUND             || "NoResourceFoundException"
-    "/fake/error"           | INTERNAL_SERVER_ERROR || "Exception"
-    "/fake/bad-request"     | BAD_REQUEST           || "ConstraintViolationException"
+    // ...
 // highlight-added
     "/fake/no-such-element" | NOT_FOUND             || "NoSuchElementException"
   }

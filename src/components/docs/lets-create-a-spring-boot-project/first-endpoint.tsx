@@ -163,49 +163,11 @@ org.eclipse.jdt.core.formatter.indentation.size=2
 export const BuildGradleJavaSpotless = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
     {`plugins {
-  id 'java'
-  id 'org.springframework.boot' version '4.0.1'
-  id 'io.spring.dependency-management' version '1.1.7'
-  // highlight-added
+  // ...
+// highlight-added
   id 'com.diffplug.spotless' version '8.1.0'
 }
-
-group = 'dev.pollito'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot with Java'
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
-}
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-  compileOnly 'org.projectlombok:lombok'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  annotationProcessor 'org.projectlombok:lombok'
-  testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-  useJUnitPlatform()
-}
-
+// ...
 // highlight-added-start
 spotless {
   java {
@@ -232,47 +194,11 @@ tasks.named("build") {
 export const BuildGradleKtsSpotless = () => (
   <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
-  kotlin("jvm") version "2.2.21"
-  kotlin("plugin.spring") version "2.2.21"
-  id("org.springframework.boot") version "4.0.1"
-  id("io.spring.dependency-management") version "1.1.7"
+  // ...
 // highlight-added
   id("com.diffplug.spotless") version "8.1.0"
 }
-
-group = "dev.pollito"
-
-version = "0.0.1-SNAPSHOT"
-
-description = "Demo project for Spring Boot with Kotlin"
-
-java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
-
-configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
-
-repositories { mavenCentral() }
-
-dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-actuator")
-  implementation("org.springframework.boot:spring-boot-starter-webmvc")
-  implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("tools.jackson.module:jackson-module-kotlin")
-  developmentOnly("org.springframework.boot:spring-boot-devtools")
-  annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-  testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-kotlin {
-  compilerOptions {
-    freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
-  }
-}
-
-tasks.withType<Test> { useJUnitPlatform() }
-
+// ...
 // highlight-added-start
 configure<com.diffplug.gradle.spotless.SpotlessExtension> {
   kotlin { ktfmt() }
@@ -293,48 +219,11 @@ tasks.named("build") {
 export const BuildGradleGroovySpotless = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
     {`plugins {
-  id 'groovy'
-  id 'org.springframework.boot' version '4.0.1'
-  id 'io.spring.dependency-management' version '1.1.7'
+// ...
 // highlight-added
   id 'com.diffplug.spotless' version '8.1.0'
 }
-
-group = 'dev.pollito'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot with Groovy'
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
-}
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-  implementation 'org.apache.groovy:groovy'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-  useJUnitPlatform()
-}
-
+// ...
 // highlight-added-start
 spotless {
   groovy {

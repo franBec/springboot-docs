@@ -14,22 +14,28 @@ While direct contributions to this demo repository are not actively sought, **fe
 
 ### New Content
 
+- Add a FAQ section in the intro
+  - What is your spring boot background?
+  - Are these docs and code examples AI generated?
+- Add a "how do I create these docs" section somewhere
+- **Optional but Recommended Features → Normalize Errors**: Add a mermaid sequence diagram of how a request/response handled by a controller advice
 - **Persistence Integration**:
-  - **Database Deployment**: Create a new document about adding a Postgres database to the docker-compose + deployment to coolify.
+  - **Database Setup** Spanish translation
   - **CRUD**: Create a new document doing whole CRUD of films. Introduce the concept of pagination. Check [swaggerhub-spring-pagination](https://github.com/daniel-shuy/swaggerhub-spring-pagination) for reference.
-  - **Schema Migrations**: Maybe creating a new document about this, exploring [Flyway](https://github.com/flyway/flyway) or [Liquibase](https://www.liquibase.com/). Not that confident in these areas though.
 - **Deployment → Dependabot and CodeQL**: Create a new document under the Deployment section explaining how to set up Dependabot for automated dependency updates and GitHub Advanced Security with CodeQL for code scanning.
-
 - **Deployment → Docker Registry Alternative**: Add a section in `/deployment/deployment-on-a-vps.mdx` explaining the alternative approach of using a Docker registry (e.g., GitHub Container Registry) instead of having Coolify build the application. Compare pros and cons with the current approach where Coolify handles the build.
-
 - **Observability**:
   - Add a File Tree of files created/modified
   - Explanation about what each panels in the Grafana dashboards shows
-
 - **Spring Security Section**: Create a dedicated section covering authentication, authorization, and security best practices in Spring Boot applications.
 
 ### Future Improvements
 
+- Code examples are too long, to the point that in GitHub this repo is TypeScript 60.6%, MDX 38.8%, CSS 0.6%.
+  - Long code examples sometimes are needed when the whole file is new. but when in a huge file there are only few new/modified lines, it gets annoying to find those specific lines
+  - Analyze a better way to deal with this
+- Rename "Optional But Recommended Features" to "Cross-Cutting Concerns", it better represents the topic being talked there.
+- Rename "Contract-Driven Development" to "OpenAPI Spec First Development", Contract-Driven Development is a very niche concept that can be omitted.
 - **AI Search Feature**: Currently the search bar has an [AI feature](https://github.com/easyops-cn/docusaurus-search-local?tab=readme-ov-file#-ask-ai-support) that is disabled. Need to check how expensive and exploitable activating this could be. Probably an overkill but would be fancy.
 
 ### Huge Maybe

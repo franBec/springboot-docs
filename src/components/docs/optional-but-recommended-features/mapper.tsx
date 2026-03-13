@@ -99,44 +99,9 @@ export const FileTree = () => (
 
 const BuildGradleJava = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
-    {`plugins {
-  id 'java'
-  id 'org.springframework.boot' version '4.0.1'
-  id 'io.spring.dependency-management' version '1.1.7'
-  id 'com.diffplug.spotless' version '8.1.0'
-}
-
-group = 'dev.pollito'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot with Java'
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
-}
-
-repositories {
-  mavenCentral()
-}
-
+    {`// ...
 dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-  compileOnly 'org.projectlombok:lombok'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  annotationProcessor 'org.projectlombok:lombok'
-  testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
+  // ...
 // highlight-added-start
   def mapstructVersion = '1.6.3'
   def mapstructSpringExtensionsVersion = '2.0.0'
@@ -148,68 +113,20 @@ dependencies {
   testAnnotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-extensions:\${mapstructSpringExtensionsVersion}"
 // highlight-added-end
 }
-
-tasks.named('test') {
-  useJUnitPlatform()
-}
-
-spotless {
-  java {
-    target 'src/*/java/**/*.java'
-    googleJavaFormat()
-    removeUnusedImports()
-    cleanthat()
-    formatAnnotations()
-  }
-  groovyGradle {
-    target '*.gradle'
-    greclipse().configFile('greclipse.properties')
-  }
-}
-
-tasks.named("build") {
-  dependsOn 'spotlessApply'
-  dependsOn 'spotlessGroovyGradleApply'
-}`}
+// ...`}
   </CollapsibleCodeBlock>
 );
 
 const BuildGradleKt = () => (
   <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
-  kotlin("jvm") version "2.2.21"
-  kotlin("plugin.spring") version "2.2.21"
-  id("org.springframework.boot") version "4.0.1"
-  id("io.spring.dependency-management") version "1.1.7"
-  id("com.diffplug.spotless") version "8.1.0"
+  // ...
 // highlight-added
   kotlin("kapt") version "2.3.0"
 }
-
-group = "dev.pollito"
-
-version = "0.0.1-SNAPSHOT"
-
-description = "Demo project for Spring Boot with Kotlin"
-
-java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
-
-configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
-
-repositories { mavenCentral() }
-
+// ...
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-actuator")
-  implementation("org.springframework.boot:spring-boot-starter-webmvc")
-  implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("tools.jackson.module:jackson-module-kotlin")
-  developmentOnly("org.springframework.boot:spring-boot-devtools")
-  annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-  testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
+  // ...
 // highlight-added-start
   val mapstructVersion = "1.6.3"
   val mapstructSpringExtensionsVersion = "2.0.0"
@@ -223,94 +140,19 @@ dependencies {
   )
 // highlight-added-end
 }
-
-kotlin {
-  compilerOptions {
-    freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
-  }
-}
-
-tasks.withType<Test> { useJUnitPlatform() }
-
-configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-  kotlin { ktfmt() }
-  kotlinGradle {
-    target("*.gradle.kts")
-    ktfmt()
-  }
-}
-
-tasks.named("build") {
-  dependsOn("spotlessKotlinApply")
-  dependsOn("spotlessKotlinGradleApply")
-}`}
+// ...`}
   </CollapsibleCodeBlock>
 );
 
 const BuildGradleGroovy = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
-    {`plugins {
-  id 'groovy'
-  id 'org.springframework.boot' version '4.0.1'
-  id 'io.spring.dependency-management' version '1.1.7'
-  id 'com.diffplug.spotless' version '8.1.0'
-}
-
-group = 'dev.pollito'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot with Groovy'
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
-}
-
-repositories {
-  mavenCentral()
-}
-
+    {`// ...
 dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-  implementation 'org.apache.groovy:groovy'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
+  // ...
 // highlight-added
   implementation 'org.modelmapper:modelmapper:3.2.6'
 }
-
-tasks.named('test') {
-  useJUnitPlatform()
-}
-
-spotless {
-  groovy {
-    importOrder()
-    removeSemicolons()
-    greclipse().configFile('greclipse.properties')
-    excludeJava()
-  }
-  groovyGradle {
-    target '*.gradle'
-    greclipse().configFile('greclipse.properties')
-  }
-}
-
-tasks.named("build") {
-  dependsOn 'spotlessGroovyApply'
-  dependsOn 'spotlessGroovyGradleApply'
-}`}
+// ...`}
   </CollapsibleCodeBlock>
 );
 
@@ -502,20 +344,11 @@ export const FilmRestMapper = () => (
 );
 
 export const FilmRestControllerGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy">
-    {`package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
-
-import dev.pollito.spring_groovy.sakila.film.adapter.in.rest.dto.FilmResponse
-import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindByIdPortIn
-import groovy.transform.CompileStatic
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-
-@RestController
-@RequestMapping("/api/films")
-@CompileStatic
+  <CollapsibleCodeBlock
+    language="groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
+  >
+    {`// ...
 class FilmRestController {
   FindByIdPortIn findByIdPortIn
 // highlight-added
@@ -535,4 +368,4 @@ class FilmRestController {
   }
 }`}
   </CollapsibleCodeBlock>
-)
+);

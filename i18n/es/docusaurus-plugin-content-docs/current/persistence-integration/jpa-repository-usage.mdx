@@ -50,10 +50,6 @@ Hay algunos detalles que vale la pena notar:
 - La **consola H2** está habilitada en `/h2-console` para consultas ad-hoc rápidas durante desarrollo.
 - Kotlin además setea **`jpa.open-in-view: false`** para deshabilitar el [open-session-in-view anti-pattern](https://vladmihalcea.com/the-open-session-in-view-anti-pattern/). Java y Groovy lo dejan en el default (habilitado), que es un default de Spring Boot que conviene conocer.
 
-El archivo `sakila-schema.sql` fue agregado durante [ingeniería inversa](./reverse-engineering-jpa-entities) y dobla como el DDL que H2 carga en startup:
-
-<SakilaSchema />
-
 ## Conectá el Puerto Secundario
 
 ### Definí la Interfaz del Puerto

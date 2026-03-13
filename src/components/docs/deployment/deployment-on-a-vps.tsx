@@ -256,31 +256,9 @@ export const SettingsDockerGradle = () => (
 
 export const GitIgnore = () => (
   <CollapsibleCodeBlock language=".gitignore" title=".gitignore">
-    {`# General
-.DS_Store
-.history
-*.log
-
-# Gradle stuff
-.gradle/
-**/build/
-!**/src/**/build/
-gradle-app.setting
-
-# IDEs
-.idea/
-*.iml
-*.iws
-.vscode/
-.project
-.settings/
-.classpath
-
-# Spring Boot
-*.jar
+    {`# ...
 // highlight-added
-!gradle/wrapper/gradle-wrapper.jar
-*.war`}
+!gradle/wrapper/gradle-wrapper.jar`}
   </CollapsibleCodeBlock>
 );
 

@@ -10,9 +10,8 @@ import TabItem from '@theme/TabItem';
 import Admonition from '@theme/Admonition';
 import {
   FileTree,
-  JavaBuildGradle,
-  GroovyBuildGradle,
-  KotlinBuildGradle,
+  BuildGradleGroovy,
+  BuildGradleKts,
   RestController,
   RestControllerAdvice,
   Mapper,
@@ -49,7 +48,7 @@ Ahorrémosnos algunos problemas usando una de las mejores librerías que existen
 
 <Tabs groupId="language" queryString>
   <TabItem value="java" label="Java" default>
-    <JavaBuildGradle />
+    <BuildGradleGroovy />
     <Admonition type="info">
 
       Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md).
@@ -58,7 +57,7 @@ Ahorrémosnos algunos problemas usando una de las mejores librerías que existen
 
   </TabItem>
   <TabItem value="kotlin" label="Kotlin">
-    <KotlinBuildGradle />
+    <BuildGradleKts />
     <Admonition type="info">
 
       Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador kotlin-spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/kotlin-spring.md).
@@ -67,7 +66,7 @@ Ahorrémosnos algunos problemas usando una de las mejores librerías que existen
 
   </TabItem>
   <TabItem value="groovy" label="Groovy" default>
-    <GroovyBuildGradle />
+    <BuildGradleGroovy />
     <Admonition type="info">
 
       - Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md).

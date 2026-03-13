@@ -126,91 +126,23 @@ export const FileTree = () => (
   </FileTreeInfo>
 );
 
-export const JavaBuildGradle = () => (
+export const BuildGradleGroovy = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
     {`plugins {
-  id 'java'
-  id 'org.springframework.boot' version '4.0.1'
-  id 'io.spring.dependency-management' version '1.1.7'
-  id 'com.diffplug.spotless' version '8.1.0'
+  // ...
 // highlight-added
   id 'org.openapi.generator' version '7.17.0'
 }
-
-group = 'dev.pollito'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot with Java'
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
-}
-
-repositories {
-  mavenCentral()
-}
-
+// ...
 dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-  compileOnly 'org.projectlombok:lombok'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  annotationProcessor 'org.projectlombok:lombok'
-  testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-  def mapstructVersion = '1.6.3'
-  def mapstructSpringExtensionsVersion = '2.0.0'
-  implementation "org.mapstruct:mapstruct:\${mapstructVersion}"
-  annotationProcessor "org.mapstruct:mapstruct-processor:\${mapstructVersion}"
-  implementation "org.mapstruct.extensions.spring:mapstruct-spring-annotations:\${mapstructSpringExtensionsVersion}"
-  annotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-extensions:\${mapstructSpringExtensionsVersion}"
-  testImplementation "org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:\${mapstructSpringExtensionsVersion}"
-  testAnnotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-extensions:\${mapstructSpringExtensionsVersion}"
-
-  implementation 'org.aspectj:aspectjtools:1.9.25.1'
-  implementation 'org.jetbrains:annotations:26.0.2-1'
-  implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
-
+  // ...
 // highlight-added-start
   implementation 'io.swagger.core.v3:swagger-annotations:2.2.41'
   implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
   implementation 'org.springframework.boot:spring-boot-starter-validation'
 // highlight-added-end
 }
-
-tasks.named('test') {
-  useJUnitPlatform()
-}
-
-spotless {
-  java {
-    target 'src/*/java/**/*.java'
-    googleJavaFormat()
-    removeUnusedImports()
-    cleanthat()
-    formatAnnotations()
-  }
-  groovyGradle {
-    target '*.gradle'
-    greclipse().configFile('greclipse.properties')
-  }
-}
-
-tasks.named("build") {
-  dependsOn 'spotlessApply'
-  dependsOn 'spotlessGroovyGradleApply'
-}
-
+// ...
 // highlight-added-start
 openApiGenerate {
   generatorName = "spring"
@@ -246,58 +178,16 @@ tasks.named('compileJava') {
   </CollapsibleCodeBlock>
 );
 
-export const KotlinBuildGradle = () => (
+export const BuildGradleKts = () => (
   <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
-  kotlin("jvm") version "2.2.21"
-  kotlin("plugin.spring") version "2.2.21"
-  id("org.springframework.boot") version "4.0.1"
-  id("io.spring.dependency-management") version "1.1.7"
-  id("com.diffplug.spotless") version "8.1.0"
-  kotlin("kapt") version "2.3.0"
+  // ...
 // highlight-added
   id("org.openapi.generator") version "7.17.0"
 }
-
-group = "dev.pollito"
-
-version = "0.0.1-SNAPSHOT"
-
-description = "Demo project for Spring Boot with Kotlin"
-
-java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
-
-configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
-
-repositories { mavenCentral() }
-
+// ...
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-actuator")
-  implementation("org.springframework.boot:spring-boot-starter-webmvc")
-  implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("tools.jackson.module:jackson-module-kotlin")
-  developmentOnly("org.springframework.boot:spring-boot-devtools")
-  annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-  testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-  val mapstructVersion = "1.6.3"
-  val mapstructSpringExtensionsVersion = "2.0.0"
-  implementation("org.mapstruct:mapstruct:$mapstructVersion")
-  kapt("org.mapstruct:mapstruct-processor:$mapstructVersion")
-  implementation(
-      "org.mapstruct.extensions.spring:mapstruct-spring-annotations:$mapstructSpringExtensionsVersion"
-  )
-  kapt(
-      "org.mapstruct.extensions.spring:mapstruct-spring-extensions:$mapstructSpringExtensionsVersion"
-  )
-
-  implementation("io.github.oshai:kotlin-logging-jvm:7.0.13")
-  implementation("org.aspectj:aspectjtools:1.9.25.1")
-  implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
-
+  // ...
 // highlight-added-start
   val swaggerCoreVersion = "2.2.41"
   implementation("io.swagger.core.v3:swagger-annotations:$swaggerCoreVersion")
@@ -305,34 +195,18 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-validation")
 // highlight-added-end
 }
-
-kotlin {
-  compilerOptions {
-    freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
-  }
-}
-
-tasks.withType<Test> { useJUnitPlatform() }
-
+// ...
 configure<com.diffplug.gradle.spotless.SpotlessExtension> {
   kotlin {
 // highlight-added-start
     target("src/**/*.kt")
     targetExclude("build/**/*.kt")
 // highlight-added-end
-    ktfmt()
+    // ...
   }
-  kotlinGradle {
-    target("*.gradle.kts")
-    ktfmt()
-  }
+  // ...
 }
-
-tasks.named("build") {
-  dependsOn("spotlessKotlinApply")
-  dependsOn("spotlessKotlinGradleApply")
-}
-
+// ...
 // highlight-added-start
 val openApiSpecPath = "\$projectDir/src/main/resources/openapi.yaml"
 val openApiGeneratedSourcesDir = "\${layout.buildDirectory.get().asFile}/generated/source/openapi"
@@ -374,116 +248,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask> {
 }
 
 tasks.named("clean") { doFirst { delete(openApiGeneratedSourcesDir) } }
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
-export const GroovyBuildGradle = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
-    {`plugins {
-  id 'groovy'
-  id 'org.springframework.boot' version '4.0.1'
-  id 'io.spring.dependency-management' version '1.1.7'
-  id 'com.diffplug.spotless' version '8.1.0'
-// highlight-added
-  id 'org.openapi.generator' version '7.17.0'
-}
-
-group = 'dev.pollito'
-version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot with Groovy'
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
-}
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-  implementation 'org.apache.groovy:groovy'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-  implementation 'org.modelmapper:modelmapper:3.2.6'
-
-  implementation 'org.aspectj:aspectjtools:1.9.25.1'
-  implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
-
-// highlight-added-start
-  implementation 'io.swagger.core.v3:swagger-annotations:2.2.41'
-  implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
-  implementation 'org.springframework.boot:spring-boot-starter-validation'
-// highlight-added-end
-}
-
-tasks.named('test') {
-  useJUnitPlatform()
-}
-
-spotless {
-  groovy {
-    importOrder()
-    removeSemicolons()
-    greclipse().configFile('greclipse.properties')
-    excludeJava()
-  }
-  groovyGradle {
-    target '*.gradle'
-    greclipse().configFile('greclipse.properties')
-  }
-}
-
-tasks.named("build") {
-  dependsOn 'spotlessGroovyApply'
-  dependsOn 'spotlessGroovyGradleApply'
-}
-
-// highlight-added-start
-openApiGenerate {
-  generatorName = "spring"
-  inputSpec = layout.projectDirectory.file("src/main/resources/openapi.yaml").asFile.toString()
-  outputDir = layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString()
-
-  def basePackage = "\${project.group}.\${project.name}.generated".toString()
-  apiPackage = "\${basePackage}.api"
-  modelPackage = "\${basePackage}.model"
-
-  configOptions = [
-    interfaceOnly             : "true",
-    requestMappingMode        : "api_interface",
-    skipDefaultInterface      : "true",
-    useJakartaEe              : "true",
-    useSpringBoot3            : "true",
-    useTags                   : "true",
-  ]
-}
-
-sourceSets {
-  main {
-    java {
-      srcDir(layout.buildDirectory.dir("generated/sources/openapi/src/main/java"))
-    }
-  }
-}
-
-tasks.named('compileJava') {
-  dependsOn 'openApiGenerate'
-}
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );

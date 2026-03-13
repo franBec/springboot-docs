@@ -7,9 +7,7 @@ import {
   ApplicationDevYaml,
   ApplicationLogs,
   ApplicationSequenceDiagram,
-  BuildGradleGroovy,
-  BuildGradleJava,
-  BuildGradleKts,
+  BuildGradle,
   CurlRequest,
   FileTree,
   LogAspect,
@@ -19,8 +17,6 @@ import {
   TraceIdFilter,
 } from '@site/src/components/docs/optional-but-recommended-features/logs';
 import GithubTagInfo from '@site/src/components/github-tag-info';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 import Admonition from '@theme/Admonition';
 
 <GithubTagInfo tag="logs" />
@@ -38,25 +34,16 @@ Even though Spring Boot includes SLF4J and Logback automatically and no setup is
 
 ## Dependencies
 
-<Tabs groupId="language" queryString>
-  <TabItem value="java" label="Java" default>
-    <BuildGradleJava />
-  </TabItem>
-  <TabItem value="kotlin" label="Kotlin">
-    <BuildGradleKts />
-    <Admonition type="info" title="kotlin-logging">
-      [`kotlin-logging`](https://github.com/oshai/kotlin-logging) is a wrapper
-      around SLF4J that provides a more idiomatic Kotlin way to log messages. It
-      **does not replace** SLF4J or Logback; instead, it simplifies logging
-      calls in Kotlin by using extension functions and lazy evaluation for
-      messages. The logging hierarchy remains: Kotlin code → `kotlin-logging` →
-      SLF4J → Logback (Spring Boot default)
-    </Admonition>
-  </TabItem>
-  <TabItem value="groovy" label="Groovy">
-    <BuildGradleGroovy />
-  </TabItem>
-</Tabs>
+<BuildGradle />
+
+<Admonition type="info" title="Logging in Kotling Projects">
+  [`kotlin-logging`](https://github.com/oshai/kotlin-logging) is a wrapper
+  around SLF4J that provides a more idiomatic Kotlin way to log messages. It
+  **does not replace** SLF4J or Logback; instead, it simplifies logging calls in
+  Kotlin by using extension functions and lazy evaluation for messages. The
+  logging hierarchy remains: Kotlin code → `kotlin-logging` → SLF4J → Logback
+  (Spring Boot default)
+</Admonition>
 
 ### Avoid Local OTLP Log Publishing
 

@@ -7,9 +7,9 @@ import GithubTagInfo from '@site/src/components/github-tag-info';
 import {
   FileTree,
   BuildGradle,
-    MapperConfig,
+  MapperConfig,
   FilmRestMapper,
-    FilmRestControllerGroovy
+  FilmRestControllerGroovy,
 } from '@site/src/components/docs/optional-but-recommended-features/mapper';
 
 <GithubTagInfo tag="mapper" />
@@ -38,8 +38,8 @@ Instead of generating code at compile time, it inspects the source and destinati
 
 At runtime, ModelMapper:
 
-1. Inspects the source class to find: id, title, releaseYear, ...
-2. Inspects the target class to find: id, title, releaseYear, ...
+1. Inspects the source class to find: `id`, `title`, `releaseYear`, ...
+2. Inspects the target class to find: `id`, `title`, `releaseYear`, ...
 3. Matches properties by naming convention
 4. Creates mapping and copies values via reflection
 
@@ -67,4 +67,4 @@ This approach offers different trade-offs:
 
 4. **Groovy only**: Update `RestController` class to inject mapper, it no longer uses static import approach.
 
-    <FilmRestControllerGroovy />
+   <FilmRestControllerGroovy />
