@@ -1,0 +1,8 @@
+{
+  "label": "Cross-Cutting Concerns",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Master logging, error handling, and request mapping patterns that apply across your entire application"
+  }
+}

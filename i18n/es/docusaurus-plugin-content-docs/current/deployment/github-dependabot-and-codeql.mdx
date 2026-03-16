@@ -1,0 +1,52 @@
+---
+sidebar_position: 3
+title: GitHub Dependabot y CodeQL
+---
+
+import {
+  FileTree,
+  Dependabot,
+  CodeQL,
+} from '@site/src/components/docs/deployment/github-dependabot-and-codeql';
+import GithubTagInfo from '@site/src/components/github-tag-info';
+
+<GithubTagInfo tag="dependabot-and-codeql" />
+
+Tus dependencias se van a quedar desactualizadas. Tu código va a tener vulnerabilidades de seguridad que no conocías. No son hipótesis, son certezas. La única pregunta es si te enterás de forma proactiva o después de que algo se rompa.
+
+GitHub provee dos herramientas gratuitas que se encargan de esto: **Dependabot** mantiene tus dependencias actualizadas, y **CodeQL** escanea tu código en busca de vulnerabilidades de seguridad en cada push. Ambas corren automáticamente sin esfuerzo continuo una vez configuradas.
+
+Esto es lo que vas a agregar al repositorio:
+
+<FileTree />
+
+## Dependabot
+
+[Dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide) revisa los manifiestos de dependencias en busca de paquetes desactualizados y abre pull requests para actualizarlos. En vez de rastrear manualmente qué librerías tienen nuevas versiones, recibís un PR con la actualización lista para revisar y mergear.
+
+<Dependabot />
+
+Algunas cosas a tener en cuenta sobre esta configuración:
+
+- **package-ecosystem: "gradle":** Le dice a Dependabot que busque en los archivos de build de Gradle (`build.gradle` o `build.gradle.kts`) las declaraciones de dependencias
+- **directory:** Cada módulo de Spring Boot tiene su propia entrada porque Dependabot necesita saber dónde vive cada `build.gradle` en el monorepo
+- **schedule:** Se ejecuta semanalmente los domingos a las 06:00 UTC. Suficientemente frecuente para mantenerse al día, suficientemente infrecuente para no inundarte de PRs
+- **open-pull-requests-limit: 3:** Limita la cantidad de PRs abiertos de Dependabot por módulo. Esto evita que tu lista de PRs se convierta en un muro de actualizaciones de dependencias
+- **commit-message prefix: "deps":** Etiqueta todos los commits de Dependabot con un prefijo `deps`, haciéndolos fáciles de identificar en tu historial de git
+
+## CodeQL
+
+[CodeQL](https://codeql.github.com/) es el motor de análisis estático de GitHub. Compila tu código, construye una base de datos de su estructura y ejecuta queries contra ella para encontrar patrones que indiquen vulnerabilidades de seguridad, bugs o malas prácticas.
+
+<CodeQL />
+
+Esto es lo que hace cada parte:
+
+- **Trigger conditions:** Se ejecuta en pushes a `main` y `develop`, y en pull requests que apuntan a `main`. Esto asegura que el código sea escaneado antes de llegar a producción
+- **permissions:** El job necesita `actions: read` y `contents: read` para hacer checkout y compilar el código, más `security-events: write` para subir los resultados del análisis a la pestaña Security de GitHub
+- **setup-java:** CodeQL necesita compilar tu código Java/Kotlin para analizarlo, así que necesita la misma versión de JDK que usa tu proyecto
+- **languages: java, kotlin:** Le dice a CodeQL que analice tanto código fuente Java como Kotlin. Los archivos Groovy compilados a bytecode JVM quedan cubiertos por el analizador de Java
+- **queries: security-extended:** Usa la suite extendida de queries de seguridad de GitHub, que incluye más verificaciones más allá del set default. Esto captura un rango más amplio de posibles problemas
+- **Build with Gradle:** CodeQL instrumenta el proceso de build para entender la estructura de tu código. Los flags `--no-daemon -x test` omiten el daemon de Gradle (innecesario en CI) y los tests (CodeQL solo necesita las clases compiladas, no los resultados de los tests)
+
+Una vez configurado, los resultados de CodeQL aparecen en la pestaña **Security** de tu repositorio bajo **Code scanning alerts**. GitHub también anota los pull requests con cualquier hallazgo, para que puedas detectar problemas antes de mergear.

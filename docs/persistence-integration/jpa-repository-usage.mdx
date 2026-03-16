@@ -95,7 +95,7 @@ Rather than catching `NoSuchElementException` inside the adapter (which would dr
 
 <ControllerAdvice />
 
-This is the same `ControllerAdvice` from the [error normalization setup](/optional-but-recommended-features/normalize-errors), with one new `@ExceptionHandler` added. The secondary port stays clean of HTTP logic, and the error response format stays consistent across the entire API.
+This is the same `ControllerAdvice` from the [error handling setup](/cross-cutting-concerns/error-handling), with one new `@ExceptionHandler` added. The secondary port stays clean of HTTP logic, and the error response format stays consistent across the entire API.
 
 ## Test the Integration
 

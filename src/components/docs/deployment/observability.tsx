@@ -1,4 +1,5 @@
 import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import { FileTreeInfo } from '@site/src/components/file-tree-info';
 import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
 import Tabs from '@theme/Tabs';
@@ -588,6 +589,42 @@ providers:
       foldersFromFilesStructure: false
 // highlight-added-end`}
   </CollapsibleCodeBlock>
+);
+
+export const FileTree = () => (
+  <FileTreeInfo>
+    <CollapsibleCodeBlock
+      language="log"
+      title="File Tree"
+    >{`springboot-demo-projects/
+// highlight-modified
+├── build.gradle
+// highlight-modified
+├── docker-compose.yml
+├── observability/
+// highlight-added-start
+│   ├── grafana.Dockerfile
+│   ├── grafana/
+│   │   ├── dashboards/
+│   │   │   ├── dashboards.yml
+│   │   │   └── *.json
+│   │   └── datasources/
+│   │       └── datasources.yml
+│   ├── loki.Dockerfile
+│   ├── loki-config.yml
+│   ├── prometheus.Dockerfile
+│   ├── prometheus.yml
+│   ├── promtail.Dockerfile
+│   ├── promtail-config.yml
+│   ├── tempo.Dockerfile
+│   └── tempo.yml
+// highlight-added-end
+└── src/
+    └── main/
+        └── resources/
+// highlight-modified
+            └── application.yaml`}</CollapsibleCodeBlock>
+  </FileTreeInfo>
 );
 
 export const ArchitectureFlowchart = () => (

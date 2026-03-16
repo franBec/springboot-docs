@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 2
 title: Observability
 ---
 
@@ -21,6 +21,7 @@ import {
   GrafanaDockerfile,
   GrafanaDatasources,
   GrafanaDashboards,
+  FileTree,
   ArchitectureFlowchart,
 } from '@site/src/components/docs/deployment/observability';
 
@@ -64,6 +65,10 @@ The flow works like this:
 - **[Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/)** scrapes Docker container logs and sends them to Loki
 - **Prometheus** scrapes metrics from each app's `/actuator/prometheus` endpoint
 - **Grafana** queries all three backends to display unified dashboards
+
+Here's a summary of the new and modified files:
+
+<FileTree />
 
 ## Repository Setup
 

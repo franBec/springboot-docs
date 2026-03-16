@@ -1,6 +1,6 @@
 ---
-sidebar_position: 3
-title: Normalizar Respuestas de Error
+sidebar_position: 4
+title: Manejo de errores
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
@@ -9,11 +9,12 @@ import {
   FileTree,
   ControllerAdvice,
   NotFoundErrorTerminal,
-} from '@site/src/components/docs/optional-but-recommended-features/normalize-errors';
+  NotFoundErrorSequenceDiagram,
+} from '@site/src/components/docs/cross-cutting-concerns/error-handling';
 
 <GithubTagInfo tag="normalize-errors" />
 
-En el trabajo, tengo muchos escenarios como:
+Ahí afuera te vas a encontrar con muchos escenarios como el siguiente:
 
 - `service.com/users/-1` devuelve:
 
@@ -60,6 +61,10 @@ Creá la clase `@RestControllerAdvice`
 Si visitás una uri que no existe (como [http://localhost:8080](http://localhost:8080)), ahora vas a obtener un error estandarizado:
 
 <NotFoundErrorTerminal />
+
+Esto es lo que pasa por detrás:
+
+<NotFoundErrorSequenceDiagram />
 
 ## Handlers Comunes Que Podés Necesitar
 

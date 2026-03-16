@@ -1,18 +1,26 @@
 ---
-sidebar_position: 1
-title: Mapper
+sidebar_position: 2
+title: Mapping
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
+import Admonition from '@theme/Admonition';
 import {
   FileTree,
   BuildGradle,
   MapperConfig,
   FilmRestMapper,
   FilmRestControllerGroovy,
-} from '@site/src/components/docs/optional-but-recommended-features/mapper';
+} from '@site/src/components/docs/cross-cutting-concerns/mapping';
 
-<GithubTagInfo tag="mapper" />
+<GithubTagInfo tag="mapping" />
+
+<Admonition type="info" title="Why Mapping Is Here">
+  Mapping isn't technically a cross-cutting concern. It's not a filter, aspect,
+  or interceptor. But you'll encounter it so often in real projects that it
+  deserves early setup with a library alongside your other infrastructure
+  decisions. That's why we cover it here.
+</Admonition>
 
 Imagine a big project with a few dozen APIs, and hundreds of Model → DTO conversions... Doing this manually can quickly create much boilerplate code, be prone to error, and consume a lot of time. Luckily for us, there are multiple [object mapping frameworks](https://www.baeldung.com/java-performance-mapping-frameworks).
 

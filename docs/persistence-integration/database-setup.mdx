@@ -36,7 +36,7 @@ Flyway runs versioned SQL files in order. Each file runs exactly once, and Flywa
 We have three migrations:
 
 - **V1: Create the Sakila Schema**. This creates all the tables, primary keys, foreign keys, and indices for the Sakila sample database.
-- **V2: Insert Sample Data**. V2 inserts 47,000+ lines of sample data. It's a large file converted from H2 format to PostgreSQL-compatible SQL, so there's no component here, but it follows the same Flyway naming convention: `V2__insert_sakila_data.sql`.
+- **V2: Insert Sample Data**. V2 inserts 47,000+ lines of sample data. It's a large file converted from H2 format to PostgreSQL-compatible SQL.
 - **V3: Grant App User Privileges**. This runs after V1 and V2, so all tables exist by the time it grants privileges.
 
   <FlywayMigrationV3GrantAppUserPrivileges />

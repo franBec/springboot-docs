@@ -1,6 +1,8 @@
 import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import ZoomContainer from '@site/src/components/zoom-container';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Mermaid from '@theme/Mermaid';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 const FileTreeJava = () => (
@@ -274,7 +276,7 @@ export const ControllerAdvice = () => (
 
 export const NotFoundErrorTerminal = () => (
   <CollapsibleCodeBlock language="sh" title="Terminal">
-    {`pollito in @ springboot-demo-projects  \\$ curl -s http://localhost:8080 | jq; curl -sw "→ HTTP %{http_code}\\n" -o /dev/null http://localhost:8080
+    {`$ curl -s http://localhost:8080 | jq; curl -sw "→ HTTP %{http_code}\\n" -o /dev/null http://localhost:8080
 {
   "detail": "No static resource  for request '/'.",
   "instance": "/",
@@ -285,4 +287,24 @@ export const NotFoundErrorTerminal = () => (
 }
 → HTTP 404`}
   </CollapsibleCodeBlock>
+);
+
+export const NotFoundErrorSequenceDiagram = () => (
+  <ZoomContainer>
+    <Mermaid
+      value={`sequenceDiagram
+    participant Client
+    participant DS as DispatcherServlet
+    participant CA as ControllerAdvice
+
+    Client->>DS: GET /
+    DS->>DS: No resource found for "/"
+    DS->>CA: throws NoResourceFoundException
+    CA->>CA: @ExceptionHandler(NoResourceFoundException.class)
+    CA->>CA: buildProblemDetail(e, NOT_FOUND)
+    CA->>CA: log.warn("NoResourceFoundException being handled")
+    CA-->>DS: ProblemDetail {status: 404, detail, timestamp, trace}
+    DS-->>Client: HTTP 404 (ProblemDetail JSON)`}
+    />
+  </ZoomContainer>
 );

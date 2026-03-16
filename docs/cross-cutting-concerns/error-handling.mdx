@@ -1,6 +1,6 @@
 ---
-sidebar_position: 3
-title: Normalize Error Responses
+sidebar_position: 4
+title: Error Handling
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
@@ -9,11 +9,12 @@ import {
   FileTree,
   ControllerAdvice,
   NotFoundErrorTerminal,
-} from '@site/src/components/docs/optional-but-recommended-features/normalize-errors';
+  NotFoundErrorSequenceDiagram,
+} from '@site/src/components/docs/cross-cutting-concerns/error-handling';
 
 <GithubTagInfo tag="normalize-errors" />
 
-At work, I have plenty of scenarios like:
+Out there you are gonna come across plenty of scenarios like the following:
 
 - `service.com/users/-1` returns:
 
@@ -33,7 +34,7 @@ At work, I have plenty of scenarios like:
   }
   ```
 
-Consistency just flew out of the window there, and it gets worse with errors inside 200OK. We don’t want to be that kind of dev: we are going to do proper error handling.
+Consistency just flew out of the window there, and it gets worse with errors inside `200 OK`. We don’t want to be that kind of dev: we are going to do proper error handling.
 
 ## Error Handling
 
@@ -60,6 +61,10 @@ Create the `@RestControllerAdvice` class
 If you visit a uri that doesn't exist (like [http://localhost:8080](http://localhost:8080)), you will now get a standardized error:
 
 <NotFoundErrorTerminal />
+
+Here's what happens under the hood:
+
+<NotFoundErrorSequenceDiagram />
 
 ## Common Handlers You May Need
 

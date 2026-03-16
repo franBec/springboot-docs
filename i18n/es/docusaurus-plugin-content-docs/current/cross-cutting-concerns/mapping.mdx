@@ -1,18 +1,26 @@
 ---
-sidebar_position: 1
-title: Mapper
+sidebar_position: 2
+title: Mapping
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
+import Admonition from '@theme/Admonition';
 import {
   FileTree,
   BuildGradle,
   MapperConfig,
   FilmRestMapper,
   FilmRestControllerGroovy,
-} from '@site/src/components/docs/optional-but-recommended-features/mapper';
+} from '@site/src/components/docs/cross-cutting-concerns/mapping';
 
-<GithubTagInfo tag="mapper" />
+<GithubTagInfo tag="mapping" />
+
+<Admonition type="info" title="Por Qué Mapping Está Aquí">
+  Mapping no es técnicamente un cross-cutting concern. No es un filter, aspect,
+  o interceptor. Pero lo encontrarás tan frecuentemente en proyectos reales que
+  vale la pena configurarlo temprano con la ayuda de una librería junto con tus
+  otras decisiones de infraestructura. Por eso lo cubrimos aquí.
+</Admonition>
 
 Imaginate un proyecto grande con algunas docenas de APIs, y cientos de conversiones Model → DTO... Hacer esto manualmente puede rápidamente crear mucho código boilerplate, ser propenso a errores, y consumir mucho tiempo. Por suerte para nosotros, hay múltiples [frameworks de mapeo de objetos](https://www.baeldung.com/java-performance-mapping-frameworks).
 

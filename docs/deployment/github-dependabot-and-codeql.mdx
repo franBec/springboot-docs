@@ -1,0 +1,52 @@
+---
+sidebar_position: 3
+title: GitHub Dependabot and CodeQL
+---
+
+import {
+  FileTree,
+  Dependabot,
+  CodeQL,
+} from '@site/src/components/docs/deployment/github-dependabot-and-codeql';
+import GithubTagInfo from '@site/src/components/github-tag-info';
+
+<GithubTagInfo tag="dependabot-and-codeql" />
+
+Your dependencies will get outdated. Your code will have security vulnerabilities you didn't know about. These aren't hypotheticals, they're certainties. The only question is whether you find out proactively or after something breaks.
+
+GitHub provides two free tools that handle this for you: **Dependabot** keeps your dependencies up to date, and **CodeQL** scans your code for security vulnerabilities on every push. Both run automatically with zero ongoing effort once configured.
+
+Here's what you'll add to the repository:
+
+<FileTree />
+
+## Dependabot
+
+[Dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide) checks your dependency manifests for outdated packages and opens pull requests to update them. Instead of manually tracking which libraries have new versions, you get a PR with the update ready to review and merge.
+
+<Dependabot />
+
+A few things worth noting about this configuration:
+
+- **package-ecosystem: "gradle"**: Tells Dependabot to look at Gradle build files (`build.gradle` or `build.gradle.kts`) for dependency declarations
+- **directory**: Each Spring Boot module gets its own entry because Dependabot needs to know where each `build.gradle` lives in the monorepo
+- **schedule**: Runs weekly on Sundays at 06:00 UTC. Frequent enough to stay current, infrequent enough to not flood you with PRs
+- **open-pull-requests-limit: 3**: Caps the number of open Dependabot PRs per module. This prevents your PR list from becoming a wall of dependency updates
+- **commit-message prefix: "deps"**: Tags all Dependabot commits with a `deps` prefix, making them easy to identify in your git history
+
+## CodeQL
+
+[CodeQL](https://codeql.github.com/) is GitHub's static analysis engine. It builds your code, constructs a database of its structure, and runs queries against it to find patterns that indicate security vulnerabilities, bugs, or bad practices.
+
+<CodeQL />
+
+Here's what each part does:
+
+- **Trigger conditions**: Runs on pushes to `main` and `develop`, and on pull requests targeting `main`. This ensures code gets scanned before it reaches production
+- **permissions**: The job needs `actions: read` and `contents: read` to check out and build the code, plus `security-events: write` to upload the analysis results to GitHub's Security tab
+- **setup-java**: CodeQL needs to compile your Java/Kotlin code to analyze it, so it needs the same JDK version your project uses
+- **languages: java, kotlin**: Tells CodeQL to analyze both Java and Kotlin source code. Groovy files compiled to JVM bytecode get covered by the Java analyzer
+- **queries: security-extended**: Uses GitHub's extended security query suite, which includes more checks beyond the default set. This catches a wider range of potential issues
+- **Build with Gradle**: CodeQL instruments the build process to understand your code's structure. The `--no-daemon -x test` flags skip the Gradle daemon (unnecessary in CI) and tests (CodeQL only needs compiled classes, not test results)
+
+Once configured, CodeQL results appear in your repository's **Security** tab under **Code scanning alerts**. GitHub will also annotate pull requests with any findings, so you can catch issues before merging.

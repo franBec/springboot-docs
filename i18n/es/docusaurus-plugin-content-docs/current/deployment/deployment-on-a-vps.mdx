@@ -1,12 +1,14 @@
 ---
-sidebar_position: 4
+sidebar_position: 1
 title: Deployment en un VPS con Coolify
 ---
 
 import Admonition from '@theme/Admonition';
 import Image from '@site/src/components/image';
 import {
+  HostingLandscapeDiagramES,
   DeploymentFlowDiagramES,
+  RegistryFlowDiagramES,
   FileTree,
   DockerComposeYaml,
   DockerFiles,
@@ -30,6 +32,24 @@ Para eso, te recomiendo chequear:
 
 Una vez que tenés tu instancia de Coolify up and running, deployemos tu aplicación Spring Boot.
 
+## ¿Por qué un VPS?
+
+Hay un montón de formas de hostear una aplicación web en 2026. Clusters de Kubernetes manejados, funciones serverless, proveedores PaaS con tiers gratuitos generosos, lo que se te ocurra. Acá te dejo un mapa aproximado del panorama:
+
+<HostingLandscapeDiagramES />
+
+Para este proyecto, vamos con un VPS en el cuadrante "Developer Cloud". La razón es simple: es lo más fácil de explicar, y lo más fácil de razonar. Tenés una caja Linux, te conectás por SSH, corrés tus containers. No hay una capa de abstracción escondiendo lo que pasa.
+
+Esa simplicidad viene con tradeoffs. Al elegir un solo VPS, estás resignando cosas que los sistemas de producción del mundo real suelen necesitar:
+
+- **Load balancing** entre múltiples instancias
+- **Rolling deployments** con zero downtime
+- **Auto-scaling** cuando el tráfico se dispara
+- **Multi-region** para redundancia y disponibilidad global
+- **Bases de datos manejadas** con backups automáticos y failover
+
+No necesitás nada de eso ahora. Estás aprendiendo cómo funciona el deployment, no arquitectando para millones de usuarios. Un solo VPS con Docker Compose es más que suficiente, y cuando llegue el momento de escalar, vas a entender los fundamentos lo suficientemente bien como para saber _de qué_ estás escalando.
+
 ## Visión general de la arquitectura
 
 Acá te muestro exactamente qué pasa cuando hacés push de código a la branch `main`:
@@ -37,6 +57,33 @@ Acá te muestro exactamente qué pasa cuando hacés push de código a la branch 
 <DeploymentFlowDiagramES />
 
 La idea clave acá es que **Coolify solo deploya si GitHub Actions pasa**. Esto previene que código roto llegue a producción. GitHub Actions maneja el heavy lifting de compilar y testear a través de las tres implementaciones de lenguaje, mientras Coolify se enfoca puramente en la orquestación del deployment.
+
+## Alternativa: enfoque con Docker registry
+
+La arquitectura de arriba hace que Coolify buildee las imágenes Docker en el VPS mismo. Hay otro patrón común donde GitHub Actions buildea las imágenes, las pushea a un container registry (como GitHub Container Registry, Docker Hub, o AWS ECR), y Coolify solo descarga las imágenes pre-buildeadas:
+
+<RegistryFlowDiagramES />
+
+Ambos enfoques son válidos. Acá te muestro cómo se comparan:
+
+|                              | **Coolify buildea (esta guía)**                                            | **Basado en registry**                                                                 |
+| ---------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| **Uso de recursos del VPS**  | Mayor: la compilación ocurre en tu servidor                                | Menor: tu VPS solo descarga y ejecuta imágenes                                         |
+| **Minutos de CI**            | Menos: CI solo corre tests                                                 | Más: CI también buildea y pushea imágenes Docker                                       |
+| **Complejidad del pipeline** | Más simple: menos partes móviles, sin credenciales de registry que manejar | Más setup: auth del registry, estrategia de tagging de imágenes, políticas de limpieza |
+| **Consistencia del build**   | Los builds ocurren en el hardware del VPS, que puede diferir del CI        | Las imágenes son idénticas en todos lados, buildeadas una vez en un entorno controlado |
+| **Velocidad de deployment**  | Más lento: Coolify compila desde el código fuente cada vez                 | Más rápido: Coolify solo descarga una imagen lista para correr                         |
+| **Rollbacks**                | Requiere un rebuild desde un commit anterior                               | Descargás un tag de imagen anterior, casi instantáneo                                  |
+| **Debugging de builds**      | Más difícil: los logs de build están en Coolify, separados del CI          | Más fácil: todo está en un solo lugar (GitHub Actions)                                 |
+
+<Admonition type="tip" title="Cuándo considerar un registry">
+  Si tu VPS tiene recursos limitados (1-2 GB de RAM), buildear aplicaciones Java
+  con Gradle en él puede ser doloroso. Mover el build a GitHub Actions (que
+  tiene 7 GB de RAM en runners gratuitos) y pushear imágenes pre-buildeadas a un
+  registry es una solución práctica.
+</Admonition>
+
+Esta guía usa el enfoque de "Coolify buildea" porque es más simple de configurar y no requiere manejar credenciales de registry ni políticas de retención de imágenes. Para un proyecto chico o un setup de aprendizaje, la menor complejidad vale la pena el tradeoff.
 
 ## Configuración del repositorio
 

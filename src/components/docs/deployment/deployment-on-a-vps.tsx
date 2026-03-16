@@ -5,6 +5,52 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
+export const HostingLandscapeDiagram = () => (
+  <ZoomContainer>
+    <pre
+      style={{
+        fontSize: '0.8rem',
+        lineHeight: 1.4,
+        overflowX: 'auto',
+        margin: 0,
+        padding: '1rem',
+      }}
+    >
+      {`Where do you see your project in the next few years?
+                ^
+                |
+I need global   |  HYPER-SCALERS            :  AWS WRAPPERS
+reach & five 9  |  - massive control        :  - "I vibecoded something and
+reliability &   |  - overwhelming service   :    I want to share it"
+availability    |    list                   :  - dashboards >> code
+                |  - requires expert        :  - what is a container?
+                |    knowledge              :
+                |                           :
+                |  [AWS] [Azure] [GCloud]   :  [Vercel] [Sevalla]
+                |                           :  [Railway] [Render]
+                |...........................:............................
+                |                           :
+                |  DEVELOPER CLOUD          :  TRADITIONAL HOSTS
+                |  - high control over OS   :  - easy setup
+                |  - simple pricing         :  - high support
+                |  - focused on core VMs    :  - less configuration
+                |                           :    flexibility
+                |                           :
+                |  [DigitalOcean]           :  [Hostinger]
+                |  [Hetzner]                :  [DreamHost] [A2 Hosting]
+I don't think   |                           :
+I'll hit 100k   |                           :
+active users    +---------------------------------------------------------->
+anytime soon
+                I'm proficient in   <----------->   I'd prefer to not
+                sudo su apt update                  mess much with that
+
+                How comfortable are you with Linux commands,
+                        security patching, etc?`}
+    </pre>
+  </ZoomContainer>
+);
+
 export const DeploymentFlowDiagram = () => (
   <ZoomContainer>
     <Mermaid
@@ -20,17 +66,95 @@ export const DeploymentFlowDiagram = () => (
   </ZoomContainer>
 );
 
+export const HostingLandscapeDiagramES = () => (
+  <ZoomContainer>
+    <pre
+      style={{
+        fontSize: '0.8rem',
+        lineHeight: 1.4,
+        overflowX: 'auto',
+        margin: 0,
+        padding: '1rem',
+      }}
+    >
+      {`¿Dónde ves tu proyecto en los próximos años?
+                ^
+                |
+Necesito        |  HYPER-SCALERS            :  WRAPPERS DE AWS
+alcance global  |  - control masivo         :  - "vibecodeé algo y
+y cinco 9 de    |  - lista abrumadora de   :    lo quiero compartir"
+confiabilidad   |    servicios              :  - dashboards >> código
+y disponibilidad|  - requiere conocimiento  :  - ¿qué es un container?
+                |    experto                :
+                |                           :
+                |  [AWS] [Azure] [GCloud]   :  [Vercel] [Sevalla]
+                |                           :  [Railway] [Render]
+                |...........................:............................
+                |                           :
+                |  DEVELOPER CLOUD          :  HOSTS TRADICIONALES
+                |  - alto control sobre OS  :  - setup fácil
+                |  - pricing simple         :  - buen soporte
+                |  - enfocado en VMs core   :  - menos flexibilidad
+                |                           :    de configuración
+                |                           :
+                |  [DigitalOcean]           :  [Hostinger]
+                |  [Hetzner]                :  [DreamHost] [A2 Hosting]
+No creo que     |                           :
+llegue a 100k   |                           :
+usuarios        +---------------------------------------------------------->
+activos pronto
+                Soy proficiente en  <----------->   Preferiría no
+                sudo su apt update                  meterme mucho con eso
+
+                ¿Qué tan cómodo estás con comandos de Linux,
+                        security patching, etc?`}
+    </pre>
+  </ZoomContainer>
+);
+
 export const DeploymentFlowDiagramES = () => (
+  <ZoomContainer>
+    <Mermaid
+      value={`flowchart TD
+    A[1. Developer pushes to main] --> B[2. GitHub Actions triggers]
+    B --> C[3. Build & Test all modules]
+    C -->|❌ Fail| D[No deployment]
+    C -->|✅ Pass| E[4. Trigger Coolify webhook]
+    E --> F[5. Coolify pulls latest code]
+    F --> G[6. Coolify builds Docker images]
+    G --> H[7. Coolify deploys containers]`}
+    />
+  </ZoomContainer>
+);
+
+export const RegistryFlowDiagram = () => (
+  <ZoomContainer>
+    <Mermaid
+      value={`flowchart TD
+    A[1. Developer pushes to main] --> B[2. GitHub Actions triggers]
+    B --> C[3. Build & Test all modules]
+    C -->|❌ Fail| D[No deployment]
+    C -->|✅ Pass| E[4. Build Docker images in CI]
+    E --> F[5. Push images to registry]
+    F --> G[6. Trigger Coolify webhook]
+    G --> H[7. Coolify pulls pre-built images]
+    H --> I[8. Coolify deploys containers]`}
+    />
+  </ZoomContainer>
+);
+
+export const RegistryFlowDiagramES = () => (
   <ZoomContainer>
     <Mermaid
       value={`flowchart TD
     A[1. El desarrollador hace push a main] --> B[2. GitHub Actions se activa]
     B --> C[3. Compilar y probar todos los módulos]
     C -->|❌ Falla| D[Sin despliegue]
-    C -->|✅ Pasa| E[4. Activar webhook de Coolify]
-    E --> F[5. Coolify obtiene el código más reciente]
-    F --> G[6. Coolify construye imágenes Docker]
-    G --> H[7. Coolify despliega contenedores]`}
+    C -->|✅ Pasa| E[4. Buildear imágenes Docker en CI]
+    E --> F[5. Pushear imágenes al registry]
+    F --> G[6. Activar webhook de Coolify]
+    G --> H[7. Coolify descarga imágenes pre-buildeadas]
+    H --> I[8. Coolify despliega contenedores]`}
     />
   </ZoomContainer>
 );

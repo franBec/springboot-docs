@@ -27,13 +27,13 @@
     "message": "Prepará tu espacio de trabajo para una codificación y prácticas de desarrollo eficientes.",
     "description": "The generated-index page description for category Development Environment in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Prior Recommended Knowledge": {
-    "message": "Conocimientos Previos Recomendados",
-    "description": "The label for category Prior Recommended Knowledge in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Cross-Cutting Concerns": {
+    "message": "Preocupaciones Transversales",
+    "description": "The label for category Cross-Cutting Concerns in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Prior Recommended Knowledge.link.generated-index.description": {
-    "message": "Antes de meternos en los detalles específicos de Spring Boot, vamos a repasar algunos conceptos, herramientas y patrones del desarrollo backend.",
-    "description": "The generated-index page description for category Prior Recommended Knowledge in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Cross-Cutting Concerns.link.generated-index.description": {
+    "message": "Domina el registro, manejo de errores y patrones de mapeo de solicitudes que se aplican en toda tu aplicación",
+    "description": "The generated-index page description for category Cross-Cutting Concerns in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Spring Boot in a Nutshell": {
     "message": "Spring Boot en Pocas Palabras",
@@ -59,13 +59,13 @@
     "message": "Son cosas que quizás encuentres en algunos proyectos, pero siempre está bueno tenerlas.",
     "description": "The generated-index page description for category Optional but Recommended Features in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Contract-Driven Development": {
-    "message": "Desarrollo Basado en Contratos",
-    "description": "The label for category Contract-Driven Development in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.OpenAPI Spec First Development": {
+    "message": "OpenAPI Spec First Development",
+    "description": "The label for category OpenAPI Spec First Development in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Contract-Driven Development.link.generated-index.description": {
-    "message": "Normalmente, al desarrollar primero armamos el endpoint y después escribimos la documentación con una Especificación OpenAPI. El problema surge cuando alguien modifica el endpoint y la documentación ya no coincide. Esto podría pasar desapercibido. Peor que no tener documentación es tenerla mal. ¿Y si primero escribimos la documentación y luego generamos el código? Te presento el Desarrollo Basado en Contratos.",
-    "description": "The generated-index page description for category Contract-Driven Development in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.OpenAPI Spec First Development.link.generated-index.description": {
+    "message": "Normalmente, al desarrollar primero armamos el endpoint y después escribimos la documentación con una Especificación OpenAPI. El problema surge cuando alguien modifica el endpoint y la documentación ya no coincide. Esto podría pasar desapercibido. Peor que no tener documentación es tenerla mal. ¿Y si primero escribimos la documentación y luego generamos el código? Te presento el OpenAPI Spec First Development.",
+    "description": "The generated-index page description for category OpenAPI Spec First Development in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Testing": {
     "message": "Pruebas",

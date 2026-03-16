@@ -1,12 +1,14 @@
 ---
-sidebar_position: 4
+sidebar_position: 1
 title: Deployment on a VPS
 ---
 
 import Admonition from '@theme/Admonition';
 import Image from '@site/src/components/image';
 import {
+  HostingLandscapeDiagram,
   DeploymentFlowDiagram,
+  RegistryFlowDiagram,
   FileTree,
   DockerComposeYaml,
   DockerFiles,
@@ -30,6 +32,24 @@ For that, I recommend you check:
 
 Once you have your Coolify instance up and running, let's deploy your Spring Boot application.
 
+## Why a VPS?
+
+There are plenty of ways to host a web application in 2026. Managed Kubernetes clusters, serverless functions, PaaS providers with generous free tiers, you name it. Here's a rough map of the landscape:
+
+<HostingLandscapeDiagram />
+
+For this project, we're going with a VPS in the "Developer Cloud" quadrant. The reason is simple: it's the easiest to explain, and the easiest to reason about. You get a Linux box, you SSH into it, you run your containers. There's no abstraction layer hiding what's happening.
+
+That simplicity comes with tradeoffs. By choosing a single VPS, you're giving up things that real-world production systems often need:
+
+- **Load balancing** across multiple instances
+- **Rolling deployments** with zero downtime
+- **Auto-scaling** when traffic spikes
+- **Multi-region** redundancy for global availability
+- **Managed databases** with automatic backups and failover
+
+You don't need any of that right now. You're learning how deployment works, not architecting for millions of users. A single VPS with Docker Compose is more than enough, and when the time comes to scale, you'll understand the fundamentals well enough to know _what_ you're scaling away from.
+
 ## Architecture Overview
 
 Here's exactly what happens when you push code to the `main` branch:
@@ -37,6 +57,33 @@ Here's exactly what happens when you push code to the `main` branch:
 <DeploymentFlowDiagram />
 
 The key insight here is that **Coolify only deploys if GitHub Actions passes**. This prevents broken code from reaching production. GitHub Actions handles the heavy lifting of compiling and testing across all three language implementations, while Coolify focuses purely on the deployment orchestration.
+
+## Alternative: Docker Registry Approach
+
+The architecture above has Coolify building Docker images on the VPS itself. There's another common pattern where GitHub Actions builds the images, pushes them to a container registry (like GitHub Container Registry, Docker Hub, or AWS ECR), and Coolify just pulls the pre-built images:
+
+<RegistryFlowDiagram />
+
+Both approaches are valid. Here's how they compare:
+
+|                         | **Coolify Builds (This Guide)**                                | **Registry-Based**                                                      |
+| ----------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **VPS resource usage**  | Higher: compiling happens on your server                       | Lower: your VPS only pulls and runs images                              |
+| **CI minutes**          | Lower: CI only runs tests                                      | Higher: CI also builds and pushes Docker images                         |
+| **Pipeline complexity** | Simpler: fewer moving parts, no registry credentials to manage | More setup: registry auth, image tagging strategy, cleanup policies     |
+| **Build consistency**   | Builds happen on VPS hardware, which may differ from CI        | Images are identical everywhere, built once in a controlled environment |
+| **Deployment speed**    | Slower: Coolify compiles from source each time                 | Faster: Coolify just pulls a ready-to-run image                         |
+| **Rollbacks**           | Requires a rebuild from a previous commit                      | Pull a previous image tag, nearly instant                               |
+| **Debugging builds**    | Harder: build logs are in Coolify, separate from CI            | Easier: everything is in one place (GitHub Actions)                     |
+
+<Admonition type="tip" title="When to Consider a Registry">
+  If your VPS is resource-constrained (1-2 GB RAM), building Java applications
+  with Gradle on it can be painful. Moving the build to GitHub Actions (which
+  has 7 GB RAM on free runners) and pushing pre-built images to a registry is a
+  practical solution.
+</Admonition>
+
+This guide uses the "Coolify builds" approach because it's simpler to set up and doesn't require managing registry credentials or image retention policies. For a small project or learning setup, the reduced complexity is worth the tradeoff.
 
 ## Repository Setup
 

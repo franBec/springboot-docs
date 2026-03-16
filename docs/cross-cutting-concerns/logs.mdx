@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: Logs
 ---
 
@@ -15,7 +15,7 @@ import {
   LogFilter,
   MaskingPatternLayout,
   TraceIdFilter,
-} from '@site/src/components/docs/optional-but-recommended-features/logs';
+} from '@site/src/components/docs/cross-cutting-concerns/logs';
 import GithubTagInfo from '@site/src/components/github-tag-info';
 import Admonition from '@theme/Admonition';
 
@@ -65,7 +65,7 @@ SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 
 Using an Aspect for logging is a classic example of AOP in action. Instead of scattering log statements all over your business logic (which clutters the code and mixes concerns), you define the logging behavior once in a separate module. This aspect then automatically intercepts method calls you care about and applies the logging logic without the target code even knowing it's happening.
 
-For a deeper dive, check out the [AOP section on Cross-Cutting Concerns](/spring-boot-in-a-nutshell/cross-cutting-concerns#aspect-oriented-programming-aop).
+For a deeper dive, check out the [AOP section on Cross-Cutting Concerns](/cross-cutting-concerns#aspect-oriented-programming-aop).
 
 <LogAspect />
 

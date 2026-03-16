@@ -1,0 +1,158 @@
+---
+sidebar_position: 4
+title: Database Setup
+---
+
+import Admonition from '@theme/Admonition';
+import Image from '@site/src/components/image';
+import {
+  FlywayMigrationV3GrantAppUserPrivileges,
+  FlywayDockerfile,
+  PostgresDockerfile,
+  PostgresInitUser,
+  DockerCompose,
+  BuildGradle,
+  ApplicationYaml,
+  TerminalCurl,
+} from '@site/src/components/docs/persistence-integration/database-setup';
+
+En las secciones anteriores vimos cómo Spring se comunica con las bases de datos y cómo generar entidades JPA. Ahora es momento de conectar una base de datos real. Vamos a reemplazar H2 (la base de datos embebida) por PostgreSQL 17 y usaremos Flyway para manejar las migraciones de esquema.
+
+## El plan
+
+Esto es lo que vamos a configurar:
+
+- **[PostgreSQL](https://www.postgresql.org/)** como base de datos de producción
+- **[Flyway](https://github.com/flyway/flyway)** para ejecutar migraciones SQL versionadas en el inicio
+- **[pgAdmin](https://www.pgadmin.org/)** como interfaz web para inspeccionar la base de datos
+- **Un usuario de aplicación restringido** (`sakila_app`) que solo tiene [privilegios DML, no DDL](https://www.geeksforgeeks.org/sql/sql-ddl-dql-dml-dcl-tcl-commands/)
+
+Acá está la clave de seguridad: los dos usuarios. El usuario admin (`sakila`) es el dueño del esquema y ejecuta las migraciones. La aplicación se conecta como `sakila_app`, que solo puede hacer SELECT, INSERT, UPDATE y DELETE. Si alguien compromete la conexión de tu app, un atacante no puede hacer DROP de tablas ni ALTER del esquema. Parece poco, pero en caso de una brecha de seguridad hace toda la diferencia.
+
+## Migraciones con Flyway
+
+Flyway ejecuta archivos SQL versionados en orden. Cada archivo se ejecuta exactamente una vez, y Flyway sigue el registro en una tabla llamada `flyway_schema_history`.
+
+Tenemos tres migraciones:
+
+- **V1: Create the Sakila Schema**. Crea todas las tablas, primary keys, foreign keys e índices de la base de datos de ejemplo Sakila.
+- **V2: Insert Sample Data**. V2 inserta más de 47.000 líneas de datos de ejemplo. Es un archivo grande convertido del formato H2 al SQL compatible con PostgreSQL.
+- **V3: Grant App User Privileges**. Se ejecuta después de V1 y V2, así todas las tablas existen cuando otorga los privilegios.
+
+  <FlywayMigrationV3GrantAppUserPrivileges />
+
+La separación importa. V3 se ejecuta como el usuario admin pero solo otorga derechos DML a `sakila_app`. Las líneas de `ALTER DEFAULT PRIVILEGES` se aseguran de que cualquier tabla creada por migraciones futuras también sea accesible al usuario de la app automáticamente.
+
+## Configuración Docker
+
+### Imagen PostgreSQL
+
+Estamos extendiendo la imagen [`postgres:17-alpine`](https://hub.docker.com/layers/library/postgres/17-alpine) para ejecutar un script de inicialización que crea el usuario `sakila_app` durante el primer inicio.
+
+<PostgresDockerfile />
+
+<PostgresInitUser />
+
+El script de inicialización se ejecuta mediante el mecanismo `/docker-entrypoint-initdb.d/` de Docker, que ejecuta cualquier script en ese directorio cuando la base de datos se inicializa por primera vez. Crea `sakila_app` con una contraseña desde una variable de entorno y otorga derechos de conexión. Los privilegios a nivel de tabla vienen después mediante la migración V3 de Flyway.
+
+### Imagen Flyway
+
+Flyway se ejecuta como un contenedor único: se conecta, aplica las migraciones pendientes y luego sale.
+
+<FlywayDockerfile />
+
+Quemamos los archivos SQL en la imagen durante el build. Sin bind mounts ni acrobacias de volúmenes. El `context: .` en `docker-compose.yml` es necesario porque el Dockerfile copia desde `database/flyway/migrations/` relativo a la raíz del repositorio.
+
+<Admonition type="info" title="¿Por qué un contenedor Flyway independiente?">
+  Un contenedor independiente hace que la migración sea un paso previo que se
+  completa antes de que la app inicie, usando las credenciales admin. La app
+  nunca necesita saber la contraseña del admin. (Podrías ejecutar Flyway desde
+  la app Spring Boot misma usando la{' '}
+  <a href="https://www.baeldung.com/database-migrations-with-flyway">
+    autoconfiguración spring-flyway
+  </a>
+  , pero separar responsabilidades mantiene las cosas más limpias.)
+</Admonition>
+
+### docker-compose.yml
+
+<DockerCompose />
+
+Esto es lo que está pasando en este archivo compose:
+
+- **`postgres` tiene un healthcheck.** El `depends_on` de Flyway espera `service_healthy`, así que no intenta conectarse hasta que PostgreSQL esté realmente listo para aceptar conexiones.
+- **`flyway` tiene `restart: "no"`.** Es un trabajo único. Una vez que termina, permanece terminado.
+- **Los servicios Spring Boot dependen de `flyway` con `condition: service_completed_successfully`.** No inician hasta que las migraciones estén completas.
+- **Los volúmenes `postgres-data` y `pgadmin-data`** persisten los datos entre reinicios.
+
+## Configuración de Spring Boot
+
+### Agregar el controlador PostgreSQL
+
+Agrega `runtimeOnly 'org.postgresql:postgresql'` al archivo build de cada módulo. Es el controlador JDBC que Spring Boot necesita para conectarse a PostgreSQL.
+
+<BuildGradle />
+
+### application.yaml
+
+Los parámetros de datasource y JPA apuntan a PostgreSQL. Las credenciales vienen de variables de entorno, que Docker Compose inyecta en tiempo de ejecución.
+
+<ApplicationYaml />
+
+**`flyway.enabled: false`** le dice a Spring Boot que no ejecute Flyway por sí solo. Nuestro contenedor Flyway independiente se encarga de eso. Configurarlo en true aquí significaría que la app intenta ejecutar migraciones en cada inicio usando las credenciales `sakila_app`, que no tienen privilegios DDL. Fallaría.
+
+**`ddl-auto: none`** significa que Hibernate no toca el esquema en absoluto. Flyway es el dueño de eso.
+
+## Desplegando el stack en Coolify
+
+El `docker-compose.yml` está listo para desplegar en cualquier lugar donde Docker esté ejecutándose. Vamos a usar la misma instancia de Coolify que configuramos en la guía de [deployment on a VPS](/es/docs/deployment/deployment-on-a-vps).
+
+### Configurar variables de entorno
+
+Antes de desplegar, agrega las nuevas variables a la configuración de entorno de tu aplicación en Coolify. Solo necesitan estar disponibles en tiempo de ejecución. No se necesitan otros controles.
+
+| Variable                   | Descripción                                     |
+| -------------------------- | ----------------------------------------------- |
+| `POSTGRES_DB`              | Nombre de la base de datos (ej., `sakila`)      |
+| `POSTGRES_USER`            | Usuario admin (ej., `sakila`)                   |
+| `POSTGRES_PASSWORD`        | Contraseña del usuario admin                    |
+| `SAKILA_APP_PASSWORD`      | Contraseña del usuario restringido `sakila_app` |
+| `PGADMIN_DEFAULT_EMAIL`    | Email de login de pgAdmin                       |
+| `PGADMIN_DEFAULT_PASSWORD` | Contraseña de login de pgAdmin                  |
+
+### Desplegar y asignar un dominio a pgAdmin
+
+Dispara un despliegue. Una vez que esté ejecutándose, ve a la pestaña **Configuration** en Coolify y asigna un dominio al servicio `pgadmin`: `https://sakila-pgadmin.your-domain.whatever:80`. El proxy inverso de Coolify enrutará el tráfico al contenedor pgAdmin en el puerto 80.
+
+## Conectar pgAdmin a PostgreSQL
+
+Una vez que pgAdmin esté ejecutándose, ábrelo en tu navegador e inicia sesión con el `PGADMIN_DEFAULT_EMAIL` y `PGADMIN_DEFAULT_PASSWORD` que configuraste. Luego registra el servidor PostgreSQL.
+
+Haz clic derecho en **Servers** → **Register** → **Server...** y completa dos pestañas:
+
+**Pestaña General:**
+
+| Campo    | Valor                                  |
+| -------- | -------------------------------------- |
+| **Name** | `Sakila Database` (o lo que prefieras) |
+
+**Pestaña Connection:**
+
+| Campo                    | Valor                           |
+| ------------------------ | ------------------------------- |
+| **Host name/address**    | `postgres`                      |
+| **Port**                 | `5432`                          |
+| **Maintenance database** | `sakila`                        |
+| **Username**             | `sakila`                        |
+| **Password**             | tu valor de `POSTGRES_PASSWORD` |
+| **Save password?**       | encendido                       |
+
+El hostname es `postgres` (el nombre del servicio Docker) porque pgAdmin y PostgreSQL comparten la misma red Docker. El DNS interno de Docker resuelve el nombre del servicio al contenedor correcto, así que no se necesita dirección IP.
+
+Una vez conectado, tendrás acceso completo para explorar el esquema, ejecutar consultas e inspeccionar los datos Sakila:
+
+<Image
+  src={require('@site/static/img/persistence-integration/pgadmin.png').default}
+/>
+
+<TerminalCurl />
