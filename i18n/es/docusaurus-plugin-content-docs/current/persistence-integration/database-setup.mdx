@@ -45,6 +45,15 @@ La separación importa. V3 se ejecuta como el usuario admin pero solo otorga der
 
 ## Configuración Docker
 
+<Admonition type="info" title="En la práctica, los setups son diferentes">
+  Es poco común encontrar la base de datos en el mismo archivo Docker Compose
+  que los servicios de la aplicación. Las bases de datos generalmente se
+  gestionan por separado, ya sea por deuda técnica que hace difícil
+  containerizarlas, o por separación de responsabilidades (imaginate borrar
+  accidentalmente el volumen donde viven tus datos de producción). Acá, todo
+  convive junto por simplicidad.
+</Admonition>
+
 ### Imagen PostgreSQL
 
 Estamos extendiendo la imagen [`postgres:17-alpine`](https://hub.docker.com/layers/library/postgres/17-alpine) para ejecutar un script de inicialización que crea el usuario `sakila_app` durante el primer inicio.

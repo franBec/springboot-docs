@@ -60,7 +60,7 @@ La idea clave acá es que **Coolify solo deploya si GitHub Actions pasa**. Esto 
 
 ## Alternativa: enfoque con Docker registry
 
-La arquitectura de arriba hace que Coolify buildee las imágenes Docker en el VPS mismo. Hay otro patrón común donde GitHub Actions buildea las imágenes, las pushea a un container registry (como GitHub Container Registry, Docker Hub, o AWS ECR), y Coolify solo descarga las imágenes pre-buildeadas:
+La arquitectura de arriba hace que Coolify buildee las imágenes Docker en el VPS mismo. Hay otro patrón común donde GitHub Actions buildea las imágenes, las pushea a un container registry (como [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry), [Docker Hub](https://hub.docker.com/), o [AWS ECR](https://aws.amazon.com/ecr/)), y Coolify solo descarga las imágenes pre-buildeadas:
 
 <RegistryFlowDiagramES />
 

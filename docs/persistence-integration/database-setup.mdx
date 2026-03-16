@@ -45,6 +45,14 @@ The separation matters. V3 runs as the admin user but only grants DML rights to 
 
 ## Docker Setup
 
+<Admonition type="info" title="Real-World Setups Look Different">
+  It's uncommon to find the database in the same Docker Compose file as the
+  application services. Databases are usually managed separately, whether
+  because of technical debt making them hard to containerize, or separation of
+  concerns (imagine accidentally wiping out the volume where your production
+  data lives). Here, everything lives together for simplicity's sake.
+</Admonition>
+
 ### PostgreSQL Image
 
 We are extending the [`postgres:17-alpine`](https://hub.docker.com/layers/library/postgres/17-alpine) image to run an init script that creates the `sakila_app` user during first startup.

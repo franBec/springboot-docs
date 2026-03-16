@@ -110,6 +110,16 @@ El stack de observabilidad incluye:
 - **Tempo**: Recibe y almacena traces distribuidos
 - **Grafana**: Visualiza métricas, logs y traces en dashboards unificados
 
+<Admonition type="info" title="En la práctica, los setups son diferentes">
+  En algunos proyectos, es común encontrar los servicios de observabilidad
+  viviendo en un proyecto de Docker Compose completamente separado, o incluso
+  gestionados por proveedores terceros como
+  [Datadog](https://www.datadoghq.com/) o [Grafana
+  Cloud](https://grafana.com/products/cloud/). Meter todo en un solo
+  `docker-compose.yml` acá mantiene las cosas simples para la documentación y
+  hace que el setup sea más fácil de seguir.
+</Admonition>
+
 ### Loki
 
 Loki es un sistema de agregación de logs horizontalmente escalable, altamente disponible y multi-tenant inspirado en Prometheus.
