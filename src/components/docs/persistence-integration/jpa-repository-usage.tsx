@@ -46,6 +46,8 @@ const FileTreeJava = () => (
         │   └── dev
         │       └── pollito
         │           └── spring_java
+// highlight-modified
+        │               ├── SanityCheckSpringBootTest.java
         │               ├── config
         │               │   └── advice
 // highlight-modified
@@ -59,7 +61,7 @@ const FileTreeJava = () => (
         │                               │   └── FindByIdPortInImplTest.java
         │                               └── out
 // highlight-added
-        │                                   └── FindByIdPortOutImplIntegrationTest.java
+        │                                   └── FindByIdPortOutImplDataJpaTest.java
         └── resources
 // highlight-added-start
             ├── application-test.yaml
@@ -110,6 +112,8 @@ const FileTreeKt = () => (
         │   └── dev
         │       └── pollito
         │           └── spring_kotlin
+// highlight-modified
+        │               ├── SanityCheckSpringBootTest.kt
         │               ├── config
         │               │   └── advice
 // highlight-modified
@@ -123,7 +127,7 @@ const FileTreeKt = () => (
         │                               │   └── FindByIdPortInImplTest.kt
         │                               └── out
 // highlight-added
-        │                                   └── FindByIdPortOutImplIntegrationTest.kt
+        │                                   └── FindByIdPortOutImplDataJpaTest.kt
         └── resources
 // highlight-added-start
             ├── application-test.yaml
@@ -174,6 +178,8 @@ const FileTreeGroovy = () => (
         │   └── dev
         │       └── pollito
         │           └── spring_groovy
+// highlight-modified
+        │               ├── SanityCheckSpringBootSpec.groovy
         │               ├── config
         │               │   └── advice
 // highlight-modified
@@ -187,7 +193,7 @@ const FileTreeGroovy = () => (
         │                               │   └── FindByIdPortInImplSpec.groovy
         │                               └── out
 // highlight-added
-        │                                   └── FindByIdPortOutImplIntegrationSpec.groovy
+        │                                   └── FindByIdPortOutImplDataJpaSpec.groovy
         └── resources
 // highlight-added-start
             ├── application-test.yaml
@@ -701,10 +707,10 @@ export const ApplicationTestYaml = () => (
   </Tabs>
 );
 
-const PortOutImplIntegrationTestJava = () => (
+const PortOutImplDataJpaTestJava = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FindByIdPortOutImplIntegrationTest.java"
+    title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FindByIdPortOutImplDataJpaTest.java"
   >
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.domain.port.out;
@@ -715,8 +721,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 
 import dev.pollito.spring_java.sakila.film.adapter.out.jpa.FilmJpaMapperImpl;
 import dev.pollito.spring_java.sakila.film.domain.model.Film;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -729,38 +734,37 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql(
     scripts = {"/sakila-schema.sql", "/sakila-data.sql"},
     executionPhase = BEFORE_TEST_CLASS)
-class FindByIdPortOutImplIntegrationTest {
+class FindByIdPortOutImplDataJpaTest {
 
   @SuppressWarnings("unused")
   @Autowired
   private FindByIdPortOut findByIdPortOut;
 
-  @ParameterizedTest
-  @CsvSource({"1, 2006", "10, "})
-  void findById_whenFilmExists_shouldReturnFilm(Integer filmId, Integer expectedYear) {
-    Film result = findByIdPortOut.findById(filmId);
+  @Test
+  void findByIdFindsAnEntityReturnsADomainModel() {
+    Integer id = 1;
+    Film result = findByIdPortOut.findById(id);
 
     assertNotNull(result);
-    assertEquals(filmId, result.getId());
-    assertEquals(expectedYear, result.getReleaseYear());
+    assertEquals(id, result.getId());
   }
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );
 
-const PortOutImplIntegrationTestKt = () => (
+const PortOutImplDataJpaTestKt = () => (
   <CollapsibleCodeBlock
     language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FindByIdPortOutImplIntegrationTest.kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FindByIdPortOutImplDataJpaTest.kt"
   >
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.domain.port.out
 
 import dev.pollito.spring_kotlin.sakila.film.adapter.out.jpa.FilmJpaMapperImpl
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
+import kotlin.test.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
 import org.springframework.context.annotation.Import
@@ -775,28 +779,27 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_CLAS
     scripts = ["/sakila-schema.sql", "/sakila-data.sql"],
     executionPhase = BEFORE_TEST_CLASS,
 )
-class FindByIdPortOutImplIntegrationTest {
+class FindByIdPortOutImplDataJpaTest {
 
   @Autowired private lateinit var findByIdPortOut: FindByIdPortOut
 
-  @ParameterizedTest
-  @CsvSource("1, 2006", "10, ")
-  fun \`findById when film exists should return film\`(filmId: Int, expectedYear: Int?) {
-    val result = findByIdPortOut.findById(filmId)
+  @Test
+  fun \`findById finds an Entity and returns a Domain model\`() {
+    val id = 1
+    val result = findByIdPortOut.findById(id)
 
-    Assertions.assertNotNull(result)
-    Assertions.assertEquals(filmId, result.id)
-    Assertions.assertEquals(expectedYear, result.releaseYear)
+    assertNotNull(result)
+    assertEquals(id, result.id)
   }
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );
 
-const PortOutImplIntegrationSpecGroovy = () => (
+const PortOutImplDataJpaSpecGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FindByIdPortOutImplIntegrationSpec.groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FindByIdPortOutDataJpaSpec.groovy"
   >
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.domain.port.out
@@ -815,50 +818,45 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
 import spock.lang.Specification
-import spock.lang.Unroll
 
 @DataJpaTest
 @ActiveProfiles("test")
 @Import([FindByIdPortOutImpl, FilmJpaMapper, ModelMapperConfig])
 @Sql(scripts = ["/sakila-schema.sql", "/sakila-data.sql"], executionPhase = BEFORE_TEST_CLASS)
-class FindByIdPortOutImplIntegrationSpec extends Specification {
+class FindByIdPortOutImplDataJpaSpec extends Specification {
 
   @Autowired
   FindByIdPortOut findByIdPortOut
 
-  @Unroll
-  def "findById(#filmId) returns a film with releaseYear=#expectedYear"() {
-    expect:
-    assertFilm(findByIdPortOut.findById(filmId), filmId, expectedYear)
+  def "findById finds an Entity and returns a Domain model"() {
+    given:
+    def id = 1
 
-    where:
-    filmId | expectedYear
-    1      | 2006
-    10     | null
+    expect:
+    assertFilm(findByIdPortOut.findById(id), id)
   }
 
   @CompileStatic
-  private static void assertFilm(Object film, int filmId, Integer expectedYear) {
+  private static void assertFilm(Object film, int filmId) {
     DomainFilm result = (DomainFilm) film
     assertNotNull(result)
     assertEquals(filmId, result.id)
-    assertEquals(expectedYear, result.releaseYear)
   }
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );
 
-export const PortOutImplIntegrationTest = () => (
+export const PortOutImplDataJpaTest = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <PortOutImplIntegrationTestJava />
+      <PortOutImplDataJpaTestJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <PortOutImplIntegrationTestKt />
+      <PortOutImplDataJpaTestKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <PortOutImplIntegrationSpecGroovy />
+      <PortOutImplDataJpaSpecGroovy />
     </TabItem>
   </Tabs>
 );
@@ -1131,7 +1129,7 @@ const ControllerAdviceSpecGroovy = () => (
     title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdviceSpec.groovy"
   >
     {`// ...
-class ControllerAdviceSpec extends Specification implements ApiResponseMatchers {
+class ControllerAdviceSpec extends Specification implements MockMvcResultMatchersTrait {
   // ...
   static class FakeController {
     // ...
@@ -1172,6 +1170,100 @@ export const ControllerAdviceTest = () => (
     </TabItem>
     <TabItem value="groovy" label="Groovy">
       <ControllerAdviceSpecGroovy />
+    </TabItem>
+  </Tabs>
+);
+
+const SanityCheckSpringBootTestJava = () => (
+  <CollapsibleCodeBlock
+    language="java"
+    title="java/dev/pollito/spring_java/SanityCheckSpringBootTest.java"
+  >
+    {`// ...
+// highlight-added-start
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_CLASS;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+// highlight-added-end
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@ExtendWith(OutputCaptureExtension.class)
+// highlight-added-start
+@ActiveProfiles("test")
+@Sql(
+    scripts = {"/sakila-schema.sql", "/sakila-data.sql"},
+    executionPhase = BEFORE_TEST_CLASS)
+// highlight-added-end
+class SanityCheckSpringBootTest {
+// ...
+}`}
+  </CollapsibleCodeBlock>
+);
+
+const SanityCheckSpringBootTestKt = () => (
+  <CollapsibleCodeBlock
+    language="kt"
+    title="kotlin/dev/pollito/spring_kotlin/SanityCheckSpringBootTest.kt"
+  >
+    {`// ...
+// highlight-added-start
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.jdbc.Sql
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_CLASS
+// highlight-added-end
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@ExtendWith(OutputCaptureExtension::class)
+// highlight-added-start
+@ActiveProfiles("test")
+@Sql(
+    scripts = ["/sakila-schema.sql", "/sakila-data.sql"],
+    executionPhase = BEFORE_TEST_CLASS,
+)
+// highlight-added-end
+class SanityCheckSpringBootTest {
+// ...
+}
+`}
+  </CollapsibleCodeBlock>
+);
+
+const SanityCheckSpringBootSpecGroovy = () => (
+  <CollapsibleCodeBlock
+    language="groovy"
+    title="groovy/dev/pollito/spring_groovy/SanityCheckSpringBootSpec.groovy"
+  >
+    {`// ...
+// highlight-added-start
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_CLASS
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.jdbc.Sql
+// highlight-added-end
+
+@SpringBootTest
+@AutoConfigureMockMvc
+// highlight-added-start
+@ActiveProfiles("test")
+@Sql(scripts = ["/sakila-schema.sql", "/sakila-data.sql"], executionPhase = BEFORE_TEST_CLASS)
+// highlight-added-end
+class SanityCheckSpringBootSpec extends Specification {
+// ...
+}`}
+  </CollapsibleCodeBlock>
+);
+
+export const SanityCheckSpringBootTests = () => (
+  <Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+      <SanityCheckSpringBootTestJava />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+      <SanityCheckSpringBootTestKt />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+      <SanityCheckSpringBootSpecGroovy />
     </TabItem>
   </Tabs>
 );

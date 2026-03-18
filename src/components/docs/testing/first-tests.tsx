@@ -109,31 +109,25 @@ const FileTreeJava = () => (
 ├── build.gradle
 └── src/
     ├── main/java/.../spring_java/
-    │   └── config/
-    │       └── advice/
+    │   └── config/advice/
 // highlight-modified
-    │           └── ControllerAdvice.java
+    │       └── ControllerAdvice.java
     └── test/java/.../spring_java/
-        ├── SpringJavaApplicationTests.java
-        ├── config/
-        │   ├── advice/
 // highlight-added
-        │   │   └── ControllerAdviceTest.java
-        │   └── log/
+        ├── SanityCheckSpringBootTest.java
+        ├── config/advice/
 // highlight-added
-        │       └── LoggingIntegrationTest.java
-        ├── sakila/
-        │   └── film/
-        │       ├── adapter/in/rest/
+        │   └── ControllerAdviceMockMvcTest.java
+        ├── sakila/film/
+        │   ├── adapter/in/rest/
 // highlight-added
-        │       │   └── FilmRestControllerTest.java
-        │       └── domain/port/in/
+        │   │   └── FilmRestControllerMockMvcTest.java
+        │   └── domain/port/in/
 // highlight-added
-        │           └── FindByIdPortInImplTest.java
-        └── test/
-            └── util/
+        │       └── FindByIdPortInImplTest.java
+        └── test/util/
 // highlight-added
-                └── ApiResponseMatchers.java`}
+            └── MockMvcResultMatchers.java`}
   </CollapsibleCodeBlock>
 );
 
@@ -141,29 +135,27 @@ const FileTreeKt = () => (
   <CollapsibleCodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle.kts
-├── src/main/kotlin/.../spring_kotlin/
-│   └── config/advice/
+└── src/
+    ├── main/kotlin/.../spring_kotlin/
+    │   └── config/advice/
 // highlight-modified
-│       └── ControllerAdvice.kt
-└── src/test/kotlin/.../spring_kotlin/
-    ├── config/
-    │   ├── advice/
+    │       └── ControllerAdvice.kt
+    └── test/kotlin/.../spring_kotlin/
 // highlight-added
-    │   │   └── ControllerAdviceTest.kt
-    │   └── log/
+        ├── SanityCheckSpringBootTest.kt
+        ├── config/advice/
 // highlight-added
-    │       └── LoggingIntegrationTest.kt
-    ├── sakila/film/
-    │   ├── adapter/in/rest/
+        │   └── ControllerAdviceMockMvcTest.kt
+        ├── sakila/film/
+        │   ├── adapter/in/rest/
 // highlight-added
-    │   │   └── FilmRestControllerTest.kt
-    │   └── domain/port/in/
+        │   │   └── FilmRestControllerMockMvcTest.kt
+        │   └── domain/port/in/
 // highlight-added
-    │       └── FindByIdPortInImplTest.kt
-    ├── test/util/
+        │       └── FindByIdPortInImplTest.kt
+        └── test/util/
 // highlight-added
-    │   └── MockMvcResultMatchersDsl.kt
-    └── SpringKotlinApplicationTests.kt`}
+            └── MockMvcResultMatchersDsl.kt`}
   </CollapsibleCodeBlock>
 );
 
@@ -171,45 +163,27 @@ const FileTreeGroovy = () => (
   <CollapsibleCodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
-├── src
-│   ├── main
-│   │   └── groovy
-│   │       └── dev
-│   │           └── pollito
-│   │               └── spring_groovy
-│   │                   └── config
-│   │                       └── advice
+└── src/
+    ├── main/groovy/.../spring_groovy/
+    │   └── config/advice/
 // highlight-modified
-│   │                           └── ControllerAdvice.groovy
-│   └── test
-│       └── groovy
-│           └── dev
-│               └── pollito
-│                   └── spring_groovy
-│                       ├── config
-│                       │   ├── advice
+    │       └── ControllerAdvice.groovy
+    └── test/groovy/.../spring_groovy/
 // highlight-added
-│                       │   │   └── ControllerAdviceSpec.groovy
-│                       │   └── log
+        ├── SanityCheckSpringBootSpec.groovy
+        ├── config/advice/
 // highlight-added
-│                       │       └── LoggingIntegrationSpec.groovy
-│                       ├── sakila
-│                       │   └── film
-│                       │       ├── adapter
-│                       │       │   └── in
-│                       │       │       └── rest
+        │   └── ControllerAdviceMockMvcSpec.groovy
+        ├── sakila/film/
+        │   ├── adapter/in/rest/
 // highlight-added
-│                       │       │           └── FilmRestControllerSpec.groovy
-│                       │       └── domain
-│                       │           └── port
-│                       │               └── in
+        │   │   └── FilmRestControllerMockMvcSpec.groovy
+        │   └── domain/port/in/
 // highlight-added
-│                       │                   └── FindByIdPortInImplSpec.groovy
-│                       ├── SpringGroovyApplicationTests.groovy
-│                       └── test
-│                           └── util
+        │       └── FindByIdPortInImplSpec.groovy
+        └── test/util/
 // highlight-added
-│                               └── ApiResponseMatchers.groovy`}
+            └── MockMvcResultMatchersTrait.groovy`}
   </CollapsibleCodeBlock>
 );
 
@@ -584,10 +558,10 @@ export const FindByIdPortInTests = () => (
   </Tabs>
 );
 
-export const ApiResponseMatchersJavaCode = () => (
+export const MockMvcResultMatchersJavaCode = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/test/util/ApiResponseMatchers.java"
+    title="java/dev/pollito/spring_java/test/util/MockMvcResultMatchers.java"
   >
     {`// highlight-added-start
 package dev.pollito.spring_java.test.util;
@@ -597,9 +571,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-public final class ApiResponseMatchers {
+public final class MockMvcResultMatchers {
 
-  private ApiResponseMatchers() {}
+  private MockMvcResultMatchers() {}
 
   public static ResultMatcher hasStandardApiResponseFields(
       String expectedInstance, HttpStatus expectedStatus) {
@@ -619,7 +593,7 @@ public final class ApiResponseMatchers {
   </CollapsibleCodeBlock>
 );
 
-export const ApiResponseMatchersKtCode = () => (
+export const MockMvcResultMatchersKtCode = () => (
   <CollapsibleCodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/test/util/MockMvcResultMatchersDsl.kt"
@@ -647,10 +621,10 @@ fun MockMvcResultMatchersDsl.hasErrorFields(extectedStatus: HttpStatus) {
   </CollapsibleCodeBlock>
 );
 
-export const ApiResponseMatchersGroovyCode = () => (
+export const MockMvcResultMatchersTraitGroovyCode = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/test/util/ApiResponseMatchers.groovy"
+    title="groovy/dev/pollito/spring_groovy/test/util/MockMvcResultMatchersTrait.groovy"
   >
     {`// highlight-added-start
 package dev.pollito.spring_groovy.test.util
@@ -660,7 +634,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.ResultMatcher
 
-trait ApiResponseMatchers {
+trait MockMvcResultMatchersTrait {
 
   ResultMatcher hasStandardApiResponseFields(String expectedInstance, HttpStatus expectedStatus) {
     { result ->
@@ -681,16 +655,16 @@ trait ApiResponseMatchers {
   </CollapsibleCodeBlock>
 );
 
-const FilmRestControllerTestJavaCode = () => (
+const FilmRestControllerMockMvcTestJava = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerTest.java"
+    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.java"
   >
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.adapter.in.rest;
 
-import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasErrorFields;
-import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasStandardApiResponseFields;
+import static dev.pollito.spring_java.test.util.MockMvcResultMatchers.hasErrorFields;
+import static dev.pollito.spring_java.test.util.MockMvcResultMatchers.hasStandardApiResponseFields;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -715,7 +689,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(FilmRestController.class)
 @Import({ControllerAdvice.class, FilmRestMapperImpl.class})
-class FilmRestControllerTest {
+class FilmRestControllerMockMvcTest {
 
   private static final String FILMS_PATH = "/api/films";
   private static final String FILM_BY_ID_TEMPLATE = FILMS_PATH + "/{id}";
@@ -775,10 +749,10 @@ class FilmRestControllerTest {
   </CollapsibleCodeBlock>
 );
 
-const FilmRestControllerTestKtCode = () => (
+const FilmRestControllerMockMvcTestKt = () => (
   <CollapsibleCodeBlock
     language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerTest.kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.kt"
   >
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
@@ -804,7 +778,7 @@ import org.springframework.test.web.servlet.get
 
 @WebMvcTest(FilmRestController::class)
 @Import(ControllerAdvice::class, FilmRestMapperImpl::class)
-class FilmRestControllerTest {
+class FilmRestControllerMockMvcTest {
   companion object {
     private const val API_FILMS = "/api/films"
   }
@@ -856,10 +830,10 @@ class FilmRestControllerTest {
   </CollapsibleCodeBlock>
 );
 
-const FilmRestControllerSpecGroovyCode = () => (
+const FilmRestControllerMockMvcSpecGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerSpec.groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerMockMvcSpec.groovy"
   >
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
@@ -873,7 +847,7 @@ import dev.pollito.spring_groovy.config.advice.ControllerAdvice
 import dev.pollito.spring_groovy.config.mapper.ModelMapperConfig
 import dev.pollito.spring_groovy.sakila.film.domain.model.Film
 import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindByIdPortIn
-import dev.pollito.spring_groovy.test.util.ApiResponseMatchers
+import dev.pollito.spring_groovy.test.util.MockMvcResultMatchersTrait
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
@@ -883,7 +857,7 @@ import spock.lang.Specification
 
 @WebMvcTest(FilmRestController)
 @Import([ControllerAdvice, FilmRestMapper, ModelMapperConfig])
-class FilmRestControllerSpec extends Specification implements ApiResponseMatchers {
+class FilmRestControllerMockMvcSpec extends Specification implements MockMvcResultMatchersTrait {
 
   private static final String FILMS_PATH = "/api/films"
   private static final String FILM_BY_ID_TEMPLATE = FILMS_PATH + "/{id}"
@@ -954,13 +928,13 @@ class FilmRestControllerSpec extends Specification implements ApiResponseMatcher
 export const FilmRestControllerTests = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <FilmRestControllerTestJavaCode />
+      <FilmRestControllerMockMvcTestJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <FilmRestControllerTestKtCode />
+      <FilmRestControllerMockMvcTestKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <FilmRestControllerSpecGroovyCode />
+      <FilmRestControllerMockMvcSpecGroovy />
     </TabItem>
   </Tabs>
 );
@@ -977,7 +951,7 @@ java.lang.AssertionError: JSON path "$.status" expected:<400> but was:<500>
 	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:129)
 	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:172)
 	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
-	at dev.pollito.spring_java.test.util.ApiResponseMatchers.lambda$hasStandardApiResponseFields$0(ApiResponseMatchers.java:19)
+	at dev.pollito.spring_java.test.util.MockMvcResultMatchers.lambda$hasStandardApiResponseFields$0(MockMvcResultMatchers.java:19)
 	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
 	at dev.pollito.spring_java.sakila.film.adapter.in.rest.FilmControllerTest.whenFindByIdWithInvalidId_thenReturnsBadRequest(FilmControllerTest.java:72)`}
   </CollapsibleCodeBlock>
@@ -1010,13 +984,13 @@ result .andExpect(hasStandardApiResponseFields(filmPath(invalidId), BAD_REQUEST)
 |       |         |                            |         |           |
 |       |         |                            |         0           400 BAD_REQUEST
 |       |         |                            /api/films/0
-|       |         dev.pollito.spring_groovy.test.util.ApiResponseMatchers$Trait$Helper$_hasStandardApiResponseFields_closure1@11577ab8
+|       |         dev.pollito.spring_groovy.test.util.MockMvcResultMatchersTrait$Trait$Helper$_hasStandardApiResponseFields_closure1@11577ab8
 |       java.lang.AssertionError: JSON path "$.status" expected:<400> but was:<500>
 |       	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:62)
 |       	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:129)
 |       	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:172)
 |       	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
-|       	at dev.pollito.spring_groovy.test.util.ApiResponseMatchers$Trait$Helper.hasStandardApiResponseFields_closure1(ApiResponseMatchers.groovy:13)
+|       	at dev.pollito.spring_groovy.test.util.MockMvcResultMatchersTrait$Trait$Helper.hasStandardApiResponseFields_closure1(MockMvcResultMatchersTrait.groovy:13)
 |       	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
 |       	at dev.pollito.spring_groovy.sakila.film.adapter.in.rest.FilmControllerSpec.when findById with invalid id then returns bad request(FilmControllerSpec.groovy:75)
 <org.springframework.test.web.servlet.MockMvc$1@73fe7483 val$mvcResult=inaccessible this$0=inaccessible>`}
@@ -1114,16 +1088,16 @@ export const ControllerAdvice = () => (
   </Tabs>
 );
 
-const ControllerAdviceTestJava = () => (
+const ControllerAdviceMockMvcTestJava = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/config/advice/ControllerAdviceTest.java"
+    title="java/dev/pollito/spring_java/config/advice/ControllerAdviceMockMvcTest.java"
   >
     {`// highlight-added-start
 package dev.pollito.spring_java.config.advice;
 
-import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasErrorFields;
-import static dev.pollito.spring_java.test.util.ApiResponseMatchers.hasStandardApiResponseFields;
+import static dev.pollito.spring_java.test.util.MockMvcResultMatchers.hasErrorFields;
+import static dev.pollito.spring_java.test.util.MockMvcResultMatchers.hasStandardApiResponseFields;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -1148,7 +1122,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-class ControllerAdviceTest {
+class ControllerAdviceMockMvcTest {
 
   private MockMvc mockMvc;
   private final HttpServletRequest request = mock(HttpServletRequest.class);
@@ -1207,10 +1181,10 @@ class ControllerAdviceTest {
   </CollapsibleCodeBlock>
 );
 
-const ControllerAdviceTestKt = () => (
+const ControllerAdviceMockMvcTestKt = () => (
   <CollapsibleCodeBlock
     language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdviceTest.kt"
+    title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdviceMockMvcTest.kt"
   >
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.config.advice
@@ -1237,7 +1211,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.resource.NoResourceFoundException
 
-class ControllerAdviceTest {
+class ControllerAdviceMockMvcTest {
 
   private lateinit var mockMvc: MockMvc
   private val request = mockk<HttpServletRequest>()
@@ -1294,10 +1268,10 @@ class ControllerAdviceTest {
   </CollapsibleCodeBlock>
 );
 
-const ControllerAdviceSpec = () => (
+const ControllerAdviceMockMvcSpecGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdviceSpec.groovy"
+    title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdviceMockMvcSpec.groovy"
   >
     {`// highlight-added-start
 package dev.pollito.spring_groovy.config.advice
@@ -1308,7 +1282,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 
-import dev.pollito.spring_groovy.test.util.ApiResponseMatchers
+import dev.pollito.spring_groovy.test.util.MockMvcResultMatchersTrait
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
 import org.springframework.test.web.servlet.MockMvc
@@ -1319,7 +1293,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class ControllerAdviceSpec extends Specification implements ApiResponseMatchers {
+class ControllerAdviceMockMvcSpec extends Specification implements MockMvcResultMatchersTrait {
   MockMvc mockMvc
   HttpServletRequest request = Mock()
 
@@ -1377,245 +1351,402 @@ class ControllerAdviceSpec extends Specification implements ApiResponseMatchers 
 export const ControllerAdviceTests = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <ControllerAdviceTestJava />
+      <ControllerAdviceMockMvcTestJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <ControllerAdviceTestKt />
+      <ControllerAdviceMockMvcTestKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <ControllerAdviceSpec />
+      <ControllerAdviceMockMvcSpecGroovy />
     </TabItem>
   </Tabs>
 );
 
-const LoggingIntegrationTestJava = () => (
+const SanityCheckSpringBootTestJava = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/config/log/LoggingIntegrationTest.java"
+    title="java/dev/pollito/spring_java/SanityCheckSpringBootTest.java"
   >
     {`// highlight-added-start
-package dev.pollito.spring_java.config.log;
+package dev.pollito.spring_java;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.quote;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-import dev.pollito.spring_java.sakila.film.domain.model.Film;
-import dev.pollito.spring_java.sakila.film.domain.port.in.FindByIdPortIn;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.Test;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(OutputCaptureExtension.class)
-class LoggingIntegrationTest {
-
-  private static final String FILM_BY_ID_PATH = "/api/films/{id}";
+class SanityCheckSpringBootTest {
 
   @SuppressWarnings("unused")
   @Autowired
   private MockMvc mockMvc;
 
-  @SuppressWarnings("unused")
-  @MockitoBean
-  private FindByIdPortIn findByIdPortIn;
+  record TestCase(
+      @NonNull HttpMethod method,
+      @NonNull String url,
+      @NonNull List<Object> pathParams,
+      @NonNull Map<String, String> headers,
+      @NonNull Map<String, String> queryParams,
+      @Nullable String requestBody) {}
 
-  @Test
-  void whenRequestThenAllLoggingComponentsWorkTogether(@NonNull CapturedOutput output)
-      throws Exception {
-    Integer filmId = 1;
-    Film film = mock(Film.class);
-    when(film.getId()).thenReturn(filmId);
-    when(findByIdPortIn.findById(filmId)).thenReturn(film);
-
-    mockMvc
-        .perform(
-            get(FILM_BY_ID_PATH, filmId)
-                .accept(APPLICATION_JSON)
-                .header("Authorization", "Bearer secret-token")
-                .header("X-Api-Key", "my-secret-key"))
-        .andExpect(status().isOk());
-
-    String logOutput = output.getOut();
-
-    assertLogFilterOutput(logOutput);
-    assertLogAspectOutput(logOutput);
-    assertMaskingPatternLayoutOutput(logOutput);
-    assertTraceIdFilterOutput(logOutput);
+  static @NonNull Stream<TestCase> sanityCheckTestCases() {
+    return Stream.of(
+        new TestCase(
+            HttpMethod.GET,
+            "/api/films/{id}",
+            List.of(1),
+            /* we don't have yet any endpoint with sensible headers to mask, so let's use this one for now */
+            Map.of("Authorization", "Bearer secret-token", "X-Api-Key", "my-secret-key"),
+            Collections.emptyMap(),
+            null));
   }
 
-  private void assertLogFilterOutput(@NonNull String logOutput) {
-    assert logOutput.contains(">>>> Method: GET; URI: /api/films/1")
-        : "LogFilter should log request details";
-    assert logOutput.contains("<<<< Response Status: 200") : "LogFilter should log response status";
+  private MockHttpServletRequestBuilder buildRequest(
+      @NonNull HttpMethod method, @NonNull String url, @NonNull List<Object> pathParams) {
+    Object[] params = pathParams.toArray();
+    return switch (method.name()) {
+      case "GET" -> get(url, params);
+      case "POST" -> post(url, params);
+      case "PUT" -> put(url, params);
+      case "PATCH" -> patch(url, params);
+      case "DELETE" -> delete(url, params);
+      default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+    };
+  }
+
+  private String resolvePathParameters(@NonNull String url, @NonNull List<Object> pathParams) {
+    String resolved = url;
+    for (Object param : pathParams) {
+      resolved = resolved.replaceFirst("\\{[^}]+}", String.valueOf(param));
+    }
+    return resolved;
+  }
+
+  private long countMatches(@NonNull String text, @NonNull String regex) {
+    return compile(regex).matcher(text).results().count();
+  }
+
+  private void assertLogFilterOutput(
+      @NonNull String logOutput, @NonNull HttpMethod method, @NonNull String url) {
+    String methodAndUri = String.format(">>>> Method: %s; URI: %s", method.name(), url);
+    assert countMatches(
+                logOutput, quote(methodAndUri) + "; QueryString: [^;\\n]*; Headers: \\{[^\\n]*}")
+            == 1
+        : "LogFilter should log request details with method, URI, QueryString, and Headers exactly once";
+    assert countMatches(logOutput, "<<<< Response Status: \\d+") == 1
+        : "LogFilter should log response status exactly once";
   }
 
   private void assertLogAspectOutput(@NonNull String logOutput) {
-    assert logOutput.contains("findById(..)] Args:") : "LogAspect should log method args";
-    assert logOutput.contains("findById(..)] Response:") : "LogAspect should log response";
+    assert countMatches(logOutput, "\\[[\\w.]+\\([..]*\\)] Args: \\[") == 1
+        : "LogAspect should log args with format [ClassName.methodName(..)] Args: [...] exactly once";
+    assert countMatches(logOutput, "\\[[\\w.]+\\([..]*\\)] Response: <") == 1
+        : "LogAspect should log response with format [ClassName.methodName(..)] Response: <...> exactly once";
   }
 
   private void assertMaskingPatternLayoutOutput(@NonNull String logOutput) {
-    assert !logOutput.contains("secret-token")
-        : "MaskingPatternLayout should mask Authorization value";
-    assert !logOutput.contains("my-secret-key")
-        : "MaskingPatternLayout should mask X-Api-Key value";
-    assert logOutput.contains("Authorization: ****")
-        : "MaskingPatternLayout should show masked Authorization";
-    assert logOutput.contains("X-Api-Key: ****")
-        : "MaskingPatternLayout should show masked X-Api-Key";
+    if (logOutput.contains("Authorization:") || logOutput.contains("X-Api-Key:")) {
+      assert !logOutput.contains("secret-token")
+          : "MaskingPatternLayout should mask Authorization value";
+      assert !logOutput.contains("my-secret-key")
+          : "MaskingPatternLayout should mask X-Api-Key value";
+      assert logOutput.contains("Authorization: ****")
+          : "MaskingPatternLayout should show masked Authorization";
+      assert logOutput.contains("X-Api-Key: ****")
+          : "MaskingPatternLayout should show masked X-Api-Key";
+    }
   }
 
   private void assertTraceIdFilterOutput(@NonNull String logOutput) {
-    assert logOutput.contains("trace_id=") : "TraceIdFilter should add trace_id to MDC";
-    assert logOutput.contains("span_id=") : "TraceIdFilter should add span_id to MDC";
-    assert logOutput.contains("trace_flags=") : "TraceIdFilter should add trace_flags to MDC";
+    assert logOutput.matches("(?s).*(trace_id=|trace_id=[a-f0-9]{32}).*")
+        : "TraceIdFilter should add trace_id to MDC (if present, must be exactly 32 hex characters)";
+    assert logOutput.matches("(?s).*(span_id=|span_id=[a-f0-9]{16}).*")
+        : "TraceIdFilter should add span_id to MDC (if present, must be exactly 16 hex characters)";
+    assert logOutput.matches("(?s).*trace_flags=(|00|01).*")
+        : "TraceIdFilter should add trace_flags to MDC (empty, 00, or 01)";
+  }
+
+  @ParameterizedTest
+  @MethodSource("sanityCheckTestCases")
+  void sanityCheck(@NonNull TestCase testCase, @NonNull CapturedOutput output) throws Exception {
+    MockHttpServletRequestBuilder requestBuilder =
+        buildRequest(testCase.method(), testCase.url(), testCase.pathParams());
+
+    testCase.headers().forEach(requestBuilder::header);
+    testCase.queryParams().forEach(requestBuilder::param);
+    if (testCase.requestBody() != null) {
+      requestBuilder.content(testCase.requestBody()).contentType(APPLICATION_JSON);
+    }
+
+    mockMvc.perform(requestBuilder.accept(APPLICATION_JSON));
+    String logOutput = output.getOut();
+
+    assertLogFilterOutput(
+        logOutput, testCase.method(), resolvePathParameters(testCase.url(), testCase.pathParams()));
+    assertLogAspectOutput(logOutput);
+    assertMaskingPatternLayoutOutput(logOutput);
+    assertTraceIdFilterOutput(logOutput);
   }
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );
 
-const LoggingIntegrationTestKt = () => (
+const SanityCheckSpringBootTestKt = () => (
   <CollapsibleCodeBlock
     language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/config/log/LoggingIntegrationTest.kt"
+    title="kotlin/dev/pollito/spring_kotlin/SanityCheckSpringBootTest.kt"
   >
     {`// highlight-added-start
-package dev.pollito.spring_kotlin.config.log
+package dev.pollito.spring_kotlin
 
-import com.ninjasquad.springmockk.MockkBean
-import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
-import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindByIdPortIn
-import io.mockk.every
-import io.mockk.mockk
-import kotlin.test.Test
+import java.util.regex.Pattern
+import java.util.regex.Pattern.compile
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(OutputCaptureExtension::class)
-class LoggingIntegrationTest {
-
-  companion object {
-    private const val FILM_BY_ID_PATH = "/api/films/{id}"
-  }
+class SanityCheckSpringBootTest {
 
   @Autowired private lateinit var mockMvc: MockMvc
-  @MockkBean private lateinit var findByIdPortIn: FindByIdPortIn
 
-  @Test
-  fun \`when request then all logging components work together\`(output: CapturedOutput) {
-    val filmId = 1
-    val film = mockk<Film>(relaxed = true)
-    every { film.id } returns filmId
-    every { findByIdPortIn.findById(filmId) } returns film
+  data class TestCase(
+      val method: HttpMethod,
+      val url: String,
+      val pathParams: List<Any> = emptyList(),
+      val headers: Map<String, String> = emptyMap(),
+      val queryParams: Map<String, String> = emptyMap(),
+      val requestBody: String? = null,
+  )
 
-    mockMvc
-        .get(FILM_BY_ID_PATH, filmId) {
-          accept(APPLICATION_JSON)
-          header("Authorization", "Bearer secret-token")
-          header("X-Api-Key", "my-secret-key")
-        }
-        .andExpect { status { isOk() } }
+  companion object {
+    @JvmStatic
+    fun sanityCheckTestCases(): List<TestCase> =
+        listOf(
+            TestCase(
+                method = HttpMethod.GET,
+                url = "/api/films/{id}",
+                pathParams = listOf(1),
+                headers =
+                    mapOf(
+                        "Authorization" to "Bearer secret-token",
+                        "X-Api-Key" to "my-secret-key",
+                    ),
+            )
+        )
+  }
+
+  private fun resolvePathParameters(url: String, pathParams: List<Any>): String {
+    var resolved = url
+    for (param in pathParams) {
+      resolved = resolved.replaceFirst("\\{[^}]+}".toRegex(), param.toString())
+    }
+    return resolved
+  }
+
+  private fun countMatches(text: String, regex: String): Long =
+      compile(regex).matcher(text).results().count()
+
+  private fun assertLogFilterOutput(logOutput: String, method: HttpMethod, url: String) {
+    val methodAndUri = ">>>> Method: \${method.name()}; URI: \$url"
+    assert(
+        countMatches(
+            logOutput,
+            Pattern.quote(methodAndUri) + "; QueryString: [^;\\n]*; Headers: \\{[^\\n]*}",
+        ) == 1L
+    ) {
+      "LogFilter should log request details with method, URI, QueryString, and Headers exactly once"
+    }
+    assert(countMatches(logOutput, "<<<< Response Status: \\d+") == 1L) {
+      "LogFilter should log response status exactly once"
+    }
+  }
+
+  private fun assertLogAspectOutput(logOutput: String) {
+    assert(countMatches(logOutput, "\\[[\\w.]+\\([..]*\\)] Args: \\[") == 1L) {
+      "LogAspect should log args with format [ClassName.methodName(..)] Args: [...] exactly once"
+    }
+    assert(countMatches(logOutput, "\\[[\\w.]+\\([..]*\\)] Response: <") == 1L) {
+      "LogAspect should log response with format [ClassName.methodName(..)] Response: <...> exactly once"
+    }
+  }
+
+  private fun assertMaskingPatternLayoutOutput(logOutput: String) {
+    if (logOutput.contains("Authorization:") || logOutput.contains("X-Api-Key:")) {
+      assert(!logOutput.contains("secret-token")) {
+        "MaskingPatternLayout should mask Authorization value"
+      }
+      assert(!logOutput.contains("my-secret-key")) {
+        "MaskingPatternLayout should mask X-Api-Key value"
+      }
+      assert(logOutput.contains("Authorization: ****")) {
+        "MaskingPatternLayout should show masked Authorization"
+      }
+      assert(logOutput.contains("X-Api-Key: ****")) {
+        "MaskingPatternLayout should show masked X-Api-Key"
+      }
+    }
+  }
+
+  private fun assertTraceIdFilterOutput(logOutput: String) {
+    assert(logOutput.matches(Regex("(?s).*(trace_id=|trace_id=[a-f0-9]{32}).*"))) {
+      "TraceIdFilter should add trace_id to MDC (if present, must be exactly 32 hex characters)"
+    }
+    assert(logOutput.matches(Regex("(?s).*(span_id=|span_id=[a-f0-9]{16}).*"))) {
+      "TraceIdFilter should add span_id to MDC (if present, must be exactly 16 hex characters)"
+    }
+    assert(logOutput.matches(Regex("(?s).*trace_flags=(|00|01).*"))) {
+      "TraceIdFilter should add trace_flags to MDC (empty, 00, or 01)"
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("sanityCheckTestCases")
+  fun sanityCheck(testCase: TestCase, output: CapturedOutput) {
+    val resolvedUrl = resolvePathParameters(testCase.url, testCase.pathParams)
+    val params = testCase.pathParams.toTypedArray()
+
+    mockMvc.perform(
+        testCase.method,
+        testCase.url,
+        params,
+        testCase.headers,
+        testCase.queryParams,
+        testCase.requestBody,
+    )
 
     val logOutput = output.out
 
-    assertLogFilterOutput(logOutput)
+    assertLogFilterOutput(logOutput, testCase.method, resolvedUrl)
     assertLogAspectOutput(logOutput)
     assertMaskingPatternLayoutOutput(logOutput)
     assertTraceIdFilterOutput(logOutput)
   }
 
-  private fun assertLogFilterOutput(logOutput: String) {
-    assert(logOutput.contains(">>>> Method: GET; URI: /api/films/1")) {
-      "LogFilter should log request details"
+  private fun MockMvc.perform(
+      method: HttpMethod,
+      url: String,
+      pathParams: Array<Any>,
+      headers: Map<String, String>,
+      queryParams: Map<String, String>,
+      requestBody: String?,
+  ) {
+    when (method.name()) {
+      "GET" ->
+          get(url, *pathParams) {
+            accept = APPLICATION_JSON
+            headers.forEach { (k, v) -> header(k, v) }
+            queryParams.forEach { (k, v) -> param(k, v) }
+          }
+      "POST" ->
+          post(url, *pathParams) {
+            accept = APPLICATION_JSON
+            headers.forEach { (k, v) -> header(k, v) }
+            queryParams.forEach { (k, v) -> param(k, v) }
+            requestBody?.let {
+              content = it
+              contentType = APPLICATION_JSON
+            }
+          }
+      "PUT" ->
+          put(url, *pathParams) {
+            accept = APPLICATION_JSON
+            headers.forEach { (k, v) -> header(k, v) }
+            queryParams.forEach { (k, v) -> param(k, v) }
+            requestBody?.let {
+              content = it
+              contentType = APPLICATION_JSON
+            }
+          }
+      "PATCH" ->
+          patch(url, *pathParams) {
+            accept = APPLICATION_JSON
+            headers.forEach { (k, v) -> header(k, v) }
+            queryParams.forEach { (k, v) -> param(k, v) }
+            requestBody?.let {
+              content = it
+              contentType = APPLICATION_JSON
+            }
+          }
+      "DELETE" ->
+          delete(url, *pathParams) {
+            accept = APPLICATION_JSON
+            headers.forEach { (k, v) -> header(k, v) }
+            queryParams.forEach { (k, v) -> param(k, v) }
+          }
+      else -> throw IllegalArgumentException("Unsupported HTTP method: $method")
     }
-    assert(logOutput.contains("<<<< Response Status: 200")) {
-      "LogFilter should log response status"
-    }
-  }
-
-  private fun assertLogAspectOutput(logOutput: String) {
-    assert(logOutput.contains("findById(..)] Args:")) { "LogAspect should log method args" }
-    assert(logOutput.contains("findById(..)] Response:")) { "LogAspect should log response" }
-  }
-
-  private fun assertMaskingPatternLayoutOutput(logOutput: String) {
-    assert(!logOutput.contains("secret-token")) {
-      "MaskingPatternLayout should mask Authorization value"
-    }
-    assert(!logOutput.contains("my-secret-key")) {
-      "MaskingPatternLayout should mask X-Api-Key value"
-    }
-    assert(logOutput.contains("Authorization: ****")) {
-      "MaskingPatternLayout should show masked Authorization"
-    }
-    assert(logOutput.contains("X-Api-Key: ****")) {
-      "MaskingPatternLayout should show masked X-Api-Key"
-    }
-  }
-
-  private fun assertTraceIdFilterOutput(logOutput: String) {
-    assert(logOutput.contains("trace_id=")) { "TraceIdFilter should add trace_id to MDC" }
-    assert(logOutput.contains("span_id=")) { "TraceIdFilter should add span_id to MDC" }
-    assert(logOutput.contains("trace_flags=")) { "TraceIdFilter should add trace_flags to MDC" }
   }
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );
 
-const LoggingIntegrationSpec = () => (
+const SanityCheckSpringBootSpecGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/config/log/LoggingIntegrationSpec.groovy"
+    title="groovy/dev/pollito/spring_groovy/SanityCheckSpringBootSpec.groovy"
   >
     {`// highlight-added-start
-package dev.pollito.spring_groovy.config.log
+package dev.pollito.spring_groovy
 
+import static java.util.regex.Pattern.compile
+import static java.util.regex.Pattern.quote
 import static org.springframework.http.MediaType.APPLICATION_JSON
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 
-import dev.pollito.spring_groovy.sakila.film.domain.model.Film
-import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindByIdPortIn
-import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class LoggingIntegrationSpec extends Specification {
-
-  static final String FILM_BY_ID_PATH = "/api/films/{id}"
+class SanityCheckSpringBootSpec extends Specification {
 
   @Autowired
   MockMvc mockMvc
-
-  @SpringBean
-  FindByIdPortIn findByIdPortIn = Stub()
 
   ByteArrayOutputStream outputCapture
   PrintStream originalOut
@@ -1635,55 +1766,107 @@ class LoggingIntegrationSpec extends Specification {
     System.setErr(originalErr)
   }
 
-  def "when request then all logging components work together"() {
+  private static MockHttpServletRequestBuilder buildRequest(HttpMethod method, String url, List<Object> pathParams) {
+    Object[] params = pathParams.toArray()
+    switch (method.name()) {
+      case "GET": return get(url, params)
+      case "POST": return post(url, params)
+      case "PUT": return put(url, params)
+      case "PATCH": return patch(url, params)
+      case "DELETE": return delete(url, params)
+      default: throw new IllegalArgumentException("Unsupported HTTP method: \${method}")
+    }
+  }
+
+  private static String resolvePathParameters(String url, List<Object> pathParams) {
+    String resolved = url
+    for (param in pathParams) {
+      resolved = resolved.replaceFirst('\\{[^}]+}', String.valueOf(param))
+    }
+    resolved
+  }
+
+  private static long countMatches(String text, String regex) {
+    compile(regex).matcher(text).results().count()
+  }
+
+  private static void assertLogFilterOutput(String logOutput, HttpMethod method, String url) {
+    String methodAndUri = ">>>> Method: \${method.name()}; URI: \${url}"
+    assert countMatches(
+    logOutput, quote(methodAndUri) + '; QueryString: [^;\\n]*; Headers: \\{[^\\n]*}') == 1:
+    'LogFilter should log request details with method, URI, QueryString, and Headers exactly once'
+    assert countMatches(logOutput, '<<<< Response Status: \\d+') == 1:
+    'LogFilter should log response status exactly once'
+  }
+
+  private static void assertLogAspectOutput(String logOutput) {
+    assert countMatches(logOutput, '\\[[\\w.]+\\([..]*\\)] Args: ') == 1:
+    'LogAspect should log args with format [ClassName.methodName(..)] Args: ... exactly once'
+    assert countMatches(logOutput, '\\[[\\w.]+\\([..]*\\)] Response: <') == 1:
+    'LogAspect should log response with format [ClassName.methodName(..)] Response: <...> exactly once'
+  }
+
+  private static void assertMaskingPatternLayoutOutput(String logOutput) {
+    if (logOutput.contains('Authorization:') || logOutput.contains('X-Api-Key:')) {
+      assert !logOutput.contains('secret-token'):
+      'MaskingPatternLayout should mask Authorization value'
+      assert !logOutput.contains('my-secret-key'):
+      'MaskingPatternLayout should mask X-Api-Key value'
+      assert logOutput.contains('Authorization: ****'):
+      'MaskingPatternLayout should show masked Authorization'
+      assert logOutput.contains('X-Api-Key: ****'):
+      'MaskingPatternLayout should show masked X-Api-Key'
+    }
+  }
+
+  private static void assertTraceIdFilterOutput(String logOutput) {
+    assert logOutput ==~ /(?s).*(trace_id=|trace_id=[a-f0-9]{32}).*/
+    assert logOutput ==~ /(?s).*(span_id=|span_id=[a-f0-9]{16}).*/
+    assert logOutput ==~ /(?s).*trace_flags=(|00|01).*/
+  }
+
+  @Unroll
+  def "sanityCheck #method #url"() {
     given:
-    def filmId = 1
-    def film = Stub(Film) {getId() >> filmId}
-    findByIdPortIn.findById(filmId) >> film
+    def requestBuilder = buildRequest(method, url, pathParams)
+    headers.each { k, v -> requestBuilder.header(k, v) }
+    queryParams.each { k, v -> requestBuilder.param(k, v) }
+    if (requestBody != null) {
+      requestBuilder.content(requestBody).contentType(APPLICATION_JSON)
+    }
 
     when:
-    mockMvc.perform(
-        get(FILM_BY_ID_PATH, filmId)
-        .accept(APPLICATION_JSON)
-        .header("Authorization", "Bearer secret-token")
-        .header("X-Api-Key", "my-secret-key"))
-        .andExpect(status().isOk())
+    mockMvc.perform(requestBuilder.accept(APPLICATION_JSON))
 
-    then: "LogFilter logs request and response details"
+    then:
     def logOutput = outputCapture.toString()
-    logOutput.contains(">>>> Method: GET; URI: /api/films/1")
-    logOutput.contains("<<<< Response Status: 200")
+    assertLogFilterOutput(logOutput, method, resolvePathParameters(url, pathParams))
+    assertLogAspectOutput(logOutput)
+    assertMaskingPatternLayoutOutput(logOutput)
+    assertTraceIdFilterOutput(logOutput)
 
-    and: "LogAspect logs method args and response"
-    logOutput.contains("findById(..)] Args:")
-    logOutput.contains("findById(..)] Response:")
+    // Reset output capture for next iteration
+    outputCapture.reset()
 
-    and: "MaskingPatternLayout masks sensitive headers"
-    !logOutput.contains("secret-token")
-    !logOutput.contains("my-secret-key")
-    logOutput.contains("Authorization: ****")
-    logOutput.contains("X-Api-Key: ****")
-
-    and: "TraceIdFilter adds trace information to MDC"
-    logOutput.contains("trace_id=")
-    logOutput.contains("span_id=")
-    logOutput.contains("trace_flags=")
+    where:
+    method         | url               | pathParams | headers                                                                          | queryParams       | requestBody
+    HttpMethod.GET | "/api/films/{id}" | [1]        | ["Authorization": "Bearer secret-token", "X-Api-Key": "my-secret-key"] as Map   | [:] as Map        | null
   }
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );
 
-export const LoggingIntegrationTests = () => (
+export const SanityCheckSpringBootTests = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <LoggingIntegrationTestJava />
+      <SanityCheckSpringBootTestJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <LoggingIntegrationTestKt />
+      <SanityCheckSpringBootTestKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <LoggingIntegrationSpec />
+      <SanityCheckSpringBootSpecGroovy />
     </TabItem>
   </Tabs>
 );

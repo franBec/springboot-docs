@@ -8,9 +8,9 @@ import {
   FileTree,
   BuildGradle,
   FindByIdPortInTests,
-  ApiResponseMatchersJavaCode,
-  ApiResponseMatchersKtCode,
-  ApiResponseMatchersGroovyCode,
+  MockMvcResultMatchersJavaCode,
+  MockMvcResultMatchersKtCode,
+  MockMvcResultMatchersTraitGroovyCode,
   FilmRestControllerTests,
   ControllerAdvice,
   TestErrorLog,
@@ -18,7 +18,7 @@ import {
   JacocoReportKt,
   JacocoReportGroovy,
   ControllerAdviceTests,
-  LoggingIntegrationTests,
+  SanityCheckSpringBootTests,
 } from '@site/src/components/docs/testing/first-tests';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -98,10 +98,10 @@ To make our assertions more readable, we'll first create some custom matchers fo
 
 <Tabs groupId="language" queryString>
   <TabItem value="java" label="Java" default>
-    <ApiResponseMatchersJavaCode />
+    <MockMvcResultMatchersJavaCode />
   </TabItem>
   <TabItem value="kotlin" label="Kotlin">
-    <ApiResponseMatchersKtCode />
+    <MockMvcResultMatchersKtCode />
     <Admonition type="tip" title="Kotlin Extension Function">
       By extending `MockMvcResultMatchersDsl`, our custom matchers integrate
       seamlessly with Spring's Kotlin DSL. They can be called directly inside
@@ -110,7 +110,7 @@ To make our assertions more readable, we'll first create some custom matchers fo
     </Admonition>
   </TabItem>
   <TabItem value="groovy" label="Groovy">
-    <ApiResponseMatchersGroovyCode />
+    <MockMvcResultMatchersTraitGroovyCode />
     <Admonition type="tip" title="Groovy Trait">
       A trait is like an interface with implementation that can be mixed into
       classes. By implementing this trait in your Spock specifications, the
@@ -145,9 +145,13 @@ The goal of these tests is to verify our `ControllerAdvice` handles different ex
 
 ## 🔴 Integration Tests
 
-The goal of this test is to verify that our application's logging configuration works correctly and that all components properly log events as expected. We want to ensure that important events are captured and formatted correctly in our logs.
+This integration test boots up the entire Spring Boot application context to verify that all the pieces fit together and work as expected in a real runtime environment.
 
-<LoggingIntegrationTests />
+Unlike the slice tests (`@WebMvcTest`) which only load specific parts of the application, this test with `@SpringBootTest` loads everything: all beans, configurations, filters, aspects, and wiring. It's our sanity check that the application actually starts and behaves correctly end-to-end.
+
+For now, we're using this integration test to verify our logging infrastructure works across the entire request lifecycle: from the moment a request arrives (LogFilter), through method execution (LogAspect), including security concerns like masking sensitive headers (MaskingPatternLayout), and distributed tracing setup (TraceIdFilter).
+
+<SanityCheckSpringBootTests />
 
 ## Check the JaCoCo Report
 

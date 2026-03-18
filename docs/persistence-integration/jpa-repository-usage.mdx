@@ -9,16 +9,16 @@ import Admonition from '@theme/Admonition';
 import {
   FileTree,
   ApplicationYamlDev,
-  SakilaSchema,
   PortOut,
   JpaMapper,
   JpaRepositoryInterface,
   PortOutImplementation,
   ApplicationTestYaml,
-  PortOutImplIntegrationTest,
+  PortOutImplDataJpaTest,
   PortInImplTest,
   ControllerAdvice,
   ControllerAdviceTest,
+  SanityCheckSpringBootTests,
   RequestFlowSequenceDiagram,
   TerminalCurl,
   BuildGradleGroovySpotlessExclude,
@@ -111,7 +111,7 @@ Both `src/test/resources/` contains its own copies of `sakila-schema.sql` and `s
 
 Tests targeting the JPA layer use `@DataJpaTest`, a Spring slice that loads only JPA infrastructure (repositories, entity manager, datasource) without the full application context.
 
-<PortOutImplIntegrationTest />
+<PortOutImplDataJpaTest />
 
 A few things worth noting:
 
@@ -142,6 +142,17 @@ Each module uses its native mocking approach:
 The existing `ControllerAdvice` test gets a new test case for `NoSuchElementException` → `404 NOT_FOUND`. The structure is the same parameterized test from before, just with one more entry in the data set.
 
 <ControllerAdviceTest />
+
+### Update the Sanity Check Test
+
+The existing `SanityCheckSpringBootTest` / `SanityCheckSpringBootSpec` needs to be updated to use the test profile and load the database schema. Without these changes, the test will fail because the application now depends on the database being initialized.
+
+<SanityCheckSpringBootTests />
+
+The two key additions:
+
+- **`@ActiveProfiles("test")`** activates the `application-test.yaml` configuration, which sets `sql.init.mode: never`.
+- **`@Sql(scripts = [...], executionPhase = BEFORE_TEST_CLASS)`** explicitly loads the schema and data before the test class runs, ensuring the database is ready.
 
 ## The Complete Flow
 

@@ -9,13 +9,12 @@ import Admonition from '@theme/Admonition';
 import {
   FileTree,
   ApplicationYamlDev,
-  SakilaSchema,
   PortOut,
   JpaMapper,
   JpaRepositoryInterface,
   PortOutImplementation,
   ApplicationTestYaml,
-  PortOutImplIntegrationTest,
+  PortOutImplDataJpaTest,
   PortInImplTest,
   ControllerAdvice,
   ControllerAdviceTest,
@@ -111,7 +110,7 @@ Ambos `src/test/resources/` contienen sus propias copias de `sakila-schema.sql` 
 
 Los tests apuntando a la capa JPA usan `@DataJpaTest`, un Spring slice que carga solo infraestructura JPA (repositories, entity manager, datasource) sin el contexto completo de la aplicación.
 
-<PortOutImplIntegrationTest />
+<PortOutImplDataJpaTest />
 
 Hay algunos detalles que vale la pena notar:
 
