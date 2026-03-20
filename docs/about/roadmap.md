@@ -15,7 +15,16 @@ While direct contributions to this demo repository are not actively sought, **fe
 ### New Content
 
 - **Persistence Integration**:
-  - **CRUD**: Create a new document doing whole CRUD of films. Introduce the concept of pagination. Check [swaggerhub-spring-pagination](https://github.com/daniel-shuy/swaggerhub-spring-pagination) for reference.
+  - **CRUD**: Create a new document doing whole CRUD of films.
+
+- Rename "About" to "Misc":
+  - Move one of the license there and get rid of the other one, MIT license is good enough for everything
+  - Create a FAQ document
+    - what's your spring boot background?
+    - will I come across codebases similar to the one explained by these docs?
+    - do I really need to know this much spring boot to get things done? 
+    - are these docs and/or code examples AI generated?
+
 - **Spring Security Section**: Create a dedicated section covering authentication, authorization, and security best practices in Spring Boot applications.
 
 ### Future Improvements

@@ -1,7 +1,9 @@
 import {CollapsibleCodeBlock} from "@site/src/components/collapsible-code-block";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
-import {FilmGroovy} from "@site/src/components/docs/lets-create-a-spring-boot-project/first-endpoint";
+import {FileTreeInfo} from "@site/src/components/file-tree-info";
+import ZoomContainer from '@site/src/components/zoom-container';
+import Mermaid from '@theme/Mermaid';
 
 const BuildGradleGroovy = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
@@ -16,6 +18,7 @@ openApiGenerate {
   // ...
   configOptions = [
     // ...
+// highlight-added
     useSpringDataPageable     : "true",
   ]
 }
@@ -244,7 +247,7 @@ export const FilmRestMapper = () => (
       <FilmRestMapperKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <FilmGroovy />
+      <FilmRestMapperGroovy />
     </TabItem>
   </Tabs>
 )
@@ -1293,7 +1296,7 @@ class SanityCheckSpringBootSpec extends Specification {
   </CollapsibleCodeBlock>
 )
 
-export const SanityCHeckSpringBoot = () => (
+export const SanityCheckSpringBoot = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
       <SanityCheckSpringBootTestJava />
@@ -1305,4 +1308,408 @@ export const SanityCHeckSpringBoot = () => (
       <SanityCheckSpringBootSpec />
     </TabItem>
   </Tabs>
+)
+
+const FileTreeJava = () => (
+  <CollapsibleCodeBlock language="log" title="File Tree">
+    {`├── ...
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── dev
+    │   │       └── pollito
+    │   │           └── spring_java
+    │   │               └── sakila
+    │   │                   └── film
+    │   │                       ├── adapter
+    │   │                       │   ├── in
+    │   │                       │   │   └── rest
+// highlight-modified-start
+    │   │                       │   │       ├── FilmRestController.java
+    │   │                       │   │       └── FilmRestMapper.java
+// highlight-modified-end
+    │   │                       │   └── out
+    │   │                       │       └── jpa
+// highlight-modified
+    │   │                       │           └── FilmJpaMapper.java
+    │   │                       └── domain
+    │   │                           └── port
+    │   │                               ├── in
+// highlight-added-start
+    │   │                               │   ├── FindAllPortIn.java
+    │   │                               │   └── FindAllPortInImpl.java
+// highlight-added-end
+    │   │                               └── out
+// highlight-added-start
+    │   │                                   ├── FindAllPortOut.java
+    │   │                                   └── FindAllPortOutImpl.java
+// highlight-added-end
+    │   └── resources
+// highlight-modified-start
+    │       ├── application.yaml
+    │       ├── application-dev.yaml
+    │       └── openapi.yaml
+// highlight-modified-end
+    └── test
+        ├── java
+        │   └── dev
+        │       └── pollito
+        │           └── spring_java
+// highlight-modified
+        │               ├── SanityCheckSpringBootTest.java
+        │               ├── sakila
+        │               │   └── film
+        │               │       ├── adapter
+        │               │       │   └── in
+        │               │       │       └── rest
+// highlight-modified
+        │               │       │           └── FilmRestControllerMockMvcTest.java
+        │               │       └── domain
+        │               │           └── port
+        │               │               ├── in
+// highlight-added
+        │               │               │   └── FindAllPortInImplTest.java
+        │               │               └── out
+// highlight-added
+        │               │                   └── FindAllPortOutImplDataJpaTest.java
+        │               └── test
+        │                   └── util
+// highlight-modified
+        │                       └── MockMvcResultMatchers.java
+        └── resources
+// highlight-modified
+            └── application-test.yaml`}
+  </CollapsibleCodeBlock>
+)
+
+const FileTreeKt = () => (
+  <CollapsibleCodeBlock language="log" title="File Tree">
+    {`├── ...
+└── src
+    ├── main
+    │   ├── kotlin
+    │   │   └── dev
+    │   │       └── pollito
+    │   │           └── spring_kotlin
+    │   │               └── sakila
+    │   │                   └── film
+    │   │                       ├── adapter
+    │   │                       │   ├── in
+    │   │                       │   │   └── rest
+// highlight-modified-start
+    │   │                       │   │       ├── FilmRestController.kt
+    │   │                       │   │       └── FilmRestMapper.kt
+// highlight-modified-end
+    │   │                       │   └── out
+    │   │                       │       └── jpa
+// highlight-modified
+    │   │                       │           └── FilmJpaMapper.kt
+    │   │                       └── domain
+    │   │                           └── port
+    │   │                               ├── in
+// highlight-added-start
+    │   │                               │   ├── FindAllPortIn.kt
+    │   │                               │   └── FindAllPortInImpl.kt
+// highlight-added-end
+    │   │                               └── out
+// highlight-added-start
+    │   │                                   ├── FindAllPortOut.kt
+    │   │                                   └── FindAllPortOutImpl.kt
+// highlight-added-end
+    │   └── resources
+// highlight-modified-start
+    │       ├── application.yaml
+    │       ├── application-dev.yaml
+    │       └── openapi.yaml
+// highlight-modified-end
+    └── test
+        ├── kotlin
+        │   └── dev
+        │       └── pollito
+        │           └── spring_kotlin
+// highlight-modified
+        │               ├── SanityCheckSpringBootTest.kt
+        │               ├── sakila
+        │               │   └── film
+        │               │       ├── adapter
+        │               │       │   └── in
+        │               │       │       └── rest
+// highlight-modified
+        │               │       │           └── FilmRestControllerMockMvcTest.kt
+        │               │       └── domain
+        │               │           └── port
+        │               │               ├── in
+// highlight-added
+        │               │               │   └── FindAllPortInImplTest.kt
+        │               │               └── out
+// highlight-added
+        │               │                   └── FindAllPortOutImplDataJpaTest.kt
+        │               └── test
+        │                   └── util
+// highlight-modified
+        │                       └── MockMvcResultMatchersDsl.kt
+        └── resources
+// highlight-modified
+            └── application-test.yaml`}
+  </CollapsibleCodeBlock>
+)
+
+const FileTreeGroovy = () => (
+  <CollapsibleCodeBlock language="log" title="File Tree">
+    {`├── ...
+└── src
+    ├── main
+    │   ├── groovy
+    │   │   └── dev
+    │   │       └── pollito
+    │   │           └── spring_groovy
+    │   │               └── sakila
+    │   │                   └── film
+    │   │                       ├── adapter
+    │   │                       │   ├── in
+    │   │                       │   │   └── rest
+// highlight-modified-start
+    │   │                       │   │       ├── FilmRestController.groovy
+    │   │                       │   │       └── FilmRestMapper.groovy
+// highlight-modified-end
+    │   │                       │   └── out
+    │   │                       │       └── jpa
+// highlight-modified
+    │   │                       │           └── FilmJpaMapper.groovy
+    │   │                       └── domain
+    │   │                           └── port
+    │   │                               ├── in
+// highlight-added-start
+    │   │                               │   ├── FindAllPortIn.groovy
+    │   │                               │   └── FindAllPortInImpl.groovy
+// highlight-added-end
+    │   │                               └── out
+// highlight-added-start
+    │   │                                   ├── FindAllPortOut.groovy
+    │   │                                   └── FindAllPortOutImpl.groovy
+// highlight-added-end
+    │   └── resources
+// highlight-modified-start
+    │       ├── application.yaml
+    │       ├── application-dev.yaml
+    │       └── openapi.yaml
+// highlight-modified-end
+    └── test
+        ├── groovy
+        │   └── dev
+        │       └── pollito
+        │           └── spring_groovy
+// highlight-modified
+        │               ├── SanityCheckSpringBootSpec.groovy
+        │               ├── sakila
+        │               │   └── film
+        │               │       ├── adapter
+        │               │       │   └── in
+        │               │       │       └── rest
+// highlight-modified
+        │               │       │           └── FilmRestControllerMockMvcSpec.groovy
+        │               │       └── domain
+        │               │           └── port
+        │               │               ├── in
+// highlight-added
+        │               │               │   └── FindAllPortInImplSpec.groovy
+        │               │               └── out
+// highlight-added
+        │               │                   └── FindAllPortOutImplDataJpaSpec.groovy
+        │               └── test
+        │                   └── util
+// highlight-modified
+        │                       └── MockMvcResultMatchersTrait.groovy
+        └── resources
+// highlight-modified
+            └── application-test.yaml`}
+  </CollapsibleCodeBlock>
+)
+
+export const FileTree = () => (
+  <FileTreeInfo>
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
+        <FileTreeJava />
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+        <FileTreeKt />
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+        <FileTreeGroovy />
+      </TabItem>
+    </Tabs>
+  </FileTreeInfo>
+)
+
+export const RequestFlowSequenceDiagram = () => (
+  <ZoomContainer>
+    <Mermaid
+      value={`sequenceDiagram
+        participant Client
+        box Adapter In
+            participant FilmRestController
+            participant FilmRestMapper
+        end
+        box Domain
+            participant FindAllPortInImpl
+        end
+        box Adapter Out
+            participant FindAllPortOutImpl
+            participant FilmJpaRepository
+            participant FilmJpaMapper
+        end
+        participant Database
+
+        Client->>FilmRestController: GET /api/films?page=0&size=10
+        activate FilmRestController
+
+        FilmRestController->>FindAllPortInImpl: findAll(pageable)
+        activate FindAllPortInImpl
+
+        FindAllPortInImpl->>FindAllPortOutImpl: findAll(pageable)
+        activate FindAllPortOutImpl
+
+        FindAllPortOutImpl->>FilmJpaRepository: findAll(pageable)
+        activate FilmJpaRepository
+
+        FilmJpaRepository->>Database: SELECT ... FROM FILM LIMIT 10 OFFSET 0
+        Database-->>FilmJpaRepository: Page of rows
+
+        FilmJpaRepository-->>FindAllPortOutImpl: Page<FilmEntity>
+        deactivate FilmJpaRepository
+
+        FindAllPortOutImpl->>FilmJpaMapper: convert(Page<Entity>)
+        activate FilmJpaMapper
+        FilmJpaMapper-->>FindAllPortOutImpl: Page<Domain Film>
+        deactivate FilmJpaMapper
+
+        FindAllPortOutImpl-->>FindAllPortInImpl: Page<Domain Film>
+        deactivate FindAllPortOutImpl
+
+        FindAllPortInImpl-->>FilmRestController: Page<Domain Film>
+        deactivate FindAllPortInImpl
+
+        FilmRestController->>FilmRestMapper: convert(Page<Domain Film>)
+        activate FilmRestMapper
+        FilmRestMapper-->>FilmRestController: FilmListResponseAllOfData
+        deactivate FilmRestMapper
+
+        FilmRestController-->>Client: HTTP 200 OK + JSON body
+        deactivate FilmRestController`}
+    />
+  </ZoomContainer>
+)
+
+export const Terminal = () => (
+  <CollapsibleCodeBlock language="log" title="Terminal">
+    {`curl -s http://localhost:8080/api/films | jq
+
+{
+  "instance": "/api/films",
+  "status": 200,
+  "timestamp": "2026-03-19T23:54:21.27581481Z",
+  "trace": "8eec221d5225be2bbf461937313a95a9",
+  "data": {
+    "content": [
+      {
+        "description": "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
+        "id": 1,
+        "language": "English",
+        "length": 86,
+        "rating": "PG",
+        "releaseYear": 2006,
+        "title": "ACADEMY DINOSAUR"
+      },
+      {
+        "description": "A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China",
+        "id": 2,
+        "language": "English",
+        "length": 48,
+        "rating": "G",
+        "releaseYear": 2006,
+        "title": "ACE GOLDFINGER"
+      },
+      {
+        "description": "A Astounding Reflection of a Lumberjack And a Car who must Sink a Lumberjack in A Baloon Factory",
+        "id": 3,
+        "language": "English",
+        "length": 50,
+        "rating": "NC-17",
+        "releaseYear": 2006,
+        "title": "ADAPTATION HOLES"
+      },
+      {
+        "description": "A Fanciful Documentary of a Frisbee And a Lumberjack who must Chase a Monkey in A Shark Tank",
+        "id": 4,
+        "language": "English",
+        "length": 117,
+        "rating": "G",
+        "releaseYear": 2006,
+        "title": "AFFAIR PREJUDICE"
+      },
+      {
+        "description": "A Fast-Paced Documentary of a Pastry Chef And a Dentist who must Pursue a Forensic Psychologist in The Gulf of Mexico",
+        "id": 5,
+        "language": "English",
+        "length": 130,
+        "rating": "G",
+        "releaseYear": 2006,
+        "title": "AFRICAN EGG"
+      },
+      {
+        "description": "A Intrepid Panorama of a Robot And a Boy who must Escape a Sumo Wrestler in Ancient China",
+        "id": 6,
+        "language": "English",
+        "length": 169,
+        "rating": "PG",
+        "releaseYear": 2006,
+        "title": "AGENT TRUMAN"
+      },
+      {
+        "description": "A Touching Saga of a Hunter And a Butler who must Discover a Butler in A Jet Boat",
+        "id": 7,
+        "language": "English",
+        "length": 62,
+        "rating": "PG-13",
+        "releaseYear": 2006,
+        "title": "AIRPLANE SIERRA"
+      },
+      {
+        "description": "A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India",
+        "id": 8,
+        "language": "English",
+        "length": 54,
+        "rating": "R",
+        "releaseYear": 2006,
+        "title": "AIRPORT POLLOCK"
+      },
+      {
+        "description": "A Thoughtful Panorama of a Database Administrator And a Mad Scientist who must Outgun a Mad Scientist in A Jet Boat",
+        "id": 9,
+        "language": "English",
+        "length": 114,
+        "rating": "PG-13",
+        "releaseYear": 2006,
+        "title": "ALABAMA DEVIL"
+      },
+      {
+        "description": "A Action-Packed Tale of a Man And a Lumberjack who must Reach a Feminist in Ancient China",
+        "id": 10,
+        "language": "English",
+        "length": 63,
+        "rating": "NC-17",
+        "releaseYear": 2006,
+        "title": "ALADDIN CALENDAR"
+      }
+    ],
+    "pageable": {
+      "pageNumber": 0,
+      "pageSize": 10
+    },
+    "totalElements": 1000,
+    "totalPages": 100
+  }
+}`}
+  </CollapsibleCodeBlock>
 )

@@ -1,0 +1,168 @@
+---
+sidebar_position: 4
+title: Paginación
+---
+
+import GithubTagInfo from '@site/src/components/github-tag-info';
+import Admonition from '@theme/Admonition';
+
+import {
+  BuildGradle,
+  FilmRestController,
+  FilmRestMapper,
+  FilmJpaMapper,
+  FindAllPortIn,
+  FindAllPortInImpl,
+  FindAllPortOut,
+  FindAllPortOutImpl,
+  ApplicationYamlDataWebPageable,
+  OpenapiYamlPaginationModifications,
+  FilmRestControllerMockMvc,
+  FindAllPortInImplTest,
+  FindAllPortOutImplDataJpa,
+  MockMvcResultMatchers,
+  SanityCheckSpringBoot,
+  FileTree,
+  RequestFlowSequenceDiagram,
+  Terminal,
+} from '@site/src/components/docs/persistence-integration/pagination';
+
+<GithubTagInfo tag="pagination" />
+
+Ahora mismo el endpoint `GET /films` devuelve todas las películas en una sola respuesta. Eso funciona bien con un dataset pequeño, pero en producción una tabla puede tener miles o millones de filas. Enviarlas todas de una sola vez desperdicia ancho de banda, aumenta los tiempos de respuesta, y pone carga innecesaria tanto en el servidor como en el cliente.
+
+La paginación resuelve esto dividiendo los resultados en páginas de tamaño fijo. El cliente pide una página a la vez (`?page=0&size=10`) y recibe solo ese slice, más metadata como el número total de elementos y páginas. Esto mantiene las respuestas rápidas y predecibles independientemente de cuántos datos existan.
+
+Spring Data provee una abstracción `Pageable` que maneja esto out of the box. Este documento te guía para agregar paginación al endpoint `GET /films` en los tres proyectos.
+
+## Archivos involucrados
+
+<FileTree />
+
+## Actualización del contrato OpenAPI
+
+Actualizás los tres archivos `openapi.yaml` con los mismos cambios:
+
+- **`x-spring-paginated: true`** en la operación `GET /films`. Esto le indica al generador de OpenAPI que inyecte un parámetro `Pageable` en el método de interfaz generado en lugar de query params individuales.
+- Tres query parameters opcionales: `page` (índice base 0, default 0), `size` (items por página, default 10, máximo 100), y `sort` (una o más strings `propiedad,asc|desc`).
+- Dos nuevos componentes de schema: `Page` (con campos `content`, `pageable`, `totalElements`, y `totalPages`) y `Pageable` (con campos `pageNumber` y `pageSize`).
+- El campo `data` de `FilmListResponse` cambia de un array plano de películas a un objeto `Page` cuyo `content` está tipado como un array de `Film`.
+
+<OpenapiYamlPaginationModifications />
+
+## Configuración del generador OpenAPI
+
+Cada archivo de build recibe dos adiciones:
+
+- La dependencia `springdoc-openapi-starter-webmvc-ui`, para que el parámetro `Pageable` generado sea resuelto y documentado correctamente por SpringDoc.
+- La opción `useSpringDataPageable: "true"` en la configuración de la tarea `openApiGenerate`. Esto le dice al generador que use `org.springframework.data.domain.Pageable` como tipo de parámetro para los endpoints paginados.
+
+<BuildGradle />
+
+## Configuración de Spring Pageable
+
+Seteás `spring.data.web.pageable.default-page-size` a `10` y `spring.data.web.pageable.max-page-size` a `100`. Esto va en los tres archivos YAML de cada proyecto (`application.yaml`, `application-dev.yaml`, y `application-test.yaml`) para que los límites de paginación sean consistentes en todos los entornos.
+
+<ApplicationYamlDataWebPageable />
+
+## Nuevas interfaces de puerto e implementaciones
+
+Creás dos nuevos pares interfaz/implementación por proyecto, siguiendo la misma convención de naming de puertos hexagonales ya usada para `FindById`.
+
+### FindAllPortIn
+
+El puerto de entrada (caso de uso). La interfaz declara `findAll(Pageable): Page<Film>`.
+
+<FindAllPortIn />
+
+### FindAllPortInImpl
+
+La implementación delega al puerto de salida.
+
+<FindAllPortInImpl />
+
+### FindAllPortOut
+
+El puerto de salida (adaptador de persistencia). La interfaz declara `findAll(Pageable): Page<Film>`.
+
+<FindAllPortOut />
+
+### FindAllPortOutImpl
+
+Llama a `repository.findAll(pageable)` y mapea el resultado a través de `FilmJpaMapper`.
+
+<FindAllPortOutImpl />
+
+## Extensiones de los mappers
+
+Extendés ambos mappers en cada proyecto para manejar conversiones de tipo `Page`.
+
+### FilmJpaMapper
+
+Recibe un nuevo método `convert(Page<EntityFilm>): Page<DomainFilm>` que mapea la página transformando cada elemento de entidad en un modelo de dominio usando el método `convert` de ítem individual ya existente.
+
+<FilmJpaMapper />
+
+### FilmRestMapper
+
+Recibe un nuevo método `convert(Page<DomainFilm>): FilmListResponseAllOfData` que produce el DTO generado con `content`, `pageable`, `totalElements`, y `totalPages` populados.
+
+<FilmRestMapper />
+
+En Java y Kotlin esto se hace mediante MapStruct. En Groovy, donde se usa ModelMapper en su lugar, implementás el mapeo manualmente como un método simple.
+
+<Admonition type="info" title="Advertencia sobre MapStruct en Kotlin">
+El `FilmRestMapper` de Kotlin requiere un método helper explícito `filmListToFilmList` y una anotación `@Mapping` con una expresión Java para el campo `content`. Sin esto, la implementación generada por MapStruct por defecto incluye un chequeo `hasContent` que asigna `null` cuando la página está vacía. Como el campo `content` del DTO generado por OpenAPI no es nullable, esto lleva a una excepción en runtime con páginas vacías. El mapeo explícito asegura que se devuelva una lista vacía en lugar de `null`.
+</Admonition>
+
+## Actualización del controller
+
+Actualizás `FilmRestController` en cada proyecto para que `findAll` ahora acepte un parámetro `Pageable` (inyectado por el `HandlerMethodArgumentResolver` de Spring MVC) y devuelva un `FilmListResponse` correctamente populado en lugar de lanzar `UnsupportedOperationException`.
+
+<FilmRestController />
+
+## Tests
+
+### FindAllPortInImplTest
+
+Test unitario que verifica que el puerto de entrada delega al puerto de salida y devuelve el resultado.
+
+<FindAllPortInImplTest />
+
+### FindAllPortOutImplDataJpaTest
+
+Un test de integración `@DataJpaTest` que carga el esquema y los datos seed, llama al puerto de salida con un `PageRequest`, y verifica que la página no esté vacía y tenga el número esperado de elementos.
+
+<FindAllPortOutImplDataJpa />
+
+### FilmRestControllerMockMvcTest
+
+El test `findAll` existente cambia de esperar `500 Internal Server Error` a esperar `200 OK` con un cuerpo de respuesta paginada válido. Agregás `FindAllPortIn` como mock bean.
+
+<FilmRestControllerMockMvc />
+
+### MockMvcResultMatchers
+
+Un nuevo matcher `hasPageFields()` verifica que el cuerpo de la respuesta contenga `data.content` (array), `data.pageable.pageNumber`, `data.pageable.pageSize`, `data.totalElements`, y `data.totalPages`.
+
+<MockMvcResultMatchers />
+
+### SanityCheckSpringBootTest
+
+Actualizás el test de sanity check para incluir el endpoint `GET /api/films`.
+
+<SanityCheckSpringBoot />
+
+## El flujo completo
+
+Con todo conectado, esto es lo que pasa cuando un request paginado le pega a tu aplicación. El flujo sigue la misma arquitectura hexagonal que `findById`, pero ahora el repository devuelve una `Page` en lugar de una sola entidad, y el REST mapper convierte la metadata de la página junto con el contenido.
+
+Vas a notar que `org.springframework.data.domain.Page` y `Pageable` aparecen en cada capa: el controller, los puertos de dominio, y el adaptador de persistencia. Estrictamente hablando, esto rompe la arquitectura hexagonal: la capa de dominio no debería depender de una interfaz de Spring Data. El enfoque puro sería definir tu propia abstracción similar a `Page` en el dominio y mapear hacia/desde ella en cada frontera.
+
+En la práctica, redefinir lo que `Page` ya provee es reinventar la rueda sin ganancia real. La interfaz es estable, bien entendida, y todos los proyectos Spring que he visto la usan de la misma manera. Es un trade-off con el que me siento cómodo.
+
+<RequestFlowSequenceDiagram />
+
+Buildeá y corré la aplicación con el perfil `dev`, después le pegás al endpoint:
+
+<Terminal />
