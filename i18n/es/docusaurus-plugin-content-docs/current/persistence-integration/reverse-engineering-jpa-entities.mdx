@@ -97,6 +97,28 @@ build/generated/sources/hibernate/<group>/<name>/generated/entity/
 
 Cada tabla en el esquema se vuelve una clase de entidad, compilada transparentemente junto a tu código escrito a mano. No referencías este directorio manualmente. El registro del source set se encarga de eso.
 
+### Sobre los comentarios `// TODO: Unknown mapping type "EnhancedBasicValue"`
+
+Es probable que veas comentarios como este esparcidos por los archivos generados:
+
+```java
+// TODO: Unknown mapping type "EnhancedBasicValue" for property firstName
+private String firstName;
+```
+
+`EnhancedBasicValue` es un tipo interno de Hibernate ORM 7.x que reemplazó al antiguo `BasicValue`. El template FreeMarker de `hibernate-tools-ant` que genera el código fuente Java todavía no lo reconoce. Es una brecha de compatibilidad entre la versión de las herramientas y la del ORM. Cuando el template encuentra un tipo de mapeo no reconocido, se limita a emitir el campo sin anotaciones y deja un comentario TODO en lugar de generar la anotación `@Column(name = "FIRST_NAME")` completa.
+
+**Por qué las pruebas siguen pasando**
+
+El `SpringPhysicalNamingStrategy` por defecto de Spring Boot convierte automáticamente los nombres de campo camelCase a snake_case en los nombres de columna: `firstName` → `first_name`. H2 es case-insensitive y PostgreSQL almacena nombres de columna en minúsculas por defecto, así que ambos coinciden con lo que produce la estrategia. Las anotaciones `@Column` faltantes no generan ningún desajuste.
+
+**Cuándo se convertiría en un problema**
+
+- Si un nombre de columna no sigue la convención camelCase → snake_case.
+- Si necesitás anotaciones `@Column` explícitas para documentación o para sobreescribir la estrategia de nombres.
+
+Para un proyecto de demo que usa la estrategia de nombres por defecto contra Sakila (que sigue snake_case consistentemente), las entidades generadas funcionan correctamente tal cual están. Los TODOs son ruido de una incompatibilidad conocida entre `hibernate-tools` y Hibernate 7.x. Podés ignorarlos.
+
 ## Cambios de Esquema en el Mundo Real
 
 [Cómo Spring habla con las bases de datos](./how-spring-talks-to-databases#migraciones-de-esquema) cubre enfoques code-first vs. database-first en detalle. La versión corta: code-first es cómodo para desarrollo local, database-first (Flyway, Liquibase) es más seguro para producción.

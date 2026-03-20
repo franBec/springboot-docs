@@ -97,6 +97,28 @@ build/generated/sources/hibernate/<group>/<name>/generated/entity/
 
 Every table in the schema becomes one entity class, compiled transparently alongside your hand-written code. You don't reference this directory manually. The source set registration takes care of it.
 
+### About the `// TODO: Unknown mapping type "EnhancedBasicValue"` Comments
+
+You'll likely see comments like this scattered through the generated files:
+
+```java
+// TODO: Unknown mapping type "EnhancedBasicValue" for property firstName
+private String firstName;
+```
+
+`EnhancedBasicValue` is an internal Hibernate ORM 7.x type that replaced the older `BasicValue`. The `hibernate-tools-ant` FreeMarker template that generates the Java source doesn't recognize it yet. It's a compatibility gap between the tools version and the ORM version. When the template hits an unrecognized mapping type, it falls back to emitting the bare field and leaving a TODO comment instead of generating the full `@Column(name = "FIRST_NAME")` annotation.
+
+**Why Tests Still Pass**
+
+Spring Boot's default `SpringPhysicalNamingStrategy` automatically converts camelCase field names to snake_case column names: `firstName` → `first_name`. H2 is case-insensitive and PostgreSQL stores column names lowercase by default, so both happen to match what the strategy produces. The missing `@Column` annotations don't cause a mismatch.
+
+**When It Would Become a Problem**
+
+- If a column name doesn't follow the camelCase → snake_case convention.
+- If you need explicit `@Column` annotations for documentation or to override the naming strategy.
+
+For a demo project using the default naming strategy against Sakila (which follows snake_case consistently), the generated entities work correctly as-is. The TODOs are noise from a known `hibernate-tools`/Hibernate 7.x incompatibility. You can ignore them.
+
 ## Schema Changes in the Real World
 
 [How Spring Talks to Databases](./how-spring-talks-to-databases#schema-migrations) covers code-first vs. database-first approaches in detail. The short version: code-first is convenient for local development, database-first (Flyway, Liquibase) is safer for production.

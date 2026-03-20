@@ -700,7 +700,7 @@ dependencies {
   // ...
 // highlight-added-start
   def h2Version = '2.4.240'
-  def hibernateVersion = '7.0.2.Final'
+  def hibernateVersion = '7.2.6.Final'
   hibernateTools "com.h2database:h2:\${h2Version}"
   hibernateTools "org.hibernate.tool:hibernate-tools-ant:\${hibernateVersion}"
   hibernateTools "org.hibernate.orm:hibernate-core:\${hibernateVersion}"
@@ -734,14 +734,30 @@ tasks.register('generateEntities') {
     def tempPropsFile = layout.buildDirectory.file("tmp/hibernate-tools.properties").get().asFile
     tempPropsFile.parentFile.mkdirs()
 
+    def h2DbDir = layout.buildDirectory.dir("tmp").get().asFile
+    h2DbDir.mkdirs()
+    h2DbDir.listFiles()?.findAll { it.name.startsWith("sakila-h2") }?.each { it.delete() }
+
+    def h2DbPath = layout.buildDirectory.file("tmp/sakila-h2").get().asFile.absolutePath.replace('\\\\', '/')
+    def sqlPath = sqlFile.asFile.absolutePath.replace('\\\\', '/')
+
+    def h2Loader = new URLClassLoader(
+        configurations.hibernateTools.collect { it.toURI().toURL() } as URL[],
+        ClassLoader.systemClassLoader
+        )
+    def jdbcProps = new java.util.Properties()
+    jdbcProps.setProperty('user', 'sa')
+    jdbcProps.setProperty('password', '')
+    def h2Driver = h2Loader.loadClass('org.h2.Driver').getDeclaredConstructor().newInstance()
+    def initConn = h2Driver.connect("jdbc:h2:file:\${h2DbPath};INIT=RUNSCRIPT FROM '\${sqlPath}'", jdbcProps)
+    initConn.close()
+    h2Loader.close()
+
     def props = new Properties()
     if (basePropsFile.asFile.exists()) {
       basePropsFile.asFile.withInputStream { props.load(it) }
     }
-    props.setProperty(
-        'hibernate.connection.url',
-        "jdbc:h2:mem:sakila;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM '\${sqlFile.asFile.absolutePath.replace('\\', '/')}'"
-        )
+    props.setProperty('hibernate.connection.url', "jdbc:h2:file:\${h2DbPath}")
 
     tempPropsFile.withOutputStream { props.store(it, null) }
 
@@ -761,7 +777,7 @@ tasks.register('generateEntities') {
           jdbcconfiguration(
               propertyfile: tempPropsFile,
               revengfile: revengFile.asFile,
-              packagename: "$\{project.group}.\${project.name}.generated.entity",
+              packagename: "\${project.group}.\${project.name}.generated.entity",
               detectmanytomany: true,
               detectoptimisticlock: true
               )
@@ -794,6 +810,7 @@ tasks.named('compileJava') {
 const BuildGradleKt = () => (
   <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
     {`// highlight-added
+import java.net.URLClassLoader
 import java.util.Properties
 
 plugins {
@@ -808,7 +825,7 @@ val hibernateTools: Configuration by configurations.creating
 dependencies {
   // ...
 // highlight-added-start
-  val hibernateVersion = "7.0.2.Final"
+  val hibernateVersion = "7.2.6.Final"
   val h2Version = "2.4.240"
   hibernateTools("com.h2database:h2:$h2Version")
   hibernateTools("org.hibernate.tool:hibernate-tools-ant:$hibernateVersion")
@@ -845,16 +862,36 @@ tasks.register("generateEntities") {
     val tempPropsFile = layout.buildDirectory.file("tmp/hibernate-tools.properties").get().asFile
     tempPropsFile.parentFile.mkdirs()
 
+    val h2DbDir = layout.buildDirectory.dir("tmp").get().asFile
+    h2DbDir.mkdirs()
+    h2DbDir.listFiles()?.filter { it.name.startsWith("sakila-h2") }?.forEach { it.delete() }
+
+    val h2DbPath =
+        layout.buildDirectory.file("tmp/sakila-h2").get().asFile.absolutePath.replace("\\\\", "/")
+    val sqlPath = sqlFile.absolutePath.replace("\\\\", "/")
+
+    val h2Loader =
+        URLClassLoader(
+            configurations.getByName("hibernateTools").map { it.toURI().toURL() }.toTypedArray(),
+            ClassLoader.getSystemClassLoader(),
+        )
+    val jdbcProps = Properties()
+    jdbcProps.setProperty("user", "sa")
+    jdbcProps.setProperty("password", "")
+    val h2Driver = h2Loader.loadClass("org.h2.Driver").getDeclaredConstructor().newInstance()
+    val initConn =
+        (h2Driver as java.sql.Driver).connect(
+            "jdbc:h2:file:\${h2DbPath};INIT=RUNSCRIPT FROM '\${sqlPath}'",
+            jdbcProps,
+        )
+    initConn!!.close()
+    h2Loader.close()
+
     val props = Properties()
     if (basePropsFile.exists()) {
       basePropsFile.inputStream().use { stream -> props.load(stream) }
     }
-
-    val sakilaSqlPath = sqlFile.absolutePath.replace("\\\\", "/")
-    props.setProperty(
-        "hibernate.connection.url",
-        "jdbc:h2:mem:sakila;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM '$sakilaSqlPath'",
-    )
+    props.setProperty("hibernate.connection.url", "jdbc:h2:file:\${h2DbPath}")
 
     tempPropsFile.outputStream().use { stream -> props.store(stream, null) }
 
@@ -883,9 +920,7 @@ tasks.register("generateEntities") {
       }
     }
 
-    val entityDir =
-        File(destDir, "\${project.group}.\${project.name}.generated.entity".replace('.', '/'))
-    entityDir
+    File(destDir, "\${project.group}.\${project.name}.generated.entity".replace('.', '/'))
         .listFiles()
         ?.filter { it.extension == "java" }
         ?.forEach { javaFile ->
@@ -931,7 +966,7 @@ dependencies {
   // ...
 // highlight-added-start
   def h2Version = '2.4.240'
-  def hibernateVersion = '7.0.2.Final'
+  def hibernateVersion = '7.2.6.Final'
   hibernateTools "com.h2database:h2:\${h2Version}"
   hibernateTools "org.hibernate.tool:hibernate-tools-ant:\${hibernateVersion}"
   hibernateTools "org.hibernate.orm:hibernate-core:\${hibernateVersion}"
@@ -965,14 +1000,30 @@ tasks.register('generateEntities') {
     def tempPropsFile = layout.buildDirectory.file("tmp/hibernate-tools.properties").get().asFile
     tempPropsFile.parentFile.mkdirs()
 
+    def h2DbDir = layout.buildDirectory.dir("tmp").get().asFile
+    h2DbDir.mkdirs()
+    h2DbDir.listFiles()?.findAll { it.name.startsWith("sakila-h2") }?.each { it.delete() }
+
+    def h2DbPath = layout.buildDirectory.file("tmp/sakila-h2").get().asFile.absolutePath.replace('\\\\', '/')
+    def sqlPath = sqlFile.asFile.absolutePath.replace('\\\\', '/')
+
+    def h2Loader = new URLClassLoader(
+        configurations.hibernateTools.collect { it.toURI().toURL() } as URL[],
+        ClassLoader.systemClassLoader
+        )
+    def jdbcProps = new java.util.Properties()
+    jdbcProps.setProperty('user', 'sa')
+    jdbcProps.setProperty('password', '')
+    def h2Driver = h2Loader.loadClass('org.h2.Driver').getDeclaredConstructor().newInstance()
+    def initConn = h2Driver.connect("jdbc:h2:file:\${h2DbPath};INIT=RUNSCRIPT FROM '\${sqlPath}'", jdbcProps)
+    initConn.close()
+    h2Loader.close()
+
     def props = new Properties()
     if (basePropsFile.asFile.exists()) {
       basePropsFile.asFile.withInputStream { props.load(it) }
     }
-    props.setProperty(
-        'hibernate.connection.url',
-        "jdbc:h2:mem:sakila;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM '\${sqlFile.asFile.absolutePath.replace('\\', '/')}'"
-        )
+    props.setProperty('hibernate.connection.url', "jdbc:h2:file:\${h2DbPath}")
 
     tempPropsFile.withOutputStream { props.store(it, null) }
 

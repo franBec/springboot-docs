@@ -17,7 +17,7 @@ While direct contributions to this demo repository are not actively sought, **fe
 - **Persistence Integration**:
   - **CRUD**: Create a new document doing whole CRUD of films.
 
-- Rename "About" to "Misc":
+- "About" section:
   - Move one of the license there and get rid of the other one, MIT license is good enough for everything
   - Create a FAQ document
     - what's your spring boot background?
