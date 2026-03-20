@@ -6,6 +6,7 @@ title: Database Setup
 import Admonition from '@theme/Admonition';
 import Image from '@site/src/components/image';
 import {
+  FileTree,
   FlywayMigrationV3GrantAppUserPrivileges,
   FlywayDockerfile,
   PostgresDockerfile,
@@ -28,6 +29,10 @@ Here's what we're setting up:
 - **A restricted application user** (`sakila_app`) that only has [DML privileges, not DDL](https://www.geeksforgeeks.org/sql/sql-ddl-dql-dml-dcl-tcl-commands/)
 
 The two users are the key security decision here. The admin user (`sakila`) owns the schema and runs migrations. The application connects as `sakila_app`, which can only SELECT, INSERT, UPDATE, and DELETE. If your app connection is compromised, an attacker can't DROP tables or ALTER schema. Small thing, big difference in a breach.
+
+## Files Overview
+
+<FileTree />
 
 ## Flyway Migrations
 

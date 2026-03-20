@@ -782,7 +782,7 @@ export const RestControllerAdvice = () => (
 
 export const Terminal = () => (
   <CollapsibleCodeBlock language="log" title="Terminal">
-    {`pollito in @ springboot-demo-projects  $ curl -s http://localhost:8080/api/films/42 | jq
+    {`curl -s http://localhost:8080/api/films/42 | jq
 {
   "instance": "/api/films/42",
   "status": 200,

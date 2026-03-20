@@ -442,9 +442,9 @@ jobs:
 
 export const VerificationTerminal = () => (
   <CollapsibleCodeBlock
-    language="sh"
+    language="log"
     title="Terminal"
-  >{`pollito in @ springboot-docs  $ curl -s https://sakila-java.pollito.tech/api/films/42 | jq                                                    
+  >{`curl -s https://sakila-java.pollito.tech/api/films/42 | jq                                                    
 {
   "instance": "/api/films/42",
   "status": 200,
@@ -461,7 +461,7 @@ export const VerificationTerminal = () => (
   }
 }
 
-pollito in @ springboot-docs  $ curl -s https://sakila-kt.pollito.tech/api/films/42 | jq
+curl -s https://sakila-kt.pollito.tech/api/films/42 | jq
 {
   "instance": "/api/films/42",
   "status": 200,
@@ -478,7 +478,7 @@ pollito in @ springboot-docs  $ curl -s https://sakila-kt.pollito.tech/api/films
   }
 }
 
-pollito in @ springboot-docs  $ curl -s https://sakila-groovy.pollito.tech/api/films/42 | jq
+curl -s https://sakila-groovy.pollito.tech/api/films/42 | jq
 {
   "instance": "/api/films/42",
   "status": 200,

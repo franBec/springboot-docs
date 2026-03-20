@@ -63,7 +63,7 @@ import Mermaid from '@theme/Mermaid';
 
 export const TerminalCode = () => (
   <CollapsibleCodeBlock
-    language="sh"
+    language="log"
     title="Terminal"
   >{`output`}</CollapsibleCodeBlock>
 );

@@ -1026,7 +1026,7 @@ export const Logback = () => (
 );
 
 export const CurlRequest = () => (
-  <CollapsibleCodeBlock language="sh" title="Terminal">
+  <CollapsibleCodeBlock language="log" title="Terminal">
     {`curl -s --request GET \
   --url http://localhost:8080/api/films/42 \
   --header 'Accept: application/json' \

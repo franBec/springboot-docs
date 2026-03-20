@@ -160,7 +160,7 @@ org.eclipse.jdt.core.formatter.indentation.size=2
   </CollapsibleCodeBlock>
 );
 
-export const BuildGradleJavaSpotless = () => (
+const BuildGradleJava = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
     {`plugins {
   // ...
@@ -191,7 +191,7 @@ tasks.named("build") {
   </CollapsibleCodeBlock>
 );
 
-export const BuildGradleKtsSpotless = () => (
+const BuildGradleKts = () => (
   <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
   // ...
@@ -216,7 +216,7 @@ tasks.named("build") {
   </CollapsibleCodeBlock>
 );
 
-export const BuildGradleGroovySpotless = () => (
+const BuildGradleGroovy = () => (
   <CollapsibleCodeBlock language="groovy" title="build.gradle">
     {`plugins {
 // ...
@@ -246,7 +246,21 @@ tasks.named("build") {
   </CollapsibleCodeBlock>
 );
 
-export const FilmJava = () => (
+export const BuildGradle = () => (
+  <Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+      <BuildGradleJava />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+      <BuildGradleKts />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+      <BuildGradleGroovy />
+    </TabItem>
+  </Tabs>
+)
+
+const DomainModelJava = () => (
   <CollapsibleCodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/domain/model/Film.java"
@@ -277,7 +291,7 @@ public class Film {
   </CollapsibleCodeBlock>
 );
 
-export const FilmKt = () => (
+const DomainModelKt = () => (
   <CollapsibleCodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt"
@@ -298,7 +312,7 @@ data class Film(
   </CollapsibleCodeBlock>
 );
 
-export const FilmGroovy = () => (
+const DomainModelGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy"
@@ -323,6 +337,20 @@ class Film {
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );
+
+export const DomainModel = () => (
+  <Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+      <DomainModelJava />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+      <DomainModelKt />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+      <DomainModelGroovy />
+    </TabItem>
+  </Tabs>
+)
 
 const FindByIdPortInJava = () => (
   <CollapsibleCodeBlock
@@ -387,6 +415,20 @@ interface FindByIdPortIn {
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
+);
+
+export const PrimaryPort = () => (
+  <Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+      <FindByIdPortInJava />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+      <FindByIdPortInKt />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+      <FindByIdPortInGroovy />
+    </TabItem>
+  </Tabs>
 );
 
 const FindByIdPortInImplKt = () => (
@@ -468,24 +510,21 @@ class FindByIdPortInImpl implements FindByIdPortIn {
   </CollapsibleCodeBlock>
 );
 
-export const PrimaryPort = () => (
+export const PrimaryPortImpl = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <FindByIdPortInJava />
       <FindByIdPortInImplJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <FindByIdPortInKt />
       <FindByIdPortInImplKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <FindByIdPortInGroovy />
       <FindByIdPortInImplGroovy />
     </TabItem>
   </Tabs>
 );
 
-const FilmResponseJava = () => (
+const RestDtoResponseJava = () => (
   <CollapsibleCodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/dto/FilmResponse.java"
@@ -516,7 +555,68 @@ public class FilmResponse {
   </CollapsibleCodeBlock>
 );
 
-const FilmRestMapperJava = () => (
+const RestDtoResponseKt = () => (
+  <CollapsibleCodeBlock
+    language="kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/dto/FilmResponse.kt"
+  >
+    {`// highlight-added-start
+package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest.dto
+
+data class FilmResponse(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val releaseYear: Int,
+    val rating: String,
+    val length: Int,
+    val language: String,
+)
+// highlight-added-end`}
+  </CollapsibleCodeBlock>
+);
+
+const RestDtoResponseGroovy = () => (
+  <CollapsibleCodeBlock
+    language="groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/dto/FilmResponse.groovy"
+  >
+    {`// highlight-added-start
+package dev.pollito.spring_groovy.sakila.film.adapter.in.rest.dto
+
+import groovy.transform.Canonical
+import groovy.transform.CompileStatic
+
+@Canonical
+@CompileStatic
+class FilmResponse {
+  Integer id
+  String title
+  String description
+  Integer releaseYear
+  String rating
+  Integer length
+  String language
+}
+// highlight-added-end`}
+  </CollapsibleCodeBlock>
+);
+
+export const RestDtoResponse = () => (
+  <Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+      <RestDtoResponseJava />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+      <RestDtoResponseKt />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+      <RestDtoResponseGroovy />
+    </TabItem>
+  </Tabs>
+);
+
+const RestMapperJava = () => (
   <CollapsibleCodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
@@ -551,60 +651,7 @@ public class FilmRestMapper {
   </CollapsibleCodeBlock>
 );
 
-const FilmRestControllerJava = () => (
-  <CollapsibleCodeBlock
-    language="java"
-    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
-  >
-    {`// highlight-added-start
-package dev.pollito.spring_java.sakila.film.adapter.in.rest;
-
-import dev.pollito.spring_java.sakila.film.adapter.in.rest.dto.FilmResponse;
-import dev.pollito.spring_java.sakila.film.domain.port.in.FindByIdPortIn;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-@RequestMapping("/api/films")
-@RequiredArgsConstructor
-public class FilmRestController {
-  private final FindByIdPortIn findByIdPortIn;
-  private final FilmRestMapper mapper;
-
-  @GetMapping("/{id}")
-  public FilmResponse findById(@PathVariable Integer id) {
-    return mapper.convert(findByIdPortIn.findById(id));
-  }
-}
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
-const FilmResponseKt = () => (
-  <CollapsibleCodeBlock
-    language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/dto/FilmResponse.kt"
-  >
-    {`// highlight-added-start
-package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest.dto
-
-data class FilmResponse(
-    val id: Int,
-    val title: String,
-    val description: String,
-    val releaseYear: Int,
-    val rating: String,
-    val length: Int,
-    val language: String,
-)
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
-const FilmRestMapperKt = () => (
+const RestMapperKt = () => (
   <CollapsibleCodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
@@ -637,63 +684,7 @@ class FilmRestMapper {
   </CollapsibleCodeBlock>
 );
 
-const FilmRestControllerKt = () => (
-  <CollapsibleCodeBlock
-    language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
-  >
-    {`// highlight-added-start
-package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
-
-import dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest.dto.FilmResponse
-import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindByIdPortIn
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-
-@RestController
-@RequestMapping("/api/films")
-class FilmRestController(
-    private val findByIdPortIn: FindByIdPortIn,
-    private val mapper: FilmRestMapper,
-) {
-  @GetMapping("/{id}")
-  fun findFilmById(@PathVariable id: Int): FilmResponse? {
-    return mapper.convert(findByIdPortIn.findById(id))
-  }
-}
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
-const FilmResponseGroovy = () => (
-  <CollapsibleCodeBlock
-    language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/dto/FilmResponse.groovy"
-  >
-    {`// highlight-added-start
-package dev.pollito.spring_groovy.sakila.film.adapter.in.rest.dto
-
-import groovy.transform.Canonical
-import groovy.transform.CompileStatic
-
-@Canonical
-@CompileStatic
-class FilmResponse {
-  Integer id
-  String title
-  String description
-  Integer releaseYear
-  String rating
-  Integer length
-  String language
-}
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
-const FilmRestMapperGroovy = () => (
+const RestMapperGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy"
@@ -723,7 +714,83 @@ final class FilmRestMapper {
   </CollapsibleCodeBlock>
 );
 
-const FilmRestControllerGroovy = () => (
+export const RestMapper = () => (
+  <Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+      <RestMapperJava />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+      <RestMapperKt />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+      <RestMapperGroovy />
+    </TabItem>
+  </Tabs>
+);
+
+const RestControllerJava = () => (
+  <CollapsibleCodeBlock
+    language="java"
+    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
+  >
+    {`// highlight-added-start
+package dev.pollito.spring_java.sakila.film.adapter.in.rest;
+
+import dev.pollito.spring_java.sakila.film.adapter.in.rest.dto.FilmResponse;
+import dev.pollito.spring_java.sakila.film.domain.port.in.FindByIdPortIn;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/films")
+@RequiredArgsConstructor
+public class FilmRestController {
+  private final FindByIdPortIn findByIdPortIn;
+  private final FilmRestMapper mapper;
+
+  @GetMapping("/{id}")
+  public FilmResponse findById(@PathVariable Integer id) {
+    return mapper.convert(findByIdPortIn.findById(id));
+  }
+}
+// highlight-added-end`}
+  </CollapsibleCodeBlock>
+);
+
+const RestControllerKt = () => (
+  <CollapsibleCodeBlock
+    language="kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
+  >
+    {`// highlight-added-start
+package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
+
+import dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest.dto.FilmResponse
+import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindByIdPortIn
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("/api/films")
+class FilmRestController(
+    private val findByIdPortIn: FindByIdPortIn,
+    private val mapper: FilmRestMapper,
+) {
+  @GetMapping("/{id}")
+  fun findFilmById(@PathVariable id: Int): FilmResponse? {
+    return mapper.convert(findByIdPortIn.findById(id))
+  }
+}
+// highlight-added-end`}
+  </CollapsibleCodeBlock>
+);
+
+const RestControllerGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
@@ -760,29 +827,23 @@ class FilmRestController {
   </CollapsibleCodeBlock>
 );
 
-export const PrimaryAdapter = () => (
+export const RestController = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <FilmResponseJava />
-      <FilmRestMapperJava />
-      <FilmRestControllerJava />
+      <RestControllerJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <FilmResponseKt />
-      <FilmRestMapperKt />
-      <FilmRestControllerKt />
+      <RestControllerKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <FilmResponseGroovy />
-      <FilmRestMapperGroovy />
-      <FilmRestControllerGroovy />
+      <RestControllerGroovy />
     </TabItem>
   </Tabs>
 );
 
 export const Terminal = () => (
-  <CollapsibleCodeBlock language="sh" title="Terminal">
-    {`pollito in @ springboot-demo-projects  $ curl -s http://localhost:8080/api/films/42 | jq
+  <CollapsibleCodeBlock language="log" title="Terminal">
+    {`curl -s http://localhost:8080/api/films/42 | jq
 {
   "id": 42,
   "title": "ACADEMY DINOSAUR",

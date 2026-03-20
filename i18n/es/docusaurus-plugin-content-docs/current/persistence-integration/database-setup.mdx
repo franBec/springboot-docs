@@ -6,6 +6,7 @@ title: Database Setup
 import Admonition from '@theme/Admonition';
 import Image from '@site/src/components/image';
 import {
+  FileTree,
   FlywayMigrationV3GrantAppUserPrivileges,
   FlywayDockerfile,
   PostgresDockerfile,
@@ -28,6 +29,10 @@ Esto es lo que vamos a configurar:
 - **Un usuario de aplicación restringido** (`sakila_app`) que solo tiene [privilegios DML, no DDL](https://www.geeksforgeeks.org/sql/sql-ddl-dql-dml-dcl-tcl-commands/)
 
 Acá está la clave de seguridad: los dos usuarios. El usuario admin (`sakila`) es el dueño del esquema y ejecuta las migraciones. La aplicación se conecta como `sakila_app`, que solo puede hacer SELECT, INSERT, UPDATE y DELETE. Si alguien compromete la conexión de tu app, un atacante no puede hacer DROP de tablas ni ALTER del esquema. Parece poco, pero en caso de una brecha de seguridad hace toda la diferencia.
+
+## Archivos involucrados
+
+<FileTree />
 
 ## Migraciones con Flyway
 

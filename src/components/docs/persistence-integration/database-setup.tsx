@@ -1,6 +1,116 @@
 import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import { FileTreeInfo } from '@site/src/components/file-tree-info';
+
+const FileTreeJava = () => (
+  <CollapsibleCodeBlock language="log" title="File Tree">
+    {`.
+├── ...
+// highlight-added-start
+├── database/
+│   ├── flyway/
+│   │   ├── Dockerfile
+│   │   └── migrations/
+│   │       ├── V1__create_sakila_schema.sql
+│   │       ├── V2__insert_sample_data.sql
+│   │       └── V3__grant_app_user_privileges.sql
+│   └── postgres/
+│       ├── Dockerfile
+│       └── init-users.sh
+// highlight-added-end
+// highlight-modified
+├── docker-compose.yml
+└── spring-java/
+    ├── ...
+// highlight-modified
+    ├── build.gradle
+    └── src
+        └── main
+            └── resources
+                ├── ...
+// highlight-modified
+                └── application.yaml`}
+  </CollapsibleCodeBlock>
+);
+
+const FileTreeKt = () => (
+  <CollapsibleCodeBlock language="log" title="File Tree">
+    {`.
+├── ...
+// highlight-added-start
+├── database/
+│   ├── flyway/
+│   │   ├── Dockerfile
+│   │   └── migrations/
+│   │       ├── V1__create_sakila_schema.sql
+│   │       ├── V2__insert_sample_data.sql
+│   │       └── V3__grant_app_user_privileges.sql
+│   └── postgres/
+│       ├── Dockerfile
+│       └── init-users.sh
+// highlight-added-end
+// highlight-modified
+├── docker-compose.yml
+└── spring-kotlin/
+    ├── ...
+// highlight-modified
+    ├── build.gradle.kts
+    └── src
+        └── main
+            └── resources
+                ├── ...
+// highlight-modified
+                └── application.yaml`}
+  </CollapsibleCodeBlock>
+);
+
+const FileTreeGroovy = () => (
+  <CollapsibleCodeBlock language="log" title="File Tree">
+    {`.
+├── ...
+// highlight-added-start
+├── database/
+│   ├── flyway/
+│   │   ├── Dockerfile
+│   │   └── migrations/
+│   │       ├── V1__create_sakila_schema.sql
+│   │       ├── V2__insert_sample_data.sql
+│   │       └── V3__grant_app_user_privileges.sql
+│   └── postgres/
+│       ├── Dockerfile
+│       └── init-users.sh
+// highlight-added-end
+// highlight-modified
+├── docker-compose.yml
+└── spring-groovy/
+    ├── ...
+// highlight-modified
+    ├── build.gradle
+    └── src
+        └── main
+            └── resources
+                ├── ...
+// highlight-modified
+                └── application.yaml`}
+  </CollapsibleCodeBlock>
+);
+
+export const FileTree = () => (
+  <FileTreeInfo>
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
+        <FileTreeJava />
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+        <FileTreeKt />
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+        <FileTreeGroovy />
+      </TabItem>
+    </Tabs>
+  </FileTreeInfo>
+);
 
 export const FlywayMigrationV3GrantAppUserPrivileges = () => (
   <CollapsibleCodeBlock
@@ -278,7 +388,7 @@ export const ApplicationYaml = () => (
 
 export const TerminalCurl = () => (
   <CollapsibleCodeBlock language="log" title="Terminal">
-    {`$ curl -s https://sakila-java.pollito.tech/api/films/1 | jq
+    {`curl -s https://sakila-java.pollito.tech/api/films/1 | jq
 {
   "instance": "/api/films/1",
   "status": 200,

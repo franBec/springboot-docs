@@ -1323,7 +1323,7 @@ export const RequestFlowSequenceDiagram = () => (
 
 export const TerminalCurl = () => (
   <CollapsibleCodeBlock language="log" title="Terminal">
-    {`$ curl -s http://localhost:8080/api/films/1 | jq
+    {`curl -s http://localhost:8080/api/films/1 | jq
 {
   "instance": "/api/films/1",
   "status": 200,

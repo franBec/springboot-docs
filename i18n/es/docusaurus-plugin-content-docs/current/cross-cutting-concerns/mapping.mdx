@@ -15,64 +15,55 @@ import {
 
 <GithubTagInfo tag="mapping" />
 
-<Admonition type="info" title="Por Qué Mapping Está Aquí">
+<Admonition type="info" title="Por qué mapping está aquí">
   Mapping no es técnicamente un cross-cutting concern. No es un filter, aspect,
   o interceptor. Pero lo encontrarás tan frecuentemente en proyectos reales que
   vale la pena configurarlo temprano con la ayuda de una librería junto con tus
   otras decisiones de infraestructura. Por eso lo cubrimos aquí.
 </Admonition>
 
-Imaginate un proyecto grande con algunas docenas de APIs, y cientos de conversiones Model → DTO... Hacer esto manualmente puede rápidamente crear mucho código boilerplate, ser propenso a errores, y consumir mucho tiempo. Por suerte para nosotros, hay múltiples [frameworks de mapeo de objetos](https://www.baeldung.com/java-performance-mapping-frameworks).
+En el documento de [primer endpoint](/lets-create-a-spring-boot-project/first-endpoint), `FilmRestMapper` era una clase escrita a mano que convertía un modelo de dominio `Film` en un DTO `FilmResponse` campo por campo. Eso funciona para siete campos. Deja de ser aceptable cuando hay decenas de campos, objetos anidados y conversiones de tipo que gestionar, y nunca genera errores en tiempo de compilación cuando se agrega un campo nuevo al dominio pero se olvida en el mapper.
 
-## ¿Cómo funciona un Mapper?
+Este documento reemplaza el mapper escrito a mano con una librería especializada: [MapStruct](https://mapstruct.org/) para Java y Kotlin, [ModelMapper](https://modelmapper.org/) para Groovy.
 
-### MapStruct Spring Extensions
-
-**Para aplicaciones Spring Boot en Java/Kotlin**, recomiendo [MapStruct Spring Extensions](https://mapstruct.org/documentation/spring-extensions/reference/html/), un procesador de anotaciones diseñado para complementar el proyecto core de [MapStruct](https://mapstruct.org/) con características específicas del Spring Framework.
-
-MapStruct funciona a través de **generación de código en tiempo de compilación**. Cuando construís tu proyecto, el procesador de anotaciones de MapStruct escanea tus interfaces de mapper y genera clases de implementación concretas con llamadas plain getter/setter (el mismo código boilerplate que escribirías a mano, pero automatizado).
-
-Este enfoque ofrece varios beneficios:
-
-- **Rendimiento**: Sin overhead en tiempo de ejecución ya que los mapeos se resuelven durante la compilación
-- **Seguridad de tipos**: Los errores de mapeo se capturan en tiempo de compilación, no en producción
-- **Debuggeable**: El código generado es legible y se puede debuggear paso a paso
-
-### ModelMapper
-
-**Para aplicaciones Groovy Spring Boot**, [la naturaleza dinámica de Groovy entra en conflicto con la generación de código en tiempo de compilación de MapStruct](https://stackoverflow.com/questions/72197127/mapstruct-with-groovy). Por eso recomiendo [ModelMapper](https://modelmapper.org/).
-
-En lugar de generar código en tiempo de compilación, inspecciona los objetos de origen y destino en tiempo de ejecución usando [Java's Reflection API](https://www.baeldung.com/java-reflection) para descubrir campos, compararlos por nombre/convención, y copiar valores.
-
-En tiempo de ejecución, ModelMapper:
-
-1. Inspecciona la clase de origen para encontrar: `id`, `title`, `releaseYear`, ...
-2. Inspecciona la clase de destino para encontrar: `id`, `title`, `releaseYear`, ...
-3. Compara propiedades por convención de nombres
-4. Crea el mapeo y copia valores via reflection
-
-Este enfoque ofrece diferentes compensaciones:
-
-- **Flexibilidad**: Funciona sin problemas con el tipado dinámico y metaprogramming de Groovy
-- **Menos configuración**: Automáticamente compara propiedades por convención sin mapeo de campos explícito
-- **Costo en tiempo de ejecución**: La reflection es más lenta que las llamadas de método directo, aunque ModelMapper cachea mapeos para minimizar overhead
-
-## Agregando un Mapper a la aplicación Spring Boot
+## Archivos modificados
 
 <FileTree />
 
-1. Agregá las dependencias:
+El archivo de build recibe nuevas dependencias, se agrega una clase de configuración para integrar la librería de mapping con Spring, y `FilmRestMapper` se reemplaza. Para Groovy, el controller también cambia porque el mapper ya no es una utilidad estática, sino un bean gestionado por Spring.
 
-   <BuildGradle />
+## Agregar la dependencia
 
-2. Configurá el Mapper:
+<BuildGradle />
 
-   <MapperConfig />
+**Java y Kotlin** usan MapStruct con sus extensiones de Spring. Las extensiones registran automáticamente cada `@Mapper` como un converter de `ConversionService` de Spring, lo que elimina la necesidad de inyectar mappers individuales en las clases que los necesitan. Kotlin además requiere el plugin `kapt` porque MapStruct genera código en tiempo de compilación mediante procesamiento de anotaciones, y `kapt` es el ejecutor de procesadores de anotaciones de Kotlin.
 
-3. Reemplazá el mapper manual con la interface de MapStruct/ModelMapper:
+**Groovy** usa ModelMapper, una librería basada en reflection. A diferencia de MapStruct, no requiere procesamiento de anotaciones. Funciona completamente en tiempo de ejecución, haciendo coincidir campos por nombre y tipo.
 
-   <FilmRestMapper />
+## Configurar la librería de mapping
 
-4. **Solo Groovy**: Actualiza la clase `RestController` para inyectar el mapper, ya no usa el enfoque de static import.
+Antes de definir cualquier mapper, cada módulo necesita una pequeña clase de configuración.
 
-   <FilmRestControllerGroovy />
+<MapperConfig />
+
+**Java y Kotlin** declaran `MapperSpringConfig`, una interfaz anotada con `@MapperConfig` y `@SpringMapperConfig`. Esto le indica a MapStruct dos cosas: usar `"spring"` como modelo de componente (para que los mappers generados sean beans de Spring), y dónde ubicar el `ConversionServiceAdapter` generado que registra todos los converters en el `ConversionService` de Spring.
+
+**Groovy** declara `ModelMapperConfig`, una clase `@Configuration` estándar que expone un bean `ModelMapper`. ModelMapper no tiene estado y es thread-safe, por lo que una única instancia compartida en toda la aplicación es la elección correcta.
+
+## Reemplazar FilmRestMapper
+
+<FilmRestMapper />
+
+**Java y Kotlin** ahora declaran `FilmRestMapper` como una interfaz. La anotación `@Mapper(config = MapperSpringConfig.class)` le indica a MapStruct que genere una implementación gestionada por Spring en tiempo de compilación. Extender `Converter<Film, FilmResponse>` integra el mapper en el `ConversionService` de Spring, por lo que en cualquier lugar donde Spring sepa cómo convertir tipos, este mapper se utilizará automáticamente.
+
+La anotación `@Nullable` en la versión Java es una anotación de nullability de jspecify. MapStruct la respeta y genera una implementación null-safe. Si el origen es `null`, el converter retorna `null` sin un `NullPointerException`.
+
+**Groovy** reemplaza la clase de utilidad estática con un `@Component` de Spring. Recibe el bean `ModelMapper` mediante inyección por constructor y delega la conversión en él. `ModelMapper.map(source, FilmResponse)` inspecciona ambas clases en tiempo de ejecución y copia los campos coincidentes por nombre y tipo.
+
+## Actualizar el controller (solo Groovy)
+
+El controller original de Groovy importaba `FilmRestMapper.convert` como un método estático. Ahora que `FilmRestMapper` es un bean de Spring, el controller necesita recibirlo mediante inyección.
+
+<FilmRestControllerGroovy />
+
+Los controllers de Java y Kotlin no necesitan actualizarse. Ya inyectaban `FilmRestMapper` como campo, y esa inyección sigue funcionando igual, solo que ahora apunta a la implementación generada por MapStruct en lugar de la clase escrita a mano.

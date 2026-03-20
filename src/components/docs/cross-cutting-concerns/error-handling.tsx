@@ -275,8 +275,8 @@ export const ControllerAdvice = () => (
 );
 
 export const NotFoundErrorTerminal = () => (
-  <CollapsibleCodeBlock language="sh" title="Terminal">
-    {`$ curl -s http://localhost:8080 | jq; curl -sw "→ HTTP %{http_code}\\n" -o /dev/null http://localhost:8080
+  <CollapsibleCodeBlock language="log" title="Terminal">
+    {`curl -s http://localhost:8080 | jq; curl -sw "→ HTTP %{http_code}\\n" -o /dev/null http://localhost:8080
 {
   "detail": "No static resource  for request '/'.",
   "instance": "/",
