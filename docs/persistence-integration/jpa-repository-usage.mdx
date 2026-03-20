@@ -163,3 +163,13 @@ With everything wired up, here's what happens when a request hits the applicatio
 Build and run the application with the `dev` profile, then hit the endpoint:
 
 <TerminalCurl />
+
+## A Note on FindByIdPortInImpl
+
+`FindByIdPortInImpl` does very little: it receives a film ID, calls the secondary port, and returns the result. No business logic, no transformation. Just pass-through delegation.
+
+In the context of hexagonal architecture, that's perfectly fine. The primary port implementation is the domain's orchestration point. The domain doesn't need to know whether the data comes from a relational database, a third-party API, or an in-memory cache. If tomorrow you replace the JPA adapter with a REST client that calls an external service, the domain remains completely untouched. The same goes for the inbound side: swapping REST controllers for SOAP, GraphQL, or a message consumer requires no changes to the domain layer.
+
+In practice, though, it's common to come across codebases where the domain directly injects a `JpaRepository`, a `WebClient`, or whatever the outbound adapter happens to use. That shortcut works, and it eliminates the ceremony of defining port interfaces and their implementations. The cost only becomes apparent when a swap is needed: the adapter's details have leaked into the domain, and untangling them requires touching code that was supposed to be insulated from that kind of change.
+
+Whether the indirection is worth the overhead is a judgement call. Hexagonal architecture makes the boundary explicit; skipping it trades long-term flexibility for short-term simplicity.

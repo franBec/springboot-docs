@@ -104,7 +104,7 @@ Un perfil de test separado configura la base de datos para tests. La diferencia 
 
 <ApplicationTestYaml />
 
-Ambos `src/test/resources/` contienen sus propias copias de `sakila-schema.sql` y `sakila-data.sql`. El archivo de esquema es idéntico al de `main/resources`. El archivo de data es intencionalmente mucho más pequeño (alrededor de 238 líneas vs ~47,400 en el dataset completo). Ya que `@DataJpaTest` corre estos scripts antes de cada clase de test que declara `@Sql`, cargar el dataset completo en cada corrida de tests sería innecesariamente lento.
+Ambos `src/test/resources/` contienen sus propias copias de `sakila-schema.sql` y `sakila-data.sql`. El archivo de esquema es idéntico al de `main/resources`. El archivo de data es intencionalmente mucho más pequeño (alrededor de 238 líneas vs. ~47,400 en el dataset completo). Ya que `@DataJpaTest` corre estos scripts antes de cada clase de test que declara `@Sql`, cargar el dataset completo en cada corrida de tests sería innecesariamente lento.
 
 ### Integration Test — @DataJpaTest
 
@@ -151,3 +151,13 @@ Con todo conectado, acá está qué pasa cuando un request le pega a la aplicaci
 Buildeá y corré la aplicación con el perfil `dev`, entonces le pegas al endpoint:
 
 <TerminalCurl />
+
+## Una Nota Sobre FindByIdPortInImpl
+
+`FindByIdPortInImpl` hace muy poco: recibe un ID de película, llama al puerto secundario y devuelve el resultado. Sin lógica de negocio, sin transformaciones. Solo delegación de paso.
+
+En el contexto de la arquitectura hexagonal, eso está perfectamente bien. La implementación del puerto primario es el punto de orquestación del dominio. El dominio no necesita saber si los datos vienen de una base de datos relacional, una API de terceros, o un caché en memoria. Si mañana reemplazás el adaptador JPA con un cliente REST que llama a un servicio externo, el dominio permanece completamente intacto. Lo mismo aplica del lado de entrada: cambiar controladores REST por SOAP, GraphQL, o un consumidor de mensajes no requiere ningún cambio en la capa de dominio.
+
+En la práctica, sin embargo, es común encontrarse con codebases donde el dominio inyecta directamente un `JpaRepository`, un `WebClient`, o lo que sea que use el adaptador de salida. Ese atajo funciona, y elimina la ceremonia de definir interfaces de puertos y sus implementaciones. El costo solo se hace evidente cuando se necesita un cambio: los detalles del adaptador se filtraron al dominio, y desenredarlos requiere tocar código que se suponía estaba aislado de ese tipo de cambio.
+
+Si la indirección vale la pena o no es una decisión del desarrollador. La arquitectura hexagonal hace el límite explícito; saltársela cambia la flexibilidad a largo plazo por simplicidad a corto plazo.
