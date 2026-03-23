@@ -17,47 +17,6 @@ export const FileTree = () => (
   </FileTreeInfo>
 );
 
-export const Dependabot = () => (
-  <CollapsibleCodeBlock language="yaml" title=".github/dependabot.yml">
-    {`// highlight-added-start
-version: 2
-updates:
-  - package-ecosystem: "gradle"
-    directory: "/spring_java"
-    schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "06:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "deps"
-
-  - package-ecosystem: "gradle"
-    directory: "/spring_kotlin"
-    schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "06:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "deps"
-
-  - package-ecosystem: "gradle"
-    directory: "/spring_groovy"
-    schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "06:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "deps"
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
 export const CodeQL = () => (
   <CollapsibleCodeBlock language="yaml" title=".github/workflows/codeql.yml">
     {`// highlight-added-start
