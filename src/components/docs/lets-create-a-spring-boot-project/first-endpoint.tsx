@@ -21,83 +21,82 @@ export const FilmJson = () => (
 
 const FileTreeJava = () => (
   <CollapsibleCodeBlock language="log" title="File Tree">
-    {`// highlight-modified
+    {`.
+// highlight-modified
 ├── build.gradle
- // highlight-added
+// highlight-added
 ├── greclipse.properties
 ├── ...
-└── src
+└── src/
     ├── main
     │   ├── java
-    │   │   └── dev/pollito/spring_java/sakila
-    │   │       ├── film
-    │   │       │   ├── adapter
-    │   │       │   │   └── in
-    │   │       │   │       └── rest
-    │   │       │   │           ├── dto
+    │   │   └── dev/pollito/spring_java
+    │   │       ├── sakila
+    │   │       │   └── film
+    │   │       │       ├── adapter
+    │   │       │       │   └── in/rest
+    │   │       │       │       ├── dto
 // highlight-added-start
-    │   │       │   │           │   └── FilmResponse.java
-    │   │       │   │           ├── FilmRestMapper.java
-    │   │       │   │           └── FilmRestController.java
+    │   │       │       │       │   └── FilmResponse.java
+    │   │       │       │       ├── FilmRestController.java
+    │   │       │       │       └── FilmRestMapper.java
 // highlight-added-end
-    │   │       │   └── domain
-    │   │       │       ├── model
+    │   │       │       └── domain
+    │   │       │           ├── model
 // highlight-added
-    │   │       │       │   └── Film.java
-    │   │       │       └── port
-    │   │       │           └── in
-// highlight-added-start
-    │   │       │               ├── FindByIdPortIn.java
-    │   │       │               └── FindByIdPortInImpl.java
-// highlight-added-end
+    │   │       │           │   └── Film.java
+    │   │       │           ├── port/in
+// highlight-added
+    │   │       │           │   └── FilmUseCases.java
+    │   │       │           └── service
+// highlight-added
+    │   │       │               └── FilmUseCasesImpl.java
     │   │       └── ...
-    │   └── resources
-    │       └── ...
-    └── test
-        └── ...`}
+    │   └── ...
+    └── ...`}
   </CollapsibleCodeBlock>
 );
 
 const FileTreeKt = () => (
   <CollapsibleCodeBlock language="log" title="File Tree">
-    {`// highlight-modified
+    {`.
+// highlight-modified
 ├── build.gradle.kts
 ├── ...
 └── src
     ├── main
     │   ├── kotlin
-    │   │   └── dev/pollito/spring_kotlin/sakila
-    │   │       ├── film
-    │   │       │   ├── adapter
-    │   │       │   │   └── in
-    │   │       │   │       └── rest
-    │   │       │   │           ├── dto
+    │   │   └── dev/pollito/spring_kotlin
+    │   │       ├── sakila
+    │   │       │   └── film
+    │   │       │       ├── adapter
+    │   │       │       │   └── in/rest
+    │   │       │       │       ├── dto
 // highlight-added-start
-    │   │       │   │           │   └── FilmResponse.kt
-    │   │       │   │           ├── FilmRestMapper.kt
-    │   │       │   │           └── FilmRestController.kt
+    │   │       │       │       │   └── FilmResponse.kt
+    │   │       │       │       ├── FilmRestController.kt
+    │   │       │       │       └── FilmRestMapper.kt
 // highlight-added-end
-    │   │       │   └── domain
-    │   │       │       ├── model
+    │   │       │       └── domain
+    │   │       │           ├── model
 // highlight-added
-    │   │       │       │   └── Film.kt
-    │   │       │       └── port
-    │   │       │           └── in
-// highlight-added-start
-    │   │       │               ├── FindByIdPortIn.kt
-    │   │       │               └── FindByIdPortInImpl.kt
-// highlight-added-end
+    │   │       │           │   └── Film.kt
+    │   │       │           ├── port/in
+// highlight-added
+    │   │       │           │   └── FilmUseCases.kt
+    │   │       │           └── service
+// highlight-added
+    │   │       │               └── FilmUseCasesImpl.kt
     │   │       └── ...
-    │   └── resources
-    │       └── ...
-    └── test
-        └── ...`}
+    │   └── ...
+    └── ...`}
   </CollapsibleCodeBlock>
 );
 
 const FileTreeGroovy = () => (
   <CollapsibleCodeBlock language="log" title="File Tree">
-    {`// highlight-modified
+    {`.
+// highlight-modified
 ├── build.gradle
 // highlight-added
 ├── greclipse.properties
@@ -105,32 +104,30 @@ const FileTreeGroovy = () => (
 └── src
     ├── main
     │   ├── groovy
-    │   │   └── dev/pollito/spring_groovy/sakila
-    │   │       ├── film
-    │   │       │   ├── adapter
-    │   │       │   │   └── in
-    │   │       │   │       └── rest
-    │   │       │   │           ├── dto
+    │   │   └── dev/pollito/spring_groovy
+    │   │       ├── sakila
+    │   │       │   └── film
+    │   │       │       ├── adapter
+    │   │       │       │   └── in/rest
+    │   │       │       │       ├── dto
 // highlight-added-start
-    │   │       │   │           │   └── FilmResponse.groovy
-    │   │       │   │           ├── FilmRestMapper.groovy
-    │   │       │   │           └── FilmRestController.groovy
+    │   │       │       │       │   └── FilmResponse.groovy
+    │   │       │       │       ├── FilmRestController.groovy
+    │   │       │       │       └── FilmRestMapper.groovy
 // highlight-added-end
-    │   │       │   └── domain
-    │   │       │       ├── model
+    │   │       │       └── domain
+    │   │       │           ├── model
 // highlight-added
-    │   │       │       │   └── Film.groovy
-    │   │       │       └── port
-    │   │       │           └── in
-// highlight-added-start
-    │   │       │               ├── FindByIdPortIn.groovy
-    │   │       │               └── FindByIdPortInImpl.groovy
-// highlight-added-end
+    │   │       │           │   └── Film.groovy
+    │   │       │           ├── port/in
+// highlight-added
+    │   │       │           │   └── FilmUseCases.groovy
+    │   │       │           └── service
+// highlight-added
+    │   │       │               └── FilmUseCasesImpl.groovy
     │   │       └── ...
-    │   └── resources
-    │       └── ...
-    └── test
-        └── ...`}
+    │   └── ...
+    └── ...`}
   </CollapsibleCodeBlock>
 );
 
@@ -352,36 +349,85 @@ export const DomainModel = () => (
   </Tabs>
 )
 
-const FindByIdPortInJava = () => (
+const PrimaryPortJava = () => (
   <CollapsibleCodeBlock
     language="java"
-    title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindByIdPortIn.java"
+    title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java"
   >
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.domain.port.in;
 
 import dev.pollito.spring_java.sakila.film.domain.model.Film;
 
-public interface FindByIdPortIn {
+public interface FilmUseCases {
   Film findById(Integer id);
 }
 // highlight-added-end`}
   </CollapsibleCodeBlock>
 );
 
-const FindByIdPortInImplJava = () => (
+const PrimaryPortKt = () => (
   <CollapsibleCodeBlock
-    language="java"
-    title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindByIdPortInImpl.java"
+    language="kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt"
   >
     {`// highlight-added-start
-package dev.pollito.spring_java.sakila.film.domain.port.in;
+package dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`
+
+import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
+
+interface FilmUseCases {
+  fun findById(id: Int): Film
+}
+// highlight-added-end`}
+  </CollapsibleCodeBlock>
+);
+
+const PrimaryPortGroovy = () => (
+  <CollapsibleCodeBlock
+    language="groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindByIdPortIn.groovy"
+  >
+    {`// highlight-added-start
+package dev.pollito.spring_groovy.sakila.film.domain.port.in
+
+import dev.pollito.spring_groovy.sakila.film.domain.model.Film
+
+interface FilmUseCases {
+  Film findById(Integer id)
+}
+// highlight-added-end`}
+  </CollapsibleCodeBlock>
+);
+
+export const PrimaryPort = () => (
+  <Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+      <PrimaryPortJava />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+      <PrimaryPortKt />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+      <PrimaryPortGroovy />
+    </TabItem>
+  </Tabs>
+);
+
+const PrimaryPortImplJava = () => (
+  <CollapsibleCodeBlock
+    language="java"
+    title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java"
+  >
+    {`// highlight-added-start
+package dev.pollito.spring_java.sakila.film.domain.service;
 
 import dev.pollito.spring_java.sakila.film.domain.model.Film;
+import dev.pollito.spring_java.sakila.film.domain.port.in.FilmUseCases;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FindByIdPortInImpl implements FindByIdPortIn {
+public class FilmUseCasesImpl implements FilmUseCases {
   @Override
   public Film findById(Integer id) {
     return Film.builder()
@@ -400,50 +446,20 @@ public class FindByIdPortInImpl implements FindByIdPortIn {
   </CollapsibleCodeBlock>
 );
 
-const FindByIdPortInKt = () => (
+const PrimaryPortImplKt = () => (
   <CollapsibleCodeBlock
     language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindByIdPortIn.kt"
+    title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt"
   >
     {`// highlight-added-start
-package dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`
+package dev.pollito.spring_kotlin.sakila.film.domain.service
 
 import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
-
-interface FindByIdPortIn {
-  fun findById(id: Int): Film
-}
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
-export const PrimaryPort = () => (
-  <Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-      <FindByIdPortInJava />
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-      <FindByIdPortInKt />
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-      <FindByIdPortInGroovy />
-    </TabItem>
-  </Tabs>
-);
-
-const FindByIdPortInImplKt = () => (
-  <CollapsibleCodeBlock
-    language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindByIdPortInImpl.kt"
-  >
-    {`// highlight-added-start
-package dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`
-
-import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
+import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FilmUseCases
 import org.springframework.stereotype.Service
 
 @Service
-class FindByIdPortInImpl : FindByIdPortIn {
+class FilmUseCasesImpl : FilmUseCases {
   override fun findById(id: Int): Film {
     return Film(
         id = id,
@@ -461,38 +477,22 @@ class FindByIdPortInImpl : FindByIdPortIn {
   </CollapsibleCodeBlock>
 );
 
-const FindByIdPortInGroovy = () => (
+const PrimaryPortImplGroovy = () => (
   <CollapsibleCodeBlock
     language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindByIdPortIn.groovy"
+    title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy"
   >
     {`// highlight-added-start
-package dev.pollito.spring_groovy.sakila.film.domain.port.in
+package dev.pollito.spring_groovy.sakila.film.domain.service
 
 import dev.pollito.spring_groovy.sakila.film.domain.model.Film
-
-interface FindByIdPortIn {
-  Film findById(Integer id)
-}
-// highlight-added-end`}
-  </CollapsibleCodeBlock>
-);
-
-const FindByIdPortInImplGroovy = () => (
-  <CollapsibleCodeBlock
-    language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindByIdPortInImpl.groovy"
-  >
-    {`// highlight-added-start
-package dev.pollito.spring_groovy.sakila.film.domain.port.in
-
-import dev.pollito.spring_groovy.sakila.film.domain.model.Film
+import dev.pollito.spring_groovy.sakila.film.domain.port.in.FilmUseCases
 import groovy.transform.CompileStatic
 import org.springframework.stereotype.Service
 
 @Service
 @CompileStatic
-class FindByIdPortInImpl implements FindByIdPortIn {
+class FilmUseCasesImpl implements FilmUseCases {
   @Override
   Film findById(Integer id) {
     new Film(
@@ -513,13 +513,13 @@ class FindByIdPortInImpl implements FindByIdPortIn {
 export const PrimaryPortImpl = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <FindByIdPortInImplJava />
+      <PrimaryPortImplJava />
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <FindByIdPortInImplKt />
+      <PrimaryPortImplKt />
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <FindByIdPortInImplGroovy />
+      <PrimaryPortImplGroovy />
     </TabItem>
   </Tabs>
 );
@@ -632,7 +632,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FilmRestMapper {
-  public FilmResponse convert(Film source) {
+  public FilmResponse map(Film source) {
     if (isNull(source)) {
       return null;
     }
@@ -665,7 +665,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class FilmRestMapper {
-  fun convert(source: Film?): FilmResponse? {
+  fun map(source: Film?): FilmResponse? {
     if (source == null) {
       return null
     }
@@ -702,7 +702,7 @@ final class FilmRestMapper {
   private FilmRestMapper() {}
 
   @CompileDynamic
-  static FilmResponse convert(Film source) {
+  static FilmResponse map(Film source) {
     source ? new FilmResponse(
         source.properties.findAll {
           it.key != 'class'
@@ -737,7 +737,7 @@ const RestControllerJava = () => (
 package dev.pollito.spring_java.sakila.film.adapter.in.rest;
 
 import dev.pollito.spring_java.sakila.film.adapter.in.rest.dto.FilmResponse;
-import dev.pollito.spring_java.sakila.film.domain.port.in.FindByIdPortIn;
+import dev.pollito.spring_java.sakila.film.domain.port.in.FilmUseCases;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -748,12 +748,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/films")
 @RequiredArgsConstructor
 public class FilmRestController {
-  private final FindByIdPortIn findByIdPortIn;
+  private final FilmUseCases filmUseCases;
   private final FilmRestMapper mapper;
 
   @GetMapping("/{id}")
   public FilmResponse findById(@PathVariable Integer id) {
-    return mapper.convert(findByIdPortIn.findById(id));
+    return mapper.map(filmUseCases.findById(id));
   }
 }
 // highlight-added-end`}
@@ -769,7 +769,7 @@ const RestControllerKt = () => (
 package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
 
 import dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest.dto.FilmResponse
-import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindByIdPortIn
+import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FilmUseCases
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -778,12 +778,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/films")
 class FilmRestController(
-    private val findByIdPortIn: FindByIdPortIn,
+    private val filmUseCases: FilmUseCases,
     private val mapper: FilmRestMapper,
 ) {
   @GetMapping("/{id}")
   fun findFilmById(@PathVariable id: Int): FilmResponse? {
-    return mapper.convert(findByIdPortIn.findById(id))
+    return mapper.map(filmUseCases.findById(id))
   }
 }
 // highlight-added-end`}
@@ -798,10 +798,10 @@ const RestControllerGroovy = () => (
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
 
-import static FilmRestMapper.convert
+import static FilmRestMapper.map
 
 import dev.pollito.spring_groovy.sakila.film.adapter.in.rest.dto.FilmResponse
-import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindByIdPortIn
+import dev.pollito.spring_groovy.sakila.film.domain.port.in.FilmUseCases
 import groovy.transform.CompileStatic
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -812,15 +812,15 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/films")
 @CompileStatic
 class FilmRestController {
-  FindByIdPortIn findByIdPortIn
+  FilmUseCases filmUseCases
 
-  FilmRestController(FindByIdPortIn findByIdPortIn) {
-    this.findByIdPortIn = findByIdPortIn
+  FilmRestController(FilmUseCases filmUseCases) {
+    this.filmUseCases = filmUseCases
   }
 
   @GetMapping("/{id}")
   FilmResponse findById(@PathVariable("id") Integer id) {
-    convert(findByIdPortIn.findById(id))
+    map(filmUseCases.findById(id))
   }
 }
 // highlight-added-end`}
@@ -862,16 +862,16 @@ export const ApplicationSequenceDiagram = () => (
       value={`sequenceDiagram
     participant Client
     participant FilmRestController
-    participant FindByIdPortInImpl
+    participant FilmUseCasesImpl
 
     Client->>FilmRestController: GET /api/films/{filmId} Request
     activate FilmRestController
 
-    FilmRestController->>FindByIdPortInImpl: findFilmById()
-    activate FindByIdPortInImpl
+    FilmRestController->>FilmUseCasesImpl: findFilmById()
+    activate FilmUseCasesImpl
 
-    FindByIdPortInImpl-->>FilmRestController: Film
-    deactivate FindByIdPortInImpl
+    FilmUseCasesImpl-->>FilmRestController: Film
+    deactivate FilmUseCasesImpl
 
     Note over FilmRestController: Map Film to FilmResponse using FilmRestMapper
 

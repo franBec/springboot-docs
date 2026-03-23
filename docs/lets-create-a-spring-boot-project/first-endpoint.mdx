@@ -59,7 +59,7 @@ The domain layer is the heart of the application. It owns the business model and
 
 ### Primary Port
 
-A port is a contract. The primary port (`FindByIdPortIn`) declares what the domain exposes to the outside world: given an ID, return a `Film`.
+A port is a contract. The primary port (`FilmUseCases`) declares what the domain exposes to the outside world: given an ID, return a `Film`.
 
 <PrimaryPort />
 
@@ -67,7 +67,7 @@ The interface lives in the domain layer. The REST controller will depend on this
 
 ### Primary Port Implementation
 
-`FindByIdPortInImpl` is the implementation of that contract. For now, it returns a hardcoded film regardless of the ID provided. The real database-backed implementation comes in a later document.
+`FilmUseCasesImpl` is the implementation of that contract. For now, it returns a hardcoded film regardless of the ID provided.
 
 <PrimaryPortImpl />
 
@@ -85,7 +85,7 @@ The adapter layer translates between the domain and the outside world. For an in
 
 ### Mapper
 
-`FilmRestMapper` converts a `Film` domain model into a `FilmResponse` DTO. This translation responsibility belongs here, not in the controller or in the domain.
+`FilmRestMapper` maps a `Film` domain model into a `FilmResponse` DTO. This translation responsibility belongs here, not in the controller or in the domain.
 
 <RestMapper />
 
@@ -95,7 +95,7 @@ The adapter layer translates between the domain and the outside world. For an in
 
 <RestController />
 
-The controller depends only on `FindByIdPortIn` (the interface) and `FilmRestMapper`. It has no knowledge of how `FindByIdPortIn` is implemented. Today it's hardcoded data; later it will be a database query. The controller won't change either way.
+The controller depends only on `FilmUseCases` (the interface) and `FilmRestMapper`. It has no knowledge of how `FilmUseCases` is implemented. Today it's hardcoded data; later it will be a database query. The controller won't change either way.
 
 ## The Complete Flow
 
@@ -106,7 +106,3 @@ Here's the full request lifecycle:
 Build and run the application, then hit the endpoint:
 
 <Terminal />
-
-## What's Next
-
-The architecture is in place, but `FindByIdPortInImpl` returns the same hardcoded film for every ID. The next step is replacing that with a real database query, which means wiring in a secondary port, a JPA repository, and an entity-to-domain mapper. The domain layer won't change at all.
