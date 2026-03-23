@@ -1,11 +1,11 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 export const FileTree = () => (
   <FileTreeInfo>
-    <CollapsibleCodeBlock language="log" title="File Tree">
+    <CodeBlock language="log" title="File Tree">
       {`.
 // highlight-modified
 ├── build.gradle  # or build.gradle.kts in kotlin
@@ -28,12 +28,12 @@ export const FileTree = () => (
     │       └── templates/hibernate/pojo/Pojo.ftl
 // highlight-added-end
     └── test/...    # test sources omitted`}
-    </CollapsibleCodeBlock>
+    </CodeBlock>
   </FileTreeInfo>
 );
 
 export const HibernateRevengXml = () => (
-  <CollapsibleCodeBlock language="xml" title="resources/hibernate.reveng.xml">
+  <CodeBlock language="xml" title="resources/hibernate.reveng.xml">
     {`// highlight-added-start
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-reverse-engineering PUBLIC
@@ -52,11 +52,11 @@ export const HibernateRevengXml = () => (
     <table-filter match-schema="PUBLIC" match-name=".*" />
 </hibernate-reverse-engineering>
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const HibernateToolsProperties = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="properties"
     title="resources/hibernate-tools.properties"
   >
@@ -67,11 +67,11 @@ hibernate.connection.password=
 hibernate.dialect=org.hibernate.dialect.H2Dialect
 hibernate.connection.provider_class=org.hibernate.connection.DriverManagerConnectionProvider
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const HibernatePojoJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="ftl"
     title="resources/templates/hibernate/pojo/Pojo.ftl"
   >
@@ -272,11 +272,11 @@ public class \${className} implements Serializable {
 </#list>
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const HibernatePojoKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="ftl"
     title="resources/templates/hibernate/pojo/Pojo.ftl"
   >
@@ -482,11 +482,11 @@ class \${className}(
 }
 </#if>
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const HibernatePojoGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="ftl"
     title="resources/templates/hibernate/pojo/Pojo.ftl"
   >
@@ -670,7 +670,7 @@ class \${className} implements Serializable {
 </#list>
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const HibernatePojo = () => (
@@ -688,7 +688,7 @@ export const HibernatePojo = () => (
 );
 
 const BuildGradleJava = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`// ...
 configurations {
   // ...
@@ -804,11 +804,11 @@ tasks.named('compileJava') {
   dependsOn 'generateEntities'
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleKt = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`// highlight-added
 import java.net.URLClassLoader
 import java.util.Properties
@@ -950,11 +950,11 @@ tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask> {
   dependsOn("generateEntities")
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`// ...
 configurations {
   // ...
@@ -1082,7 +1082,7 @@ tasks.named('compileGroovy') {
   dependsOn 'generateEntities'
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradle = () => (

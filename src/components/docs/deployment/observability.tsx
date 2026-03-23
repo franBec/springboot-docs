@@ -1,4 +1,4 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
@@ -6,7 +6,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 const BuildGradleGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`// ...
 dependencies {
   // ...
@@ -14,11 +14,11 @@ dependencies {
   implementation 'io.micrometer:micrometer-registry-prometheus:1.17.0-M2'
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleKts = () => (
-  <CollapsibleCodeBlock language="kotlin" title="build.gradle.kts">
+  <CodeBlock language="kotlin" title="build.gradle.kts">
     {`// ...
 dependencies {
   // ...
@@ -26,7 +26,7 @@ dependencies {
   implementation("io.micrometer:micrometer-registry-prometheus:1.17.0-M2")
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradle = () => (
@@ -44,7 +44,7 @@ export const BuildGradle = () => (
 );
 
 export const ApplicationYaml = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/application.yaml">
+  <CodeBlock language="yaml" title="resources/application.yaml">
     {`# ...
 // highlight-added-start
 management:
@@ -85,11 +85,11 @@ logging:
   pattern:
     level: "trace_id=%mdc{traceId} span_id=%mdc{spanId} trace_flags=%mdc{traceFlags} %p"
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const DockerComposeObservability = () => (
-  <CollapsibleCodeBlock language="yaml" title="docker-compose.yml">
+  <CodeBlock language="yaml" title="docker-compose.yml">
     {`services:
   spring-java:
     # ...
@@ -246,11 +246,11 @@ volumes:
   tempo-data:
     driver: local
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const LokiDockerfile = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="dockerfile"
     title="observability/loki.Dockerfile"
   >
@@ -266,11 +266,11 @@ COPY observability/loki-config.yml /etc/loki/local-config.yaml
 
 USER 10001
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const LokiConfig = () => (
-  <CollapsibleCodeBlock language="yaml" title="observability/loki-config.yml">
+  <CodeBlock language="yaml" title="observability/loki-config.yml">
     {`// highlight-added-start
 auth_enabled: false
 
@@ -326,11 +326,11 @@ limits_config:
 analytics:
   reporting_enabled: false
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const PromtailDockerfile = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="dockerfile"
     title="observability/promtail.Dockerfile"
   >
@@ -338,11 +338,11 @@ export const PromtailDockerfile = () => (
 FROM grafana/promtail:3.5.10
 COPY observability/promtail-config.yml /etc/promtail/config.yml
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const PromtailConfig = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="yaml"
     title="observability/promtail-config.yml"
   >
@@ -378,11 +378,11 @@ scrape_configs:
       - labels:
           type:
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const TempoDockerfile = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="dockerfile"
     title="observability/tempo.Dockerfile"
   >
@@ -399,11 +399,11 @@ COPY observability/tempo.yml /etc/tempo/tempo.yml
 
 CMD ["-config.file=/etc/tempo/tempo.yml"]
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const TempoConfig = () => (
-  <CollapsibleCodeBlock language="yaml" title="observability/tempo.yml">
+  <CodeBlock language="yaml" title="observability/tempo.yml">
     {`// highlight-added-start
 auth_enabled: false
 
@@ -452,11 +452,11 @@ overrides:
 usage_report:
   reporting_enabled: false
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const PrometheusDockerfile = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="dockerfile"
     title="observability/prometheus.Dockerfile"
   >
@@ -464,11 +464,11 @@ export const PrometheusDockerfile = () => (
 FROM prom/prometheus:v3.9.1
 COPY observability/prometheus.yml /etc/prometheus/prometheus.yml
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const PrometheusConfig = () => (
-  <CollapsibleCodeBlock language="yaml" title="observability/prometheus.yml">
+  <CodeBlock language="yaml" title="observability/prometheus.yml">
     {`// highlight-added-start
 global:
   scrape_interval: 60s
@@ -494,11 +494,11 @@ scrape_configs:
       - targets: ['spring-groovy:8080']
     metrics_path: '/actuator/prometheus'
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const GrafanaDockerfile = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="dockerfile"
     title="observability/grafana.Dockerfile"
   >
@@ -508,11 +508,11 @@ COPY observability/grafana/datasources /etc/grafana/provisioning/datasources
 COPY observability/grafana/dashboards/dashboards.yml /etc/grafana/provisioning/dashboards/dashboards.yml
 COPY observability/grafana/dashboards/*.json /var/lib/grafana/dashboards/
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const GrafanaDatasources = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="yaml"
     title="observability/grafana/datasources/datasources.yml"
   >
@@ -565,11 +565,11 @@ datasources:
         tags:
           - service.name
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const GrafanaDashboards = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="yaml"
     title="observability/grafana/dashboards/dashboards.yml"
   >
@@ -588,12 +588,12 @@ providers:
       path: /var/lib/grafana/dashboards
       foldersFromFilesStructure: false
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
   <FileTreeInfo>
-    <CollapsibleCodeBlock
+    <CodeBlock
       language="log"
       title="File Tree"
     >{`springboot-demo-projects/
@@ -623,7 +623,7 @@ export const FileTree = () => (
     └── main/
         └── resources/
 // highlight-modified
-            └── application.yaml`}</CollapsibleCodeBlock>
+            └── application.yaml`}</CodeBlock>
   </FileTreeInfo>
 );
 

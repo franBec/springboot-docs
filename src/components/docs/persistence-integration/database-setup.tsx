@@ -1,10 +1,10 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`.
 ├── ...
 // highlight-added-start
@@ -31,11 +31,11 @@ const FileTreeJava = () => (
                 ├── ...
 // highlight-modified
                 └── application.yaml`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`.
 ├── ...
 // highlight-added-start
@@ -62,11 +62,11 @@ const FileTreeKt = () => (
                 ├── ...
 // highlight-modified
                 └── application.yaml`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`.
 ├── ...
 // highlight-added-start
@@ -93,7 +93,7 @@ const FileTreeGroovy = () => (
                 ├── ...
 // highlight-modified
                 └── application.yaml`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
@@ -113,7 +113,7 @@ export const FileTree = () => (
 );
 
 export const FlywayMigrationV3GrantAppUserPrivileges = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="sql"
     title="database/flyway/migrations/V3__grant_app_user_privileges.sql"
   >
@@ -142,11 +142,11 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE O
 
 -- Set default privileges for future sequences
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO sakila_app;`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FlywayDockerfile = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="Dockerfile"
     title="database/flyway/Dockerfile"
   >
@@ -154,11 +154,11 @@ export const FlywayDockerfile = () => (
 FROM flyway/flyway:12-alpine
 COPY database/flyway/migrations/ /flyway/sql/
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const PostgresDockerfile = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="Dockerfile"
     title="database/postgres/Dockerfile"
   >
@@ -167,11 +167,11 @@ FROM postgres:17-alpine
 COPY init-users.sh /docker-entrypoint-initdb.d/01-init-users.sh
 RUN chmod +x /docker-entrypoint-initdb.d/01-init-users.sh
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const PostgresInitUser = () => (
-  <CollapsibleCodeBlock language="sh" title="database/postgres/init-users.sh">
+  <CodeBlock language="sh" title="database/postgres/init-users.sh">
     {`// highlight-added-start
 #!/bin/bash
 set -e
@@ -189,11 +189,11 @@ EOSQL
 echo "sakila_app user created successfully"
 echo "Privileges will be granted by Flyway migration V3 after tables are created"
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const DockerCompose = () => (
-  <CollapsibleCodeBlock language="yml" title="docker-compose.yml">
+  <CodeBlock language="yml" title="docker-compose.yml">
     {`services:
 // highlight-added-start
   postgres:
@@ -324,11 +324,11 @@ volumes:
     driver: local
 // highlight-added-end
   # ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`// ...
 dependencies {
   // ...
@@ -336,11 +336,11 @@ dependencies {
   runtimeOnly 'org.postgresql:postgresql'
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleKt = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`// ...
 dependencies {
   // ...
@@ -348,7 +348,7 @@ dependencies {
   runtimeOnly("org.postgresql:postgresql")
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradle = () => (
@@ -366,7 +366,7 @@ export const BuildGradle = () => (
 );
 
 export const ApplicationYaml = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/application.yaml">
+  <CodeBlock language="yaml" title="resources/application.yaml">
     {`# ...
 // highlight-added-start
   datasource:
@@ -383,11 +383,11 @@ export const ApplicationYaml = () => (
     enabled: false
 // highlight-added-end
 # ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const TerminalCurl = () => (
-  <CollapsibleCodeBlock language="log" title="Terminal">
+  <CodeBlock language="log" title="Terminal">
     {`curl -s https://sakila-java.pollito.tech/api/films/1 | jq
 {
   "instance": "/api/films/1",
@@ -404,5 +404,5 @@ export const TerminalCurl = () => (
     "title": "ACADEMY DINOSAUR"
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

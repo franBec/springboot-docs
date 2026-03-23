@@ -1,11 +1,11 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
 export const RawJdbcExample = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <CollapsibleCodeBlock language="java" title="Raw JDBC query">
+      <CodeBlock language="java" title="Raw JDBC query">
         {`import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,10 +30,10 @@ while (rs.next()) {
 rs.close();
 stmt.close();
 conn.close();`}
-      </CollapsibleCodeBlock>
+      </CodeBlock>
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <CollapsibleCodeBlock language="kotlin" title="Raw JDBC query">
+      <CodeBlock language="kotlin" title="Raw JDBC query">
         {`import java.sql.DriverManager
 
 val conn = DriverManager.getConnection(
@@ -55,10 +55,10 @@ while (rs.next()) {
 rs.close()
 stmt.close()
 conn.close()`}
-      </CollapsibleCodeBlock>
+      </CodeBlock>
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <CollapsibleCodeBlock language="groovy" title="Raw JDBC query">
+      <CodeBlock language="groovy" title="Raw JDBC query">
         {`import java.sql.DriverManager
 
 def conn = DriverManager.getConnection(
@@ -80,13 +80,13 @@ while (rs.next()) {
 rs.close()
 stmt.close()
 conn.close()`}
-      </CollapsibleCodeBlock>
+      </CodeBlock>
     </TabItem>
   </Tabs>
 );
 
 export const HibernateEntityExample = () => (
-  <CollapsibleCodeBlock language="java" title="Film.java">
+  <CodeBlock language="java" title="Film.java">
     {`@Entity
 @Table(name = "film")
 public class Film {
@@ -101,13 +101,13 @@ public class Film {
     @Column(name = "release_year")
     private Integer releaseYear;
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const EntityManagerExample = () => (
   <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
-      <CollapsibleCodeBlock language="java" title="FilmRepository.java">
+      <CodeBlock language="java" title="FilmRepository.java">
         {`import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -125,10 +125,10 @@ public class FilmRepository {
         em.persist(film);
     }
 }`}
-      </CollapsibleCodeBlock>
+      </CodeBlock>
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
-      <CollapsibleCodeBlock language="kotlin" title="FilmRepository.kt">
+      <CodeBlock language="kotlin" title="FilmRepository.kt">
         {`import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 
@@ -144,10 +144,10 @@ class FilmRepository {
     fun save(film: Film) =
         em.persist(film)
 }`}
-      </CollapsibleCodeBlock>
+      </CodeBlock>
     </TabItem>
     <TabItem value="groovy" label="Groovy">
-      <CollapsibleCodeBlock language="groovy" title="FilmRepository.groovy">
+      <CodeBlock language="groovy" title="FilmRepository.groovy">
         {`import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 
@@ -165,15 +165,15 @@ class FilmRepository {
         em.persist(film)
     }
 }`}
-      </CollapsibleCodeBlock>
+      </CodeBlock>
     </TabItem>
   </Tabs>
 );
 
 export const SpringDataJpaInterfaceExample = () => (
-  <CollapsibleCodeBlock language="java" title="FilmRepository.java">
+  <CodeBlock language="java" title="FilmRepository.java">
     {`public interface FilmRepository extends JpaRepository<Film, Integer> {
     List<Film> findByReleaseYear(Integer year);
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

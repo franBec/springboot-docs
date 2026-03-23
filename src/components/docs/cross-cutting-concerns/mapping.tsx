@@ -1,10 +1,10 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
 └── src
@@ -26,11 +26,11 @@ const FileTreeJava = () => (
 // highlight-modified
                         │                   └── FilmRestMapper.java
                         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle.kts
 └── src
@@ -52,11 +52,11 @@ const FileTreeKt = () => (
 // highlight-modified
                         │                   └── FilmRestMapper.kt
                         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
 └── src
@@ -78,7 +78,7 @@ const FileTreeGroovy = () => (
 // highlight-modified
                         │                   └── FilmRestMapper.groovy
                         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
@@ -98,7 +98,7 @@ export const FileTree = () => (
 );
 
 const BuildGradleJava = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`// ...
 dependencies {
   // ...
@@ -114,11 +114,11 @@ dependencies {
 // highlight-added-end
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleKt = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
   // ...
 // highlight-added
@@ -141,11 +141,11 @@ dependencies {
 // highlight-added-end
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`// ...
 dependencies {
   // ...
@@ -153,7 +153,7 @@ dependencies {
   implementation 'org.modelmapper:modelmapper:3.2.6'
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradle = () => (
@@ -171,7 +171,7 @@ export const BuildGradle = () => (
 );
 
 const MapperSpringConfigJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/mapper/MapperSpringConfig.java"
   >
@@ -186,11 +186,11 @@ import org.mapstruct.extensions.spring.SpringMapperConfig;
 conversionServiceAdapterPackage = "dev.pollito.spring_java.config.mapper")
 public interface MapperSpringConfig {}
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const MapperSpringConfigKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/mapper/MapperSpringConfig.kt"
   >
@@ -204,11 +204,11 @@ import org.mapstruct.extensions.spring.SpringMapperConfig
 @SpringMapperConfig(conversionServiceAdapterPackage = "dev.pollito.spring_kotlin.config.mapper")
 interface MapperSpringConfig {}
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ModelMapperConfigGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/mapper/ModelMapperConfig.groovy"
   >
@@ -229,7 +229,7 @@ class ModelMapperConfig {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const MapperConfig = () => (
@@ -247,7 +247,7 @@ export const MapperConfig = () => (
 );
 
 const FilmRestMapperJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
   >
@@ -270,11 +270,11 @@ public interface FilmRestMapper extends Converter<Film, FilmResponse> {
   FilmResponse convert(@Nullable Film source);
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FilmRestMapperKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
   >
@@ -295,11 +295,11 @@ interface FilmRestMapper : Converter<Film, FilmResponse> {
   override fun convert(source: Film): FilmResponse
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FilmRestMapperGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy"
   >
@@ -326,7 +326,7 @@ class FilmRestMapper {
   }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FilmRestMapper = () => (
@@ -344,7 +344,7 @@ export const FilmRestMapper = () => (
 );
 
 export const FilmRestControllerGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
   >
@@ -367,5 +367,5 @@ class FilmRestController {
     mapper.convert(findByIdPortIn.findById(id))
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

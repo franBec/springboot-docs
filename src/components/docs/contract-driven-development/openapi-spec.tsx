@@ -1,8 +1,8 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 export const FilmStructureJson = () => (
-  <CollapsibleCodeBlock language="json">
+  <CodeBlock language="json">
     {`{
   "id": 42,
   "title": "ACADEMY DINOSAUR",
@@ -12,12 +12,12 @@ export const FilmStructureJson = () => (
   "lengthMinutes": 86,
   "language": "English"
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
   <FileTreeInfo>
-    <CollapsibleCodeBlock language="log" title="File Tree">
+    <CodeBlock language="log" title="File Tree">
       {`├── ...
 └── src
     ├── main
@@ -27,12 +27,12 @@ export const FileTree = () => (
 // highlight-added
     │       └── openapi.yaml
     └── ...`}
-    </CollapsibleCodeBlock>
+    </CodeBlock>
   </FileTreeInfo>
 );
 
 export const ErrorResponseJson = () => (
-  <CollapsibleCodeBlock language="json">
+  <CodeBlock language="json">
     {`{
   "instance": "/api/something",
   "timestamp": "2026-01-03T17:11:50.826722328Z",
@@ -41,11 +41,11 @@ export const ErrorResponseJson = () => (
   "title": "Not Found",
   "detail": "No static resource for request '/'."
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FilmsListResponseJson = () => (
-  <CollapsibleCodeBlock language="json">
+  <CodeBlock language="json">
     {`{
   "instance": "/api/films",
   "timestamp": "2026-01-03T17:11:50.826722328Z",
@@ -63,11 +63,11 @@ export const FilmsListResponseJson = () => (
     }
   ]
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FilmResponseJson = () => (
-  <CollapsibleCodeBlock language="json">
+  <CodeBlock language="json">
     {`{
   "instance": "/api/films/42",
   "timestamp": "2026-01-03T17:11:50.826722328Z",
@@ -83,11 +83,11 @@ export const FilmResponseJson = () => (
     "language": "English"
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const EnvelopePatternJson = () => (
-  <CollapsibleCodeBlock language="json">
+  <CodeBlock language="json">
     {`{
   "instance": "/api/films/42",
   "timestamp": "...",
@@ -99,11 +99,11 @@ export const EnvelopePatternJson = () => (
     //...
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ResponseMetadataSchemaYaml = () => (
-  <CollapsibleCodeBlock language="yaml">
+  <CodeBlock language="yaml">
     {`# Base metadata for all responses
 ResponseMetadata:
   type: object
@@ -116,5 +116,5 @@ ResponseMetadata:
       # ...
     trace:
       # ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

@@ -1,9 +1,9 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 export const FileTree = () => (
   <FileTreeInfo>
-    <CollapsibleCodeBlock language="log" title="File Tree">
+    <CodeBlock language="log" title="File Tree">
       {`springboot-demo-projects/
 └── .github/
 // highlight-added-start
@@ -13,12 +13,12 @@ export const FileTree = () => (
 // highlight-added-start
         └── codeql.yml
 // highlight-added-end`}
-    </CollapsibleCodeBlock>
+    </CodeBlock>
   </FileTreeInfo>
 );
 
 export const CodeQL = () => (
-  <CollapsibleCodeBlock language="yaml" title=".github/workflows/codeql.yml">
+  <CodeBlock language="yaml" title=".github/workflows/codeql.yml">
     {`// highlight-added-start
 name: CodeQL
 
@@ -59,5 +59,5 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

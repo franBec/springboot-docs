@@ -1,4 +1,4 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
@@ -6,7 +6,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
 ├── ...
@@ -32,11 +32,11 @@ const FileTreeJava = () => (
     │       └── ...
     └── test
         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle.kts
 ├── ...
@@ -62,11 +62,11 @@ const FileTreeKt = () => (
     │       └── ...
     └── test
         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
 ├── ...
@@ -91,7 +91,7 @@ const FileTreeGroovy = () => (
     │       └── ...
     └── test
         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
@@ -111,7 +111,7 @@ export const FileTree = () => (
 );
 
 export const BuildGradleKts = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`// ...
 dependencies {
   // ...
@@ -122,11 +122,11 @@ dependencies {
 // highlight-added-end
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradleGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`// ...
 dependencies {
   // ...
@@ -136,7 +136,7 @@ dependencies {
 // highlight-added-end
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradle = () => (
@@ -154,7 +154,7 @@ export const BuildGradle = () => (
 );
 
 const ApplicationDevYamlJava = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/application-dev.yaml">
+  <CodeBlock language="yaml" title="resources/application-dev.yaml">
     {`// highlight-added-start
 spring:
   application:
@@ -165,11 +165,11 @@ management:
       export:
         enabled: false
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ApplicationDevYamlKt = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/application-dev.yaml">
+  <CodeBlock language="yaml" title="resources/application-dev.yaml">
     {`// highlight-added-start
 spring:
   application:
@@ -180,11 +180,11 @@ management:
       export:
         enabled: false
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ApplicationDevYamlGroovy = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/application-dev.yaml">
+  <CodeBlock language="yaml" title="resources/application-dev.yaml">
     {`// highlight-added-start
 spring:
   application:
@@ -195,7 +195,7 @@ management:
       export:
         enabled: false
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ApplicationDevYaml = () => (
@@ -213,7 +213,7 @@ export const ApplicationDevYaml = () => (
 );
 
 const LogAspectJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/log/LogAspect.java"
   >
@@ -251,11 +251,11 @@ public class LogAspect {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const LogAspectKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/log/LogAspect.kt"
   >
@@ -294,11 +294,11 @@ class LogAspect {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const LogAspectGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/log/LogAspect.groovy"
   >
@@ -336,7 +336,7 @@ class LogAspect {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const LogAspect = () => (
@@ -354,7 +354,7 @@ export const LogAspect = () => (
 );
 
 const LogFilterJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/log/LogFilter.java"
   >
@@ -427,11 +427,11 @@ public class LogFilter extends OncePerRequestFilter {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const LogFilterKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/log/LogFilter.kt"
   >
@@ -498,11 +498,11 @@ class LogFilter : OncePerRequestFilter() {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const LogFilterGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/log/LogFilter.groovy"
   >
@@ -569,7 +569,7 @@ class LogFilter extends OncePerRequestFilter {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const LogFilter = () => (
@@ -587,7 +587,7 @@ export const LogFilter = () => (
 );
 
 const TraceIdFilterJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/log/TraceIdFilter.java"
   >
@@ -638,11 +638,11 @@ public class TraceIdFilter extends OncePerRequestFilter {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const TraceIdFilterKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/log/TraceIdFilter.kt"
   >
@@ -686,11 +686,11 @@ class TraceIdFilter : OncePerRequestFilter() {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const TraceIdFilterGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/log/TraceIdFilter.groovy"
   >
@@ -738,7 +738,7 @@ class TraceIdFilter extends OncePerRequestFilter {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const TraceIdFilter = () => (
@@ -756,7 +756,7 @@ export const TraceIdFilter = () => (
 );
 
 const MaskingPatternLayoutJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/log/MaskingPatternLayout.java"
   >
@@ -819,11 +819,11 @@ public class MaskingPatternLayout extends PatternLayout {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const MaskingPatternLayoutKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/log/MaskingPatternLayout.kt"
   >
@@ -859,11 +859,11 @@ class MaskingPatternLayout : PatternLayout() {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const MaskingPatternLayoutGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/log/MaskingPatternLayout.groovy"
   >
@@ -923,7 +923,7 @@ class MaskingPatternLayout extends PatternLayout {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const MaskingPatternLayout = () => (
@@ -941,7 +941,7 @@ export const MaskingPatternLayout = () => (
 );
 
 const LogbackJava = () => (
-  <CollapsibleCodeBlock language="xml" title="resources/logback-spring.xml">
+  <CodeBlock language="xml" title="resources/logback-spring.xml">
     {`// highlight-added-start
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -960,11 +960,11 @@ const LogbackJava = () => (
     </root>
 </configuration>
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const LogbackKt = () => (
-  <CollapsibleCodeBlock language="xml" title="resources/logback-spring.xml">
+  <CodeBlock language="xml" title="resources/logback-spring.xml">
     {`// highlight-added-start
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -983,11 +983,11 @@ const LogbackKt = () => (
     </root>
 </configuration>
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const LogbackGroovy = () => (
-  <CollapsibleCodeBlock language="xml" title="resources/logback-spring.xml">
+  <CodeBlock language="xml" title="resources/logback-spring.xml">
     {`// highlight-added-start
 <configuration>
 
@@ -1008,7 +1008,7 @@ const LogbackGroovy = () => (
 
 </configuration>
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const Logback = () => (
@@ -1026,7 +1026,7 @@ export const Logback = () => (
 );
 
 export const CurlRequest = () => (
-  <CollapsibleCodeBlock language="log" title="Terminal">
+  <CodeBlock language="log" title="Terminal">
     {`curl -s --request GET \
   --url http://localhost:8080/api/films/42 \
   --header 'Accept: application/json' \
@@ -1037,16 +1037,16 @@ export const CurlRequest = () => (
   --header 'X-API-Key: super-secret-api-key' \
   --header 'X-Auth-Token: super-secret-auth-token-12345' \
   --header 'X-CSRF-Token: csrf_abc123def456ghi789' | jq`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ApplicationLogs = () => (
-  <CollapsibleCodeBlock language="log" title="Application logs">
+  <CodeBlock language="log" title="Application logs">
     {`2026-02-18 15:28:11.600 trace_id=b8e1447340832e9b466fde0a1f172b55 span_id=a4fa1234784f7c02 trace_flags=01 INFO  http-nio-8080-exec-1 --- d.p.spring_java.config.log.LogFilter >>>> Method: GET; URI: /api/films/42; QueryString: null; Headers: {Host: localhost:8080, Accept: application/json, Authorization: ****, Cookie: ****, Proxy-Authorization: ****, User-Agent: Mozilla/5.0 (Test Client), X-API-Key: ****, X-Auth-Token: ****, X-CSRF-Token: ****
 2026-02-18 15:28:11.619 trace_id=b8e1447340832e9b466fde0a1f172b55 span_id=a4fa1234784f7c02 trace_flags=01 INFO  http-nio-8080-exec-1 --- d.p.spring_java.config.log.LogAspect [FilmRestController.findById(..)] Args: [42]
 2026-02-18 15:28:11.620 trace_id=b8e1447340832e9b466fde0a1f172b55 span_id=a4fa1234784f7c02 trace_flags=01 INFO  http-nio-8080-exec-1 --- d.p.spring_java.config.log.LogAspect [FilmRestController.findById(..)] Response: FilmResponse(id=42, title=ACADEMY DINOSAUR, description=A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies, releaseYear=2006, rating=PG, lengthMinutes=86, language=English)
 2026-02-18 15:28:11.664 trace_id=b8e1447340832e9b466fde0a1f172b55 span_id=a4fa1234784f7c02 trace_flags=01 INFO  http-nio-8080-exec-1 --- d.p.spring_java.config.log.LogFilter <<<< Response Status: 200`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ApplicationSequenceDiagram = () => (

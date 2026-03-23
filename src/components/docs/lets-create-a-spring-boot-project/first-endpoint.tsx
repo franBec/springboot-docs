@@ -1,4 +1,4 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
@@ -6,7 +6,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 export const FilmJson = () => (
-  <CollapsibleCodeBlock language="json">
+  <CodeBlock language="json">
     {`{
   "id": 42,
   "title": "ACADEMY DINOSAUR",
@@ -16,11 +16,11 @@ export const FilmJson = () => (
   "length": 86,
   "language": "English"
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
  // highlight-added
@@ -55,11 +55,11 @@ const FileTreeJava = () => (
     │       └── ...
     └── test
         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle.kts
 ├── ...
@@ -92,11 +92,11 @@ const FileTreeKt = () => (
     │       └── ...
     └── test
         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
 // highlight-added
@@ -131,7 +131,7 @@ const FileTreeGroovy = () => (
     │       └── ...
     └── test
         └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
@@ -151,17 +151,17 @@ export const FileTree = () => (
 );
 
 export const GreclipseProperties = () => (
-  <CollapsibleCodeBlock language="properties" title="greclipse.properties">
+  <CodeBlock language="properties" title="greclipse.properties">
     {`// highlight-added-start
 org.eclipse.jdt.core.formatter.tabulation.char=space
 org.eclipse.jdt.core.formatter.tabulation.size=2
 org.eclipse.jdt.core.formatter.indentation.size=2
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleJava = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`plugins {
   // ...
 // highlight-added
@@ -188,11 +188,11 @@ tasks.named("build") {
   dependsOn 'spotlessGroovyGradleApply'
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleKts = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
   // ...
 // highlight-added
@@ -213,11 +213,11 @@ tasks.named("build") {
   dependsOn("spotlessKotlinGradleApply")
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`plugins {
 // ...
 // highlight-added
@@ -243,7 +243,7 @@ tasks.named("build") {
   dependsOn 'spotlessGroovyGradleApply'
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradle = () => (
@@ -261,7 +261,7 @@ export const BuildGradle = () => (
 )
 
 const DomainModelJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/domain/model/Film.java"
   >
@@ -288,11 +288,11 @@ public class Film {
   String language;
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const DomainModelKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt"
   >
@@ -309,11 +309,11 @@ data class Film(
     val language: String,
 )
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const DomainModelGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy"
   >
@@ -335,7 +335,7 @@ class Film {
   String language
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const DomainModel = () => (
@@ -353,7 +353,7 @@ export const DomainModel = () => (
 )
 
 const FindByIdPortInJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindByIdPortIn.java"
   >
@@ -366,11 +366,11 @@ public interface FindByIdPortIn {
   Film findById(Integer id);
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FindByIdPortInImplJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindByIdPortInImpl.java"
   >
@@ -397,11 +397,11 @@ public class FindByIdPortInImpl implements FindByIdPortIn {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FindByIdPortInKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindByIdPortIn.kt"
   >
@@ -414,7 +414,7 @@ interface FindByIdPortIn {
   fun findById(id: Int): Film
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const PrimaryPort = () => (
@@ -432,7 +432,7 @@ export const PrimaryPort = () => (
 );
 
 const FindByIdPortInImplKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindByIdPortInImpl.kt"
   >
@@ -458,11 +458,11 @@ class FindByIdPortInImpl : FindByIdPortIn {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FindByIdPortInGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindByIdPortIn.groovy"
   >
@@ -475,11 +475,11 @@ interface FindByIdPortIn {
   Film findById(Integer id)
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FindByIdPortInImplGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindByIdPortInImpl.groovy"
   >
@@ -507,7 +507,7 @@ class FindByIdPortInImpl implements FindByIdPortIn {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const PrimaryPortImpl = () => (
@@ -525,7 +525,7 @@ export const PrimaryPortImpl = () => (
 );
 
 const RestDtoResponseJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/dto/FilmResponse.java"
   >
@@ -552,11 +552,11 @@ public class FilmResponse {
   String language;
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const RestDtoResponseKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/dto/FilmResponse.kt"
   >
@@ -573,11 +573,11 @@ data class FilmResponse(
     val language: String,
 )
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const RestDtoResponseGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/dto/FilmResponse.groovy"
   >
@@ -599,7 +599,7 @@ class FilmResponse {
   String language
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const RestDtoResponse = () => (
@@ -617,7 +617,7 @@ export const RestDtoResponse = () => (
 );
 
 const RestMapperJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
   >
@@ -648,11 +648,11 @@ public class FilmRestMapper {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const RestMapperKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
   >
@@ -681,11 +681,11 @@ class FilmRestMapper {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const RestMapperGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy"
   >
@@ -711,7 +711,7 @@ final class FilmRestMapper {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const RestMapper = () => (
@@ -729,7 +729,7 @@ export const RestMapper = () => (
 );
 
 const RestControllerJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
   >
@@ -757,11 +757,11 @@ public class FilmRestController {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const RestControllerKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
   >
@@ -787,11 +787,11 @@ class FilmRestController(
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const RestControllerGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
   >
@@ -824,7 +824,7 @@ class FilmRestController {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const RestController = () => (
@@ -842,7 +842,7 @@ export const RestController = () => (
 );
 
 export const Terminal = () => (
-  <CollapsibleCodeBlock language="log" title="Terminal">
+  <CodeBlock language="log" title="Terminal">
     {`curl -s http://localhost:8080/api/films/42 | jq
 {
   "id": 42,
@@ -853,7 +853,7 @@ export const Terminal = () => (
   "lengthMinutes": 86,
   "language": "English"
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ApplicationSequenceDiagram = () => (

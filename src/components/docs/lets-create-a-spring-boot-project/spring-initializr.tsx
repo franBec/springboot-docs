@@ -1,6 +1,6 @@
 import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 
 export const SpringBootInitializrProjectGraph = () => (
   <ZoomContainer>
@@ -32,16 +32,16 @@ export const SpringBootInitializrProjectGraph = () => (
 );
 
 export const ConfigFormatProperties = () => (
-  <CollapsibleCodeBlock language="properties" title="application.properties">
+  <CodeBlock language="properties" title="application.properties">
     {`server.port=8080
 spring.datasource.url=jdbc:h2:mem:testdb
 spring.datasource.username=sa
 spring.datasource.password=`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ConfigFormatYaml = () => (
-  <CollapsibleCodeBlock language="yaml" title="application.yml">
+  <CodeBlock language="yaml" title="application.yml">
     {`server:
   port: 8080
 spring:
@@ -49,5 +49,5 @@ spring:
     url: jdbc:h2:mem:testdb
     username: sa
     password:`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

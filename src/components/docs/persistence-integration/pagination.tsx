@@ -1,4 +1,4 @@
-import {CollapsibleCodeBlock} from "@site/src/components/collapsible-code-block";
+import CodeBlock from '@theme/CodeBlock';
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import {FileTreeInfo} from "@site/src/components/file-tree-info";
@@ -6,7 +6,7 @@ import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
 
 const BuildGradleGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`// ...
 dependencies {
   //...
@@ -23,11 +23,11 @@ openApiGenerate {
   ]
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const BuildGradleKts = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`// ...
 dependencies {
   //...
@@ -46,7 +46,7 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("gen
   )
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const BuildGradle = () => (
@@ -64,7 +64,7 @@ export const BuildGradle = () => (
 );
 
 const FilmRestControllerJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java">
     {`// ...
 // highlight-added-start
 import dev.pollito.spring_java.sakila.film.domain.port.in.FindAllPortIn;
@@ -89,11 +89,11 @@ public class FilmRestController implements FilmsApi {
   }
   // ...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmRestControllerKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt">
     {`// ...
 // highlight-added-start
 import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindAllPortIn
@@ -120,11 +120,11 @@ class FilmRestController(
   }
   // ...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmRestControllerGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy">
     {`// ...
 // highlight-added-start
 import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindAllPortIn
@@ -151,7 +151,7 @@ class FilmRestController implements FilmsApi {
   }
   // ...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FilmRestController = () => (
@@ -169,7 +169,7 @@ export const FilmRestController = () => (
 )
 
 const FilmRestMapperJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java">
     {`// ...
 // highlight-added-start
 import dev.pollito.spring_java.generated.model.FilmListResponseAllOfData;
@@ -182,11 +182,11 @@ public interface FilmRestMapper
 // highlight-added
   FilmListResponseAllOfData convert(Page<Film> filmPageable);
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmRestMapperKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt">
     {`// ...
 // highlight-added-start
 import dev.pollito.spring_kotlin.generated.model.FilmListResponseAllOfData
@@ -207,11 +207,11 @@ interface FilmRestMapper : Converter<Film, dev.pollito.spring_kotlin.generated.m
   fun convert(source: Page<Film>): FilmListResponseAllOfData
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmRestMapperGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy">
     {`// ...
 // highlight-added-start
 import dev.pollito.spring_groovy.generated.model.FilmListResponseAllOfData
@@ -235,7 +235,7 @@ class FilmRestMapper {
   }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FilmRestMapper = () => (
@@ -253,7 +253,7 @@ export const FilmRestMapper = () => (
 )
 
 const FilmJpaMapperJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaMapper.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaMapper.java">
     {`// ...
 // highlight-added-start
 import static java.util.Objects.requireNonNull;
@@ -270,11 +270,11 @@ public interface FilmJpaMapper
   }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmJpaMapperKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaMapper.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaMapper.kt">
     {`// ...
 // highlight-added
 import org.springframework.data.domain.Page
@@ -286,11 +286,11 @@ interface FilmJpaMapper : Converter<dev.pollito.spring_kotlin.generated.entity.F
       source.map { convert(it) }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmJpaMapperGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaMapper.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaMapper.groovy">
     {`// ...
 // highlight-added
 import org.springframework.data.domain.Page
@@ -303,7 +303,7 @@ class FilmJpaMapper {
     }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FilmJpaMapper = () => (
@@ -321,7 +321,7 @@ export const FilmJpaMapper = () => (
 )
 
 const FindAllPortInJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindAllPortIn.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindAllPortIn.java">
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.domain.port.in;
 
@@ -333,11 +333,11 @@ public interface FindAllPortIn {
   Page<Film> findAll(Pageable pageable);
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortInKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindAllPortIn.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindAllPortIn.kt">
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`
 
@@ -349,11 +349,11 @@ interface FindAllPortIn {
   fun findAll(pageable: Pageable): Page<Film>
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortInGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindAllPortIn.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindAllPortIn.groovy">
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.domain.port.in
 
@@ -365,7 +365,7 @@ interface FindAllPortIn {
   Page<Film> findAll(Pageable pageable)
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FindAllPortIn = () => (
@@ -383,7 +383,7 @@ export const FindAllPortIn = () => (
 )
 
 const FindAllPortInImplJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindAllPortInImpl.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindAllPortInImpl.java">
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.domain.port.in;
 
@@ -405,11 +405,11 @@ public class FindAllPortInImpl implements FindAllPortIn {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortInImplKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindAllPortInImpl.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindAllPortInImpl.kt">
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`
 
@@ -424,11 +424,11 @@ class FindAllPortInImpl(private val findAllPortOut: FindAllPortOut) : FindAllPor
   override fun findAll(pageable: Pageable): Page<Film> = findAllPortOut.findAll(pageable)
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortInImplGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindAllPortInImpl.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindAllPortInImpl.groovy">
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.domain.port.in
 
@@ -454,7 +454,7 @@ class FindAllPortInImpl implements FindAllPortIn {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FindAllPortInImpl = () => (
@@ -472,7 +472,7 @@ export const FindAllPortInImpl = () => (
 )
 
 const FindAllPortOutJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FindAllPortOut.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FindAllPortOut.java">
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.domain.port.out;
 
@@ -484,11 +484,11 @@ public interface FindAllPortOut {
   Page<Film> findAll(Pageable pageable);
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortOutKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FindAllPortOut.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FindAllPortOut.kt">
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.domain.port.out
 
@@ -500,11 +500,11 @@ interface FindAllPortOut {
   fun findAll(pageable: Pageable): Page<Film>
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortOutGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FindAllPortOut.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FindAllPortOut.groovy">
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.domain.port.out
 
@@ -516,7 +516,7 @@ interface FindAllPortOut {
   Page<Film> findAll(Pageable pageable)
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FindAllPortOut = () => (
@@ -534,7 +534,7 @@ export const FindAllPortOut = () => (
 )
 
 const FindAllPortOutImplJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FindAllPortOutImpl.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FindAllPortOutImpl.java">
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.domain.port.out;
 
@@ -558,11 +558,11 @@ public class FindAllPortOutImpl implements FindAllPortOut {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortOutImplKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FindAllPortOutImpl.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FindAllPortOutImpl.kt">
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.domain.port.out
 
@@ -582,11 +582,11 @@ class FindAllPortOutImpl(
       mapper.convert(repository.findAll(pageable))
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortOutImplGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FindAllPortOutImpl.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FindAllPortOutImpl.groovy">
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.domain.port.out
 
@@ -615,7 +615,7 @@ class FindAllPortOutImpl implements FindAllPortOut {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FindAllPortOutImpl = () => (
@@ -633,7 +633,7 @@ export const FindAllPortOutImpl = () => (
 )
 
 export const ApplicationYamlDataWebPageable = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/application-*.yaml">
+  <CodeBlock language="yaml" title="resources/application-*.yaml">
     {`spring:
 // highlight-added-start
   data:
@@ -643,11 +643,11 @@ export const ApplicationYamlDataWebPageable = () => (
         max-page-size: 100
 // highlight-added-end
   # ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const OpenapiYamlPaginationModifications = () => (
-  <CollapsibleCodeBlock language="yaml" title="resources/openapi.yaml">
+  <CodeBlock language="yaml" title="resources/openapi.yaml">
     {`# ...
 paths:
   /films:
@@ -775,11 +775,11 @@ components:
           required:
             - data
 `}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmRestControllerMockMvcTestJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.java">
     {`// ...
 // highlight-added-start
 import org.springframework.data.domain.PageImpl;
@@ -806,11 +806,11 @@ class FilmRestControllerMockMvcTest {
 // highlight-added-end
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmRestControllerMockMvcTestKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.kt">
     {`// ...
 // highlight-added-start
 import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindAllPortIn
@@ -842,11 +842,11 @@ class FilmRestControllerMockMvcTest {
         }
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FilmRestControllerMockMvcSpec = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerMockMvcSpec.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerMockMvcSpec.groovy">
     {`// ...
 // highlight-added-start
 import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindAllPortIn
@@ -885,7 +885,7 @@ class FilmRestControllerMockMvcSpec extends Specification implements MockMvcResu
 // highlight-added-end
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FilmRestControllerMockMvc = () => (
@@ -903,7 +903,7 @@ export const FilmRestControllerMockMvc = () => (
 )
 
 const FindAllPortInImplTestJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindAllPortInImplTest.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindAllPortInImplTest.java">
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.domain.port.in;
 
@@ -935,11 +935,11 @@ class FindAllPortInImplTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortInImplTestKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindAllPortInImplTest.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindAllPortInImplTest.kt">
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`
 
@@ -968,11 +968,11 @@ class FindAllPortInImplTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortInImplSpec = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindAllPortInImplSpec.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindAllPortInImplSpec.groovy">
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.domain.port.in
 
@@ -999,7 +999,7 @@ class FindAllPortInImplSpec extends Specification {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FindAllPortInImplTest = () => (
@@ -1017,7 +1017,7 @@ export const FindAllPortInImplTest = () => (
 )
 
 const FindAllPortOutImplDataJpaTestJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FindAllPortOutImplDataJpaTest.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FindAllPortOutImplDataJpaTest.java">
     {`// highlight-added-start
 package dev.pollito.spring_java.sakila.film.domain.port.out;
 
@@ -1055,11 +1055,11 @@ class FindAllPortOutImplDataJpaTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortOutImplDataJpaTestKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FindAllPortOutImplDataJpaTest.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FindAllPortOutImplDataJpaTest.kt">
     {`// highlight-added-start
 package dev.pollito.spring_kotlin.sakila.film.domain.port.out
 
@@ -1097,11 +1097,11 @@ class FindAllPortOutImplDataJpaTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FindAllPortOutImplDataJpaSpec = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FindAllPortOutImplDataJpaSpec.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FindAllPortOutImplDataJpaSpec.groovy">
     {`// highlight-added-start
 package dev.pollito.spring_groovy.sakila.film.domain.port.out
 
@@ -1140,7 +1140,7 @@ class FindAllPortOutImplDataJpaSpec extends Specification {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FindAllPortOutImplDataJpa = () => (
@@ -1158,7 +1158,7 @@ export const FindAllPortOutImplDataJpa = () => (
 )
 
 const MockMvcResultMatchersJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/test/util/MockMvcResultMatchers.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/test/util/MockMvcResultMatchers.java">
     {`// ...
 public final class MockMvcResultMatchers {
   // ...
@@ -1174,11 +1174,11 @@ public final class MockMvcResultMatchers {
   }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const MockMvcResultMatchersDsl = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/test/util/MockMvcResultMatchersDsl.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/test/util/MockMvcResultMatchersDsl.kt">
     {`// ...
 // highlight-added-start
 fun MockMvcResultMatchersDsl.hasPageFields() {
@@ -1189,11 +1189,11 @@ fun MockMvcResultMatchersDsl.hasPageFields() {
   jsonPath("$.data.totalPages") { isNumber() }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const MockMvcResultMatchersTrait = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/test/util/MockMvcResultMatchersTrait.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/test/util/MockMvcResultMatchersTrait.groovy">
     {`// ...
 trait MockMvcResultMatchersTrait {
   // ...
@@ -1209,7 +1209,7 @@ trait MockMvcResultMatchersTrait {
   }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const MockMvcResultMatchers = () => (
@@ -1227,7 +1227,7 @@ export const MockMvcResultMatchers = () => (
 )
 
 const SanityCheckSpringBootTestJava = () => (
-  <CollapsibleCodeBlock language="java" title="java/dev/pollito/spring_java/SanityCheckSpringBootTest.java">
+  <CodeBlock language="java" title="java/dev/pollito/spring_java/SanityCheckSpringBootTest.java">
     {`// ...
 class SanityCheckSpringBootTest {
   // ...
@@ -1246,11 +1246,11 @@ class SanityCheckSpringBootTest {
         );
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const SanityCheckSpringBootTestKt = () => (
-  <CollapsibleCodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/SanityCheckSpringBootTest.kt">
+  <CodeBlock language="kt" title="kotlin/dev/pollito/spring_kotlin/SanityCheckSpringBootTest.kt">
     {`// ...
 class SanityCheckSpringBootTest {
   // ...
@@ -1268,11 +1268,11 @@ class SanityCheckSpringBootTest {
         )
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const SanityCheckSpringBootSpec = () => (
-  <CollapsibleCodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/SanityCheckSpringBootSpec.groovy">
+  <CodeBlock language="groovy" title="groovy/dev/pollito/spring_groovy/SanityCheckSpringBootSpec.groovy">
     {`// ...
 class SanityCheckSpringBootSpec extends Specification {
   // ...
@@ -1293,7 +1293,7 @@ class SanityCheckSpringBootSpec extends Specification {
     HttpMethod.GET | "/api/films"      | []         | [:] as Map                                                                       | [:] as Map        | null
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const SanityCheckSpringBoot = () => (
@@ -1311,7 +1311,7 @@ export const SanityCheckSpringBoot = () => (
 )
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`├── ...
 └── src
     ├── main
@@ -1379,11 +1379,11 @@ const FileTreeJava = () => (
         └── resources
 // highlight-modified
             └── application-test.yaml`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`├── ...
 └── src
     ├── main
@@ -1451,11 +1451,11 @@ const FileTreeKt = () => (
         └── resources
 // highlight-modified
             └── application-test.yaml`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 const FileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`├── ...
 └── src
     ├── main
@@ -1523,7 +1523,7 @@ const FileTreeGroovy = () => (
         └── resources
 // highlight-modified
             └── application-test.yaml`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
 
 export const FileTree = () => (
@@ -1602,7 +1602,7 @@ export const RequestFlowSequenceDiagram = () => (
 )
 
 export const Terminal = () => (
-  <CollapsibleCodeBlock language="log" title="Terminal">
+  <CodeBlock language="log" title="Terminal">
     {`curl -s http://localhost:8080/api/films | jq
 
 {
@@ -1711,5 +1711,5 @@ export const Terminal = () => (
     "totalPages": 100
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 )
