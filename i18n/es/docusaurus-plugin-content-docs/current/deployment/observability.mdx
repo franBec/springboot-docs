@@ -7,23 +7,11 @@ import Admonition from '@theme/Admonition';
 import Image from '@site/src/components/image';
 import GithubTagInfo from '@site/src/components/github-tag-info';
 import {
-  DockerComposeObservability,
-  BuildGradle,
-  ApplicationYaml,
-  LokiDockerfile,
-  LokiConfig,
-  PromtailDockerfile,
-  PromtailConfig,
-  TempoDockerfile,
-  TempoConfig,
-  PrometheusDockerfile,
-  PrometheusConfig,
-  GrafanaDockerfile,
-  GrafanaDatasources,
-  GrafanaDashboards,
   FileTree,
   ArchitectureFlowchart,
 } from '@site/src/components/docs/deployment/observability';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <GithubTagInfo tag="observability" />
 
@@ -76,13 +64,59 @@ A continuación, un resumen de los archivos nuevos y modificados:
 
 Agregá `micrometer-registry-prometheus` para exponer métricas en formato Prometheus en `/actuator/prometheus`
 
-<BuildGradle />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/spring_java/build.gradle#L53
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kts reference title="build.gradle.kts (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/spring_kotlin/build.gradle.kts#L52
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/spring_groovy/build.gradle#L52
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ### Configuración de la aplicación
 
 Habilitá los endpoints de observabilidad y configurá dónde enviar los traces.
 
-<ApplicationYaml />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```yml reference title="resources/application.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/spring_java/src/main/resources/application.yaml#L4-L40
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```yml reference title="resources/application.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/spring_kotlin/src/main/resources/application.yaml#L4-L40
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```yml reference title="resources/application.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/spring_groovy/src/main/resources/application.yaml#L4-L40
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 - **management.endpoints.web.exposure.include**: Expone los endpoints de health, info, prometheus y metrics
 - **management.tracing.sampling.probability**: Configurá en `1.0` para tracear el 100% de los requests (reducir en producción)
@@ -95,7 +129,9 @@ Habilitá los endpoints de observabilidad y configurá dónde enviar los traces.
 
 Agregá los servicios del stack de observabilidad a tu `docker-compose.yml`:
 
-<DockerComposeObservability />
+```yml reference title="docker-compose.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/docker-compose.yml
+```
 
 Cada servicio de Spring Boot recibe dos adiciones:
 
@@ -126,13 +162,17 @@ Loki es un sistema de agregación de logs horizontalmente escalable, altamente d
 
 **Dockerfile:**
 
-<LokiDockerfile />
+```Dockerfile reference title="observability/loki.Dockerfile"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/loki.Dockerfile
+```
 
 Usa un build multi-stage para crear directorios con permisos correctos (Loki corre como usuario 10001).
 
 **Configuración:**
 
-<LokiConfig />
+```yml reference title="observability/loki-config.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/loki-config.yml
+```
 
 - **auth_enabled: false**: Deshabilita la autenticación para desarrollo local
 - **storage.filesystem**: Usa almacenamiento de filesystem local (adecuado para configuraciones de un solo nodo)
@@ -145,11 +185,15 @@ Promtail es un agente que envía el contenido de logs locales a Loki.
 
 **Dockerfile:**
 
-<PromtailDockerfile />
+```Dockerfile reference title="observability/promtail.Dockerfile"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/promtail.Dockerfile
+```
 
 **Configuración:**
 
-<PromtailConfig />
+```yml reference title="observability/promtail-config.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/promtail-config.yml
+```
 
 - **docker_sd_configs**: Descubre contenedores Docker automáticamente
 - **relabel_configs**: Filtra solo servicios `spring-*` y renombra labels
@@ -163,13 +207,17 @@ Tempo es un backend de tracing distribuido de alto volumen con dependencias mín
 
 **Dockerfile:**
 
-<TempoDockerfile />
+```Dockerfile reference title="observability/tempo.Dockerfile"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/tempo.Dockerfile
+```
 
 Crea directorios requeridos con ownership apropiado antes de copiar el binario de Tempo.
 
 **Configuración:**
 
-<TempoConfig />
+```yml reference title="observability/tempo.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/tempo.yml
+```
 
 - **distributor.receivers.otlp**: Acepta traces vía OTLP en los puertos 4317 (gRPC) y 4318 (HTTP)
 - **storage.trace.backend: local**: Usa filesystem local para almacenamiento de traces
@@ -182,11 +230,15 @@ Prometheus es un toolkit de monitoreo y alerting de sistemas que recolecta y alm
 
 **Dockerfile:**
 
-<PrometheusDockerfile />
+```Dockerfile reference title="observability/prometheus.Dockerfile"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/prometheus.Dockerfile
+```
 
 **Configuración:**
 
-<PrometheusConfig />
+```yml reference title="observability/prometheus.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/prometheus.yml
+```
 
 - **scrape_interval**: Recolecta métricas cada 60 segundos
 - **scrape_configs**: Define tres jobs para scrapear métricas de cada servicio de Spring Boot
@@ -198,13 +250,17 @@ Grafana provee visualización y análisis para tus datos de observabilidad.
 
 **Dockerfile:**
 
-<GrafanaDockerfile />
+```Dockerfile reference title="observability/grafana.Dockerfile"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/grafana.Dockerfile
+```
 
 Copia la configuración de provisioning de datasources y dashboards en tiempo de build.
 
 **Configuración de Datasources:**
 
-<GrafanaDatasources />
+```yml reference title="observability/grafana/datasources/datasources.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/grafana/datasources/datasources.yml
+```
 
 Configura tres datasources:
 
@@ -216,7 +272,9 @@ Las configuraciones `exemplarTraceIdDestinations` y `derivedFields` habilitan la
 
 **Configuración de Dashboards:**
 
-<GrafanaDashboards />
+```yml reference title="observability/grafana/dashboards/dashboards.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/93d608763b20eccdb830d715baa699ab7fd38b3d/observability/grafana/dashboards/dashboards.yml
+```
 
 Habilita la carga automática de dashboards desde `/var/lib/grafana/dashboards`.
 

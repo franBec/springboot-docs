@@ -10,15 +10,12 @@ import {
   DeploymentFlowDiagram,
   RegistryFlowDiagram,
   FileTree,
-  DockerComposeYaml,
-  DockerFiles,
-  SettingsDockerGradle,
-  GitHubActionsYaml,
   VerificationTerminal,
-  GitIgnore,
 } from '@site/src/components/docs/deployment/deployment-on-a-vps';
 import Youtube from '@site/src/components/youtube';
 import GithubTagInfo from '@site/src/components/github-tag-info';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <GithubTagInfo tag="vps-coolify-deployment" />
 
@@ -102,7 +99,9 @@ Before configuring Coolify, you need to prepare your repository with Docker and 
 
 This file orchestrates all three Spring Boot services:
 
-<DockerComposeYaml />
+```yml reference title="docker-compose.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/docker-compose.yml
+```
 
 Each service:
 
@@ -116,7 +115,30 @@ Each service:
 
 Each module gets its own optimized Dockerfile:
 
-<DockerFiles />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```Dockerfile reference title="spring_java/Dockerfile"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/spring_java/Dockerfile
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```Dockerfile reference title="spring_kotlin/Dockerfile"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/spring_kotlin/Dockerfile
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```Dockerfile reference title="spring_groovy/Dockerfile"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/spring_groovy/Dockerfile
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 A few important details about this multi-stage build:
 
@@ -129,7 +151,30 @@ A few important details about this multi-stage build:
 
 Each module needs a standalone settings file for Docker builds:
 
-<SettingsDockerGradle />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```groovy reference title="spring_java/settings-docker.gradle"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/spring_java/settings-docker.gradle
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```groovy reference title="spring_kotlin/settings-docker.gradle"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/spring_kotlin/settings-docker.gradle
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="spring_groovy/settings-docker.gradle"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/spring_groovy/settings-docker.gradle
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 This minimal configuration tells Gradle to only build the specific module, avoiding unnecessary compilation of the entire monorepo during the Docker build phase.
 
@@ -143,13 +188,17 @@ This minimal configuration tells Gradle to only build the specific module, avoid
 
 Exclude it from being ignored:
 
-<GitIgnore />
+```gitignore reference title=".gitignore"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/.gitignore#L23
+```
 
 ### .github/workflows/ci-cd.yml
 
 The GitHub Actions workflow orchestrates the CI/CD pipeline:
 
-<GitHubActionsYaml />
+```yml reference title=".github/workflows/ci-cd.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/d210b1837bd50df80c71bcf37f417555f9f6f7bc/.github/workflows/ci-cd.yml
+```
 
 This workflow has two jobs:
 

@@ -4,26 +4,16 @@ title: First Tests
 ---
 
 import {
-  MainFileTree,
   FileTree,
-  BuildGradle,
-  FindByIdPortInTests,
-  MockMvcResultMatchersJavaCode,
-  MockMvcResultMatchersKtCode,
-  MockMvcResultMatchersTraitGroovyCode,
-  FilmRestControllerTests,
-  ControllerAdvice,
-  TestErrorLog,
   JacocoReportJava,
   JacocoReportKt,
   JacocoReportGroovy,
-  ControllerAdviceTests,
-  SanityCheckSpringBootTests,
 } from '@site/src/components/docs/testing/first-tests';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Admonition from '@theme/Admonition';
 import GithubTagInfo from '@site/src/components/github-tag-info';
+import Image from '@site/src/components/image';
 
 <GithubTagInfo tag="testing" />
 
@@ -43,15 +33,23 @@ When running the `test` or `jacocoTestReport` task, JaCoCo will generate reports
 
 ### What Files To Test
 
-<MainFileTree />
+_Should I create one test per every main package file? Can I group tests? Which kind of test is better?_ All these questions don't have one truth answer. It changes from team to team, and from developer to developer. Here I share my approach, feel free to follow it, adapt it, change it as much as needed.
 
-| Symbol | Test Type          | Description                            |
-| ------ | ------------------ | -------------------------------------- |
-| 🔴     | `@SpringBootTest`  | Full context integration test          |
-| 🟡     | `@WebMvcTest`      | Web layer slice test                   |
-| 🔶     | Standalone MockMvc | MockMvc without full Spring context    |
-| 🟢     | Unit Test          | Pure unit test                         |
-| ⚪     | Ignored            | No test needed (config/interface/POJO) |
+Given a REST + Database CRUD project following hexagonal architecture:
+
+<Image
+  src={
+    require('@site/static/img/testing/hexagonal-arch-simple-diagram.png')
+      .default
+  }
+/>
+
+- **Adapter In** related classes that adapt REST can be grouped and tested together under a `@WebMvcTest` Web layer slice test.
+- **Adapter Out** related classes that adapt JPA can be grouped and tested together under a `@DataJpaTest` JPA layer slice test.
+- **Domain Use cases Implementations** can be grouped and tested together under a unit test.
+- **Configuration** classes are tricky. Most teams just ignore them completely. My take on them are:
+  - Web `@RestControllerAdvice` classes are tested with a `MockMvc` Standalone `@WebMvcTest` Web layer slice test.
+  - I've seen developers test log related classes in integration tests. My take is to just avoid testing log related filters and aspects. Too much trouble for too little win.
 
 ```txt
 ◀─────────────────────── TEST SPECTRUM ───────────────────────▶
@@ -60,98 +58,255 @@ UNIT                                                INTEGRATION
 FAST                                                      SLOW
 ISOLATED                                              CONNECTED
 
-🟢──────────🔶──────────🟡──────────🔴
+⚪──────────⚪──────────⚪──────────⚪
  │           │           │           │
  │           │           │           └── Full Spring Boot
  │           │           └── Web Layer Only
  │           └── MockMvc Standalone
  └── Pure Unit Test
-
-⚪ = Not on spectrum (no test needed)
 ```
 
 <FileTree />
 
 ## Dependencies
 
-<BuildGradle />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-## 🟢 Unit Tests
+        ```groovy reference title="build.gradle (plugin block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b4c04b36a87398fca60070b739fa0cbe726f741/spring_java/build.gradle#L7
+        ```
+
+        ```groovy reference title="build.gradle (new jacoco blocks + updated test block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b4c04b36a87398fca60070b739fa0cbe726f741/spring_java/build.gradle#L54-L122
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kts reference title="build.gradle.kts (plugin block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/build.gradle.kts#L9
+        ```
+
+        ```kts reference title="build.gradle.kts (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/build.gradle.kts#L49-L50
+        ```
+
+        ```kts reference title="build.gradle.kts (updated test block + new jacoco blocks)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/build.gradle.kts#L59-L120
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="build.gradle (plugin block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/build.gradle#L7
+        ```
+
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/build.gradle#L49-L50
+        ```
+
+        ```groovy reference title="build.gradle (updated test block + new jacoco blocks)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/build.gradle#L53-L118
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+## Unit Tests
 
 Unit tests don't involve Spring at all. These are faster to run and perfect for testing business logic in complete isolation.
 
-`FindByIdPortInImpl` is currently just returning a hardcoded film. There's not much point in doing deep testing here yet, but let's at least verify the service instantiates and returns something.
+### Use Cases Implementation Test
 
-<FindByIdPortInTests />
+`FilmUseCasesImpl.getFilm()` is currently just returning a hardcoded film. There's not much point in doing deep testing here yet, but let's at least verify the service instantiates and returns something.
 
-## 🔶 🟡 Slice Tests
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-### 🟡 Web Layer
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImplTest.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b4c04b36a87398fca60070b739fa0cbe726f741/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImplTest.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImplTest.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImplTest.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImplSpec.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImplSpec.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+### Valued Enum Utility Test
+
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/common/util/EnumUtilsTest.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b4c04b36a87398fca60070b739fa0cbe726f741/spring_java/src/test/java/dev/pollito/spring_java/common/util/EnumUtilsTest.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/common/util/EnumUtilsTest.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/common/util/EnumUtilsTest.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/common/util/EnumUtilsSpec.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/common/util/EnumUtilsSpec.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+## Slice Tests
+
+### Web Layer
 
 We're testing three things here:
 
 - **REST endpoint behavior**: Does the controller map requests correctly and return the expected responses?
 - **Exception handling**: When things go wrong, does our error response structure look right?
-- **JSON response structure**: Does the final JSON match what our API contract promises?
+- **JSON response structure**: Does the final JSON match what our API contract?
 
 To make our assertions more readable, we'll first create some custom matchers for our API response structure:
 
 <Tabs groupId="language" queryString>
-  <TabItem value="java" label="Java" default>
-    <MockMvcResultMatchersJavaCode />
-  </TabItem>
-  <TabItem value="kotlin" label="Kotlin">
-    <MockMvcResultMatchersKtCode />
-    <Admonition type="tip" title="Kotlin Extension Function">
-      By extending `MockMvcResultMatchersDsl`, our custom matchers integrate
-      seamlessly with Spring's Kotlin DSL. They can be called directly inside
-      the `andExpect` block, making the test code read like a native part of the
-      framework.
-    </Admonition>
-  </TabItem>
-  <TabItem value="groovy" label="Groovy">
-    <MockMvcResultMatchersTraitGroovyCode />
-    <Admonition type="tip" title="Groovy Trait">
-      A trait is like an interface with implementation that can be mixed into
-      classes. By implementing this trait in your Spock specifications, the
-      matcher methods become available as if they were defined directly in your
-      test class, no static imports needed. Unlike abstract base classes, you
-      can implement multiple traits, keeping your test hierarchy flexible.
-    </Admonition>
-  </TabItem>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/test/util/MockMvcResultMatchers.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b4c04b36a87398fca60070b739fa0cbe726f741/spring_java/src/test/java/dev/pollito/spring_java/test/util/MockMvcResultMatchers.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/test/util/MockMvcResultMatchersDsl.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/test/util/MockMvcResultMatchersDsl.kt
+        ```
+
+        <Admonition type="tip" title="Kotlin Extension Function">
+            By extending `MockMvcResultMatchersDsl`, our custom matchers integrate
+            seamlessly with Spring's Kotlin DSL. They can be called directly inside
+            the `andExpect` block, making the test code read like a native part of the
+            framework.
+        </Admonition>
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/test/util/MockMvcResultMatchersTrait.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/test/util/MockMvcResultMatchersTrait.groovy
+        ```
+
+        <Admonition type="tip" title="Groovy Trait">
+            A trait is like an interface with implementation that can be mixed into
+            classes. By implementing this trait in your Spock specifications, the
+            matcher methods become available as if they were defined directly in your
+            test class, no static imports needed. Unlike abstract base classes, you
+            can implement multiple traits, keeping your test hierarchy flexible.
+        </Admonition>
+    </TabItem>
+
 </Tabs>
 
 Now let's write the actual `RestController` test using a slice testing approach with `@WebMvcTest`, which creates a minimal Spring context focused on the web layer.
 
-<FilmRestControllerTests />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-When we run the tests, we find this error:
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b4c04b36a87398fca60070b739fa0cbe726f741/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.java
+        ```
 
-<TestErrorLog />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
 
-We expected a 400 (Bad Request) when passing an invalid ID (0), but got a 500 instead. This tells us our `ControllerAdvice` isn't handling `ConstraintViolationException` properly. It's being caught by the generic `Exception` handler and returning a 500 status.
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.kt
+        ```
 
-Let's fix the `ControllerAdvice` by adding an explicit handler for `ConstraintViolationException` that returns `BAD_REQUEST` (400) instead of letting it fall through to the generic 500 handler:
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
 
-<ControllerAdvice />
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerMockMvcSpec.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerMockMvcSpec.groovy
+        ```
 
-After this fix, we now have confidence that our controller handles happy paths, validation errors, and unexpected exceptions correctly.
+    </TabItem>
 
-### 🔶 MockMvc Standalone
+</Tabs>
 
-The goal of these tests is to verify our `ControllerAdvice` handles different exception scenarios correctly. We test that validation errors return appropriate HTTP status codes and response structures, ensuring our API provides consistent error responses across different failure modes.
+### MockMvc Standalone
 
-<ControllerAdviceTests />
+The goal of these tests is to verify `ControllerAdvice` handles different exception scenarios correctly. We test that validation errors return appropriate HTTP status codes and response structures, ensuring our API provides consistent error responses across different failure modes.
 
-## 🔴 Integration Tests
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-This integration test boots up the entire Spring Boot application context to verify that all the pieces fit together and work as expected in a real runtime environment.
+        ```java reference title="java/dev/pollito/spring_java/config/web/ControllerAdviceMockMvcTest.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b4c04b36a87398fca60070b739fa0cbe726f741/spring_java/src/test/java/dev/pollito/spring_java/config/web/ControllerAdviceMockMvcTest.java
+        ```
 
-Unlike the slice tests (`@WebMvcTest`) which only load specific parts of the application, this test with `@SpringBootTest` loads everything: all beans, configurations, filters, aspects, and wiring. It's our sanity check that the application actually starts and behaves correctly end-to-end.
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
 
-For now, we're using this integration test to verify our logging infrastructure works across the entire request lifecycle: from the moment a request arrives (LogFilter), through method execution (LogAspect), including security concerns like masking sensitive headers (MaskingPatternLayout), and distributed tracing setup (TraceIdFilter).
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdviceMockMvcTest.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdviceMockMvcTest.kt
+        ```
 
-<SanityCheckSpringBootTests />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/web/ControllerAdviceMockMvcSpec.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/config/web/ControllerAdviceMockMvcSpec.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+Don't forget to update `ControllerAdvice` to handle the exceptions tested.
+
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/config/web/ControllerAdvice.java (new exception handlers)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b4c04b36a87398fca60070b739fa0cbe726f741/spring_java/src/main/java/dev/pollito/spring_java/config/web/ControllerAdvice.java#L59-L67
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt (new exception handlers)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/a07c08c8b118befaefc3bc55190571b60adef72e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt#L57-L65
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy (new exception handlers)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/b4e267f0954cdce21179845cb8385f74852de9a7/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy#L71-L79
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ## Check the JaCoCo Report
 

@@ -27,13 +27,9 @@
     "message": "LinkedIn",
     "description": "The label of footer link with label=LinkedIn linking to https://www.linkedin.com/in/franco-becvort/"
   },
-  "link.item.label.Code License": {
-    "message": "Licencia de código",
-    "description": "The label of footer link with label=Code License linking to /licenses/code-license"
-  },
-  "link.item.label.Content License": {
-    "message": "Licencia de contenido",
-    "description": "The label of footer link with label=Content License linking to /licenses/content-license"
+  "link.item.label.MIT License": {
+    "message": "MIT License",
+    "description": "The label of footer link with label=MIT License linking to /about/MIT-license"
   },
   "copyright": {
     "message": "Copyright © 2025 Franco Exequiel Becvort. Built with Docusaurus.",

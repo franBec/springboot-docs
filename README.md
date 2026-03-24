@@ -33,13 +33,13 @@ While direct contributions to this demo repository are not actively sought, **fe
 
 ## Skills
 
-For detailed guidance on specific aspects, coding agents can use the OpenCode skills:
+For detailed guidance on specific aspects, coding agents (and humans too) can use the OpenCode skills:
 
-- **[AGENTS.md](./AGENTS.md)** - Agent instructions, project context, and global behavior constraints
-- **`.opencode/skills/code-style`** - TypeScript, React patterns, and code formatting standards
-- **`.opencode/skills/writing-style`** - Writing persona, tone, and content structure guidelines
-- **`.opencode/skills/docusaurus-i18n`** - Internationalization guidelines and translation processes
-- **`.opencode/skills/coolify-deployment`** - Deployment guide for Coolify
+- **[AGENTS.md](./AGENTS.md)** - Agent instructions.
+- **`.opencode/skills/code-style`** - TypeScript, React, and Markdown code style conventions including naming, formatting, snippet management, and image usage patterns.
+- **`.opencode/skills/coolify-deployment`** - Deployment guide for the Docusaurus documentation site to Coolify. Covers application setup, build configuration, domain settings, and automatic deployments.
+- **`.opencode/skills/docusaurus-i18n`** - Guidelines for translating Docusaurus documentation to Spanish, including file placement, tone, and formatting rules.
+- **`.opencode/skills/writing-style`** - Guidelines for creating documentation with a pragmatic senior developer mentor tone and voice. Covers Docusaurus formatting, heading capitalization rules, and writing patterns to avoid.
 
 ---
 

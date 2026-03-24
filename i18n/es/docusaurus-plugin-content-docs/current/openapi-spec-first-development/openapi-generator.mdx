@@ -10,11 +10,6 @@ import TabItem from '@theme/TabItem';
 import Admonition from '@theme/Admonition';
 import {
   FileTree,
-  BuildGradleGroovy,
-  BuildGradleKts,
-  RestController,
-  RestControllerAdvice,
-  Mapper,
   Terminal,
 } from '@site/src/components/docs/contract-driven-development/openapi-generator';
 
@@ -50,8 +45,20 @@ Ahorrémosnos algunos problemas usando una de las mejores librerías que existen
 
 <Tabs groupId="language" queryString>
   <TabItem value="java" label="Java" default>
-    <BuildGradleGroovy />
-    <Admonition type="info">
+
+      ```groovy reference title="build.gradle (plugin block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/build.gradle#L6
+      ```
+
+      ```groovy reference title="build.gradle (dependencies block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/build.gradle#L48-L50
+      ```
+
+      ```groovy reference title="build.gradle (new openApiGenerate block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/build.gradle#L76-L105
+      ```
+
+    <Admonition type="info" title="Documentación del Spring Generator">
 
       Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md).
 
@@ -59,8 +66,24 @@ Ahorrémosnos algunos problemas usando una de las mejores librerías que existen
 
   </TabItem>
   <TabItem value="kotlin" label="Kotlin">
-    <BuildGradleKts />
-    <Admonition type="info">
+
+      ```kts reference title="build.gradle.kts (plugin block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/build.gradle.kts#L8
+      ```
+
+      ```kts reference title="build.gradle.kts (dependencies block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/build.gradle.kts#L43-L46
+      ```
+
+      ```kts reference title="build.gradle.kts (Spotless extension block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/build.gradle.kts#L57-L72
+      ```
+
+      ```kts reference title="build.gradle.kts (new generateOpenApi block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/build.gradle.kts#L74-L113
+      ```
+
+    <Admonition type="info" title="Documentación del Kotlin Spring Generator">
 
       Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador kotlin-spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/kotlin-spring.md).
 
@@ -68,11 +91,22 @@ Ahorrémosnos algunos problemas usando una de las mejores librerías que existen
 
   </TabItem>
   <TabItem value="groovy" label="Groovy" default>
-    <BuildGradleGroovy />
-    <Admonition type="info">
 
-      - Podés encontrar más información sobre las diferentes configuraciones en la [Documentación para el generador spring](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md).
-      - Aunque existe un [generador groovy](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/groovy.md), es un generador de clientes. Para nuestro caso de uso (generar código del lado del servidor), no es lo que necesitamos. Por eso nos quedamos con el generador "spring", que genera clases `.java`.
+      ```groovy reference title="build.gradle (plugin block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/build.gradle#L6
+      ```
+
+      ```groovy reference title="build.gradle (dependencies block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/build.gradle#L44-L46
+      ```
+
+      ```groovy reference title="build.gradle (new openApiGenerate block)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/build.gradle#L71-L100
+      ```
+
+    <Admonition type="info" title="Documentación del Spring Generator">
+
+      Aunque existe un [generador groovy](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/groovy.md), es un generador de clientes. Para nuestro caso de uso (generar código del lado del servidor), no es lo que necesitamos. Por eso nos quedamos con el generador "[spring"](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md), que genera clases `.java`.
 
     </Admonition>
 
@@ -102,19 +136,179 @@ Ahora que todo está configurado, **ejecutá la tarea Build**. Cuando la tarea t
 
 ## Usando el Código Generado
 
-1. **Hacé que la clase `@RestController` implemente la interfaz `Api` generada:**
+<ol>
+  <li>
+    <strong>Hacé que la clase `@RestController` implemente la interfaz `Api` generada:</strong>
 
-   <RestController />
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
 
-2. **Actualizá la interfaz `Mapper` así retorna el modelo `Response` generado en lugar del escrito a mano:**
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java
+        ```
 
-   <Mapper />
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
 
-3. **Actualizá la clase `@RestControllerAdvice` así retorna el modelo `Error` generado (que modela `ProblemDetail`) para mantener consistencia:**
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt
+        ```
 
-   <RestControllerAdvice />
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
 
-4. **Borrá el `FilmResponse` escrito a mano, ya no es necesario.**
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy
+        ```
+
+      </TabItem>
+    </Tabs>
+
+  </li>
+
+  <li>
+    <strong>Actualizá la interfaz `Mapper` así retorna el modelo `generated.model.Film` generado en lugar del escrito a mano:</strong>
+
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java
+        ```
+
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt
+        ```
+
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy
+        ```
+
+      </TabItem>
+    </Tabs>
+
+  </li>
+
+  <li>
+    <strong>Actualizá la clase `@RestControllerAdvice` así retorna el modelo `Error` generado (que modela `ProblemDetail`) para mantener consistencia:</strong>
+
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/config/web/ControllerAdvice.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/src/main/java/dev/pollito/spring_java/config/web/ControllerAdvice.java
+        ```
+
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt
+        ```
+
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy
+        ```
+
+      </TabItem>
+    </Tabs>
+
+  </li>
+
+  <li>
+    <strong>Actualizá los modelos del domain para que representen mejor los casos de uso:</strong>
+
+    - Patrón Enum interface + utility class:
+
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/common/ValuedEnum.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/src/main/java/dev/pollito/spring_java/common/ValuedEnum.java
+        ```
+
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/common/ValuedEnum.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/common/ValuedEnum.kt
+        ```
+
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/common/ValuedEnum.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/common/ValuedEnum.groovy
+        ```
+
+      </TabItem>
+    </Tabs>
+
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/common/util/EnumUtils.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/src/main/java/dev/pollito/spring_java/common/util/EnumUtils.java
+        ```
+
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/common/util/EnumUtils.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/common/util/EnumUtils.kt
+        ```
+
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/common/util/EnumUtils.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/common/util/EnumUtils.groovy
+        ```
+
+      </TabItem>
+    </Tabs>
+
+    - Actualización del modelo de dominio:
+
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/model/Film.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/ec32164ede7cc8e020ba07c559d44485cbb15f9d/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/model/Film.java
+        ```
+
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/f0aa3a3665a9a260b042f787c73d7a95950158cb/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt
+        ```
+
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/7e4b5b12c2b5146318fa098128dd7b1b9cac0006/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy
+        ```
+
+      </TabItem>
+    </Tabs>
+
+  </li>
+
+  <li>
+    <strong>Borrá el `FilmResponse` escrito a mano, ya no es necesario.</strong>
+  </li>
+</ol>
 
 Compilá y ejecutá la aplicación. Después andá a [http://localhost:8080/api/films/42](http://localhost:8080/api/films/42)
 

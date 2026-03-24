@@ -1,104 +1,177 @@
 ---
 name: code-style
-description: TypeScript, React, and documentation code style conventions including naming, formatting, snippet management, and image usage patterns
+description: TypeScript, React, and Markdown code style conventions including naming, formatting, snippet management, and image usage patterns.
 license: MIT
 compatibility: opencode
 metadata:
-  language: typescript
-  framework: react
   type: conventions
 ---
 
+## What I do
+
+- Enforce consistent TypeScript/React coding conventions across all `.tsx` and `.ts` files
+- Enforce consistent Markdown/MDX conventions across all documentation files
+- Enforce Docusaurus-specific patterns for components, imports, and content snippets
+- Enforce formatting rules matching the Prettier configuration
+
 ## When to use me
 
-Use this skill when:
+- When creating or editing `.tsx`, `.ts`, `.mdx`, or `.md` files in this project
+- When reviewing or refactoring React components, documentation pages, or remark plugins
+- When adding new Docusaurus doc pages, components, or interactive snippets
 
-- Writing new React components
-- Creating or modifying documentation with code snippets
-- Adding images to documentation
-- Naming files, components, or functions
-- Extracting code examples from MDX files
+## Instructions
 
-## TypeScript & React Patterns
+### TypeScript and React
 
-- Use functional components with hooks
-- Use `React.FC` type for function components
-- Define explicit interfaces for props
-- Use `ReactNode` as return type for components
-- Destructure props in function parameters with explicit type annotation
-- Use `clsx` for conditional className merging
-- Use named imports from React (e.g., `import { useState } from 'react'`) — avoid `import React from 'react'`
+#### Imports
 
-## Naming Conventions
+- **Never** use `import React from 'react'`. Use named imports only: `import { useState, useRef } from 'react'`. The default `React` import causes false-positive TypeScript errors with Docusaurus theme components.
+- Use `@theme/` imports for Docusaurus theme components: `CodeBlock`, `Tabs`, `TabItem`, `Mermaid`, `Admonition`, `Heading`, `Translate`.
+- Use `@site/src/components/` for project-specific component imports.
+- Use `@docusaurus/Translate` for i18n: `import Translate, { translate } from '@docusaurus/Translate'`.
+- Group imports logically: React/Docusaurus builtins first, then `@theme/`, then `@site/` local components.
 
-| Type                | Case                   | Example                                            |
-| ------------------- | ---------------------- | -------------------------------------------------- |
-| Components          | PascalCase             | `CollapsibleCodeBlock`, `ZoomContainer`            |
-| Functions           | camelCase              | `handleToggle`, `fetchData`                        |
-| Constants/Variables | camelCase              | `maxLines`, `isExpanded`                           |
-| Snippet exports     | Descriptive PascalCase | `FilmStructureJson`, `OpenApiSpecYaml`             |
-| Files               | kebab-case             | `collapsible-code-block.tsx`, `zoom-container.tsx` |
+#### Component Patterns
 
-## Formatting
+- Use named function exports for components: `export default function ComponentName()` or `export const ComponentName = () => ()`.
+- Use `React.FC<PropsType>` syntax when the component has a defined props interface.
+- Define interfaces/types immediately above the component that uses them, not in separate files.
+- Don't add comments unless explicitly asked.
 
-Run `pnpm run format` to format code with Prettier.
+#### Props and Types
 
-## Code Snippet Management
+- Define prop types as `interface ComponentNameProps { ... }` or `type ComponentNameProps = { ... }`.
+- Use `React.ComponentType`, `React.ComponentProps`, `ReactNode`, `React.CSSProperties` etc. from React's type system.
+- For inline styles, type as `Record<string, React.CSSProperties>` for style maps, or `React.CSSProperties` for single style objects.
 
-For large documentation files with extensive code examples, extract code snippets into separate React components.
+#### Docusaurus Theme Components
 
-### File Location Convention
+- `@theme/CodeBlock`: Import from `@theme/CodeBlock`. Accepts `language`, `title`, and children (string for fenced code, JSX for interactive content).
+- `@theme/Mermaid`: Import from `@theme/Mermaid`. Accepts `value` prop with Mermaid diagram string. Always wrap in `<ZoomContainer>` for diagram interactivity.
+- `@theme/Tabs` and `@theme/TabItem`: Always use `groupId="language" queryString` on Tabs when presenting Java/Kotlin/Groovy variations. Java is always the default tab (`default` attribute).
+- TypeScript LSP warnings about `Mermaid`, `ZoomContainer`, or `children` from theme imports are false positives. Do not attempt to fix them.
 
-1. Mirror the `docs/` directory structure within `src/components/docs/`
-2. Convert document filename by removing `.mdx` extension
+#### Code Highlighting in CodeBlock Snippets
 
-**Example:** `docs/deployment/observability.mdx` → `src/components/docs/deployment/observability.tsx`
+Use these magic comment markers inside `<CodeBlock>` string children:
 
-### Snippet Component Structure
+- `// highlight-added` or `// highlight-added-start` / `// highlight-added-end` for new lines (green)
+- `// highlight-removed` or `// highlight-removed-start` / `// highlight-removed-end` for deleted lines (red)
+- `// highlight-modified` or `// highlight-modified-start` / `// highlight-modified-end` for changed lines (blue)
+- `// highlight-next-line` for highlighting a single line
 
-```tsx
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
-import ZoomContainer from '@site/src/components/zoom-container';
-import Mermaid from '@theme/Mermaid';
+These are configured in `docusaurus.config.ts` under `themeConfig.prism.magicComments`.
 
-export const TerminalCode = () => (
-  <CollapsibleCodeBlock
-    language="log"
-    title="Terminal"
-  >{`output`}</CollapsibleCodeBlock>
-);
+### Markdown and MDX
 
-export const ApplicationLogs = () => (
-  <CollapsibleCodeBlock
-    language="log"
-    title="Application logs"
-  >{`logs`}</CollapsibleCodeBlock>
-);
+#### Frontmatter
 
-export const SequenceDiagram = () => (
-  <ZoomContainer>
-    <Mermaid
-      value={`sequenceDiagram participant A participant B A->>B: Example`}
-    />
-  </ZoomContainer>
-);
+Every `.mdx` or `.md` doc file must include:
+
+```yaml
+---
+sidebar_position: <number>
+title: <Title Case String>
+---
 ```
 
-### Escaping in Template Literals
+The sidebar is autogenerated from the `docs/` directory structure. Do not modify `sidebars.ts`.
 
-When embedding code in JavaScript template literals, escape:
+#### Content Imports
 
-- `$` → `\$`
-- `` ` `` → `` \` ``
+Import reusable interactive components from:
 
-## Image Component Usage
+- `@site/src/components/github-tag-info` for `<GithubTagInfo tag="..." />`
+- `@site/src/components/file-tree-info` for `<FileTreeInfo>`
+- `@site/src/components/zoom-container` for `<ZoomContainer>`
+- `@site/src/components/docs/<section>/<filename>` for doc-specific snippets
 
-Use the custom `Image` component instead of raw `<img>` tags or `<div>` wrappers:
+#### Code Snippets from GitHub
 
-```tsx
-import Image from '@site/src/components/image';
+Use the `reference` meta keyword in fenced code blocks to fetch live code from the `springboot-demo-projects` repo:
 
-<Image src={require('@site/static/img/deployment/screenshot.png').default} />;
+````
+```java reference title="descriptive-title.java"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/<commit>/spring_java/src/main/java/...
+````
+
+Support line ranges with `#L5` for single lines or `#L44-L61` for ranges in the URL fragment.
+
+#### Language Tab Pattern
+
+When showing code for Java, Kotlin, and Groovy variants, always use:
+
+```mdx
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+    ...
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+    ...
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+    ...
+  </TabItem>
+</Tabs>
 ```
 
-**Important:** Always use `require('@site/static/img/...').default` syntax for static images.
+Indent content inside TabItem with 4 spaces.
+
+#### File Trees
+
+Use `<CodeBlock language="log" title="File Tree">` with tree characters (unicode box-drawing) and highlight markers for new/modified files. Wrap in `<FileTreeInfo>` and `<Tabs groupId="language" queryString>` for multi-language variants.
+
+#### Terminal Output
+
+Use `<CodeBlock language="log" title="Terminal">` for shell commands and output.
+
+#### JSON Samples
+
+Use `<CodeBlock language="json">` for API response examples.
+
+#### Sequence Diagrams
+
+Always wrap `<Mermaid>` in `<ZoomContainer>`:
+
+```mdx
+<ZoomContainer>
+  <Mermaid
+    value={`sequenceDiagram
+    participant A
+    participant B
+    A->>B: message`}
+  />
+</ZoomContainer>
+```
+
+### Prettier Formatting
+
+The project uses Prettier. Run `pnpm run format` before committing changes.
+
+### Project Structure Conventions
+
+- **Reusable components**: `src/components/<component-name>.tsx` (e.g. `image.tsx`, `youtube.tsx`, `zoom-container.tsx`)
+- **Doc-specific snippet components**: `src/components/docs/<doc-section>/<snippet-name>.tsx`
+- **Swizzled theme components**: `src/theme/<ThemeComponent>/index.tsx`
+- **Remark plugins**: `src/remark/<plugin-name>.ts`
+- **Pages**: `src/pages/index.tsx`
+- **Static assets**: `static/img/`
+- **i18n**: `i18n/es/` for Spanish translations; uses Docusaurus JSON translation IDs
+- **CSS**: `src/css/custom.css` for global styles using Infima CSS variables
+
+### Images
+
+- Store images in `static/img/`.
+- Use the `<Image>` component from `@site/src/components/image` instead of raw `<img>` tags where possible. It auto-generates alt text from the filename.
+- Use SVG illustrations for feature icons; store in `static/img/`.
+- CSS centers all `.markdown img` elements automatically with `margin-left: auto; margin-right: auto` and `margin-bottom: 1.5rem`.
+
+### TypeScript Strict Mode Warnings
+
+Ignore these known false positives from Docusaurus theme imports:
+
+- `Cannot find name 'Mermaid'` or `Cannot find name 'ZoomContainer'`
+- `Property 'children' is missing in type '{}'`
+
+These occur because Docusaurus injects theme components at build time. The imports work at runtime.

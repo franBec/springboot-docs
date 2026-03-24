@@ -4,20 +4,15 @@ title: Logs
 ---
 
 import {
-  ApplicationDevYaml,
   ApplicationLogs,
   ApplicationSequenceDiagram,
-  BuildGradle,
   CurlRequest,
   FileTree,
-  LogAspect,
-  Logback,
-  LogFilter,
-  MaskingPatternLayout,
-  TraceIdFilter,
 } from '@site/src/components/docs/cross-cutting-concerns/logs';
 import GithubTagInfo from '@site/src/components/github-tag-info';
 import Admonition from '@theme/Admonition';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <GithubTagInfo tag="logs" />
 
@@ -30,22 +25,47 @@ In Spring Boot, [SLF4J](https://slf4j.org/) and [Logback](https://logback.qos.ch
 
 Even though Spring Boot includes SLF4J and Logback automatically and no setup is required to get basic logging working, improving the logging experience is highly recommended. Structured logging with trace IDs, centralized sensitive data masking, and consistent request/response logging make debugging production issues significantly easier.
 
+## Changed Files
+
 <FileTree />
 
 ## Dependencies
 
-<BuildGradle />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-<Admonition type="info" title="Logging in Kotling Projects">
-  [`kotlin-logging`](https://github.com/oshai/kotlin-logging) is a wrapper
-  around SLF4J that provides a more idiomatic Kotlin way to log messages. It
-  **does not replace** SLF4J or Logback; instead, it simplifies logging calls in
-  Kotlin by using extension functions and lazy evaluation for messages. The
-  logging hierarchy remains: Kotlin code → `kotlin-logging` → SLF4J → Logback
-  (Spring Boot default)
-</Admonition>
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_java/build.gradle#L44-L45
+        ```
 
-### Avoid Local OTLP Log Publishing
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kts reference title="build.gradle.kts (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_kotlin/build.gradle.kts#L38-L40
+        ```
+
+        <Admonition type="info" title="Logging in Kotlin Projects">
+            [`kotlin-logging`](https://github.com/oshai/kotlin-logging) is a wrapper
+            around SLF4J that provides a more idiomatic Kotlin way to log messages. It
+            **does not replace** SLF4J or Logback; instead, it simplifies logging calls in
+            Kotlin by using extension functions and lazy evaluation for messages. The
+            logging hierarchy remains: Kotlin code → `kotlin-logging` → SLF4J → Logback
+            (Spring Boot default)
+        </Admonition>
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_groovy/build.gradle#L40-L41
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+## Avoid Local OTLP Log Publishing
 
 When you add [`spring-boot-starter-opentelemetry`](https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/) to your dependencies, Spring Boot automatically configures OpenTelemetry exporters to publish metrics and traces via OTLP (OpenTelemetry Protocol).
 
@@ -53,11 +73,34 @@ The problem is that on local development, you typically don't have an OTLP colle
 
 To avoid this noise during local development, disable OTLP metrics export in your dev profile:
 
-<ApplicationDevYaml />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```yml reference title="resources/application-dev.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_java/src/main/resources/application-dev.yaml
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```yml reference title="resources/application-dev.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_kotlin/src/main/resources/application-dev.yaml
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```yml reference title="resources/application-dev.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_groovy/src/main/resources/application-dev.yaml
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 From now on, run the `bootRun` Gradle task with the `SPRING_PROFILES_ACTIVE=dev` environment variable to activate the dev profile:
 
-```bash
+```sh
 SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 ```
 
@@ -67,7 +110,30 @@ Using an Aspect for logging is a classic example of AOP in action. Instead of sc
 
 For a deeper dive, check out the [AOP section on Cross-Cutting Concerns](/cross-cutting-concerns#aspect-oriented-programming-aop).
 
-<LogAspect />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/config/log/LogAspect.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_java/src/main/java/dev/pollito/spring_java/config/log/LogAspect.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/log/LogAspect.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/log/LogAspect.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/log/LogAspect.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/log/LogAspect.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ## Log Filter
 
@@ -75,7 +141,30 @@ Sometimes, a request might not even reach your Spring MVC controllers. By loggin
 
 This can be incredibly useful for debugging issues like authentication failures, routing problems, or requests that are blocked higher up in the filter chain.
 
-<LogFilter />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/config/log/LogFilter.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_java/src/main/java/dev/pollito/spring_java/config/log/LogFilter.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/log/LogFilter.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/log/LogFilter.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/log/LogFilter.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/log/LogFilter.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ## Tracing
 
@@ -83,19 +172,94 @@ Ever tried to debug an issue in a busy system by trawling through a massive log 
 
 This is where tracing comes in. By assigning a unique ID (a 'Trace ID') to each incoming request, you can tag every single log entry generated during that request's lifecycle. Suddenly, you can filter the entire log file to see the journey of just one request across multiple methods, services, or threads.
 
-<TraceIdFilter />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/config/log/OTelApiTraceSpanFilter.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_java/src/main/java/dev/pollito/spring_java/config/log/OTelApiTraceSpanFilter.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/log/OTelApiTraceSpanFilter.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/log/OTelApiTraceSpanFilter.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/log/OTelApiTraceSpanFilter.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/log/OTelApiTraceSpanFilter.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ## Mask Sensitive Data in Logs With Logback
 
 It's important to mask sensitive details when logging (i.e., passwords, SSN, etc.). Let's mask the logs centrally by configuring masking rules for all log entries produced by Logback.
 
-1.  Create `MaskingPatternLayout`:
+<ol>
+  <li>
+    Create `MaskingPatternLayout`:
 
-    <MaskingPatternLayout />
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
 
-2.  Add regex patterns in `maskPattern` tags inside `logback.xml`:
+        ```java reference title="java/dev/pollito/spring_java/config/log/MaskingPatternLayout.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_java/src/main/java/dev/pollito/spring_java/config/log/MaskingPatternLayout.java
+        ```
 
-    <Logback />
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/log/MaskingPatternLayout.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/log/MaskingPatternLayout.kt
+        ```
+
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/log/MaskingPatternLayout.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/log/MaskingPatternLayout.groovy
+        ```
+
+      </TabItem>
+    </Tabs>
+
+  </li>
+
+  <li>
+    Add regex patterns in `maskPattern` tags inside `logback.xml`:
+
+    <Tabs groupId="language" queryString>
+      <TabItem value="java" label="Java" default>
+
+        ```xml reference title="resources/logback-spring.xml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_java/src/main/resources/logback-spring.xml
+        ```
+
+      </TabItem>
+      <TabItem value="kotlin" label="Kotlin">
+
+        ```xml reference title="resources/logback-spring.xml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_kotlin/src/main/resources/logback-spring.xml
+        ```
+
+      </TabItem>
+      <TabItem value="groovy" label="Groovy">
+
+        ```xml reference title="resources/logback-spring.xml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b/spring_groovy/src/main/resources/logback-spring.xml
+        ```
+
+      </TabItem>
+    </Tabs>
+
+  </li>
+</ol>
 
 ## Check How Logs Look Like
 

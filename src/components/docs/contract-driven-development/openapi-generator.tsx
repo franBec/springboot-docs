@@ -16,10 +16,15 @@ const FileTreeJava = () => (
     │   │       └── pollito
     │   │           └── spring_java
     │   │               ├── config
-    │   │               │   ├── advice
+    │   │               │   └── web
 // highlight-modified
-    │   │               │   │   └── ControllerAdvice.java
-    │   │               │   └── ...
+    │   │               │       └── ControllerAdvice.java
+    │   │               ├── common
+    │   │               │   ├── util
+// highlight-added-start
+    │   │               │   │   └── EnumUtils.java
+    │   │               │   └── ValuedEnum.java
+// highlight-added-end
     │   │               ├── sakila
     │   │               │   └── film
     │   │               │       ├── adapter
@@ -32,6 +37,17 @@ const FileTreeJava = () => (
     │   │               │       │           ├── FilmRestMapper.java
     │   │               │       │           └── FilmRestController.java
 // highlight-modified-end
+    │   │               │       ├── domain
+    │   │               │       │   ├── model
+// highlight-modified
+    │   │               │       │   │   ├── Film.java
+// highlight-added-start
+    │   │               │       │   │   ├── FilmLanguage.java
+    │   │               │       │   │   └── FilmRating.java
+// highlight-added-end
+    │   │               │       │   └── service
+// highlight-modified
+    │   │               │       │       └── FilmUseCasesImpl.java
     │   │               │       └── ...
     │   │               └── ...
     │   └── ...
@@ -52,10 +68,15 @@ const FileTreeKt = () => (
     │   │       └── pollito
     │   │           └── spring_kotlin
     │   │               ├── config
-    │   │               │   ├── advice
+    │   │               │   └── web
 // highlight-modified
-    │   │               │   │   └── ControllerAdvice.kt
-    │   │               │   └── ...
+    │   │               │       └── ControllerAdvice.kt
+    │   │               ├── common
+    │   │               │   ├── util
+// highlight-added-start
+    │   │               │   │   └── EnumUtils.kt
+    │   │               │   └── ValuedEnum.kt
+// highlight-added-end
     │   │               ├── sakila
     │   │               │   └── film
     │   │               │       ├── adapter
@@ -68,6 +89,17 @@ const FileTreeKt = () => (
     │   │               │       │           ├── FilmRestMapper.kt
     │   │               │       │           └── FilmRestController.kt
 // highlight-modified-end
+    │   │               │       ├── domain
+    │   │               │       │   ├── model
+// highlight-modified
+    │   │               │       │   │   ├── Film.kt
+// highlight-added-start
+    │   │               │       │   │   ├── FilmLanguage.kt
+    │   │               │       │   │   └── FilmRating.kt
+// highlight-added-end
+    │   │               │       │   └── service
+// highlight-modified
+    │   │               │       │       └── FilmUseCasesImpl.kt
     │   │               │       └── ...
     │   │               └── ...
     │   └── ...
@@ -87,10 +119,18 @@ const FileTreeGroovy = () => (
     │   │       └── pollito
     │   │           └── spring_groovy
     │   │               ├── config
-    │   │               │   ├── advice
+    │   │               │   ├── mapper
 // highlight-modified
-    │   │               │   │   └── ControllerAdvice.groovy
-    │   │               │   └── ...
+    │   │               │   │   └── ModelMapperConfig.groovy
+    │   │               │   └── web
+// highlight-modified
+    │   │               │       └── ControllerAdvice.groovy
+    │   │               ├── common
+    │   │               │   ├── util
+// highlight-added-start
+    │   │               │   │   └── EnumUtils.groovy
+    │   │               │   └── ValuedEnum.groovy
+// highlight-added-end
     │   │               ├── sakila
     │   │               │   └── film
     │   │               │       ├── adapter
@@ -103,6 +143,17 @@ const FileTreeGroovy = () => (
     │   │               │       │           ├── FilmRestMapper.groovy
     │   │               │       │           └── FilmRestController.groovy
 // highlight-modified-end
+    │   │               │       ├── domain
+    │   │               │       │   ├── model
+// highlight-modified
+    │   │               │       │   │   ├── Film.groovy
+// highlight-added-start
+    │   │               │       │   │   ├── FilmLanguage.groovy
+    │   │               │       │   │   └── FilmRating.groovy
+// highlight-added-end
+    │   │               │       │   └── service
+// highlight-modified
+    │   │               │       │       └── FilmUseCasesImpl.groovy
     │   │               │       └── ...
     │   │               └── ...
     │   └── ...
@@ -124,660 +175,6 @@ export const FileTree = () => (
       </TabItem>
     </Tabs>
   </FileTreeInfo>
-);
-
-export const BuildGradleGroovy = () => (
-  <CodeBlock language="groovy" title="build.gradle">
-    {`plugins {
-  // ...
-// highlight-added
-  id 'org.openapi.generator' version '7.17.0'
-}
-// ...
-dependencies {
-  // ...
-// highlight-added-start
-  implementation 'io.swagger.core.v3:swagger-annotations:2.2.41'
-  implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
-  implementation 'org.springframework.boot:spring-boot-starter-validation'
-// highlight-added-end
-}
-// ...
-// highlight-added-start
-openApiGenerate {
-  generatorName = "spring"
-  inputSpec = layout.projectDirectory.file("src/main/resources/openapi.yaml").asFile.toString()
-  outputDir = layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString()
-
-  def basePackage = "\${project.group}.\${project.name}.generated".toString()
-  apiPackage = "\${basePackage}.api"
-  modelPackage = "\${basePackage}.model"
-
-  configOptions = [
-    interfaceOnly             : "true",
-    requestMappingMode        : "api_interface",
-    skipDefaultInterface      : "true",
-    useJakartaEe              : "true",
-    useSpringBoot3            : "true",
-    useTags                   : "true",
-  ]
-}
-
-sourceSets {
-  main {
-    java {
-      srcDir(layout.buildDirectory.dir("generated/sources/openapi/src/main/java"))
-    }
-  }
-}
-
-tasks.named('compileJava') {
-  dependsOn 'openApiGenerate'
-}
-// highlight-added-end`}
-  </CodeBlock>
-);
-
-export const BuildGradleKts = () => (
-  <CodeBlock language="kts" title="build.gradle.kts">
-    {`plugins {
-  // ...
-// highlight-added
-  id("org.openapi.generator") version "7.17.0"
-}
-// ...
-dependencies {
-  // ...
-// highlight-added-start
-  val swaggerCoreVersion = "2.2.41"
-  implementation("io.swagger.core.v3:swagger-annotations:$swaggerCoreVersion")
-  implementation("io.swagger.core.v3:swagger-models:$swaggerCoreVersion")
-  implementation("org.springframework.boot:spring-boot-starter-validation")
-// highlight-added-end
-}
-// ...
-configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-  kotlin {
-// highlight-added-start
-    target("src/**/*.kt")
-    targetExclude("build/**/*.kt")
-// highlight-added-end
-    // ...
-  }
-  // ...
-}
-// ...
-// highlight-added-start
-val openApiSpecPath = "\$projectDir/src/main/resources/openapi.yaml"
-val openApiGeneratedSourcesDir = "\${layout.buildDirectory.get().asFile}/generated/source/openapi"
-
-tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateOpenApi") {
-  generatorName.set("kotlin-spring")
-  generateApiTests.set(false)
-  generateApiDocumentation.set(false)
-  generateModelTests.set(false)
-  generateModelDocumentation.set(false)
-
-  inputSpec.set(openApiSpecPath)
-  outputDir.set(openApiGeneratedSourcesDir)
-
-  val basePackage = "\${project.group}.\${project.name}.generated"
-  apiPackage.set("\$basePackage.api")
-  modelPackage.set("\$basePackage.model")
-
-  configOptions.set(
-      mapOf(
-          "gradleBuildFile" to "false",
-          "interfaceOnly" to "true",
-          "modelMutable" to "true",
-          "requestMappingMode" to "api_interface",
-          "skipDefaultInterface" to "true",
-          "useJakartaEe" to "true",
-          "useSpringBoot3" to "true",
-          "useTags" to "true",
-      )
-  )
-}
-
-kotlin.sourceSets["main"].kotlin.srcDir("\$openApiGeneratedSourcesDir/src/main/kotlin")
-
-tasks.named("compileKotlin") { dependsOn("generateOpenApi") }
-
-tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask> {
-  dependsOn("generateOpenApi")
-}
-
-tasks.named("clean") { doFirst { delete(openApiGeneratedSourcesDir) } }
-// highlight-added-end`}
-  </CodeBlock>
-);
-
-const JavaRestController = () => (
-  <CodeBlock
-    language="java"
-    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
-  >
-    {`package dev.pollito.spring_java.sakila.film.adapter.in.rest;
-
-// highlight-added-start
-import static io.opentelemetry.api.trace.Span.current;
-import static java.time.OffsetDateTime.now;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.ResponseEntity.ok;
-
-import dev.pollito.spring_java.generated.api.FilmsApi;
-import dev.pollito.spring_java.generated.model.FilmListResponse;
-// highlight-added-end
-// highlight-modified
-import dev.pollito.spring_java.generated.model.FilmResponse;
-import dev.pollito.spring_java.sakila.film.domain.port.in.FindByIdPortIn;
-// highlight-added
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-// highlight-added
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-@RequiredArgsConstructor
-// highlight-modified
-public class FilmRestController implements FilmsApi {
-  private final FindByIdPortIn findByIdPortIn;
-  private final FilmRestMapper mapper;
-// highlight-added-start
-  private final HttpServletRequest request;
-
-  @Override
-  public ResponseEntity<FilmListResponse> findAll() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public ResponseEntity<FilmResponse> findById(Integer id) {
-    return ok(
-        new FilmResponse()
-            .data(mapper.convert(findByIdPortIn.findById(id)))
-            .instance(request.getRequestURI())
-            .timestamp(now())
-            .trace(current().getSpanContext().getTraceId())
-            .status(OK.value()));
-// highlight-added-end
-  }
-}`}
-  </CodeBlock>
-);
-
-const KotlinRestController = () => (
-  <CodeBlock
-    language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
-  >
-    {`package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
-
-// highlight-added-start
-import dev.pollito.spring_kotlin.generated.api.FilmsApi
-import dev.pollito.spring_kotlin.generated.model.FilmListResponse
-// highlight-added-end
-// highlight-modified
-import dev.pollito.spring_kotlin.generated.model.FilmResponse
-import dev.pollito.spring_kotlin.sakila.film.domain.port.\`in\`.FindByIdPortIn
-// highlight-added-start
-import io.opentelemetry.api.trace.Span.current
-import jakarta.servlet.http.HttpServletRequest
-import java.time.OffsetDateTime.now
-import org.springframework.http.HttpStatus.OK
-import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.ok
-// highlight-added-end
-import org.springframework.web.bind.annotation.RestController
-
-@RestController
-class FilmRestController(
-    private val findByIdPortIn: FindByIdPortIn,
-    private val mapper: FilmRestMapper,
-// highlight-added-start
-    private val request: HttpServletRequest,
-) : FilmsApi {
-  override fun findAll(): ResponseEntity<FilmListResponse> {
-    TODO("Not yet implemented")
-  }
-
-  override fun findById(id: Int): ResponseEntity<FilmResponse> {
-    return ok(
-        FilmResponse(
-            data = mapper.convert(findByIdPortIn.findById(id)),
-            instance = request.requestURI,
-            timestamp = now(),
-            trace = current().spanContext.traceId,
-            status = OK.value(),
-        )
-    )
-// highlight-added-end
-  }
-}`}
-  </CodeBlock>
-);
-
-const GroovyRestController = () => (
-  <CodeBlock
-    language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmController.groovy"
-  >
-    {`package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
-
-// highlight-added-start
-import static java.time.OffsetDateTime.now
-import static org.springframework.http.HttpStatus.OK
-import static org.springframework.http.ResponseEntity.ok
-
-import dev.pollito.spring_groovy.generated.api.FilmsApi
-import dev.pollito.spring_groovy.generated.model.FilmListResponse
-// highlight-added-end
-// highlight-modified
-import dev.pollito.spring_groovy.generated.model.FilmResponse
-import dev.pollito.spring_groovy.sakila.film.domain.port.in.FindByIdPortIn
-import groovy.transform.CompileStatic
-// highlight-added-start
-import io.opentelemetry.api.trace.Span
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.http.ResponseEntity
-// highlight-added-end
-import org.springframework.web.bind.annotation.RestController
-
-@RestController
-@CompileStatic
-// highlight-modified
-class FilmRestController implements FilmsApi {
-  FindByIdPortIn findByIdPortIn
-// highlight-added-start
-  FilmRestMapper mapper
-  HttpServletRequest request
-// highlight-added-end
-
-// highlight-modified
-  FilmRestController(FindByIdPortIn findByIdPortIn, FilmRestMapper mapper, HttpServletRequest request) {
-    this.findByIdPortIn = findByIdPortIn
-// highlight-added-start
-    this.mapper = mapper
-    this.request = request
-  }
-
-  @Override
-  ResponseEntity<FilmListResponse> findAll() {
-    throw new UnsupportedOperationException()
-  }
-
-  @Override
-  ResponseEntity<FilmResponse> findById(Integer id) {
-    ok(
-        new FilmResponse(
-        data: mapper.convert(findByIdPortIn.findById(id)),
-        instance: request.requestURI,
-        timestamp: now(),
-        trace: Span.current().spanContext.traceId,
-        status: OK.value()
-        )
-        )
-// highlight-added-end
-  }
-}`}
-  </CodeBlock>
-);
-
-export const RestController = () => (
-  <Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-      <JavaRestController />
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-      <KotlinRestController />
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-      <GroovyRestController />
-    </TabItem>
-  </Tabs>
-);
-
-const JavaMapper = () => (
-  <CodeBlock
-    language="java"
-    title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
-  >
-    {`package dev.pollito.spring_java.sakila.film.adapter.in.rest;
-
-import dev.pollito.spring_java.config.mapper.MapperSpringConfig;
-import dev.pollito.spring_java.sakila.film.domain.model.Film;
-import org.jspecify.annotations.Nullable;
-import org.mapstruct.Mapper;
-import org.springframework.core.convert.converter.Converter;
-
-@Mapper(config = MapperSpringConfig.class)
-// highlight-modified
-public interface FilmRestMapper extends Converter<Film, dev.pollito.spring_java.generated.model.Film> {
-  @Override
-// highlight-modified
-  dev.pollito.spring_java.generated.model.Film convert(@Nullable Film source);
-}`}
-  </CodeBlock>
-);
-
-const KotlinMapper = () => (
-  <CodeBlock
-    language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
-  >
-    {`package dev.pollito.spring_kotlin.sakila.film.adapter.\`in\`.rest
-
-import dev.pollito.spring_kotlin.config.mapper.MapperSpringConfig
-import dev.pollito.spring_kotlin.sakila.film.domain.model.Film
-import org.mapstruct.Mapper
-import org.springframework.core.convert.converter.Converter
-
-@Mapper(config = MapperSpringConfig::class)
-// highlight-modified-start
-interface FilmRestMapper : Converter<Film, dev.pollito.spring_kotlin.generated.model.Film> {
-  override fun convert(source: Film): dev.pollito.spring_kotlin.generated.model.Film
-// highlight-modified-end
-}`}
-  </CodeBlock>
-);
-
-const GroovyMapper = () => (
-  <CodeBlock
-    language="groovy"
-    title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/mapper/FilmRestMapper.groovy"
-  >
-    {`package dev.pollito.spring_groovy.sakila.film.adapter.in.rest
-
-// highlight-modified-start
-import dev.pollito.spring_groovy.generated.model.Film as RestDtoFilm
-import dev.pollito.spring_groovy.sakila.film.domain.model.Film as DomainFilm
-// highlight-modified-end
-import groovy.transform.CompileStatic
-import org.modelmapper.ModelMapper
-import org.springframework.stereotype.Component
-
-@Component
-@CompileStatic
-class FilmRestMapper {
-  private final ModelMapper mapper
-
-  FilmRestMapper(ModelMapper mapper) {
-    this.mapper = mapper
-  }
-
-// highlight-modified-start
-  RestDtoFilm convert(DomainFilm source) {
-    mapper.map(source, RestDtoFilm)
-// highlight-modified-end
-  }
-}`}
-  </CodeBlock>
-);
-
-export const Mapper = () => (
-  <Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-      <JavaMapper />
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-      <KotlinMapper />
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-      <GroovyMapper />
-    </TabItem>
-  </Tabs>
-);
-
-const JavaRestControllerAdvice = () => (
-  <CodeBlock
-    language="java"
-    title="java/dev/pollito/spring_java/config/advice/ControllerAdvice.java"
-  >
-    {`package dev.pollito.spring_java.config.advice;
-
-import static io.opentelemetry.api.trace.Span.current;
-// highlight-added
-import static java.time.OffsetDateTime.now;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-// highlight-added
-import static org.springframework.http.ResponseEntity.status;
-
-// highlight-added-start
-import dev.pollito.spring_java.generated.model.Error;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-// highlight-added-end
-import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
-import org.springframework.http.HttpStatus;
-// highlight-added
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-@RestControllerAdvice
-// highlight-added
-@RequiredArgsConstructor
-@Slf4j
-public class ControllerAdvice {
-// highlight-added
-  private final HttpServletRequest request;
-
-// highlight-modified
-  private @NonNull ResponseEntity<Error> buildProblemDetail(
-      @NonNull Exception e, @NonNull HttpStatus status) {
-    String exceptionSimpleName = e.getClass().getSimpleName();
-    String logMessage = "{} being handled";
-
-    switch (status.series()) {
-      case SERVER_ERROR -> log.error(logMessage, exceptionSimpleName, e);
-      case CLIENT_ERROR -> log.warn(logMessage, exceptionSimpleName, e);
-      default -> log.info(logMessage, exceptionSimpleName, e);
-    }
-
-// highlight-added-start
-    return status(status)
-        .body(
-            new Error()
-                .detail(e.getLocalizedMessage())
-                .instance(request.getRequestURI())
-                .status(status.value())
-                .timestamp(now())
-                .title(status.getReasonPhrase())
-                .trace(current().getSpanContext().getTraceId()));
-// highlight-added-end
-  }
-
-  @ExceptionHandler(Exception.class)
-// highlight-modified
-  public ResponseEntity<Error> handle(Exception e) {
-    return buildProblemDetail(e, INTERNAL_SERVER_ERROR);
-  }
-
-  @ExceptionHandler(NoResourceFoundException.class)
-// highlight-modified
-  public ResponseEntity<Error> handle(NoResourceFoundException e) {
-    return buildProblemDetail(e, NOT_FOUND);
-  }
-}`}
-  </CodeBlock>
-);
-
-const KtRestControllerAdvice = () => (
-  <CodeBlock
-    language="kt"
-    title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdvice.kt"
-  >
-    {`package dev.pollito.spring_kotlin.config.advice
-
-// highlight-added
-import dev.pollito.spring_kotlin.generated.model.Error
-import io.github.oshai.kotlinlogging.KotlinLogging
-import io.opentelemetry.api.trace.Span.current
-// highlight-added-start
-import jakarta.servlet.http.HttpServletRequest
-import java.time.OffsetDateTime.now
-// highlight-added-end
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import org.springframework.http.HttpStatus.NOT_FOUND
-// highlight-added-start
-import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.status
-// highlight-added-end
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.servlet.resource.NoResourceFoundException
-
-private val log = KotlinLogging.logger {}
-
-@RestControllerAdvice
-// highlight-modified
-class ControllerAdvice(private val request: HttpServletRequest) {
-
-// highlight-modified
-  private fun buildProblemDetail(e: Exception, status: HttpStatus): ResponseEntity<Error> {
-    val exceptionSimpleName = e.javaClass.simpleName
-    val logMessage = "$exceptionSimpleName being handled"
-
-    when {
-      status.is5xxServerError -> log.error(e) { logMessage }
-      status.is4xxClientError -> log.warn(e) { logMessage }
-      else -> log.info(e) { logMessage }
-    }
-
-// highlight-added-start
-    return status(status)
-        .body(
-            Error(
-                detail = e.localizedMessage,
-                instance = request.requestURI,
-                timestamp = now(),
-                title = status.reasonPhrase,
-                trace = current().spanContext.traceId,
-                status = status.value(),
-            )
-        )
-// highlight-added-end
-  }
-
-  @ExceptionHandler(Exception::class)
-// highlight-modified
-  fun handle(e: Exception): ResponseEntity<Error> {
-    return buildProblemDetail(e, INTERNAL_SERVER_ERROR)
-  }
-
-  @ExceptionHandler(NoResourceFoundException::class)
-// highlight-modified
-  fun handle(e: NoResourceFoundException): ResponseEntity<Error> {
-    return buildProblemDetail(e, NOT_FOUND)
-  }
-}`}
-  </CodeBlock>
-);
-
-const GroovyRestControllerAdvice = () => (
-  <CodeBlock
-    language="groovy"
-    title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdvice.groovy"
-  >
-    {`package dev.pollito.spring_groovy.config.advice
-
-// highlight-added
-import static java.time.OffsetDateTime.now
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR
-
-// highlight-added
-import dev.pollito.spring_groovy.generated.model.Error
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
-import io.opentelemetry.api.trace.Span
-// highlight-added
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.http.HttpStatus
-// highlight-added
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.servlet.resource.NoResourceFoundException
-
-@RestControllerAdvice
-@Slf4j
-@CompileStatic
-class ControllerAdvice {
-// highlight-added-start
-  private final HttpServletRequest request
-
-  ControllerAdvice(HttpServletRequest request) {
-    this.request = request
-  }
-// highlight-added-end
-
-// highlight-modified
-  private ResponseEntity<Error> buildProblemDetail(Exception e, HttpStatus status) {
-    def exceptionSimpleName = e.class.simpleName
-    def logMessage = "\${exceptionSimpleName} being handled"
-
-    switch (status.series()) {
-      case SERVER_ERROR:
-        log.error(logMessage, e)
-        break
-      case CLIENT_ERROR:
-        log.warn(logMessage, e)
-        break
-      default:
-        log.info(logMessage, e)
-        break
-    }
-
-// highlight-added-start
-    ResponseEntity.status(status)
-        .body(
-        new Error(
-        detail: e.localizedMessage,
-        instance: request.requestURI,
-        timestamp: now(),
-        title: status.reasonPhrase,
-        trace: Span.current().spanContext.traceId,
-        status: status.value(),
-        )
-        )
-// highlight-added-end
-  }
-
-  @ExceptionHandler(Exception.class)
-// highlight-modified
-  ResponseEntity<Error> handle(Exception e) {
-    buildProblemDetail(e, INTERNAL_SERVER_ERROR)
-  }
-
-  @ExceptionHandler(NoResourceFoundException)
-// highlight-modified
-  ResponseEntity<Error> handle(NoResourceFoundException e) {
-    buildProblemDetail(e, NOT_FOUND)
-  }
-}`}
-  </CodeBlock>
-);
-
-export const RestControllerAdvice = () => (
-  <Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-      <JavaRestControllerAdvice />
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-      <KtRestControllerAdvice />
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-      <GroovyRestControllerAdvice />
-    </TabItem>
-  </Tabs>
 );
 
 export const Terminal = () => (

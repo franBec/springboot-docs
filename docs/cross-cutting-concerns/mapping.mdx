@@ -5,13 +5,9 @@ title: Mapping
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
 import Admonition from '@theme/Admonition';
-import {
-  FileTree,
-  BuildGradle,
-  MapperConfig,
-  FilmRestMapper,
-  FilmRestControllerGroovy,
-} from '@site/src/components/docs/cross-cutting-concerns/mapping';
+import { FileTree } from '@site/src/components/docs/cross-cutting-concerns/mapping';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <GithubTagInfo tag="mapping" />
 
@@ -22,48 +18,95 @@ import {
   decisions. That's why we cover it here.
 </Admonition>
 
-In the [first endpoint](/lets-create-a-spring-boot-project/first-endpoint) document, `FilmRestMapper` was a hand-written class that converted a `Film` domain model into a `FilmResponse` DTO field by field. That works for seven fields. It stops being acceptable when you have dozens of fields, nested objects, and type conversions to manage, and it never generates errors at compile time when a new field is added to the domain but forgotten in the mapper.
+In the [first endpoint](/lets-create-a-spring-boot-project/first-endpoint) document, `FilmRestMapper` was a handwritten class that converted a `Film` domain model into a `FilmResponse` DTO field by field. That works for seven fields. It stops being acceptable when you have dozens of fields, nested objects, and type conversions to manage, and it never generates errors at compile time when a new field is added to the domain but forgotten in the mapper.
 
-This document replaces the hand-written mapper with a dedicated mapping library: [MapStruct](https://mapstruct.org/) for Java and Kotlin, [ModelMapper](https://modelmapper.org/) for Groovy.
+This document replaces the handwritten mapper with a dedicated mapping library: [MapStruct](https://mapstruct.org/) for Java and Kotlin, [ModelMapper](https://modelmapper.org/) for Groovy.
 
 ## Changed Files
 
 <FileTree />
 
-The build file gets new dependencies, a config class is added to wire the mapper library into Spring, and `FilmRestMapper` is replaced. For Groovy, the controller also changes because the mapper is no longer a static utility; it's a Spring-managed bean.
+The build file gets new dependencies, and `FilmRestMapper` is rewritten. For Groovy, the controller also changes because the mapper is no longer a static utility; it's a Spring-managed bean.
 
 ## Add the Dependency
 
-<BuildGradle />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-**Java and Kotlin** use MapStruct with its Spring extensions. The extensions register every `@Mapper` as a Spring `ConversionService` converter automatically, which removes the need to inject individual mappers into classes that need them. Kotlin additionally requires the `kapt` plugin because MapStruct generates code at compile time through annotation processing, and `kapt` is Kotlin's annotation processor runner.
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_java/build.gradle#L39-L42
+        ```
 
-**Groovy** uses ModelMapper, a reflection-based library. Unlike MapStruct, it requires no annotation processing. It works entirely at runtime, matching fields by name and type.
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
 
-## Configure the Mapper Library
+        ```kts reference title="build.gradle.kts (plugins block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_kotlin/build.gradle.kts#L7
+        ```
 
-Before defining any mapper, each module needs a small configuration class.
+        ```kts reference title="build.gradle.kts (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_kotlin/build.gradle.kts#L34-L36
+        ```
 
-<MapperConfig />
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
 
-**Java and Kotlin** declare `MapperSpringConfig`, an interface annotated with `@MapperConfig` and `@SpringMapperConfig`. This tells MapStruct two things: use `"spring"` as the component model (so generated mappers become Spring beans), and where to place the generated `ConversionServiceAdapter` that registers all converters with Spring's `ConversionService`.
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_groovy/build.gradle#L38
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+- **Java and Kotlin** use MapStruct.
+  - Kotlin additionally requires the `kapt` plugin because MapStruct generates code at compile time through annotation processing, and `kapt` is Kotlin's annotation processor runner.
+- **Groovy** uses ModelMapper, a reflection-based library. Unlike MapStruct, it requires no annotation processing. It works entirely at runtime, matching fields by name and type.
+
+## (Groovy Only) Configure ModelMapper
 
 **Groovy** declares `ModelMapperConfig`, a standard `@Configuration` class that exposes a `ModelMapper` bean. ModelMapper is stateless and thread-safe, so a single instance shared across the application is the right choice.
 
-## Replace FilmRestMapper
+```groovy reference title="spring_groovy/config/mapper/ModelMapperConfig.groovy"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/mapper/ModelMapperConfig.groovy
+```
 
-<FilmRestMapper />
+## Rewrite FilmRestMapper
 
-**Java and Kotlin** now declare `FilmRestMapper` as an interface. The `@Mapper(config = MapperSpringConfig.class)` annotation tells MapStruct to generate a Spring-managed implementation at compile time. Extending `Converter<Film, FilmResponse>` integrates the mapper into Spring's `ConversionService`, so anywhere Spring knows how to convert types, this mapper will be picked up automatically.
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-The `@Nullable` annotation on the Java version is a jspecify nullability annotation. MapStruct respects it and generates a null-safe implementation. If the source is `null`, the converter returns `null` without a `NullPointerException`.
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java
+        ```
 
-**Groovy** replaces the static utility class with a Spring `@Component`. It receives the `ModelMapper` bean through constructor injection and delegates conversion to it. `ModelMapper.map(source, FilmResponse)` inspects both classes at runtime and copies matching fields by name and type.
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
 
-## Update the Controller (Groovy Only)
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+- **Java and Kotlin** now declare `FilmRestMapper` as an interface. The `@Mapper(componentModel = SPRING)` annotation tells MapStruct to generate a Spring-managed implementation at compile time.
+- **Groovy** replaces the static utility class with a Spring `@Component`. It receives the `ModelMapper` bean through constructor injection and delegates conversion to it. `ModelMapper.map(source, FilmResponse)` inspects both classes at runtime and copies matching fields by name and type.
+
+## (Groovy Only) Update the Controller
 
 The original Groovy controller imported `FilmRestMapper.convert` as a static method. Now that `FilmRestMapper` is a Spring bean, the controller needs to receive it through injection instead.
 
-<FilmRestControllerGroovy />
+```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc1656829ef25c2bb79ce2c377fecd88/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy
+```
 
-Java and Kotlin controllers don't need updating. They already injected `FilmRestMapper` as a field. That injection still works the same way, just against the MapStruct-generated implementation instead of the hand-written class.
+Java and Kotlin controllers don't need updating. They already injected `FilmRestMapper` as a field. That injection still works the same way, just against the MapStruct-generated implementation instead of the handwritten class.

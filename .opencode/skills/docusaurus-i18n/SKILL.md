@@ -1,6 +1,6 @@
 ---
 name: docusaurus-i18n
-description: Guidelines for translating Docusaurus documentation to Spanish, including file placement, tone, and formatting rules
+description: Guidelines for translating Docusaurus documentation to Spanish, including file placement, tone, and formatting rules.
 license: MIT
 compatibility: opencode
 metadata:
@@ -45,7 +45,7 @@ i18n/es/docusaurus-plugin-content-docs/current/intro.mdx
 
 ## Category Translations
 
-**Do not** create `_category_.json` files in i18n directories—they are ignored.
+**Do not** create `_category_.json` files in i18n directories, they are ignored.
 
 Use `i18n/es/docusaurus-plugin-content-docs/current.json` instead:
 
@@ -96,5 +96,5 @@ Spanish **does not use Title Case**. When generating document titles or headings
 
 Examples:
 
-- `Introducción a Spring Boot`
-- `Cómo funciona la inyección de dependencias`
+- "Introducción a Spring Boot"
+- "Cómo funciona la inyección de dependencias"

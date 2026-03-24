@@ -4,16 +4,14 @@ title: OpenAPI Specification
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
-import Image from '@site/src/components/image';
 import {
   FilmStructureJson,
   FileTree,
-  ErrorResponseJson,
-  FilmsListResponseJson,
-  FilmResponseJson,
   EnvelopePatternJson,
   ResponseMetadataSchemaYaml,
 } from '@site/src/components/docs/contract-driven-development/openapi-spec.tsx';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <GithubTagInfo tag="openapi-spec" />
 
@@ -21,10 +19,7 @@ Dado un Film con la siguiente estructura:
 
 <FilmStructureJson />
 
-Queremos que nuestra aplicación Spring Boot exponga estos endpoints:
-
-- `/api/films` lista todas las películas.
-- `/api/films/{id}` obtiene una película por identificador.
+Queremos que nuestra aplicación Spring Boot exponga [CRUD endpoints](https://es.wikipedia.org/wiki/CRUD).
 
 <FileTree />
 
@@ -32,26 +27,32 @@ Queremos que nuestra aplicación Spring Boot exponga estos endpoints:
 
 > [OpenAPI Specification (OAS)](https://swagger.io/specification/) define una interfaz estándar e independiente del lenguaje para las API HTTP, que permite tanto a humanos como a ordenadores descubrir y comprender las capacidades del servicio sin necesidad de acceder al código fuente, la documentación o inspeccionar el tráfico de red. Cuando está correctamente definida, un usuario puede comprender e interactuar con el servicio remoto con una mínima lógica de implementación.
 
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```yml reference title="resources/openapi.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/2cce680239480e99bb910b5864ba3699f2ef4b20/spring_java/src/main/resources/openapi.yaml
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```yml reference title="resources/openapi.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/2cce680239480e99bb910b5864ba3699f2ef4b20/spring_kotlin/src/main/resources/openapi.yaml
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```yml reference title="resources/openapi.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/2cce680239480e99bb910b5864ba3699f2ef4b20/spring_groovy/src/main/resources/openapi.yaml
+        ```
+
+    </TabItem>
+
+</Tabs>
+
 Para una mejor visualización, podés copiar y pegar la especificación OpenAPI YAML del repositorio en [Swagger Editor](https://editor.swagger.io/) o usar [OpenAPI (Swagger) Editor en IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor).
-
-<Image
-  src={
-    require('@site/static/img/openapi-spec-first-development/preview-browser.png')
-      .default
-  }
-/>
-
-- Todas las respuestas de error se verían así:
-
-  <ErrorResponseJson />
-
-- Las respuestas de `/api/films` se verían así:
-
-  <FilmsListResponseJson />
-
-- Las respuestas de `/api/films/{id}` se verían así:
-
-  <FilmResponseJson />
 
 ## El Envelope Pattern
 
@@ -82,12 +83,4 @@ Consistencia. Ese es todo el juego.
 
 ## Paginación
 
-El endpoint `/api/films` "lista todas las películas". Pero si tomás eso literalmente en el mundo real, te va a ir mal.
-
-Imaginate que tu base de datos tiene un millón de películas. Intentar traer todas de una es una receta para el desastre. Tu base de datos se va a colgar, la memoria de tu servidor se va a evaporar, y el pobre navegador del usuario se va a colgar tratando de renderizar un payload JSON colosal.
-
-Aquí es donde entra la **paginación**. Es la simple idea de dividir un conjunto de resultados grande en páginas más pequeñas y manejables. En lugar de pedir _todas_ las películas, pedís "página 1 con 20 películas", después "página 2 con 20 películas", y así sucesivamente.
-
-Esto es práctica estándar en todos lados. Pensá en los resultados de búsqueda de Google o en navegar productos en Amazon. Nunca recibís todo de una; recibís una página y un botón de "Siguiente".
-
-Para mantener las cosas simples por ahora, la especificación no incluye parámetros de paginación. Vamos a agregar paginación apropiada más tarde.
+TODO: explain pagination

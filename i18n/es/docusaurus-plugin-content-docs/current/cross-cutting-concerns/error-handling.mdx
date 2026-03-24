@@ -7,10 +7,13 @@ import GithubTagInfo from '@site/src/components/github-tag-info';
 
 import {
   FileTree,
-  ControllerAdvice,
+  ErrorScenario1,
+  ErrorScenario2,
   NotFoundErrorTerminal,
   NotFoundErrorSequenceDiagram,
 } from '@site/src/components/docs/cross-cutting-concerns/error-handling';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <GithubTagInfo tag="normalize-errors" />
 
@@ -18,21 +21,11 @@ Ahí afuera te vas a encontrar con muchos escenarios como el siguiente:
 
 - `service.com/users/-1` devuelve:
 
-  ```json
-  {
-    "errorDescription": "User not found",
-    "cause": "BAD REQUEST"
-  }
-  ```
+  <ErrorScenario1 />
 
 - pero `service.com/product/-1` devuelve:
 
-  ```json
-  {
-    "message": "not found",
-    "error": 404
-  }
-  ```
+  <ErrorScenario2 />
 
 La consistencia se fue por la ventana ahí, y se pone peor con errores dentro de 200OK. No queremos ser ese tipo de dev: vamos a hacer un manejo de errores apropiado.
 
@@ -56,7 +49,30 @@ Juntas, estas herramientas aseguran que tu app nunca confunda a los clientes con
 
 Creá la clase `@RestControllerAdvice`
 
-<ControllerAdvice />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/config/web/ControllerAdvice.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/2277a0fe0b15ca696f2fc7ee069cfdefe872fad4/spring_java/src/main/java/dev/pollito/spring_java/config/web/ControllerAdvice.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/2277a0fe0b15ca696f2fc7ee069cfdefe872fad4/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/2277a0fe0b15ca696f2fc7ee069cfdefe872fad4/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 Si visitás una uri que no existe (como [http://localhost:8080](http://localhost:8080)), ahora vas a obtener un error estandarizado:
 

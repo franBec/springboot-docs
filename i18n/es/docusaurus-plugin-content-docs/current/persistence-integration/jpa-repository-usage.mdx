@@ -4,24 +4,14 @@ title: Uso de repositorios JPA
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
-import Admonition from '@theme/Admonition';
-
 import {
   FileTree,
-  ApplicationYamlDev,
-  PortOut,
-  JpaMapper,
-  JpaRepositoryInterface,
-  PortOutImplementation,
-  ApplicationTestYaml,
-  PortOutImplDataJpaTest,
-  PortInImplTest,
-  ControllerAdvice,
-  ControllerAdviceTest,
   RequestFlowSequenceDiagram,
   TerminalCurl,
-  BuildGradleGroovySpotlessExclude,
 } from '@site/src/components/docs/persistence-integration/jpa-repository-usage';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
 
 <GithubTagInfo tag="persistence-integration" />
 
@@ -39,7 +29,34 @@ Las adiciones resaltadas abarcan tanto `src/main` como `src/test`. Del lado de m
 
 Cada módulo tiene un `application-dev.yaml` que se activa cuando el perfil Spring `dev` está activo. Este es el lugar dónde le decís a Spring Boot cómo conectarse a la base de datos, cómo inicializarla, y cómo JPA debería comportarse.
 
-<ApplicationYamlDev />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```yml reference title="resources/application-dev.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/main/resources/application-dev.yaml
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```yml reference title="resources/application-dev.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/main/resources/application-dev.yaml
+        ```
+
+        <Admonition type="info" title="open-session-in-view anti-pattern">
+            TODO some text explaining why Kotlin sets `jpa.open-in-view: false` to disable the [open-session-in-view anti-pattern](https://vladmihalcea.com/the-open-session-in-view-anti-pattern/).
+        </Admonition>
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```yml reference title="resources/application-dev.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/main/resources/application-dev.yaml
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 Hay algunos detalles que vale la pena notar:
 
@@ -47,52 +64,184 @@ Hay algunos detalles que vale la pena notar:
 - **`ddl-auto: none`** es deliberado. El esquema está completamente controlado por `sakila-schema.sql`, no por Hibernate. Hibernate no crea ni altera tablas.
 - **`sql.init.mode: always`** le dice a Spring que corra ambos scripts de esquema y data SQL en cada startup, entonces la base de datos siempre está en un estado conocido.
 - La **consola H2** está habilitada en `/h2-console` para consultas ad-hoc rápidas durante desarrollo.
-- Kotlin además setea **`jpa.open-in-view: false`** para deshabilitar el [open-session-in-view anti-pattern](https://vladmihalcea.com/the-open-session-in-view-anti-pattern/). Java y Groovy lo dejan en el default (habilitado), que es un default de Spring Boot que conviene conocer.
 
 ## Conectá el Puerto Secundario
 
 ### Definí la Interfaz del Puerto
 
-La capa de dominio declara **qué** necesita sin saber que JPA existe. `FindByIdPortOut` es ese contrato: dame una película por ID, devolvé un modelo de dominio.
+La capa de dominio declara **qué** necesita sin saber que JPA existe. `FilmRepository` es ese contrato: dame una película por ID, devolvé un modelo de dominio.
 
-<PortOut />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ### Creá el Repository JPA
 
 `FilmJpaRepository` es el adaptador secundario. Spring Data JPA genera la implementación completa en runtime desde esta interfaz mínima. No hay métodos de consulta personalizados necesarios, el `findById` heredado es suficiente.
 
-<JpaRepositoryInterface />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaRepository.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaRepository.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaRepository.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaRepository.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaRepository.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaRepository.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 El parámetro de tipo `Film` acá es la **entidad JPA generada** (`dev.pollito.{module}.generated.entity.Film`), no el modelo de dominio. Esa distinción importa y es exactamente por qué el mapper existe.
 
-### Mapá Entidades a Modelos de Dominio
+### Mapeá Entidades a Modelos de Dominio
 
 El mapper convierte entidades JPA en modelos de dominio. Los nombres de campos no coinciden uno-a-uno (`filmId` → `id`, `languageByLanguageId.name` → `language`, `releaseYear` como `LocalDate` → `Integer` año), entonces el mapper maneja esa traducción.
 
-<JpaMapper />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-<Admonition type="warning" title="Configuración Groovy Spotless">
-La implementación de Groovy de `FilmJpaMapper` usa una sintaxis que Spotless no puede formatear apropiadamente. Excluí este archivo de chequeos Spotless actualizando tu `build.gradle`:
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaMapper.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaMapper.java
+        ```
 
-<BuildGradleGroovySpotlessExclude />
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
 
-Esta exclusión es necesaria porque la configuración basada en closures del mapper en el método `configureTypeMap()` no cumple con las reglas de formateo estándar que Spotless aplica. El archivo permanece funcional y sigue principios de código limpio; solo es excluido de formateo automático para prevenir que Spotless lo rechace o lo maneje mal.
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaMapper.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaMapper.kt
+        ```
 
-</Admonition>
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaMapper.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaMapper.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ### Implementá el Puerto
 
-`FindByIdPortOutImpl` implementa `FindByIdPortOut` y orquesta el repository y el mapper. Es un `@Service` que vive junto a la interfaz del puerto.
+`FilmRepositoryImpl` es un `@Service` que implementa `FilmRepository` y orquesta el repository y el mapper.
 
-<PortOutImplementation />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 La línea clave es `repository.findById(id).orElseThrow()`. Cuando la película solicitada no existe, `Optional.orElseThrow()` levanta una `NoSuchElementException`. La implementación no la atrapa. La deja propagarse por la call stack, dónde la capa web decide cómo representarla.
+
+### Hacé uso del Puerto Secundario
+
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ## Manejá el Caso "No Encontrado"
 
 En lugar de atrapar `NoSuchElementException` dentro del adaptador (que arrastraría preocupaciones HTTP a la capa de dominio), el `ControllerAdvice` de cada módulo lo maneja globalmente y lo mapea a una HTTP `404 NOT_FOUND`:
 
-<ControllerAdvice />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/config/web/ControllerAdvice.java (new NoSuchElementException handler)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/main/java/dev/pollito/spring_java/config/web/ControllerAdvice.java#L70-L73
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt (new NoSuchElementException handler)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt#L68-L71
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy (new NoSuchElementException handler)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy#L82-l85
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 Este es el mismo `ControllerAdvice` del [setup de manejo de errors](/es/cross-cutting-concerns/error-handling), con un nuevo `@ExceptionHandler` agregado. El puerto secundario se mantiene limpio de lógica HTTP, y el formato de respuesta de error se mantiene consistente a través de toda la API.
 
@@ -102,7 +251,30 @@ Este es el mismo `ControllerAdvice` del [setup de manejo de errors](/es/cross-cu
 
 Un perfil de test separado configura la base de datos para tests. La diferencia importante del perfil dev: `sql.init.mode: never`. Los scripts no se cargan en startup. En su lugar, cada clase de test los carga explícitamente vía `@Sql`, que te da control granular sobre datos de test.
 
-<ApplicationTestYaml />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```yml reference title="resources/application-test.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/test/resources/application-test.yaml
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```yml reference title="resources/application-test.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/test/resources/application-test.yaml
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```yml reference title="resources/application-test.yaml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/test/resources/application-test.yaml
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 Ambos `src/test/resources/` contienen sus propias copias de `sakila-schema.sql` y `sakila-data.sql`. El archivo de esquema es idéntico al de `main/resources`. El archivo de data es intencionalmente mucho más pequeño (alrededor de 238 líneas vs. ~47,400 en el dataset completo). Ya que `@DataJpaTest` corre estos scripts antes de cada clase de test que declara `@Sql`, cargar el dataset completo en cada corrida de tests sería innecesariamente lento.
 
@@ -110,23 +282,69 @@ Ambos `src/test/resources/` contienen sus propias copias de `sakila-schema.sql` 
 
 Los tests apuntando a la capa JPA usan `@DataJpaTest`, un Spring slice que carga solo infraestructura JPA (repositories, entity manager, datasource) sin el contexto completo de la aplicación.
 
-<PortOutImplDataJpaTest />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaTest.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaTest.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaTest.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaTest.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaSpec.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaSpec.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 Hay algunos detalles que vale la pena notar:
 
 - **`@DataJpaTest`** carga solo el slice JPA. No hay capa web, no hay contexto completo.
 - **`@ActiveProfiles("test")`** levanta `application-test.yaml` con `sql.init.mode: never`.
-- **`@Import(...)`** manualmente importa `FindByIdPortOutImpl` y el mapper. `@DataJpaTest` no hace component-scan fuera del slice JPA, entonces cualquier cosa más allá de los repositories necesita importación explícita.
+- **`@Import(...)`** manualmente importa `FilmRepositoryImpl` y el mapper. `@DataJpaTest` no hace component-scan fuera del slice JPA, entonces cualquier cosa más allá de los repositories necesita importación explícita.
 - **`@Sql(executionPhase = BEFORE_TEST_CLASS)`** corre el esquema y los scripts de data una sola vez antes de todos los métodos en la clase, no antes de cada test individual.
-- El test inyecta **`FindByIdPortOut`** (la interfaz), no la implementación concreta, manteniéndose leal a la abstracción del puerto.
+- El test inyecta **`FilmRepository`** (la interfaz), no la implementación concreta, manteniéndose leal a la abstracción del puerto.
 
 La lista `@Import` difiere por módulo: Java y Kotlin importan `FilmJpaMapperImpl` (la clase generada por MapStruct), mientras que Groovy importa `FilmJpaMapper` directamente más `ModelMapperConfig` para suministrar el bean `ModelMapper`.
 
 ### Unit Test — Mocked Secondary Port
 
-`FindByIdPortInImpl` (la implementación del puerto primario) se prueba en aislamiento mockeando `FindByIdPortOut`. Estos tests no tienen ningún involucramiento de base de datos. Verifican que el puerto primario correctamente delega al puerto secundario y devuelve el resultado.
+`FilmUseCasesImpl` (la implementación del puerto primario) se prueba en aislamiento mockeando `FilmRepository`. Estos tests no tienen ningún involucramiento de base de datos. Verifican que el puerto primario correctamente delega al puerto secundario y devuelve el resultado.
 
-<PortInImplTest />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImplTest.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImplTest.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImplTest.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImplTest.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImplSpec.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImplSpec.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 Cada módulo usa su enfoque de mocking nativo:
 
@@ -140,7 +358,30 @@ Cada módulo usa su enfoque de mocking nativo:
 
 El test `ControllerAdvice` existente obtiene un nuevo test case para `NoSuchElementException` → `404 NOT_FOUND`. La estructura es el mismo test parametrizado de antes, solo con una entrada más en el dataset.
 
-<ControllerAdviceTest />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/config/web/ControllerAdviceMockMvcTest.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/394ff512110e7034bda9562b2ba86c3a59a435b5/spring_java/src/test/java/dev/pollito/spring_java/config/web/ControllerAdviceMockMvcTest.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdviceMockMvcTest.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/31a0fe295f58ea56963d046ddeebe5fcc6226745/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdviceMockMvcTest.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/config/web/ControllerAdviceMockMvcSpec.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/5ae8d174453476d990f48490d60c2144ff014e4e/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/config/web/ControllerAdviceMockMvcSpec.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ## El Flujo Completo
 
@@ -152,9 +393,9 @@ Buildeá y corré la aplicación con el perfil `dev`, entonces le pegas al endpo
 
 <TerminalCurl />
 
-## Una Nota Sobre FindByIdPortInImpl
+## Una Nota Sobre FilmUseCasesImpl
 
-`FindByIdPortInImpl` hace muy poco: recibe un ID de película, llama al puerto secundario y devuelve el resultado. Sin lógica de negocio, sin transformaciones. Solo delegación de paso.
+`FilmUseCasesImpl` hace muy poco: recibe un ID de película, llama al puerto secundario y devuelve el resultado. Sin lógica de negocio, sin transformaciones. Solo delegación de paso.
 
 En el contexto de la arquitectura hexagonal, eso está perfectamente bien. La implementación del puerto primario es el punto de orquestación del dominio. El dominio no necesita saber si los datos vienen de una base de datos relacional, una API de terceros, o un caché en memoria. Si mañana reemplazás el adaptador JPA con un cliente REST que llama a un servicio externo, el dominio permanece completamente intacto. Lo mismo aplica del lado de entrada: cambiar controladores REST por SOAP, GraphQL, o un consumidor de mensajes no requiere ningún cambio en la capa de dominio.
 

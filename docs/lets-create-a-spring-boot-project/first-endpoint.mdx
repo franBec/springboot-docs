@@ -6,18 +6,12 @@ title: First Endpoint
 import GithubTagInfo from '@site/src/components/github-tag-info';
 import {
   FilmJson,
-    FileTree,
-  GreclipseProperties,
-    BuildGradle,
-    DomainModel,
-  PrimaryPort,
-  PrimaryPortImpl,
-    RestDtoResponse,
-    RestMapper,
-    RestController,
-    Terminal,
+  FileTree,
+  Terminal,
   ApplicationSequenceDiagram,
 } from '@site/src/components/docs/lets-create-a-spring-boot-project/first-endpoint';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <GithubTagInfo tag="first-endpoint" />
 
@@ -39,11 +33,62 @@ Before writing any code, set up [Spotless](https://github.com/diffplug/spotless)
 
 Java and Groovy modules also need a `greclipse.properties` file to configure indentation:
 
-<GreclipseProperties />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```properties reference title="greclipse.properties"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/greclipse.properties
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```properties reference title="greclipse.properties"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/greclipse.properties
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 Then update `build.gradle` (or `build.gradle.kts`) to register the Spotless plugin and wire it into the build lifecycle:
 
-<BuildGradle />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```groovy reference title="build.gradle (plugins block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/build.gradle#L5
+        ```
+
+        ```groovy reference title="build.gradle (new spotless block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/build.gradle#L44-L61
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kts reference title="build.gradle.kts (plugins block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_kotlin/build.gradle.kts#L6
+        ```
+
+        ```kts reference title="build.gradle.kts (new SpotlessExtension block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_kotlin/build.gradle.kts#L42-L53
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="build.gradle (plugins block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/build.gradle#L5
+        ```
+
+        ```groovy reference title="build.gradle (new spotless block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/build.gradle#L43-L59
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 With this in place, formatting is no longer a manual step or a code review concern. Every build produces consistently formatted code.
 
@@ -55,13 +100,59 @@ The domain layer is the heart of the application. It owns the business model and
 
 `Film` is the central domain model. It represents a film as the application understands it: not as a database row, not as an HTTP response, just a plain data object.
 
-<DomainModel />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/model/Film.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/model/Film.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/model/Film.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/model/Film.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ### Primary Port
 
 A port is a contract. The primary port (`FilmUseCases`) declares what the domain exposes to the outside world: given an ID, return a `Film`.
 
-<PrimaryPort />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 The interface lives in the domain layer. The REST controller will depend on this interface, not on any concrete implementation. That indirection is what makes the architecture flexible.
 
@@ -69,7 +160,30 @@ The interface lives in the domain layer. The REST controller will depend on this
 
 `FilmUseCasesImpl` is the implementation of that contract. For now, it returns a hardcoded film regardless of the ID provided.
 
-<PrimaryPortImpl />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 The hardcoded data is intentional. It lets you verify that the full request-response cycle works end-to-end before introducing any persistence complexity.
 
@@ -79,21 +193,90 @@ The adapter layer translates between the domain and the outside world. For an in
 
 ### Response DTO
 
-`FilmResponse` is what the API exposes over the wire. It mirrors `Film` field-for-field at this stage, but keeping them separate matters: the domain model can evolve independently from the API contract.
+`FilmResponse` is what the API exposes over the wire. It mirrors `Film` field-for-field at this stage, but keeping them separate matters: the domain model can evolve independently of the API contract.
 
-<RestDtoResponse />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/dto/FilmResponse.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/dto/FilmResponse.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/dto/FilmResponse.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/dto/FilmResponse.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/dto/FilmResponse.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/dto/FilmResponse.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ### Mapper
 
 `FilmRestMapper` maps a `Film` domain model into a `FilmResponse` DTO. This translation responsibility belongs here, not in the controller or in the domain.
 
-<RestMapper />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ### Controller
 
 `FilmRestController` ties it all together. It handles the `GET /api/films/{id}` route, delegates to the primary port, and maps the result to a response DTO.
 
-<RestController />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/0bc76fe622396c586cf98481c1e817bc24864d5a/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 The controller depends only on `FilmUseCases` (the interface) and `FilmRestMapper`. It has no knowledge of how `FilmUseCases` is implemented. Today it's hardcoded data; later it will be a database query. The controller won't change either way.
 

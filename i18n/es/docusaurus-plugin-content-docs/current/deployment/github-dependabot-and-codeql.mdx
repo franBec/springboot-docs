@@ -3,10 +3,7 @@ sidebar_position: 3
 title: GitHub Dependabot y CodeQL
 ---
 
-import {
-  FileTree,
-  CodeQL,
-} from '@site/src/components/docs/deployment/github-dependabot-and-codeql';
+import { FileTree } from '@site/src/components/docs/deployment/github-dependabot-and-codeql';
 import GithubTagInfo from '@site/src/components/github-tag-info';
 
 <GithubTagInfo tag="dependabot-and-codeql" />
@@ -39,7 +36,9 @@ Algunas cosas a tener en cuenta sobre esta configuración:
 
 [CodeQL](https://codeql.github.com/) es el motor de análisis estático de GitHub. Compila tu código, construye una base de datos de su estructura y ejecuta queries contra ella para encontrar patrones que indiquen vulnerabilidades de seguridad, bugs o malas prácticas.
 
-<CodeQL />
+```yml reference title=".github/dependabot.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/a569c6649baa2ff681d1bcc8c7caaf9a8d3d5363/.github/workflows/codeql.yml
+```
 
 Esto es lo que hace cada parte:
 

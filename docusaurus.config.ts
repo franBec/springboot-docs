@@ -113,15 +113,11 @@ const config: Config = {
           ],
         },
         {
-          title: 'Licenses',
+          title: 'License',
           items: [
             {
-              label: 'Code License',
-              to: '/licenses/code-license',
-            },
-            {
-              label: 'Content License',
-              to: '/licenses/content-license',
+              label: 'MIT License',
+              to: '/about/mit-license',
             },
           ],
         },

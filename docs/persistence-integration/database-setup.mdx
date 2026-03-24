@@ -7,15 +7,10 @@ import Admonition from '@theme/Admonition';
 import Image from '@site/src/components/image';
 import {
   FileTree,
-  FlywayMigrationV3GrantAppUserPrivileges,
-  FlywayDockerfile,
-  PostgresDockerfile,
-  PostgresInitUser,
-  DockerCompose,
-  BuildGradle,
-  ApplicationYaml,
   TerminalCurl,
 } from '@site/src/components/docs/persistence-integration/database-setup';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 The previous sections covered how Spring talks to databases and how to generate JPA entities. Now it's time to wire up a real database. We're replacing the embedded H2 with PostgreSQL 17 and using Flyway to manage schema migrations.
 
@@ -44,7 +39,9 @@ We have three migrations:
 - **V2: Insert Sample Data**. V2 inserts 47,000+ lines of sample data. It's a large file converted from H2 format to PostgreSQL-compatible SQL.
 - **V3: Grant App User Privileges**. This runs after V1 and V2, so all tables exist by the time it grants privileges.
 
-  <FlywayMigrationV3GrantAppUserPrivileges />
+  ```sql reference title="database/flyway/migrations/V3__grant_app_user_privileges.sql"
+  https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/database/flyway/migrations/V3__grant_app_user_privileges.sql
+  ```
 
 The separation matters. V3 runs as the admin user but only grants DML rights to `sakila_app`. The `ALTER DEFAULT PRIVILEGES` lines make sure any tables created by future migrations are also accessible to the app user automatically.
 
@@ -62,9 +59,13 @@ The separation matters. V3 runs as the admin user but only grants DML rights to 
 
 We are extending the [`postgres:17-alpine`](https://hub.docker.com/layers/library/postgres/17-alpine) image to run an init script that creates the `sakila_app` user during first startup.
 
-<PostgresDockerfile />
+```Dockerfile reference title="database/postgres/Dockerfile"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/database/postgres/Dockerfile
+```
 
-<PostgresInitUser />
+```sh reference title="database/postgres/init-users.sh"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/database/postgres/init-users.sh
+```
 
 The init script runs via Docker's `/docker-entrypoint-initdb.d/` mechanism, which executes any scripts in that directory when the database is first initialized. It creates `sakila_app` with a password from an environment variable and grants connection rights. Actual table-level privileges come later via Flyway migration V3.
 
@@ -72,7 +73,9 @@ The init script runs via Docker's `/docker-entrypoint-initdb.d/` mechanism, whic
 
 Flyway runs as a one-shot container: it connects, applies pending migrations, then exits.
 
-<FlywayDockerfile />
+```Dockerfile reference title="database/flyway/Dockerfile"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/database/flyway/Dockerfile
+```
 
 We bake the SQL files into the image at build time. No bind mounts, no volume gymnastics. The `context: .` in `docker-compose.yml` is needed because the Dockerfile copies from `database/flyway/migrations/` relative to the repo root.
 
@@ -87,7 +90,9 @@ We bake the SQL files into the image at build time. No bind mounts, no volume gy
 
 ### docker-compose.yml
 
-<DockerCompose />
+```yml reference title="docker-compose.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/docker-compose.yml
+```
 
 Here's what's happening in this compose file:
 
@@ -102,17 +107,62 @@ Here's what's happening in this compose file:
 
 Add `runtimeOnly 'org.postgresql:postgresql'` to each module's build file. That's the JDBC driver Spring Boot needs to connect to PostgreSQL.
 
-<BuildGradle />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_java/build.gradle#L68
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kts reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_kotlin/build.gradle.kts#L71
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_groovy/build.gradle#L67
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 ### application.yaml
 
 The datasource and JPA settings point to PostgreSQL. The credentials come from environment variables, which Docker Compose injects at runtime.
 
-<ApplicationYaml />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-**`flyway.enabled: false`** tells Spring Boot not to run Flyway itself. Our standalone Flyway container handles that. Setting it to true here would mean the app tries to run migrations on every startup using `sakila_app` credentials, which don't have DDL privileges. It would fail.
+        ```yml reference title="resources/application.yaml (new code nester under the spring key)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_java/src/main/resources/application.yaml#L4-L15
+        ```
 
-**`ddl-auto: none`** means Hibernate doesn't touch the schema at all. Flyway owns that.
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```yml reference title="resources/application.yaml (new code nester under the spring key)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_kotlin/src/main/resources/application.yaml#L4-L16
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```yml reference title="resources/application.yaml (new code nester under the spring key)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_groovy/src/main/resources/application.yaml#L4-L15
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+- **`flyway.enabled: false`** tells Spring Boot not to run Flyway itself. Our standalone Flyway container handles that. Setting it to true here would mean the app tries to run migrations on every startup using `sakila_app` credentials, which don't have DDL privileges. It would fail.
+- **`ddl-auto: none`** means Hibernate doesn't touch the schema at all. Flyway owns that.
 
 ## Deploying the Stack in Coolify
 

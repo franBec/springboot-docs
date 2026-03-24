@@ -4,19 +4,15 @@ title: Reverse Engineering JPA Entities
 ---
 
 import GithubTagInfo from '@site/src/components/github-tag-info';
-import {
-  FileTree,
-  HibernateRevengXml,
-  HibernateToolsProperties,
-  HibernatePojo,
-  BuildGradle,
-} from '@site/src/components/docs/persistence-integration/reverse-engineering-jpa-entities';
+import { FileTree } from '@site/src/components/docs/persistence-integration/reverse-engineering-jpa-entities';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <GithubTagInfo tag="persistence-integration" />
 
 ## The Problem
 
-Writing JPA entity classes by hand from an existing database schema is tedious. If your schema has 20 tables you get 20 entity files to create, annotate, and keep in sync whenever the schema changes. Miss a column, get a nullable wrong, or forget a relationship and you're debugging at runtime.
+Writing JPA entity classes by hand from an existing database schema is tedious. If your schema has 20 tables you get 20 entity files to create, annotate, and keep in sync whenever the schema changes. Miss a column, get a nullable wrong, or forget a relationship, and you're debugging at runtime.
 
 The alternative: generate the entities at build time directly from the SQL schema. No running database required. No manual entity writing. The build reads the schema, spins up an in-memory H2 instance, introspects it, and writes the entity source files before your code even compiles.
 
@@ -43,7 +39,30 @@ Hibernate Tools never connects to your real database. It only reads this SQL fil
 
 ### `hibernate.reveng.xml`
 
-<HibernateRevengXml />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```xml reference title="resources/hibernate.reveng.xml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/90328ae095a29bd4836acb6a1ba1be12d60baad8/spring_java/src/main/resources/hibernate.reveng.xml
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```xml reference title="resources/hibernate.reveng.xml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4e76c9ec9ddd263e39428da82115a414304231c2/spring_kotlin/src/main/resources/hibernate.reveng.xml
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```xml reference title="resources/hibernate.reveng.xml"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66c833e262c22d4680841942a5d10407e8f2cfdb/spring_groovy/src/main/resources/hibernate.reveng.xml
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 The `<type-mapping>` block overrides the default JDBC-to-Java type mappings. Without it, Hibernate Tools would map `TIMESTAMP` to a raw `java.sql.Timestamp` and `TINYINT` to a primitive `byte`. The overrides give you clean `java.time.*` equivalents and proper boxed types instead.
 
@@ -51,13 +70,59 @@ The `<table-filter>` line tells Hibernate Tools to reverse-engineer every table 
 
 ### `hibernate-tools.properties`
 
-<HibernateToolsProperties />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```properties reference title="resources/hibernate-tools.properties"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/90328ae095a29bd4836acb6a1ba1be12d60baad8/spring_java/src/main/resources/hibernate-tools.properties
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```properties reference title="resources/hibernate-tools.properties"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4e76c9ec9ddd263e39428da82115a414304231c2/spring_kotlin/src/main/resources/hibernate-tools.properties
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```properties reference title="resources/hibernate-tools.properties"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66c833e262c22d4680841942a5d10407e8f2cfdb/spring_groovy/src/main/resources/hibernate-tools.properties
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 This file supplies the static JDBC connection details. Notice there's no `hibernate.connection.url` here. That property is injected dynamically by the Gradle task at generation time, pointing at the SQL schema file via an H2 `INIT=RUNSCRIPT` connection string. Keeping it out of this file avoids hardcoding an absolute path.
 
 ### `Pojo.ftl`
 
-<HibernatePojo />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```ftl reference title="resources/templates/hibernate/pojo/Pojo.ftl"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/90328ae095a29bd4836acb6a1ba1be12d60baad8/spring_java/src/main/resources/templates/hibernate/pojo/Pojo.ftl
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```ftl reference title="resources/templates/hibernate/pojo/Pojo.ftl"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4e76c9ec9ddd263e39428da82115a414304231c2/spring_kotlin/src/main/resources/templates/hibernate/pojo/Pojo.ftl
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```ftl reference title="resources/templates/hibernate/pojo/Pojo.ftl"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66c833e262c22d4680841942a5d10407e8f2cfdb/spring_groovy/src/main/resources/templates/hibernate/pojo/Pojo.ftl
+        ```
+
+    </TabItem>
+
+</Tabs>
 
 A [FreeMarker](https://freemarker.apache.org/) template that controls the exact shape of each generated entity class. Hibernate Tools calls it once per table and passes a `pojo` object describing the table's columns and relationships. The template decides what annotations to emit, how to handle composite keys, and how to wire up `@OneToMany` and `@ManyToOne` relationships.
 
@@ -71,13 +136,75 @@ Because Hibernate Tools always emits `.java` files, the Kotlin and Groovy tasks 
 
 ## Step 2 — Wire Up `build.gradle`
 
-<BuildGradle />
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
 
-A few things worth calling out in the diff:
+        ```groovy reference title="build.gradle (updated configurations block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/90328ae095a29bd4836acb6a1ba1be12d60baad8/spring_java/build.gradle#L20-L25
+        ```
 
-**`hibernateTools` configuration** is a separate Gradle dependency bucket that exists only for code generation. It holds the Hibernate Tools Ant runner, Hibernate ORM core, and H2, none of which belong in your application's compile or runtime classpath. Keeping them here means they do their job at build time and disappear.
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/90328ae095a29bd4836acb6a1ba1be12d60baad8/spring_java/build.gradle#L56-L66
+        ```
 
-**Runtime and compile dependencies** add the standard Spring Data JPA and H2 jars your application needs at runtime. The Kotlin variant also requires the `kotlin("plugin.jpa")` Gradle plugin, which generates the no-arg constructors that JPA needs under the hood, something Kotlin classes don't provide by default.
+        ```groovy reference title="build.gradle (new task generateEntities + updated sourceSets + updated task compileJava blocks)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/90328ae095a29bd4836acb6a1ba1be12d60baad8/spring_java/build.gradle#L177-L267
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kts reference title="build.gradle.kts (new imports)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4e76c9ec9ddd263e39428da82115a414304231c2/spring_kotlin/build.gradle.kts#L1-L2
+        ```
+
+        ```kts reference title="build.gradle.kts (new val hibernateTools)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4e76c9ec9ddd263e39428da82115a414304231c2/spring_kotlin/build.gradle.kts#L23
+        ```
+
+        ```kts reference title="build.gradle.kts (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4e76c9ec9ddd263e39428da82115a414304231c2/spring_kotlin/build.gradle.kts#L59-L69
+        ```
+
+        ```kts reference title="build.gradle.kts (new val hibernateGeneratedSourcesDir)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4e76c9ec9ddd263e39428da82115a414304231c2/spring_kotlin/build.gradle.kts#L160
+        ```
+
+        ```kts reference title="build.gradle.kts (new task generateEntities)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/4e76c9ec9ddd263e39428da82115a414304231c2/spring_kotlin/build.gradle.kts#L200-L305
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="build.gradle (updated configurations block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66c833e262c22d4680841942a5d10407e8f2cfdb/spring_groovy/build.gradle#L20-L25
+        ```
+
+        ```groovy reference title="build.gradle (dependencies block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66c833e262c22d4680841942a5d10407e8f2cfdb/spring_groovy/build.gradle#L55-L65
+        ```
+
+        ```groovy reference title="build.gradle (updated spotless block)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66c833e262c22d4680841942a5d10407e8f2cfdb/spring_groovy/build.gradle#L135-L146
+        ```
+
+        ```groovy reference title="build.gradle (new task generateEntities + updated sourceSets)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66c833e262c22d4680841942a5d10407e8f2cfdb/spring_groovy/build.gradle#L172-L266
+        ```
+
+        ```groovy reference title="build.gradle (new task compileGroovy)"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/66c833e262c22d4680841942a5d10407e8f2cfdb/spring_groovy/build.gradle#L272-L274
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+A few things worth calling out:
+
+- **`hibernateTools` configuration** is a separate Gradle dependency bucket that exists only for code generation. It holds the Hibernate Tools Ant runner, Hibernate ORM core, and H2, none of which belong in your application's compile or runtime classpath. Keeping them here means they do their job at build time and disappear.
+- **Runtime and compile dependencies** add the standard Spring Data JPA and H2 jars your application needs at runtime.
 
 **`generateEntities` task** does the work in three steps:
 
@@ -89,11 +216,7 @@ A few things worth calling out in the diff:
 
 ## What Gets Generated
 
-After running `./gradlew generateEntities` (or any task that depends on it, like `build`), you'll find entity source files under:
-
-```
-build/generated/sources/hibernate/<group>/<name>/generated/entity/
-```
+After running `./gradlew generateEntities` (or any task that depends on it, like `build`), you'll find entity source files under `build/generated/sources/hibernate/<group>/<name>/generated/entity/`.
 
 Every table in the schema becomes one entity class, compiled transparently alongside your hand-written code. You don't reference this directory manually. The source set registration takes care of it.
 

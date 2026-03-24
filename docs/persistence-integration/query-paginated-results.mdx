@@ -1,0 +1,445 @@
+---
+sidebar_position: 5
+title: Query paginated results
+---
+
+import GithubTagInfo from '@site/src/components/github-tag-info';
+import {
+  FileTree,
+  PaginatedRequestSequenceDiagram,
+  TerminalCurl,
+  OpenApiSnippet,
+  ApplicationYamlSnippet,
+} from '@site/src/components/docs/persistence-integration/query-paginated-results';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+In the [previous document](./jpa-repository-usage) we wired a single-film lookup through the hexagonal architecture, from controller to JPA repository and back. This document adds pagination to the `/films` endpoint so clients can request pages of results instead of loading everything at once.
+
+## Files Overview
+
+<FileTree />
+
+Every layer in the architecture changes:
+
+- The OpenAPI spec gets `x-spring-paginated: true` on the `/films` endpoint.
+- `FilmUseCases` and `FilmRepository` grow a `getFilms(Pageable)` method.
+- The JPA repository overrides `findAll` with an `@EntityGraph`.
+- The REST mapper gains a `Page` → `FilmListResponseAllOfData` mapping.
+- The `application.yaml` files pick up Spring Data's pagination defaults.
+- A shared `hasPageFields()` test assertion is added to `MockMvcResultMatchers`.
+
+## The OpenAPI spec and `x-spring-paginated`
+
+The `/films` endpoint already existed in the OpenAPI spec, but before these commits it threw `RuntimeException("Not implemented")`. The key addition is `x-spring-paginated: true`:
+
+<OpenApiSnippet />
+
+This custom extension tells the OpenAPI generator to resolve the `page`, `size`, and `sort` query parameters into a Spring `Pageable` object rather than three separate method parameters. Without it, the generated controller interface would look like `getFilms(Integer page, Integer size, List<String> sort)`. With it, the generator produces `getFilms(Pageable pageable)`, and Spring Data's `PageableHandlerMethodArgumentResolver` automatically parses the query string into a `Pageable` instance.
+
+## springdoc-openapi-starter-webmvc-ui
+
+The build files also add the `springdoc-openapi-starter-webmvc-ui:3.0.2` dependency. This serves the OpenAPI spec as a live Swagger UI at `/swagger-ui.html`, which is useful for ad-hoc exploration. It does not affect the pagination logic itself.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```groovy reference title="build.gradle (snippet)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/build.gradle#L70-L70
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kotlin reference title="build.gradle.kts (snippet)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/build.gradle.kts#L52-L52
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="build.gradle (snippet)"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/build.gradle#L69-L69
+      ```
+
+  </TabItem>
+</Tabs>
+
+## Configure pagination defaults
+
+Spring Data lets you set global defaults for pagination so every request that omits `page` or `size` gets predictable values. The three YAML files (`application.yaml`, `application-dev.yaml`, `application-test.yaml`) all add the same block:
+
+<ApplicationYamlSnippet />
+
+- **`default-page-size: 10`** — when the client doesn't include `size`, return 10 results per page.
+- **`max-page-size: 100`** — cap any request at 100 results per page, so a client can't ask for all 1,000 films in one shot.
+
+## Add pagination through the layers
+
+### Domain port interfaces
+
+Both the inbound port (`FilmUseCases`) and the outbound port (`FilmRepository`) gain a `getFilms(Pageable)` method that returns `Page<Film>`:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+The domain layer only knows about `Page<Film>` and `Pageable`. It has zero knowledge of JPA or HTTP.
+
+### Use case implementation
+
+`FilmUseCasesImpl` delegates straight through to the repository — same pattern as `getFilm`:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+### JPA repository with `@EntityGraph`
+
+`FilmJpaRepository` now overrides `findAll(Pageable)` with an `@EntityGraph` that eagerly fetches the `language` relationships. Without it, accessing `film.languageByLanguageId` would trigger an N+1 query on every row in the page.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaRepository.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaRepository.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaRepository.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaRepository.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaRepository.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaRepository.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+The `@EntityGraph` annotation tells Hibernate to fetch those relationships in the same query using a `JOIN`, instead of issuing a separate `SELECT` for each film's language.
+
+### Map `Page<Entity>` to `Page<Film>`
+
+MapStruct (Java and Kotlin) and ModelMapper (Groovy) each handle the `Page` mapping differently.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+In Java, a `default` method on the MapStruct interface delegates to `source.map(this::map)`, which applies the existing single-entity mapper to every element and preserves pagination metadata:
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaMapper.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmJpaMapper.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+In Kotlin, the same idea is expressed as a single-expression function:
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaMapper.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmJpaMapper.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+In Groovy, ModelMapper's auto-mapping conflicts with Groovy's metaclass — it auto-discovers `language` and `language.metaClass` as properties, causing mapping failures. Selective approaches like `addMapping` with closures or `PropertyMap` both fail: the former triggers `language.metaClass` conflicts, and the latter still auto-discovers property paths from expressions like `source.releaseYear?.year`, which crashes on `final` types such as `java.time.LocalDate`. The only reliable pattern is `setConverter` with a closure that explicitly maps every field — verbose, but correct. The `Page` mapping uses the same manual approach with `source.map { it -> map(it) }`:
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaMapper.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmJpaMapper.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+### Repository implementation
+
+`FilmRepositoryImpl` wires the JPA repository and mapper together:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+The `getFilms(Pageable)` method passes the `Pageable` straight to `repository.findAll(...)`, gets back a `Page<FilmEntity>`, and converts it to `Page<Film>` via the mapper. The pagination metadata (total elements, total pages, current page info) travels along automatically because `Page.map()` preserves it.
+
+### Map the REST response
+
+The OpenAPI spec defines `FilmListResponse` as an `allOf` combining `ResponseMetadata` (instance, status, timestamp, trace) with a `data` property. The `data` property itself is an `allOf` of the Spring `Page` schema and an object with a `content` array of `Film` items.
+
+The REST-side mapper converts `Page<Film>` (domain) to `FilmListResponseAllOfData` (generated DTO):
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+MapStruct maps `Page<Film>` directly to `FilmListResponseAllOfData`, which mirrors the Spring `Page` structure (content, pageable, totalElements, totalPages):
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+In Kotlin, MapStruct needs a `@Mapping` annotation to handle the `content` field because `Page.getContent()` returns an immutable list that the generator can't assign directly. The `expression` builds the list from `source.getContent()`:
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+In Groovy, ModelMapper doesn't handle `Page`, so the mapper constructs a `FilmListResponseAllOfData` by hand — collecting `source.content`, creating a `GeneratedPageable`, and passing `totalElements` and `totalPages` directly:
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestMapper.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+### The controller method
+
+The generated `FilmsApi` interface now declares `getFilms(Pageable pageable)` thanks to `x-spring-paginated`. The controller builds the response using the same pattern as the single-film endpoint:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+The `Pageable` parameter is resolved automatically by Spring MVC from the `page`, `size`, and `sort` query parameters, bounded by the defaults and max-page-size configured in `application.yaml`.
+
+## Test the pagination
+
+### Integration test — @DataJpaTest
+
+The JPA repository test verifies that `getFilms(PageRequest.of(0, 10))` returns a page with 10 films whose IDs start at 1:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaTest.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaTest.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaTest.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaTest.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaSpec.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImplDataJpaSpec.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+### Unit test — mocked repository
+
+The use case test checks that `getFilms` delegates to the repository and returns the page:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImplTest.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImplTest.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImplTest.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImplTest.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImplSpec.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImplSpec.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+### Reusable pagination assertions
+
+The controller test needs to verify that the JSON response contains the pagination fields (`content`, `pageable.pageNumber`, `pageable.pageSize`, `totalElements`, `totalPages`). Instead of repeating those `jsonPath` assertions in every test, a shared `hasPageFields()` method is added to each language's `MockMvcResultMatchers` utility:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/test/util/MockMvcResultMatchers.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/test/java/dev/pollito/spring_java/test/util/MockMvcResultMatchers.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/test/util/MockMvcResultMatchersDsl.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/test/util/MockMvcResultMatchersDsl.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/test/util/MockMvcResultMatchersTrait.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/test/util/MockMvcResultMatchersTrait.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+`hasPageFields()` asserts that `$.data.content` is an array and that `$.data.pageable.pageNumber`, `$.data.pageable.pageSize`, `$.data.totalElements`, and `$.data.totalPages` are all numbers. The controller tests call it alongside `hasStandardApiResponseFields()`.
+
+### Controller test — MockMvc
+
+The controller test was previously asserting `500 INTERNAL_SERVER_ERROR` (because `getFilms` threw `RuntimeException("Not implemented")`). Now it mocks `useCases.getFilms(any(Pageable.class))` to return an empty page and asserts the response includes the standard API fields plus pagination fields (`content`, `pageable.pageNumber`, `pageable.pageSize`, `totalElements`, `totalPages`):
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+      ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.java"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e/spring_java/src/test/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.java
+      ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+      ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.kt"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/1429e90dd4b57f34ed455f94e7b40d948727c79e/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.kt
+      ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+      ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerMockMvcSpec.groovy"
+      https://raw.githubusercontent.com/franBec/springboot-demo-projects/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerMockMvcSpec.groovy
+      ```
+
+  </TabItem>
+</Tabs>
+
+## The complete flow
+
+With pagination wired through every layer, a request to `GET /api/films?page=0&size=5` flows like this:
+
+<PaginatedRequestSequenceDiagram />
+
+Build and run the application with the `dev` profile, then hit the endpoint:
+
+<TerminalCurl />

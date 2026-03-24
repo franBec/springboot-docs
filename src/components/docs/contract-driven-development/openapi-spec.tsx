@@ -4,13 +4,19 @@ import { FileTreeInfo } from '@site/src/components/file-tree-info';
 export const FilmStructureJson = () => (
   <CodeBlock language="json">
     {`{
-  "id": 42,
   "title": "ACADEMY DINOSAUR",
-  "description": "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
+  "description": "An Epic Drama of a Feminist And a Mad Scientist",
   "releaseYear": 2006,
   "rating": "PG",
-  "lengthMinutes": 86,
-  "language": "English"
+  "length": 86,
+  "language": "English",
+  "originalLanguage": "English",
+  "rentalDuration": 3,
+  "rentalRate": 4.99,
+  "replacementCost": 20.99,
+  "specialFeatures": "Trailers,Deleted Scenes",
+  "id": 42,
+  "lastUpdate": "2006-02-15T04:03:42Z"
 }`}
   </CodeBlock>
 );
@@ -18,15 +24,18 @@ export const FilmStructureJson = () => (
 export const FileTree = () => (
   <FileTreeInfo>
     <CodeBlock language="log" title="File Tree">
-      {`├── ...
+      {`.
+├── ...
 └── src
     ├── main
     │   ├── ...
     │   └── resources
     │       ├── ...
 // highlight-added
-    │       └── openapi.yaml
-    └── ...`}
+    │       ├── openapi.yaml
+    │       └── ...
+    └── test
+        └── ...`}
     </CodeBlock>
   </FileTreeInfo>
 );
@@ -35,9 +44,9 @@ export const ErrorResponseJson = () => (
   <CodeBlock language="json">
     {`{
   "instance": "/api/something",
+  "status": 200,
   "timestamp": "2026-01-03T17:11:50.826722328Z",
   "trace": "9482c151-b417-43ff-9dbb-ee12b84e5d99",
-  "status": 404,
   "title": "Not Found",
   "detail": "No static resource for request '/'."
 }`}
@@ -48,20 +57,18 @@ export const FilmsListResponseJson = () => (
   <CodeBlock language="json">
     {`{
   "instance": "/api/films",
+  "status": 200,
   "timestamp": "2026-01-03T17:11:50.826722328Z",
   "trace": "9482c151-b417-43ff-9dbb-ee12b84e5d99",
-  "status": 200,
-  "data": [
-    {
-      "id": 42,
-      "title": "ACADEMY DINOSAUR",
-      "description": "An Epic Drama of a Feminist And a Mad Scientist",
-      "releaseYear": 2006,
-      "rating": "PG",
-      "lengthMinutes": 86,
-      "language": "English"
-    }
-  ]
+  "data": {
+    "content": [],
+    "pageable": {
+      "pageNumber": 0,
+      "pageSize": 10
+    },
+    "totalElements": 10,
+    "totalPages": 10
+  }
 }`}
   </CodeBlock>
 );
@@ -69,18 +76,24 @@ export const FilmsListResponseJson = () => (
 export const FilmResponseJson = () => (
   <CodeBlock language="json">
     {`{
-  "instance": "/api/films/42",
+  "instance": "/api/something",
+  "status": 200,
   "timestamp": "2026-01-03T17:11:50.826722328Z",
   "trace": "9482c151-b417-43ff-9dbb-ee12b84e5d99",
-  "status": 200,
   "data": {
-    "id": 42,
     "title": "ACADEMY DINOSAUR",
     "description": "An Epic Drama of a Feminist And a Mad Scientist",
     "releaseYear": 2006,
     "rating": "PG",
-    "lengthMinutes": 86,
-    "language": "English"
+    "length": 86,
+    "language": "English",
+    "originalLanguage": "English",
+    "rentalDuration": 3,
+    "rentalRate": 4.99,
+    "replacementCost": 20.99,
+    "specialFeatures": "Trailers,Deleted Scenes",
+    "id": 42,
+    "lastUpdate": "2006-02-15T04:03:42Z"
   }
 }`}
   </CodeBlock>
@@ -96,7 +109,7 @@ export const EnvelopePatternJson = () => (
   "data": {
     "id": 42,
     "title": "ACADEMY DINOSAUR",
-    //...
+    // ...
   }
 }`}
   </CodeBlock>
@@ -104,8 +117,7 @@ export const EnvelopePatternJson = () => (
 
 export const ResponseMetadataSchemaYaml = () => (
   <CodeBlock language="yaml">
-    {`# Base metadata for all responses
-ResponseMetadata:
+    {`ResponseMetadata:
   type: object
   properties:
     instance:
