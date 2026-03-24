@@ -1,9 +1,9 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
 
 export const JUnit5BasicStructure = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/com/example/service/FilmServiceTest.java"
   >
@@ -35,11 +35,11 @@ class FilmServiceTest {
             .isInstanceOf(FilmNotFoundException.class);
     }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const KotlinMockkExample = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kotlin"
     title="kotlin/com/example/service/FilmServiceTest.kt"
   >
@@ -66,11 +66,11 @@ class FilmServiceTest {
         assertThrows<FilmNotFoundException> { filmService.getFilmById(999L) }
     }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const SpockBasicStructure = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/com/example/service/FilmServiceSpec.groovy"
   >
@@ -110,7 +110,7 @@ class FilmServiceSpec extends Specification {
         thrown(FilmNotFoundException)
     }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const TestingFrameworkDecisionGraph = () => (

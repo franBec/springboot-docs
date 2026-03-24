@@ -1,6 +1,6 @@
 import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 
 export const SpringIocContainerGraph = () => (
   <ZoomContainer>
@@ -65,7 +65,7 @@ export const SpringIocContainerGraphES = () => (
 );
 
 export const AnnotationsLayerJava = () => (
-  <CollapsibleCodeBlock language="java">
+  <CodeBlock language="java">
     {`@Repository  // Data layer
 public class UserRepository { ... }
 
@@ -74,11 +74,11 @@ public class UserService { ... }
 
 @RestController  // API layer
 public class UserController { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const AnnotationsLayerKt = () => (
-  <CollapsibleCodeBlock language="kt">
+  <CodeBlock language="kt">
     {`@Repository  // Data layer
 class UserRepository { ... }
 
@@ -87,11 +87,11 @@ class UserService { ... }
 
 @RestController  // API layer
 class UserController { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const AnnotationsLayerGroovy = () => (
-  <CollapsibleCodeBlock language="groovy">
+  <CodeBlock language="groovy">
     {`@Repository  // Data layer
 class UserRepository { ... }
 
@@ -100,11 +100,11 @@ class UserService { ... }
 
 @RestController  // API layer
 class UserController { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ConfigurationBeanJava = () => (
-  <CollapsibleCodeBlock language="java">
+  <CodeBlock language="java">
     {`@Configuration
 public class SecurityConfig {
     @Bean
@@ -112,11 +112,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ConfigurationBeanKt = () => (
-  <CollapsibleCodeBlock language="kt">
+  <CodeBlock language="kt">
     {`@Configuration
 class SecurityConfig {
     @Bean
@@ -124,11 +124,11 @@ class SecurityConfig {
         return BCryptPasswordEncoder()
     }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ConfigurationBeanGroovy = () => (
-  <CollapsibleCodeBlock language="groovy">
+  <CodeBlock language="groovy">
     {`@Configuration
 class SecurityConfig {
     @Bean
@@ -136,56 +136,56 @@ class SecurityConfig {
         new BCryptPasswordEncoder()
     }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ProfileBeanJava = () => (
-  <CollapsibleCodeBlock language="java">
+  <CodeBlock language="java">
     {`@Profile("dev")
 @Service
 public class MockPaymentService implements PaymentService { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ProfileBeanKt = () => (
-  <CollapsibleCodeBlock language="kt">
+  <CodeBlock language="kt">
     {`@Profile("dev")
 @Service
 class MockPaymentService : PaymentService { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ProfileBeanGroovy = () => (
-  <CollapsibleCodeBlock language="groovy">
+  <CodeBlock language="groovy">
     {`@Profile("dev")
 @Service
 class MockPaymentService implements PaymentService { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const AnnotationSoupJava = () => (
-  <CollapsibleCodeBlock language="java">
+  <CodeBlock language="java">
     {`@Component @Service  // Redundant!
 public class UserService { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const AnnotationSoupKt = () => (
-  <CollapsibleCodeBlock language="kt">
+  <CodeBlock language="kt">
     {`@Component @Service  // Redundant!
 class UserService { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const AnnotationSoupGroovy = () => (
-  <CollapsibleCodeBlock language="groovy">
+  <CodeBlock language="groovy">
     {`@Component @Service  // Redundant!
 class UserService { ... }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ConstructorInjectionJava = () => (
-  <CollapsibleCodeBlock language="java">
+  <CodeBlock language="java">
     {`@RestController
 public class CheckoutController {
 
@@ -198,22 +198,22 @@ public class CheckoutController {
 
     //Controller logic...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ConstructorInjectionKt = () => (
-  <CollapsibleCodeBlock language="kt">
+  <CodeBlock language="kt">
     {`@RestController
 class CheckoutController(private val paymentService: PaymentService) {
     // In Kotlin, the primary constructor is concise and does the same thing.
 
     //Controller logic...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ConstructorInjectionGroovy = () => (
-  <CollapsibleCodeBlock language="groovy">
+  <CodeBlock language="groovy">
     {`@RestController
 class CheckoutController {
 
@@ -226,11 +226,11 @@ class CheckoutController {
 
     //Controller logic...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const RequiredArgsConstructor = () => (
-  <CollapsibleCodeBlock language="java">
+  <CodeBlock language="java">
     {`@RestController
 @RequiredArgsConstructor // <-- Lombok annotation
 public class CheckoutController {
@@ -239,21 +239,21 @@ public class CheckoutController {
 
     //Controller logic
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const KtPrimaryConstructor = () => (
-  <CollapsibleCodeBlock language="kt">
+  <CodeBlock language="kt">
     {`@RestController
 // In Kotlin, this is built into the language with primary constructors.
 class CheckoutController(private val paymentService: PaymentService) {
     //Controller logic
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const GroovyImmutable = () => (
-  <CollapsibleCodeBlock language="groovy">
+  <CodeBlock language="groovy">
     {`@RestController
 @Immutable // This generates a constructor for all properties
 class CheckoutController {
@@ -261,11 +261,11 @@ class CheckoutController {
 
     //Controller logic
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const SetterInjectionJava = () => (
-  <CollapsibleCodeBlock language="java">
+  <CodeBlock language="java">
     {`@RestController
 public class CheckoutController {
 
@@ -277,11 +277,11 @@ public class CheckoutController {
     }
     //...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const SetterInjectionKt = () => (
-  <CollapsibleCodeBlock language="kt">
+  <CodeBlock language="kt">
     {`@RestController
 class CheckoutController {
 
@@ -289,11 +289,11 @@ class CheckoutController {
     lateinit var paymentService: PaymentService
     //...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const SetterInjectionGroovy = () => (
-  <CollapsibleCodeBlock language="groovy">
+  <CodeBlock language="groovy">
     {`@RestController
 class CheckoutController {
 
@@ -305,11 +305,11 @@ class CheckoutController {
     }
     //...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FieldInjectionJava = () => (
-  <CollapsibleCodeBlock language="java">
+  <CodeBlock language="java">
     {`@RestController
 public class CheckoutController {
 
@@ -318,11 +318,11 @@ public class CheckoutController {
 
     //...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FieldInjectionKt = () => (
-  <CollapsibleCodeBlock language="kt">
+  <CodeBlock language="kt">
     {`@RestController
 class CheckoutController {
 
@@ -331,11 +331,11 @@ class CheckoutController {
 
     //...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FieldInjectionGroovy = () => (
-  <CollapsibleCodeBlock language="groovy">
+  <CodeBlock language="groovy">
     {`@RestController
 class CheckoutController {
 
@@ -344,5 +344,5 @@ class CheckoutController {
 
     //...
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

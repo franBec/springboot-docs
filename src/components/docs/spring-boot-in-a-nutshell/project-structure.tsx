@@ -1,7 +1,7 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 
 export const DefaultProjectStructure = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`your-project/
 ├── src/
 │   ├── main/
@@ -18,11 +18,11 @@ export const DefaultProjectStructure = () => (
 ├── .gitignore
 ├── pom.xml (or build.gradle)
 └── HELP.md`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const CleanArchitectureStructure = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`src/main/java/dev/pollito/spring_java
 ├── SpringJavaApplication.java
 │
@@ -62,11 +62,11 @@ export const CleanArchitectureStructure = () => (
             │   └── FilmController.java      # Interface Adapters
             └── dto
                 └── FilmResponse.java        # Interface Adapters`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const HexagonalArchitectureStructure = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`src/main/java/dev/pollito/spring_java
 ├── SpringJavaApplication.java
 │
@@ -106,5 +106,5 @@ export const HexagonalArchitectureStructure = () => (
     │
     └── configuration
         └── FeignConfig.java`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

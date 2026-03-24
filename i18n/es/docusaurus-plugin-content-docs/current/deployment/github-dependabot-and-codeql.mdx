@@ -5,7 +5,6 @@ title: GitHub Dependabot y CodeQL
 
 import {
   FileTree,
-  Dependabot,
   CodeQL,
 } from '@site/src/components/docs/deployment/github-dependabot-and-codeql';
 import GithubTagInfo from '@site/src/components/github-tag-info';
@@ -24,7 +23,9 @@ Esto es lo que vas a agregar al repositorio:
 
 [Dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide) revisa los manifiestos de dependencias en busca de paquetes desactualizados y abre pull requests para actualizarlos. En vez de rastrear manualmente qué librerías tienen nuevas versiones, recibís un PR con la actualización lista para revisar y mergear.
 
-<Dependabot />
+```yaml reference title=".github/dependabot.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/a569c6649baa2ff681d1bcc8c7caaf9a8d3d5363/.github/dependabot.yml
+```
 
 Algunas cosas a tener en cuenta sobre esta configuración:
 

@@ -1,14 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import CodeBlock from '@theme/CodeBlock';
-
-interface CollapsibleCodeBlockProps {
-  children: string;
-  language: string;
-  title?: string;
-  maxLines?: number;
-}
+import OriginalCodeBlock from '@theme-original/CodeBlock';
+import type { Props } from '@theme/CodeBlock';
 
 const LINE_HEIGHT_ESTIMATE = 24; // pixels per line
+const MAX_LINES = 15;
 
 const ChevronIcon: React.FC<{ isExpanded: boolean }> = ({ isExpanded }) => (
   <svg
@@ -28,24 +23,23 @@ const ChevronIcon: React.FC<{ isExpanded: boolean }> = ({ isExpanded }) => (
   </svg>
 );
 
-export const CollapsibleCodeBlock: React.FC<CollapsibleCodeBlockProps> = ({
-  children,
-  language,
-  title,
-  maxLines = 15,
-}) => {
+export default function CodeBlock(props: Props): React.ReactNode {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [maxHeight, setMaxHeight] = useState<string>(
-    `${LINE_HEIGHT_ESTIMATE * maxLines}px`,
+    `${LINE_HEIGHT_ESTIMATE * MAX_LINES}px`,
   );
   const containerRef = useRef<HTMLDivElement>(null);
   const codeBlockRef = useRef<HTMLDivElement>(null);
   const intersectionObserverRef = useRef<IntersectionObserver | null>(null);
 
-  const lines = children.split('\n');
+  // Only process if children is a string (fenced code blocks)
+  // Skip for JSX children (inline CodeBlock usage)
+  const childrenStr =
+    typeof props.children === 'string' ? props.children : null;
+  const lines = childrenStr ? childrenStr.split('\n') : [];
   const totalLines = lines.length;
-  const needsCollapse = totalLines > maxLines;
+  const needsCollapse = totalLines > MAX_LINES;
 
   const calculateMaxHeight = useCallback(() => {
     if (codeBlockRef.current && needsCollapse) {
@@ -55,14 +49,14 @@ export const CollapsibleCodeBlock: React.FC<CollapsibleCodeBlockProps> = ({
         if (lineElements.length > 0) {
           const lineHeight = lineElements[0].getBoundingClientRect().height;
           if (lineHeight > 0) {
-            setMaxHeight(`${lineHeight * maxLines}px`);
+            setMaxHeight(`${lineHeight * MAX_LINES}px`);
             return true;
           }
         }
       }
     }
     return false;
-  }, [maxLines, needsCollapse]);
+  }, [needsCollapse]);
 
   useEffect(() => {
     if (!needsCollapse) return;
@@ -162,32 +156,34 @@ export const CollapsibleCodeBlock: React.FC<CollapsibleCodeBlockProps> = ({
     transition: 'max-height 0.2s ease-out',
   };
 
+  // If no collapsing needed, just render the original component
+  if (!needsCollapse) {
+    return <OriginalCodeBlock {...props} />;
+  }
+
+  // Otherwise, wrap with collapse/expand UI
   return (
     <div ref={containerRef} style={styles.container}>
       <div ref={codeBlockRef} style={codeWrapperStyle}>
-        <CodeBlock language={language} title={title}>
-          {children}
-        </CodeBlock>
-        {needsCollapse && !isExpanded && <div style={styles.fadeOverlay} />}
+        <OriginalCodeBlock {...props} />
+        {!isExpanded && <div style={styles.fadeOverlay} />}
       </div>
 
-      {needsCollapse && (
-        <button
-          type="button"
-          style={styles.button}
-          onClick={handleToggle}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <ChevronIcon isExpanded={isExpanded} />
-          {isExpanded ? 'Show less' : 'Expand'}
-          <span style={styles.lineCount}>
-            {isExpanded
-              ? `(${totalLines} lines)`
-              : `(${totalLines - maxLines} more lines)`}
-          </span>
-        </button>
-      )}
+      <button
+        type="button"
+        style={styles.button}
+        onClick={handleToggle}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <ChevronIcon isExpanded={isExpanded} />
+        {isExpanded ? 'Show less' : 'Expand'}
+        <span style={styles.lineCount}>
+          {isExpanded
+            ? `(${totalLines} lines)`
+            : `(${totalLines - MAX_LINES} more lines)`}
+        </span>
+      </button>
     </div>
   );
-};
+}

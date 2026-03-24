@@ -1,4 +1,4 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+
 import { JacocoCoverageTable } from '@site/src/components/jacoco-coverage-table';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -6,7 +6,7 @@ import CodeBlock from '@theme/CodeBlock';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 const MainFileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`spring_java/
 ├── SpringJavaApplication.java              ← 🔴 @SpringBootTest (context loads)
 ├── config/
@@ -30,11 +30,11 @@ const MainFileTreeJava = () => (
             └── port/in/
                 ├── FindByIdPortIn.java     ← ⚪ Ignored (Interface)
                 └── FindByIdPortInImpl.java ← 🟢 Unit Test`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const MainFileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`spring_kotlin/
 ├── SpringKotlinApplication.kt              ← 🔴 @SpringBootTest (context loads)
 ├── config/
@@ -58,11 +58,11 @@ const MainFileTreeKt = () => (
             └── port/in/
                 ├── FindByIdPortIn.kt       ← ⚪ Ignored (Interface)
                 └── FindByIdPortInImpl.kt   ← 🟢 Unit Test`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const MainFileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`spring_groovy/
 ├── SpringGroovyApplication.groovy            ← 🔴 @SpringBootTest (context loads)
 ├── config/
@@ -86,7 +86,7 @@ const MainFileTreeGroovy = () => (
             └── port/in/
                 ├── FindByIdPortIn.groovy     ← ⚪ Ignored (Interface)
                 └── FindByIdPortInImpl.groovy ← 🟢 Unit Test`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const MainFileTree = () => (
@@ -104,7 +104,7 @@ export const MainFileTree = () => (
 );
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="FileTree">
+  <CodeBlock language="log" title="FileTree">
     {`// highlight-modified
 ├── build.gradle
 └── src/
@@ -128,11 +128,11 @@ const FileTreeJava = () => (
         └── test/util/
 // highlight-added
             └── MockMvcResultMatchers.java`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle.kts
 └── src/
@@ -156,11 +156,11 @@ const FileTreeKt = () => (
         └── test/util/
 // highlight-added
             └── MockMvcResultMatchersDsl.kt`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
 └── src/
@@ -184,7 +184,7 @@ const FileTreeGroovy = () => (
         └── test/util/
 // highlight-added
             └── MockMvcResultMatchersTrait.groovy`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
@@ -204,7 +204,7 @@ export const FileTree = () => (
 );
 
 const BuildGradleJava = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`plugins {
   // ...
 // highlight-added
@@ -282,11 +282,11 @@ tasks.named('test') {
 // highlight-added-end
 }
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleKts = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
   // ...
 // highlight-added
@@ -364,11 +364,11 @@ tasks.jacocoTestCoverageVerification {
 tasks.named("check") { dependsOn(tasks.jacocoTestCoverageVerification) }
 // highlight-added-end
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleSpock = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`plugins {
   // ...
 // highlight-added
@@ -446,7 +446,7 @@ tasks.named('check') {
 }
 // highlight-added-end
 // ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradle = () => (
@@ -464,7 +464,7 @@ export const BuildGradle = () => (
 );
 
 const FindByIdPortInImplTestJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FindByIdPortInImplTest.java"
   >
@@ -488,11 +488,11 @@ class FindByIdPortInImplTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FindByIdPortInImplTestKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FindByIdPortInImplTest.kt"
   >
@@ -515,11 +515,11 @@ class FindByIdPortInImplTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FindByIdPortInImplSpec = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FindByIdPortInImplSpec.groovy"
   >
@@ -541,7 +541,7 @@ class FindByIdPortInImplSpec extends Specification {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FindByIdPortInTests = () => (
@@ -559,7 +559,7 @@ export const FindByIdPortInTests = () => (
 );
 
 export const MockMvcResultMatchersJavaCode = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/test/util/MockMvcResultMatchers.java"
   >
@@ -590,11 +590,11 @@ public final class MockMvcResultMatchers {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const MockMvcResultMatchersKtCode = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/test/util/MockMvcResultMatchersDsl.kt"
   >
@@ -618,11 +618,11 @@ fun MockMvcResultMatchersDsl.hasErrorFields(extectedStatus: HttpStatus) {
   jsonPath("$.title") { value(extectedStatus.reasonPhrase) }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const MockMvcResultMatchersTraitGroovyCode = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/test/util/MockMvcResultMatchersTrait.groovy"
   >
@@ -652,11 +652,11 @@ trait MockMvcResultMatchersTrait {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FilmRestControllerMockMvcTestJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.java"
   >
@@ -746,11 +746,11 @@ class FilmRestControllerMockMvcTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FilmRestControllerMockMvcTestKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestControllerMockMvcTest.kt"
   >
@@ -827,11 +827,11 @@ class FilmRestControllerMockMvcTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FilmRestControllerMockMvcSpecGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestControllerMockMvcSpec.groovy"
   >
@@ -922,7 +922,7 @@ class FilmRestControllerMockMvcSpec extends Specification implements MockMvcResu
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FilmRestControllerTests = () => (
@@ -940,7 +940,7 @@ export const FilmRestControllerTests = () => (
 );
 
 const TestErrorsLogJava = () => (
-  <CollapsibleCodeBlock language="log" title="Terminal">
+  <CodeBlock language="log" title="Terminal">
     {`JSON path "$.status"
 Expected :400
 Actual   :500
@@ -954,11 +954,11 @@ java.lang.AssertionError: JSON path "$.status" expected:<400> but was:<500>
 	at dev.pollito.spring_java.test.util.MockMvcResultMatchers.lambda$hasStandardApiResponseFields$0(MockMvcResultMatchers.java:19)
 	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
 	at dev.pollito.spring_java.sakila.film.adapter.in.rest.FilmControllerTest.whenFindByIdWithInvalidId_thenReturnsBadRequest(FilmControllerTest.java:72)`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const TestErrorLogKt = () => (
-  <CollapsibleCodeBlock language="log" title="Application logs">
+  <CodeBlock language="log" title="Application logs">
     {`Status
 Expected :400
 Actual   :500
@@ -973,11 +973,11 @@ java.lang.AssertionError: Status expected:<400> but was:<500>
 	at dev.pollito.spring_kotlin.sakila.film.adapter.in.rest.FilmControllerTest.when_find_by_invalid_id_then_returns_bad_request$lambda$1$0(FilmControllerTest.kt:63)
 	at org.springframework.test.web.servlet.MockMvcResultMatchersDsl.status(MockMvcResultMatchersDsl.kt:97)
 	at dev.pollito.spring_kotlin.sakila.film.adapter.in.rest.FilmControllerTest.when_find_by_invalid_id_then_returns_bad_request$lambda$1(FilmControllerTest.kt:63)`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const TestErrorLogGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="Terminal">
+  <CodeBlock language="log" title="Terminal">
     {`Condition failed with Exception:
 
 result .andExpect(hasStandardApiResponseFields(filmPath(invalidId), BAD_REQUEST)) .andExpect(hasErrorFields(BAD_REQUEST))
@@ -994,7 +994,7 @@ result .andExpect(hasStandardApiResponseFields(filmPath(invalidId), BAD_REQUEST)
 |       	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
 |       	at dev.pollito.spring_groovy.sakila.film.adapter.in.rest.FilmControllerSpec.when findById with invalid id then returns bad request(FilmControllerSpec.groovy:75)
 <org.springframework.test.web.servlet.MockMvc$1@73fe7483 val$mvcResult=inaccessible this$0=inaccessible>`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const TestErrorLog = () => (
@@ -1012,7 +1012,7 @@ export const TestErrorLog = () => (
 );
 
 const ControllerAdviceJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/advice/ControllerAdvice.java"
   >
@@ -1029,11 +1029,11 @@ public class ControllerAdvice {
   }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ControllerAdviceKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdvice.kt"
   >
@@ -1050,11 +1050,11 @@ class ControllerAdvice(private val request: HttpServletRequest) {
   }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ControllerAdviceGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdvice.groovy"
   >
@@ -1071,7 +1071,7 @@ class ControllerAdvice {
   }
 // highlight-added-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ControllerAdvice = () => (
@@ -1089,7 +1089,7 @@ export const ControllerAdvice = () => (
 );
 
 const ControllerAdviceMockMvcTestJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/advice/ControllerAdviceMockMvcTest.java"
   >
@@ -1178,11 +1178,11 @@ class ControllerAdviceMockMvcTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ControllerAdviceMockMvcTestKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdviceMockMvcTest.kt"
   >
@@ -1265,11 +1265,11 @@ class ControllerAdviceMockMvcTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ControllerAdviceMockMvcSpecGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdviceMockMvcSpec.groovy"
   >
@@ -1345,7 +1345,7 @@ class ControllerAdviceMockMvcSpec extends Specification implements MockMvcResult
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ControllerAdviceTests = () => (
@@ -1363,7 +1363,7 @@ export const ControllerAdviceTests = () => (
 );
 
 const SanityCheckSpringBootTestJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/SanityCheckSpringBootTest.java"
   >
@@ -1510,11 +1510,11 @@ class SanityCheckSpringBootTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const SanityCheckSpringBootTestKt = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/SanityCheckSpringBootTest.kt"
   >
@@ -1716,11 +1716,11 @@ class SanityCheckSpringBootTest {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const SanityCheckSpringBootSpecGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/SanityCheckSpringBootSpec.groovy"
   >
@@ -1854,7 +1854,7 @@ class SanityCheckSpringBootSpec extends Specification {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const SanityCheckSpringBootTests = () => (

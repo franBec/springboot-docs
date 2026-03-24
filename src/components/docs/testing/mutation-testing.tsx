@@ -1,25 +1,25 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import { PitCoverageReport } from '@site/src/components/pit-coverage-report';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
 └── src/
     └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle.kts
 └── src/
     └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
@@ -36,7 +36,7 @@ export const FileTree = () => (
 );
 
 const BuildGradleCode = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`plugins {
   // ...
 // highlight-added
@@ -87,11 +87,11 @@ pitest {
   ]
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const BuildGradleKtsCode = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
   // ...
 // highlight-added
@@ -141,7 +141,7 @@ pitest {
   coverageThreshold = 80
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradle = () => (

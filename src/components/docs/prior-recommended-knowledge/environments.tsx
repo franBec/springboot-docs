@@ -1,7 +1,7 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 
 export const ApplicationYml = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="yaml"
     title="src/main/resources/application.yml"
   >{`spring:
@@ -9,11 +9,11 @@ export const ApplicationYml = () => (
     name: spring_java
 
 server:
-  port: 8080`}</CollapsibleCodeBlock>
+  port: 8080`}</CodeBlock>
 );
 
 export const ApplicationDevYml = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="yaml"
     title="src/main/resources/application-dev.yml"
   >{`spring:
@@ -26,11 +26,11 @@ export const ApplicationDevYml = () => (
       enabled: true
 logging:
   level:
-    dev.pollito: DEBUG`}</CollapsibleCodeBlock>
+    dev.pollito: DEBUG`}</CodeBlock>
 );
 
 export const ApplicationProdYml = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="yaml"
     title="src/main/resources/application-prod.yml"
   >{`spring:
@@ -42,14 +42,14 @@ server:
   port: 80
 logging:
   level:
-    dev.pollito: INFO`}</CollapsibleCodeBlock>
+    dev.pollito: INFO`}</CodeBlock>
 );
 
 export const ApplicationYmlWithProfile = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="yaml"
     title="src/main/resources/application.yml"
   >{`spring:
   profiles:
-    active: dev`}</CollapsibleCodeBlock>
+    active: dev`}</CodeBlock>
 );

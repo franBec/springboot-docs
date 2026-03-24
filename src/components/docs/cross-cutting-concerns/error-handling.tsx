@@ -1,4 +1,4 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import ZoomContainer from '@site/src/components/zoom-container';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -6,7 +6,7 @@ import Mermaid from '@theme/Mermaid';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`├── ...
 └── src
     ├── main
@@ -22,11 +22,11 @@ const FileTreeJava = () => (
     │   │               └── ...
     │   └── ...
     └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`├── ...
 └── src
     ├── main
@@ -42,11 +42,11 @@ const FileTreeKt = () => (
     │   │               └── ...
     │   └── ...
     └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`├── ...
 └── src
     ├── main
@@ -62,7 +62,7 @@ const FileTreeGroovy = () => (
     │   │               └── ...
     │   └── ...
     └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
@@ -82,7 +82,7 @@ export const FileTree = () => (
 );
 
 const ControllerAdviceJavaCode = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/advice/ControllerAdvice.java"
   >
@@ -135,11 +135,11 @@ public class ControllerAdvice {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ControllerAdviceKtCode = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdvice.kt"
   >
@@ -192,11 +192,11 @@ class ControllerAdvice {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const ControllerAdviceGroovyCode = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdvice.groovy"
   >
@@ -257,7 +257,7 @@ class ControllerAdvice {
   }
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const ControllerAdvice = () => (
@@ -275,7 +275,7 @@ export const ControllerAdvice = () => (
 );
 
 export const NotFoundErrorTerminal = () => (
-  <CollapsibleCodeBlock language="log" title="Terminal">
+  <CodeBlock language="log" title="Terminal">
     {`curl -s http://localhost:8080 | jq; curl -sw "→ HTTP %{http_code}\\n" -o /dev/null http://localhost:8080
 {
   "detail": "No static resource  for request '/'.",
@@ -286,7 +286,7 @@ export const NotFoundErrorTerminal = () => (
   "trace": "d9178227-18d6-4442-8598-9a9f17f65f9c"
 }
 → HTTP 404`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const NotFoundErrorSequenceDiagram = () => (

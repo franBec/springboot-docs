@@ -1,10 +1,10 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 const FileTreeJava = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`
 // highlight-modified
 ├── build.gradle
@@ -36,11 +36,11 @@ const FileTreeJava = () => (
     │   │               └── ...
     │   └── ...
     └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeKt = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`
 // highlight-modified
 ├── build.gradle.kts
@@ -72,11 +72,11 @@ const FileTreeKt = () => (
     │   │               └── ...
     │   └── ...
     └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const FileTreeGroovy = () => (
-  <CollapsibleCodeBlock language="log" title="File Tree">
+  <CodeBlock language="log" title="File Tree">
     {`// highlight-modified
 ├── build.gradle
 ├── ...
@@ -107,7 +107,7 @@ const FileTreeGroovy = () => (
     │   │               └── ...
     │   └── ...
     └── ...`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const FileTree = () => (
@@ -127,7 +127,7 @@ export const FileTree = () => (
 );
 
 export const BuildGradleGroovy = () => (
-  <CollapsibleCodeBlock language="groovy" title="build.gradle">
+  <CodeBlock language="groovy" title="build.gradle">
     {`plugins {
   // ...
 // highlight-added
@@ -175,11 +175,11 @@ tasks.named('compileJava') {
   dependsOn 'openApiGenerate'
 }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const BuildGradleKts = () => (
-  <CollapsibleCodeBlock language="kts" title="build.gradle.kts">
+  <CodeBlock language="kts" title="build.gradle.kts">
     {`plugins {
   // ...
 // highlight-added
@@ -249,11 +249,11 @@ tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask> {
 
 tasks.named("clean") { doFirst { delete(openApiGeneratedSourcesDir) } }
 // highlight-added-end`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const JavaRestController = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
   >
@@ -304,11 +304,11 @@ public class FilmRestController implements FilmsApi {
 // highlight-added-end
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const KotlinRestController = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
   >
@@ -355,11 +355,11 @@ class FilmRestController(
 // highlight-added-end
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const GroovyRestController = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmController.groovy"
   >
@@ -421,7 +421,7 @@ class FilmRestController implements FilmsApi {
 // highlight-added-end
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const RestController = () => (
@@ -439,7 +439,7 @@ export const RestController = () => (
 );
 
 const JavaMapper = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestMapper.java"
   >
@@ -458,11 +458,11 @@ public interface FilmRestMapper extends Converter<Film, dev.pollito.spring_java.
 // highlight-modified
   dev.pollito.spring_java.generated.model.Film convert(@Nullable Film source);
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const KotlinMapper = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestMapper.kt"
   >
@@ -479,11 +479,11 @@ interface FilmRestMapper : Converter<Film, dev.pollito.spring_kotlin.generated.m
   override fun convert(source: Film): dev.pollito.spring_kotlin.generated.model.Film
 // highlight-modified-end
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const GroovyMapper = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/mapper/FilmRestMapper.groovy"
   >
@@ -512,7 +512,7 @@ class FilmRestMapper {
 // highlight-modified-end
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const Mapper = () => (
@@ -530,7 +530,7 @@ export const Mapper = () => (
 );
 
 const JavaRestControllerAdvice = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="java"
     title="java/dev/pollito/spring_java/config/advice/ControllerAdvice.java"
   >
@@ -603,11 +603,11 @@ public class ControllerAdvice {
     return buildProblemDetail(e, NOT_FOUND);
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const KtRestControllerAdvice = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="kt"
     title="kotlin/dev/pollito/spring_kotlin/config/advice/ControllerAdvice.kt"
   >
@@ -676,11 +676,11 @@ class ControllerAdvice(private val request: HttpServletRequest) {
     return buildProblemDetail(e, NOT_FOUND)
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 const GroovyRestControllerAdvice = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="groovy/dev/pollito/spring_groovy/config/advice/ControllerAdvice.groovy"
   >
@@ -763,7 +763,7 @@ class ControllerAdvice {
     buildProblemDetail(e, NOT_FOUND)
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const RestControllerAdvice = () => (
@@ -781,7 +781,7 @@ export const RestControllerAdvice = () => (
 );
 
 export const Terminal = () => (
-  <CollapsibleCodeBlock language="log" title="Terminal">
+  <CodeBlock language="log" title="Terminal">
     {`curl -s http://localhost:8080/api/films/42 | jq
 {
   "instance": "/api/films/42",
@@ -798,5 +798,5 @@ export const Terminal = () => (
     "title": "ACADEMY DINOSAUR"
   }
 }`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );

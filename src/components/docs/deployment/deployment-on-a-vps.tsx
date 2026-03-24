@@ -1,4 +1,4 @@
-import { CollapsibleCodeBlock } from '@site/src/components/collapsible-code-block';
+import CodeBlock from '@theme/CodeBlock';
 import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
 import Tabs from '@theme/Tabs';
@@ -161,7 +161,7 @@ export const RegistryFlowDiagramES = () => (
 
 export const FileTree = () => (
   <FileTreeInfo>
-    <CollapsibleCodeBlock
+    <CodeBlock
       language="log"
       title="File Tree"
     >{`springboot-demo-projects/
@@ -187,12 +187,12 @@ export const FileTree = () => (
 // highlight-added-start
     ├── Dockerfile
     └── settings-docker.gradle
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
   </FileTreeInfo>
 );
 
 export const DockerComposeYaml = () => (
-  <CollapsibleCodeBlock language="yaml" title="docker-compose.yml">{`
+  <CodeBlock language="yaml" title="docker-compose.yml">{`
 // highlight-added-start
 services:
   spring-java:
@@ -245,11 +245,11 @@ services:
       retries: 3
       start_period: 40s
     restart: unless-stopped
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
 );
 
 const DockerfileJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="dockerfile"
     title="spring_java/Dockerfile"
   >{`// highlight-added-start
@@ -268,11 +268,11 @@ RUN apk add --no-cache curl
 WORKDIR /app
 COPY --from=build /home/gradle/src/spring_java/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
 );
 
 const DockerfileKotlin = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="dockerfile"
     title="spring_kotlin/Dockerfile"
   >{`// highlight-added-start
@@ -291,11 +291,11 @@ RUN apk add --no-cache curl
 WORKDIR /app
 COPY --from=build /home/gradle/src/spring_kotlin/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
 );
 
 const DockerfileGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="dockerfile"
     title="spring_groovy/Dockerfile"
   >{`// highlight-added-start
@@ -314,7 +314,7 @@ RUN apk add --no-cache curl
 WORKDIR /app
 COPY --from=build /home/gradle/src/spring_groovy/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
 );
 
 export const DockerFiles = () => (
@@ -332,36 +332,36 @@ export const DockerFiles = () => (
 );
 
 const SettingsDockerGradleJava = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="spring_java/settings-docker.gradle"
   >{`// highlight-added-start
 rootProject.name = 'springboot-demo-projects'
 
 include 'spring_java'
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
 );
 
 const SettingsDockerGradleKotlin = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="spring_kotlin/settings-docker.gradle"
   >{`// highlight-added-start
 rootProject.name = 'springboot-demo-projects'
 
 include 'spring_kotlin'
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
 );
 
 const SettingsDockerGradleGroovy = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="groovy"
     title="spring_groovy/settings-docker.gradle"
   >{`// highlight-added-start
 rootProject.name = 'springboot-demo-projects'
 
 include 'spring_groovy'
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
 );
 
 export const SettingsDockerGradle = () => (
@@ -379,15 +379,15 @@ export const SettingsDockerGradle = () => (
 );
 
 export const GitIgnore = () => (
-  <CollapsibleCodeBlock language=".gitignore" title=".gitignore">
+  <CodeBlock language=".gitignore" title=".gitignore">
     {`# ...
 // highlight-added
 !gradle/wrapper/gradle-wrapper.jar`}
-  </CollapsibleCodeBlock>
+  </CodeBlock>
 );
 
 export const GitHubActionsYaml = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="yaml"
     title=".github/workflows/ci-cd.yml"
   >{`// highlight-added-start
@@ -437,11 +437,11 @@ jobs:
           curl -X GET "https://coolify.pollito.tech/api/v1/deploy?uuid=\${{ secrets.COOLIFY_DEPLOY_UUID }}&force=false" \\
             --header "Authorization: Bearer \${{ secrets.COOLIFY_API_TOKEN }}" \\
             --fail-with-body
-// highlight-added-end`}</CollapsibleCodeBlock>
+// highlight-added-end`}</CodeBlock>
 );
 
 export const VerificationTerminal = () => (
-  <CollapsibleCodeBlock
+  <CodeBlock
     language="log"
     title="Terminal"
   >{`curl -s https://sakila-java.pollito.tech/api/films/42 | jq                                                    
@@ -493,5 +493,5 @@ curl -s https://sakila-groovy.pollito.tech/api/films/42 | jq
     "releaseYear": 2006,
     "title": "ACADEMY DINOSAUR"
   }
-}`}</CollapsibleCodeBlock>
+}`}</CodeBlock>
 );
