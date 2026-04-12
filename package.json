@@ -26,7 +26,7 @@
     "prism-react-renderer": "^2.3.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-zoom-pan-pinch": "^3.7.0"
+    "react-zoom-pan-pinch": "^4.0.3"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.9.2",
