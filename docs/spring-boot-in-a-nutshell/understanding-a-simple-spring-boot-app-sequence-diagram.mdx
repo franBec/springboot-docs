@@ -1,11 +1,11 @@
 ---
 sidebar_position: 3
-title: Understanding A Simple Spring Boot App Sequence Diagram
+title: Understanding a simple Spring Boot app sequence diagram
 ---
 
 import { RequestFlowSequenceDiagram } from '@site/src/components/docs/spring-boot-in-a-nutshell/understanding-a-simple-spring-boot-app-sequence-diagram';
 
-Let's imagine a simple application that:
+Now that you understand the [Spring Container's role](/spring-boot-in-a-nutshell/spring-ioc-container) in managing your application's components, let's see how those components work together to handle a real request. Imagine a simple application that:
 
 1. Exposes a GET `/api/films/{filmId}` REST API endpoint.
 2. Gets the films information from a database.
@@ -25,3 +25,5 @@ This diagram shows the life of a single request in a stereotypical, no-frills Sp
   - **`FilmRepository`:** This component's only job is to talk to the database. It fetches raw data and passes it back up. By separating this, you could swap out your database from Postgres to MongoDB and you'd only have to change the repository, not your business logic.
 
 - **Database:** The vault where all your data is stored. Just stores and retrieves data when the `FilmRepository` asks it to.
+
+This layered architecture—Controller, Service, Repository—is the foundation of most Spring Boot applications. Each layer has a single responsibility and delegates work to the next.

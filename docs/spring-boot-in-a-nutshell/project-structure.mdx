@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-title: Project Structure
+title: Project structure
 ---
 
 import Image from '@site/src/components/image';
@@ -20,7 +20,7 @@ Let's check how we can group related classes in Java and what are the recommende
   discussed can be applied to Kotlin and Groovy projects.
 </Admonition>
 
-## Packages & the main Class Rule
+## Packages & the main class rule
 
 Packages are Java’s way of grouping classes (like folders).
 
@@ -30,7 +30,7 @@ Packages are Java’s way of grouping classes (like folders).
 - **Why?** Spring Boot automatically scans classes in the root package and its subpackages. Classes outside won’t be detected unless explicitly configured.
   - **Avoid fighting against this default unless necessary**: Spring Boot relies on this hierarchy.
 
-## Default Project Structure
+## Default project structure
 
 When you generate a Spring Boot project (more on how to generate a project in the [Spring Initializr section](/lets-create-a-spring-boot-project/spring-initializr)), you get a standardized folder and file structure.
 
@@ -93,7 +93,7 @@ _`src/test` folder is omitted for simplicity._
   }
 />
 
-## Is It Mandatory to Follow an Architecture?
+## Is it mandatory to follow an architecture?
 
 No. **Spring doesn’t enforce names or layers**. You could write everything in a single class. But these conventions solve the **readability problem**: developers instantly understand a class by its name.
 
@@ -105,3 +105,5 @@ I feel that **Hexagonal Architecture makes coding easier to understand** (or at 
 - **Is ok to bend the rules**: Small projects might combine layers.
 - **Consistency > perfection**: Agree with your team on a structure and stick to it. Refactor later if needed.
   - If your team uses different terms (e.g., `DataManager` instead of `Repository`), consistency matters more than the name itself.
+
+This document covered the main class rule, the default project structure Spring Boot generates, and common architectural patterns like Clean and Hexagonal architecture. The next step is generating an actual project using Spring Initializr.

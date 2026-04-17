@@ -1,11 +1,13 @@
 ---
 sidebar_position: 1
-title: Version Control
+title: Control de versiones
 ---
+
+import { GitFourCommands } from '@site/src/components/docs/prior-recommended-knowledge/development-environment/version-control';
 
 No construirías una casa sin un arnés de seguridad. No codees sin [control de versiones](https://github.com/resources/articles/software-development/what-is-version-control).
 
-## Sistemas de Control de Versiones
+## Sistemas de control de versiones
 
 Git domina el mercado de VCS, con los demás relegados a casos legacy.
 
@@ -16,11 +18,11 @@ Git domina el mercado de VCS, con los demás relegados a casos legacy.
 | [Mercurial](https://www.mercurial-scm.org/) | Más fácil que Git              | Perdió las guerras de VCS        |
 | [CVS](https://cvs.nongnu.org/)              | Pionero en versionado          | Tracking a nivel de archivo      |
 
-## Plataformas de Hosting
+## Plataformas de hosting
 
 Acá es donde vive el código.
 
-| Plataforma                                                       | Preferido por   | Repos Privados Gratis     | Feature Killer                         |
+| Plataforma                                                       | Preferido por   | Repos Privados Gratis     | Funcionalidad estrella                 |
 | ---------------------------------------------------------------- | --------------- | ------------------------- | -------------------------------------- |
 | [GitHub](https://github.com/)                                    | Tech startups   | Sí, hasta 3 colaboradores | Integración con Copilot, Actions CI/CD |
 | [GitLab](https://gitlab.com/)                                    | Enterprise      | Sí️                        | Pipeline DevOps integrado              |
@@ -32,13 +34,10 @@ Acá es donde vive el código.
 1. **Git primero, código después**: Siempre hacé `git init` antes de escribir la primera línea de código.
 2. **Consola > GUI**. Herramientas como [GitHub Desktop](https://desktop.github.com/download/) están bien, pero aprendé estos cuatro comandos primero:
 
-   ```bash
-   git add .
-   git commit -m "save point"
-   git push
-   git checkout -b
-   ```
+   <GitFourCommands />
 
    ¿Por qué? Porque cuando el plugin de Git de tu IDE se rompa misteriosamente (va a pasar), vas a necesitar debugear como un pro.
 
 3. **Las reglas de tu equipo > gitflow de libro**: Quizás te encanten las feature branches, pero cada empresa tiene su workflow "sagrado". Observá primero, después sugerí mejoras.
+
+Elegí una plataforma, iniciá tu repo, y empezá pequeño. El mejor setup de control de versiones es aquel que realmente vas a usar.

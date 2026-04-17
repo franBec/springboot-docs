@@ -3,13 +3,20 @@ sidebar_position: 2
 title: Mapping
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import Admonition from '@theme/Admonition';
 import { FileTree } from '@site/src/components/docs/cross-cutting-concerns/mapping';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="mapping" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Mapper',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/66f851c2dc1656829ef25c2bb79ce2c377fecd88',
+    },
+  ]}
+/>
 
 <Admonition type="info" title="Por qué mapping está aquí">
   Mapping no es técnicamente un cross-cutting concern. No es un filter, aspect,
@@ -110,3 +117,5 @@ https://raw.githubusercontent.com/franBec/springboot-demo-projects/66f851c2dc165
 ```
 
 Los controllers de Java y Kotlin no necesitan actualizarse. Ya inyectaban `FilmRestMapper` como campo, y esa inyección sigue funcionando igual, solo que ahora apunta a la implementación generada por MapStruct en lugar de la clase escrita a mano.
+
+Con la librería de mapping en su lugar, `FilmRestMapper` ya no se mantiene a mano. MapStruct genera las implementaciones de Java y Kotlin en tiempo de compilación, y ModelMapper maneja Groovy en tiempo de ejecución. Ambos enfoques se integran con la inyección de dependencias de Spring, por lo que el resto de la aplicación permanece sin cambios.

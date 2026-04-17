@@ -5,7 +5,7 @@ title: Arquitectura de software
 
 import Youtube from '@site/src/components/youtube';
 
-Cuando te metés en el diseño de software, seguido escuchás hablar de [Clean Architecture](https://medium.com/@DrunknCode/clean-architecture-simplified-and-in-depth-guide-026333c54454). Casi se convirtió en el blueprint de facto para diseñar sistemas mantenibles. Sin embargo, en mi ambiente de trabajo actual, [Hexagonal Architecture](https://medium.com/ssense-tech/hexagonal-architecture-there-are-always-two-sides-to-every-story-bc0780ed7d9c) surgió como una alternativa convincente. Echemos un vistazo más de cerca a ambas, sus matices, y por qué Hexagonal podría volverse aún más popular.
+Antes de entrar en los detalles de la arquitectura de aplicaciones, ayuda entender los patrones arquitectónicos que dan forma a cómo organizamos el código. Cuando te metés en el diseño de software, seguido escuchás hablar de [Clean Architecture](https://medium.com/@DrunknCode/clean-architecture-simplified-and-in-depth-guide-026333c54454). Casi se convirtió en el blueprint de facto para diseñar sistemas mantenibles. Sin embargo, en mi ambiente de trabajo actual, [Hexagonal Architecture](https://medium.com/ssense-tech/hexagonal-architecture-there-are-always-two-sides-to-every-story-bc0780ed7d9c) surgió como una alternativa convincente. Echemos un vistazo más de cerca a ambas, sus matices, y por qué Hexagonal podría volverse aún más popular.
 
 ## Clean Architecture
 
@@ -72,12 +72,12 @@ También conocida como Ports & Adapters, este patrón de [Alistair Cockburn](htt
   - **Adapters**: Detalles de implementación.
     _Ejemplo_: Implementación MySQL de la interfaz de repositorio.
 
-### Qué Diferencia a Hexagonal
+### Qué diferencia a hexagonal
 
 - **Integración flexible:** Al separar claramente los roles del lado driver y driven, la arquitectura acomoda fácilmente varias interfaces y mecanismos de integración.
 - **Testabilidad mejorada:** Aislar las interacciones externas mediante puertos bien definidos simplifica el testing. Los casos de uso core pueden ejecutarse con mocks o stubs sin invocar sistemas externos reales.
 
-### Recurso Recomendado
+### Recurso recomendado
 
 **Te recomiendo posta** el video de Alex Hyett "Hexagonal Architecture: What You Need To Know - Simple Explanation".
 
@@ -91,4 +91,4 @@ También conocida como Ports & Adapters, este patrón de [Alistair Cockburn](htt
 | Adaptabilidad         | Excelente para aplicaciones con capas bien demarcadas en setups empresariales tradicionales | Sobra en ambientes que requieren opciones de integración dinámica (APIs, sistemas de mensajería, GUIs) con clara separación de responsabilidades |
 | Adopción y Mentalidad | Ampliamente adoptada por su diseño intuitivo y clara separación de responsabilidades        | Crecientemente popular en ambientes dinámicos; ofrece un enfoque progresivo que se adapta a demandas de integración en evolución                 |
 
-Ambas arquitecturas buscan producir software resiliente y mantenible aislando las reglas de negocio core de cambios externos volátiles. Ya sea que elijas la claridad por capas de Clean Architecture o el enfoque en interacciones de Hexagonal Architecture, la clave es alinear tu diseño con las necesidades de tu equipo y las demandas de tu proyecto.
+Ambas arquitecturas buscan producir software resiliente y mantenible aislando las reglas de negocio core de cambios externos volátiles. Elegí Clean Architecture cuando querés una dirección de dependencias estricta de capa a capa; elegí Hexagonal cuando tus puntos de integración cambian frecuentemente y necesitás intercambiar adaptadores sin tocar el core.

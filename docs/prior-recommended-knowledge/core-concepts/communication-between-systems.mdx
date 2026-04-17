@@ -1,22 +1,14 @@
 ---
 sidebar_position: 2
-title: Communication Between Systems
+title: Communication between systems
 ---
 
+import {
+  SynchronousSequenceDiagram,
+  AsynchronousSequenceDiagram,
+} from '@site/src/components/docs/prior-recommended-knowledge/core-concepts/communication-between-systems';
+
 When systems need to talk, they have two fundamental ways to communicate: **synchronously** (waiting for immediate replies) or **asynchronously** (fire-and-forget). Understanding this split will help you debug issues, choose technologies, and explain architectural decisions to your team.
-
-```txt
-SYNCHRONOUS                         ASYNCHRONOUS
-
-Client        Server                Client      Broker      Server
-  │             │                     │           │           │
-  ├──request──▶ │                     ├──publish─▶│           │
-  │   ......    │                     │◀── ✓ ─────┤           │
-  │   (wait)    │                     │           │   (later) │
-  │   ......    │                     │           ├──consume─▶│
-  │◀─response───┤                     │           │◀── ✓ ─────┤
-  │             │                     │           │           │
-```
 
 ## Synchronous
 
@@ -62,10 +54,18 @@ Async communication via message brokers. Systems toss messages into a "digital m
 | **Complexity**     | Simple to implement       | Complex delivery guarantees |
 | **Cost**           | Resource-heavy (waiting)  | Efficient (no waiting)      |
 
-Most systems you’ll encounter use a mix. Remember:
+Most systems you'll encounter use a mix. Remember:
 
-1. Your company’s existing infrastructure will heavily influence choices (no rewriting COBOL batch jobs into Kafka streams).
+1. Your company's existing infrastructure will heavily influence choices (no rewriting COBOL batch jobs into Kafka streams).
 2. Communication patterns often outlive the systems themselves.
 3. When joining a team, ask: _"What happens when System A sneezes?"_ The answer reveals their system communication philosophy.
 
-Now that you’re armed with this knowledge, you’ll never look at a "Connection timed out" error the same way again.
+Now that you know this, you'll never look at a "Connection timed out" error the same way again.
+
+### Synchronous Communication
+
+<SynchronousSequenceDiagram />
+
+### Asynchronous Communication
+
+<AsynchronousSequenceDiagram />

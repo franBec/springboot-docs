@@ -3,7 +3,9 @@ sidebar_position: 4
 title: Manejo de errores
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 
 import {
   FileTree,
@@ -12,12 +14,17 @@ import {
   NotFoundErrorTerminal,
   NotFoundErrorSequenceDiagram,
 } from '@site/src/components/docs/cross-cutting-concerns/error-handling';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="normalize-errors" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Controller Advice',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/2277a0fe0b15ca696f2fc7ee069cfdefe872fad4',
+    },
+  ]}
+/>
 
-Ahí afuera te vas a encontrar con muchos escenarios como el siguiente:
+Ahora que tenemos el logging en su lugar, abordemos otro cross-cutting concern. Ahí afuera te vas a encontrar con muchos escenarios como el siguiente:
 
 - `service.com/users/-1` devuelve:
 
@@ -29,7 +36,7 @@ Ahí afuera te vas a encontrar con muchos escenarios como el siguiente:
 
 La consistencia se fue por la ventana ahí, y se pone peor con errores dentro de 200OK. No queremos ser ese tipo de dev: vamos a hacer un manejo de errores apropiado.
 
-## Manejo de Errores
+## Manejo de errores
 
 [`@RestControllerAdvice`](https://www.bezkoder.com/spring-boot-restcontrolleradvice/) actúa como un "coordinador de errores" central para tu aplicación.
 
@@ -82,7 +89,7 @@ Esto es lo que pasa por detrás:
 
 <NotFoundErrorSequenceDiagram />
 
-## Handlers Comunes Que Podés Necesitar
+## Handlers comunes que podés necesitar
 
 Si ocurre una excepción que no es manejada por ningún `@ExceptionHandler` específico en tu `@RestControllerAdvice`, va a caer en el `@ExceptionHandler(Exception.class)` default que retorna una respuesta genérica de 500 Internal Server Error.
 
@@ -95,3 +102,5 @@ Acá están las excepciones más comunes que vas a querer manejar explícitament
 | `NoResourceFoundException`            | Request accede a un recurso Spring MVC inexistente                               | Accediendo a un endpoint indefinido               |                                             |
 | `NoSuchElementException`              | `Optional.get()` llamado sobre un `Optional` vacío                               | Buscando un usuario inexistente por ID            |                                             |
 | `PropertyReferenceException`          | Propiedad inválida usada en query de repositorio Spring Data                     | Ordenando por un campo inexistente                | Requiere Spring Data (para agregar después) |
+
+A medida que tu app crezca, tené esta tabla a mano — probablemente vuelvas a ella cada vez que agregues un nuevo endpoint o modelo de dominio.

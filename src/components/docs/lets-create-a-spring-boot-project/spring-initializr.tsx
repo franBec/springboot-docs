@@ -1,6 +1,6 @@
-import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
 import CodeBlock from '@theme/CodeBlock';
+import ZoomContainer from '@site/src/components/zoom-container';
 
 export const SpringBootInitializrProjectGraph = () => (
   <ZoomContainer>

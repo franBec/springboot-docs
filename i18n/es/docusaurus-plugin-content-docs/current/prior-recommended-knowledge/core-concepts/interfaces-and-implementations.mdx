@@ -3,6 +3,8 @@ sidebar_position: 6
 title: Interfaces e Implementaciones
 ---
 
+Las interfaces y las implementaciones son conceptos fundamentales que te permiten escribir código flexible y fácil de testear. Una interface define _qué_ hace algo, mientras que una implementación define _cómo_ lo hace. Esta separación es la base de una arquitectura limpia.
+
 - **Una Interface es el "Qué".** Es un contrato. Una promesa. Te dice _qué_ puede hacer una cosa, pero no tiene ni idea de _cómo_ se hace. Pensá en un tomacorriente de la pared. Sabés que podés enchufar una lámpara y tener electricidad (el "qué"). No necesitás saber sobre la planta de energía, los transformadores o las ratas corriendo en una rueda que generan la energía (el "cómo"). El tomacorriente es la interface.
 - **Una Implementación es el "Cómo".** Esta es la realidad desordenada. Es el código real que hace el trabajo prometido por la interface. Es la planta de energía, el cableado en tus paredes, y tal vez esa pobre rata. Es la clase concreta que tiene los métodos y la lógica.
 
@@ -11,15 +13,17 @@ title: Interfaces e Implementaciones
 | **Interface**      | El tomacorriente | `public interface LightSwitch`                        |
 | **Implementación** | La red eléctrica | `public class EdisonPowerGrid implements LightSwitch` |
 
-**¿Por Qué Me Debería Importar?**
+**¿Por qué me debería importar?**
 
-1.  **Tu Código Se Vuelve Flexible:**
+1.  **Tu código se vuelve flexible:**
     Digamos que empezás con un `UserRepository` falso que solo devuelve una lista hardcodeada de usuarios. Tu implementación es simple. Pero tu código de aplicación no le importa. Solo habla con la interface `UserRepository`.
     Más tarde, cuando estés listo para usar una base de datos real, simplemente creás un `PostgresUserRepository`. Cambiás la _implementación_. El resto de tu código? No cambia en absoluto. Cambiaste el "cómo" sin tocar el "qué". Esto es enorme.
 
-2.  **Las Pruebas Se Vuelven Fáciles:**
+2.  **Las pruebas se vuelven fáciles:**
     Si tu `BillingService` necesita un `PaymentGateway` para funcionar, no querés pegarle a una API de tarjetas de crédito real cada vez que corrés una prueba unitaria. Eso es lento, caro, y te genera mails enojados de contabilidad.
     En cambio, le das una implementación _mock_ de la interface `PaymentGateway`. Una falsa que solo pretende funcionar. Esto te permite probar tu `BillingService` de forma aislada, y es rápido y gratis.
 
-3.  **Oculta las Partes Feas:**
+3.  **Oculta las partes feas:**
     El código del mundo real es desordenado. Las implementaciones lidian con conexiones de base de datos, quirks raros de APIs y todo tipo de otros dolores de cabeza. Una interface es una fachada limpia y hermosa que oculta toda esa complejidad. Permite que otros desarrolladores usen tu componente sin necesitar saber sobre el incendio de basura de complejidad adentro.
+
+Este patrón aparece por todas partes en Spring Boot. Desde los repositorios hasta los servicios y las APIs externas, vas a ver interfaces definiendo contratos e implementaciones manejando los detalles específicos. Entender esta separación te ayuda a escribir código más fácil de mantener, testear y evolucionar con el tiempo.

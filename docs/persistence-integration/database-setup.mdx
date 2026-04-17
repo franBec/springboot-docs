@@ -1,20 +1,30 @@
 ---
 sidebar_position: 4
-title: Database Setup
+title: Database setup
 ---
 
 import Admonition from '@theme/Admonition';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import Image from '@site/src/components/image';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import {
   FileTree,
   TerminalCurl,
 } from '@site/src/components/docs/persistence-integration/database-setup';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'PostgreSQL + Flyway migrations + pgAdmin for Docker deployment',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/cb7c9521cd9d780407728aa980f7174e20bed4e3',
+    },
+  ]}
+/>
 
 The previous sections covered how Spring talks to databases and how to generate JPA entities. Now it's time to wire up a real database. We're replacing the embedded H2 with PostgreSQL 17 and using Flyway to manage schema migrations.
 
-## The Plan
+## The plan
 
 Here's what we're setting up:
 
@@ -23,13 +33,13 @@ Here's what we're setting up:
 - **[pgAdmin](https://www.pgadmin.org/)** as a web UI for database inspection
 - **A restricted application user** (`sakila_app`) that only has [DML privileges, not DDL](https://www.geeksforgeeks.org/sql/sql-ddl-dql-dml-dcl-tcl-commands/)
 
-The two users are the key security decision here. The admin user (`sakila`) owns the schema and runs migrations. The application connects as `sakila_app`, which can only SELECT, INSERT, UPDATE, and DELETE. If your app connection is compromised, an attacker can't DROP tables or ALTER schema. Small thing, big difference in a breach.
+The two users are the important security decision here. The admin user (`sakila`) owns the schema and runs migrations. The application connects as `sakila_app`, which can only SELECT, INSERT, UPDATE, and DELETE. If your app connection is compromised, an attacker can't DROP tables or ALTER schema. Small thing, big difference in a breach.
 
-## Files Overview
+## Files overview
 
 <FileTree />
 
-## Flyway Migrations
+## Flyway migrations
 
 Flyway runs versioned SQL files in order. Each file runs exactly once, and Flyway tracks what's already been applied in a `flyway_schema_history` table.
 
@@ -45,9 +55,9 @@ We have three migrations:
 
 The separation matters. V3 runs as the admin user but only grants DML rights to `sakila_app`. The `ALTER DEFAULT PRIVILEGES` lines make sure any tables created by future migrations are also accessible to the app user automatically.
 
-## Docker Setup
+## Docker setup
 
-<Admonition type="info" title="Real-World Setups Look Different">
+<Admonition type="info" title="Real-world setups look different">
   It's uncommon to find the database in the same Docker Compose file as the
   application services. Databases are usually managed separately, whether
   because of technical debt making them hard to containerize, or separation of
@@ -55,7 +65,7 @@ The separation matters. V3 runs as the admin user but only grants DML rights to 
   data lives). Here, everything lives together for simplicity's sake.
 </Admonition>
 
-### PostgreSQL Image
+### PostgreSQL image
 
 We are extending the [`postgres:17-alpine`](https://hub.docker.com/layers/library/postgres/17-alpine) image to run an init script that creates the `sakila_app` user during first startup.
 
@@ -69,7 +79,7 @@ https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d7
 
 The init script runs via Docker's `/docker-entrypoint-initdb.d/` mechanism, which executes any scripts in that directory when the database is first initialized. It creates `sakila_app` with a password from an environment variable and grants connection rights. Actual table-level privileges come later via Flyway migration V3.
 
-### Flyway Image
+### Flyway image
 
 Flyway runs as a one-shot container: it connects, applies pending migrations, then exits.
 
@@ -79,7 +89,7 @@ https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d7
 
 We bake the SQL files into the image at build time. No bind mounts, no volume gymnastics. The `context: .` in `docker-compose.yml` is needed because the Dockerfile copies from `database/flyway/migrations/` relative to the repo root.
 
-<Admonition type="info" title="Why a Standalone Flyway Container?">
+<Admonition type="info" title="Why a standalone Flyway container?">
   A standalone container makes the migration a prerequisite step that completes
   before the app starts, using the admin credentials. The app never needs to
   know the admin password. (You could run Flyway from the Spring Boot app itself
@@ -101,9 +111,9 @@ Here's what's happening in this compose file:
 - **Spring Boot services depend on `flyway` with `condition: service_completed_successfully`.** They don't start until migrations are done.
 - **`postgres-data` and `pgadmin-data` volumes** persist data across restarts.
 
-## Spring Boot Configuration
+## Spring Boot configuration
 
-### Add the PostgreSQL Driver
+### Add the PostgreSQL driver
 
 Add `runtimeOnly 'org.postgresql:postgresql'` to each module's build file. That's the JDBC driver Spring Boot needs to connect to PostgreSQL.
 
@@ -139,21 +149,21 @@ The datasource and JPA settings point to PostgreSQL. The credentials come from e
 <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
 
-        ```yml reference title="resources/application.yaml (new code nester under the spring key)"
+        ```yml reference title="resources/application.yaml (new code nested under the spring key)"
         https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_java/src/main/resources/application.yaml#L4-L15
         ```
 
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
 
-        ```yml reference title="resources/application.yaml (new code nester under the spring key)"
+        ```yml reference title="resources/application.yaml (new code nested under the spring key)"
         https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_kotlin/src/main/resources/application.yaml#L4-L16
         ```
 
     </TabItem>
     <TabItem value="groovy" label="Groovy">
 
-        ```yml reference title="resources/application.yaml (new code nester under the spring key)"
+        ```yml reference title="resources/application.yaml (new code nested under the spring key)"
         https://raw.githubusercontent.com/franBec/springboot-demo-projects/cb7c9521cd9d780407728aa980f7174e20bed4e3/spring_groovy/src/main/resources/application.yaml#L4-L15
         ```
 
@@ -164,11 +174,11 @@ The datasource and JPA settings point to PostgreSQL. The credentials come from e
 - **`flyway.enabled: false`** tells Spring Boot not to run Flyway itself. Our standalone Flyway container handles that. Setting it to true here would mean the app tries to run migrations on every startup using `sakila_app` credentials, which don't have DDL privileges. It would fail.
 - **`ddl-auto: none`** means Hibernate doesn't touch the schema at all. Flyway owns that.
 
-## Deploying the Stack in Coolify
+## Deploying the stack in Coolify
 
 The `docker-compose.yml` is ready to deploy wherever Docker is running. We'll use the same Coolify instance set up in the [deployment on a VPS](/deployment/deployment-on-a-vps) guide.
 
-### Set Up Environment Variables
+### Set up environment variables
 
 Before deploying, add the new variables to your Coolify application's environment configuration. These only need to be available at runtime. No other checks are needed.
 
@@ -181,7 +191,7 @@ Before deploying, add the new variables to your Coolify application's environmen
 | `PGADMIN_DEFAULT_EMAIL`    | pgAdmin login email                           |
 | `PGADMIN_DEFAULT_PASSWORD` | pgAdmin login password                        |
 
-### Deploy and Assign a Domain to pgAdmin
+### Deploy and assign a domain to pgAdmin
 
 Trigger a deployment. Once it's running, go to the **Configuration** tab in Coolify and assign a domain to the `pgadmin` service: `https://sakila-pgadmin.your-domain.whatever:80`. Coolify's reverse proxy will route traffic to the pgAdmin container on port 80.
 

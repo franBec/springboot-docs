@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: Deployment en un VPS con Coolify
+title: Despliegue en un VPS con Coolify
 ---
 
 import Admonition from '@theme/Admonition';
@@ -13,11 +13,18 @@ import {
   VerificationTerminal,
 } from '@site/src/components/docs/deployment/deployment-on-a-vps';
 import Youtube from '@site/src/components/youtube';
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="vps-coolify-deployment" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Coolify + GitHub Actions CI/CD Setup',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/d210b1837bd50df80c71bcf37f417555f9f6f7bc',
+    },
+  ]}
+/>
 
 Deployar a tu propio VPS con [Coolify](https://coolify.io/) te da más control y evita las limitaciones de cold starts de los tiers gratuitos de PaaS. Sin embargo, este documento no va a entrar demasiado en detalle sobre cómo configurar un VPS + dominio + instancia de Coolify en sí.
 

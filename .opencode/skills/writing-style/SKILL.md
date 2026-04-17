@@ -122,6 +122,8 @@ Never end a document abruptly after the last code block or technical step. Every
 
 Pick one format — don't pile all three. The conclusion should feel like a natural wrap-up, not a summary list.
 
+**Avoid the "next sections will show you X" pattern** — phrases like "In the next documents, we will explore..." followed by a list of topics. LLMs tend to hallucinate content that doesn't actually exist in subsequent documents. Only mention what's next if you have already verified those documents exist.
+
 ### Heading Capitalization
 
 Use **sentence case** for all headings, not title case:
@@ -158,6 +160,7 @@ Do not use title case:
 - Sequence diagrams are wrapped in `<ZoomContainer><Mermaid .../></ZoomContainer>`.
 - Terminal output uses `<CodeBlock language="log" title="Terminal">`.
 - Do not modify `sidebars.ts` — it autogenerates from the `docs/` directory.
+- Do not use `---` (horizontal rules) to divide sections in documents. They add visual noise and break the reading flow. Use proper heading hierarchy instead.
 
 ### Writing Patterns to Avoid
 

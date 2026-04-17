@@ -3,7 +3,7 @@ sidebar_position: 2
 title: OpenAPI Generator
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import Image from '@site/src/components/image';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -11,11 +11,26 @@ import Admonition from '@theme/Admonition';
 import {
   FileTree,
   Terminal,
-} from '@site/src/components/docs/contract-driven-development/openapi-generator';
+} from '@site/src/components/docs/openapi-spec-first-development/openapi-generator';
 
-<GithubTagInfo tag="openapi-spec" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'OpenAPI Generation (spring_java)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/ec32164ede7cc8e020ba07c559d44485cbb15f9d',
+    },
+    {
+      name: 'OpenAPI Generation (spring_kotlin)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/f0aa3a3665a9a260b042f787c73d7a95950158cb',
+    },
+    {
+      name: 'OpenAPI Generation (spring_groovy)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/7e4b5b12c2b5146318fa098128dd7b1b9cac0006',
+    },
+  ]}
+/>
 
-## El Problema con los Primary Adapters Manuales
+## El problema con los Primary Adapters Manuales
 
 A menos que trabajes en microservicios, un proyecto suele tener más que unos pocos endpoints. A medida que tu dominio crece, crear primary adapters manualmente se convierte en una tarea monumental. Viene con muchos inconvenientes:
 
@@ -24,7 +39,7 @@ A menos que trabajes en microservicios, un proyecto suele tener más que unos po
 - **Compromete la documentación y mantenibilidad**: En el momento en que tu código se desvía de tu spec, tu documentación es una mentira, y tu mantenibilidad se va al tacho.
 
 <Admonition type="info" title="Escenario de caso real">
-El proyecto [SIGEM](https://sigem.sanluislaciudad.gob.ar/sigem/) (un [monolito Grails](https://grails.apache.org/)) presume 76 controladores y una asombrosa cantidad de 1102 endpoints.
+El proyecto [SIGEM](https://sigem.sanluislaciudad.gob.ar/sigem/) (un [monolito Grails](https://grails.apache.org/)) presume 76 controladores y 1102 endpoints.
 
     <Image
       src={
@@ -39,7 +54,7 @@ El proyecto [SIGEM](https://sigem.sanluislaciudad.gob.ar/sigem/) (un [monolito G
 
 <FileTree />
 
-## Generando Código
+## Generando código
 
 Ahorrémosnos algunos problemas usando una de las mejores librerías que existen: [openapi-generator](https://github.com/OpenAPITools/openapi-generator).
 
@@ -120,7 +135,7 @@ Ahorrémosnos algunos problemas usando una de las mejores librerías que existen
 
 Ahora que todo está configurado, **ejecutá la tarea Build**. Cuando la tarea termine, revisá la carpeta `build\generated\sources\openapi`. Vas a encontrar la representación de la OpenAPI Specification (nuestro contrato) en clases, listas para ser usadas.
 
-## Entendiendo el Código Generado
+## Entendiendo el código generado
 
 - **¿Qué hay adentro del código generado?**
   - **Models**: Clases Java (o Kotlin) que reflejan tus schemas de OpenAPI (ej., `Film`). Estas incluyen anotaciones de validación, lógica de serialización y patrones builder.
@@ -134,7 +149,7 @@ Ahora que todo está configurado, **ejecutá la tarea Build**. Cuando la tarea t
   - **Filosofía contract-first**: El código coincide exactamente con tu spec de OpenAPI. Si necesitás cambios, actualizá el archivo YAML y regenerá.
   - **Libre de mantenimiento**: El generador maneja las actualizaciones, así que evitás refactoring manual.
 
-## Usando el Código Generado
+## Usando el código generado
 
 <ol>
   <li>
@@ -314,7 +329,7 @@ Compilá y ejecutá la aplicación. Después andá a [http://localhost:8080/api/
 
 <Terminal />
 
-## ¿Cuál Es El Punto De Generar Código?
+## ¿Cuál es el punto de generar código?
 
 Configurar este OpenAPI Generator puede parecer como si estuvieras realizando rituales antiguos solo para sacar algo de código. Quizás estés pensando, _"¿No se suponía que esto debía *ahorrarme* tiempo?"_ Y a eso, te digo: Sí, estás invirtiendo un poco de esfuerzo inicial para evitar mucho dolor después.
 

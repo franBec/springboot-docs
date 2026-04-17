@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: Testing Frameworks
+title: Testing frameworks
 ---
 
 import {
@@ -10,12 +10,12 @@ import {
   TestingFrameworkDecisionGraph,
 } from '@site/src/components/docs/testing/testing-frameworks';
 
-Doing testing requires two things working together:
+Now that you know _why_ testing matters, let's look at the tools you'll use. Doing testing requires two things working together:
 
-1. **A Testing Framework** serves as the conductor. It tells your tests when to run, how to organize them, and reports the results. Think of it as the test runner.
-2. **A Mocking Framework** acts as the understudy. It lets you replace real dependencies (databases, external services) with fake versions you control.
+1. **A Testing Framework** is the conductor. It tells your tests when to run, how to organize them, and reports the results. Think of it as the test runner.
+2. **A Mocking Framework** is the understudy. It lets you replace real dependencies (databases, external services) with fake versions you control.
 
-## Spring Boot's Out-of-the-Box Solution
+## Spring Boot's out-of-the-box solution
 
 Spring Boot gives you a solid foundation with `spring-boot-starter-webmvc-test` (`spring-boot-starter-test` if you're still on Spring Boot 3).
 
@@ -51,7 +51,7 @@ Clean, readable, and no backticks needed. The `every` keyword replaces `when`, a
 
 ## Groovy Spock
 
-If you're open to writing your tests in Groovy, [Spock](https://spockframework.org/) is a game-changer. Spock doesn't just replace Mockito, it replaces JUnit too. It's a complete testing framework that includes:
+If you're open to writing your tests in Groovy, [Spock](https://spockframework.org/) changes the equation. Spock doesn't just replace Mockito, it replaces JUnit too. It's a complete testing framework that includes:
 
 1. **Test Runner** works like JUnit, but with superpowers
 2. **Mocking Engine** works like Mockito, but built into the language
@@ -70,7 +70,7 @@ The mocking syntax is refreshingly simple too:
 
 This reads as: "Expect exactly 1 call to `findById(1L)`, and return this mock film." No boilerplate, no verbosity.
 
-## Which One Should You Choose?
+## Which one should you choose?
 
 There's no wrong choice, but there are better choices for your context.
 

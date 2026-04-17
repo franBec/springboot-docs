@@ -1,25 +1,44 @@
 ---
 sidebar_position: 3
-title: First Tests
+title: First tests
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
 import {
   FileTree,
   JacocoReportJava,
   JacocoReportKt,
   JacocoReportGroovy,
 } from '@site/src/components/docs/testing/first-tests';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import Admonition from '@theme/Admonition';
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import Image from '@site/src/components/image';
 
-<GithubTagInfo tag="testing" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Testing Java',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/3b4c04b36a87398fca60070b739fa0cbe726f741',
+    },
+    {
+      name: 'Testing Kotlin',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/a07c08c8b118befaefc3bc55190571b60adef72e',
+    },
+    {
+      name: 'Testing Groovy',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/b4e267f0954cdce21179845cb8385f74852de9a7',
+    },
+  ]}
+/>
 
-## Testing Strategy
+In the [previous document](./testing-frameworks) we compared JVM testing frameworks and picked one for each language. Now we put those frameworks to work: write unit tests, slice tests, and check the results with JaCoCo.
 
-### Pick a Framework
+<FileTree />
+
+## Testing strategy
+
+### Pick a framework
 
 - For the **Java** Spring Boot App we are going to choose **JUnit + Mockito**: is the de-facto standard, the one always being asked in interviews, and the one you are expected to know.
 - For the **Kotlin** Spring Boot App we are going to choose **JUnit + MockK**: kotlin native tools + kotlin-first mocking.
@@ -31,7 +50,7 @@ import Image from '@site/src/components/image';
 
 When running the `test` or `jacocoTestReport` task, JaCoCo will generate reports in HTML (for humans) and XML (for CI tools) at `build/reports/jacoco/test`.
 
-### What Files To Test
+### What files to test
 
 _Should I create one test per every main package file? Can I group tests? Which kind of test is better?_ All these questions don't have one truth answer. It changes from team to team, and from developer to developer. Here I share my approach, feel free to follow it, adapt it, change it as much as needed.
 
@@ -65,8 +84,6 @@ ISOLATED                                              CONNECTED
  │           └── MockMvc Standalone
  └── Pure Unit Test
 ```
-
-<FileTree />
 
 ## Dependencies
 
@@ -115,11 +132,11 @@ ISOLATED                                              CONNECTED
 
 </Tabs>
 
-## Unit Tests
+## Unit tests
 
 Unit tests don't involve Spring at all. These are faster to run and perfect for testing business logic in complete isolation.
 
-### Use Cases Implementation Test
+### Use cases implementation test
 
 `FilmUseCasesImpl.getFilm()` is currently just returning a hardcoded film. There's not much point in doing deep testing here yet, but let's at least verify the service instantiates and returns something.
 
@@ -148,7 +165,7 @@ Unit tests don't involve Spring at all. These are faster to run and perfect for 
 
 </Tabs>
 
-### Valued Enum Utility Test
+### Valued enum utility test
 
 <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
@@ -175,15 +192,15 @@ Unit tests don't involve Spring at all. These are faster to run and perfect for 
 
 </Tabs>
 
-## Slice Tests
+## Slice tests
 
-### Web Layer
+### Web layer
 
 We're testing three things here:
 
 - **REST endpoint behavior**: Does the controller map requests correctly and return the expected responses?
 - **Exception handling**: When things go wrong, does our error response structure look right?
-- **JSON response structure**: Does the final JSON match what our API contract?
+- **JSON response structure**: Does the final JSON match our API contract?
 
 To make our assertions more readable, we'll first create some custom matchers for our API response structure:
 
@@ -252,7 +269,7 @@ Now let's write the actual `RestController` test using a slice testing approach 
 
 </Tabs>
 
-### MockMvc Standalone
+### MockMvc standalone
 
 The goal of these tests is to verify `ControllerAdvice` handles different exception scenarios correctly. We test that validation errors return appropriate HTTP status codes and response structures, ensuring our API provides consistent error responses across different failure modes.
 
@@ -308,7 +325,7 @@ Don't forget to update `ControllerAdvice` to handle the exceptions tested.
 
 </Tabs>
 
-## Check the JaCoCo Report
+## Check the JaCoCo report
 
 <Tabs groupId="language" queryString>
   <TabItem value="java" label="Java" default>
@@ -347,3 +364,5 @@ Here's what each column in a JaCoCo coverage report means:
 | **Total Methods**        | Total number of methods                                             | Includes constructors and lambdas               |
 | **Missed Classes**       | Classes never loaded during tests                                   | High‑level test completeness indicator          |
 | **Total Classes**        | Total number of classes                                             | Includes inner/anonymous classes                |
+
+We now have unit tests for domain logic and enum utilities, slice tests for the web layer, and JaCoCo tracking coverage on every build.

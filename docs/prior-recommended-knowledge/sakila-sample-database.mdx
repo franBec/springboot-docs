@@ -8,9 +8,9 @@ import Admonition from '@theme/Admonition';
 
 Ever heard of [Lorem Ipsum](http://en.wikipedia.org/wiki/Lorem_ipsum)? It's that nonsensical Latin filler content designers use when they don't have real copy yet.
 
-Now, imagine that, but for relational databases. You need to test a query, build a demo, write a tutorial, or learn a new SQL dialect. You don't want to waste time inventing a "Users", "Products", "Orders" schema from scratch for the millionth time. Enter **Sakila**.
+Now, imagine that, but for relational databases. You need to test a query, build a demo, write a tutorial, or learn a new SQL dialect. You don't want to waste time inventing a "Users", "Products", "Orders" schema from scratch for the millionth time. That's where **Sakila** comes in.
 
-[Sakila](https://dev.mysql.com/doc/sakila/en/) is a complete, pre-fabricated sample database schema. Its original incarnation was created by [MySQL](https://www.mysql.com/) to showcase their database's features.
+[Sakila](https://dev.mysql.com/doc/sakila/en/) is a complete, pre-fabricated sample database schema. Its original incarnation was created by [MySQL](https://www.mysql.com/) to demonstrate their database's features.
 
 <SakilaSchemaDiagram />
 
@@ -30,15 +30,15 @@ Now, imagine that, but for relational databases. You need to test a query, build
   full-text search capabilities, this table can be safely ignored.
 </Admonition>
 
-The genius is in the theme: it's built around a DVD rental store. It's familiar, slightly fun, and has just enough complexity (with things like many-to-many relationships, foreign keys, and dated records) to be useful for realistic practice.
+The appeal is in the theme: it's built around a DVD rental store. It's familiar, slightly fun, and has just enough complexity (with things like many-to-many relationships, foreign keys, and dated records) to be useful for realistic practice.
 
 Think of it as a well-worn training dummy, you don't question its origins.
 
-## What's the Big Deal?
+## What's the big deal?
 
 Here's why you should care, beyond just passing a trivia quiz.
 
-1. **It's universal lore:** Mention "Sakila" to a room of experienced folks, and most will nod in recognition. It comes up in conversations and interviews, similar to [PEBKAC](https://en.wikipedia.org/wiki/User_error) and [xkcd 2347](https://xkcd.com/2347/).
+1. **It's common knowledge:** Mention "Sakila" to a room of experienced folks, and most will nod in recognition. It comes up in conversations and interviews, like [PEBKAC](https://en.wikipedia.org/wiki/User_error) or [xkcd 2347](https://xkcd.com/2347/).
 2. **It has escaped the MySQL cage:** While born for MySQL, the beauty of Sakila is that the _concept_ and _schema_ have been ported far and wide. You can find official or community adaptations. This makes it a fantastic **Rosetta Stone**. You can learn the nuances of a new database by loading Sakila and trying to write the same queries in a different SQL dialect. The mental model stays constant; only the syntax changes.
 3. **It's the perfect teaching tool:** When writing about [Persistent Integration](/category/persistence-integration), I need a consistent, relatable dataset. I'm not going to invent a new one. **I'll be using Sakila.** Consider this your heads-up.
 

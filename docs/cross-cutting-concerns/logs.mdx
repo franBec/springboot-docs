@@ -3,29 +3,38 @@ sidebar_position: 3
 title: Logs
 ---
 
+import Admonition from '@theme/Admonition';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import {
   ApplicationLogs,
   ApplicationSequenceDiagram,
   CurlRequest,
   FileTree,
 } from '@site/src/components/docs/cross-cutting-concerns/logs';
-import GithubTagInfo from '@site/src/components/github-tag-info';
-import Admonition from '@theme/Admonition';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="logs" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Logs',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b',
+    },
+  ]}
+/>
 
-## How Spring Boot Logs
+## How Spring Boot logs
+
+In the [cross-cutting concerns overview](/cross-cutting-concerns), **logging** was introduced as the concern that answers "What happened?". This document walks through setting it up properly.
 
 In Spring Boot, [SLF4J](https://slf4j.org/) and [Logback](https://logback.qos.ch/) work together to provide a logging setup.
 
-- **SLF4J** = **S**imple **L**ogging **F**acade for **J**ava. Think of it as a logging **API** (an abstraction layer). Your application code talks to SLF4J, not directly to a specific logging implementation. This is brilliant because it decouples your code from _how_ logs are written.
+- **SLF4J** = **S**imple **L**ogging **F**acade for **J**ava. Think of it as a logging **API** (an abstraction layer). Your application code talks to SLF4J, not directly to a specific logging implementation. This decouples your code from _how_ logs are written.
 - **Logback** = The actual logging **implementation** (the engine that does the heavy lifting). It's the default logging backend that SLF4J uses in a Spring Boot application.
 
-Even though Spring Boot includes SLF4J and Logback automatically and no setup is required to get basic logging working, improving the logging experience is highly recommended. Structured logging with trace IDs, centralized sensitive data masking, and consistent request/response logging make debugging production issues significantly easier.
+Even though Spring Boot includes SLF4J and Logback automatically and no setup is required to get basic logging working, you should improve the logging setup. Structured logging with trace IDs, centralized sensitive data masking, and consistent request/response logging make debugging production issues significantly easier.
 
-## Changed Files
+## Files overview
 
 <FileTree />
 
@@ -65,7 +74,7 @@ Even though Spring Boot includes SLF4J and Logback automatically and no setup is
 
 </Tabs>
 
-## Avoid Local OTLP Log Publishing
+## Avoid local OTLP log publishing
 
 When you add [`spring-boot-starter-opentelemetry`](https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/) to your dependencies, Spring Boot automatically configures OpenTelemetry exporters to publish metrics and traces via OTLP (OpenTelemetry Protocol).
 
@@ -104,7 +113,7 @@ From now on, run the `bootRun` Gradle task with the `SPRING_PROFILES_ACTIVE=dev`
 SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 ```
 
-## Log Aspect
+## Log aspect
 
 Using an Aspect for logging is a classic example of AOP in action. Instead of scattering log statements all over your business logic (which clutters the code and mixes concerns), you define the logging behavior once in a separate module. This aspect then automatically intercepts method calls you care about and applies the logging logic without the target code even knowing it's happening.
 
@@ -135,7 +144,7 @@ For a deeper dive, check out the [AOP section on Cross-Cutting Concerns](/cross-
 
 </Tabs>
 
-## Log Filter
+## Log filter
 
 Sometimes, a request might not even reach your Spring MVC controllers. By logging at the Servlet level, it grants you visibility into every incoming request and outgoing response, regardless of whether it hits your application's specific endpoints.
 
@@ -197,7 +206,7 @@ This is where tracing comes in. By assigning a unique ID (a 'Trace ID') to each 
 
 </Tabs>
 
-## Mask Sensitive Data in Logs With Logback
+## Mask sensitive data in logs with Logback
 
 It's important to mask sensitive details when logging (i.e., passwords, SSN, etc.). Let's mask the logs centrally by configuring masking rules for all log entries produced by Logback.
 
@@ -261,7 +270,7 @@ It's important to mask sensitive details when logging (i.e., passwords, SSN, etc
   </li>
 </ol>
 
-## Check How Logs Look Like
+## Check how logs look like
 
 Run the following `curl` command (with placeholder values) to see everything working: sensitive data masking, the aspect intercepting controller method invocations, how the logs contain the trace, and the filter printing the HTTP request and response.
 

@@ -1,8 +1,8 @@
 {
-  "label": "Deployment Concepts",
+  "label": "Deployment concepts",
   "position": 4,
   "link": {
     "type": "generated-index",
-    "description": "Fundamental concepts and tools for deploying applications in modern environments."
+    "description": "Environment configurations, Docker containerization, and CI/CD pipelines for deploying Spring Boot applications."
   }
 }

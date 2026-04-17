@@ -1,6 +1,8 @@
 import CodeBlock from '@theme/CodeBlock';
+import Mermaid from '@theme/Mermaid';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
+import ZoomContainer from '@site/src/components/zoom-container';
 
 export const RawJdbcExample = () => (
   <Tabs groupId="language" queryString>
@@ -176,4 +178,32 @@ export const SpringDataJpaInterfaceExample = () => (
     List<Film> findByReleaseYear(Integer year);
 }`}
   </CodeBlock>
+);
+
+export const StackDiagram = () => (
+  <ZoomContainer>
+    <Mermaid
+      value={`sequenceDiagram
+    participant App as Your Code
+    participant SDJ as Spring Data JPA
+    participant JPA as JPA / EntityManager
+    participant Hib as Hibernate
+    participant JDBC as JDBC
+    participant Drv as JDBC Driver
+    participant DB as Database
+
+    App->>SDJ: filmRepository.findByReleaseYear(2006)
+    SDJ->>JPA: invoke generated query
+    JPA->>Hib: resolve entity mapping
+    Hib->>JDBC: prepareStatement("SELECT … WHERE release_year = ?")
+    JDBC->>Drv: bind params & execute
+    Drv->>DB: SQL request over wire
+    DB-->>Drv: result rows
+    Drv-->>JDBC: ResultSet
+    JDBC-->>Hib: ResultSet
+    Hib-->>JPA: map rows → Film entities
+    JPA-->>SDJ: managed Film objects
+    SDJ-->>App: List of Film`}
+    />
+  </ZoomContainer>
 );

@@ -3,23 +3,32 @@ sidebar_position: 1
 title: OpenAPI Specification
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import {
   FilmStructureJson,
   FileTree,
   EnvelopePatternJson,
   ResponseMetadataSchemaYaml,
-} from '@site/src/components/docs/contract-driven-development/openapi-spec.tsx';
+} from '@site/src/components/docs/openapi-spec-first-development/openapi-spec.tsx';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="openapi-spec" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'OpenAPI Specifications',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/2cce680239480e99bb910b5864ba3699f2ef4b20',
+    },
+  ]}
+/>
 
-Dado un Film con la siguiente estructura:
+Ahora necesitamos una especificación OpenAPI que describa el contrato de la API antes de escribir cualquier código de implementación. Dado un Film con la siguiente estructura:
 
 <FilmStructureJson />
 
 Queremos que nuestra aplicación Spring Boot exponga [CRUD endpoints](https://es.wikipedia.org/wiki/CRUD).
+
+## Changed files
 
 <FileTree />
 
@@ -54,7 +63,7 @@ Queremos que nuestra aplicación Spring Boot exponga [CRUD endpoints](https://es
 
 Para una mejor visualización, podés copiar y pegar la especificación OpenAPI YAML del repositorio en [Swagger Editor](https://editor.swagger.io/) o usar [OpenAPI (Swagger) Editor en IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor).
 
-## El Envelope Pattern
+## El envelope pattern
 
 Tal vez estás mirando los ejemplos de respuesta y pensando, "¿Qué onda con todo ese relleno extra? ¿Por qué envolver los datos reales de la película dentro de un objeto `data`?"
 
@@ -84,3 +93,5 @@ Consistencia. Ese es todo el juego.
 ## Paginación
 
 TODO: explain pagination
+
+Con la especificación OpenAPI y el envelope pattern en su lugar, el contrato de la API está completamente definido. El siguiente paso es generar código Spring Boot a partir de esta especificación para que la implementación coincida exactamente con el contrato.

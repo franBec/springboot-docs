@@ -1,8 +1,8 @@
 import CodeBlock from '@theme/CodeBlock';
-import ZoomContainer from '@site/src/components/zoom-container';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Mermaid from '@theme/Mermaid';
+import ZoomContainer from '@site/src/components/zoom-container';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 const FileTreeJava = () => (

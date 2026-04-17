@@ -1,7 +1,7 @@
 import CodeBlock from '@theme/CodeBlock';
-import { FileTreeInfo } from '@site/src/components/file-tree-info';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 const FileTreeJava = () => (
   <CodeBlock language="log" title="File Tree">

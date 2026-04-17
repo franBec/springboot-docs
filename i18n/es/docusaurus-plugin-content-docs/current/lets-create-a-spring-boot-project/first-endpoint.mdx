@@ -3,17 +3,24 @@ sidebar_position: 3
 title: Primer endpoint
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import {
   FilmJson,
   FileTree,
   Terminal,
   ApplicationSequenceDiagram,
 } from '@site/src/components/docs/lets-create-a-spring-boot-project/first-endpoint';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="first-endpoint" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'First Endpoint',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/0bc76fe622396c586cf98481c1e817bc24864d5a',
+    },
+  ]}
+/>
 
 La aplicación ahora inicia y responde con un 404 en cada ruta. Es hora de darle algo real que hacer. Este documento construye un único endpoint, `GET /api/films/{id}`, siguiendo arquitectura hexagonal desde el primer día. Los datos están hardcodeados por ahora; el objetivo es establecer la estructura en la que crecerá el resto de la aplicación.
 

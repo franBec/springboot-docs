@@ -10,9 +10,9 @@ import {
   ApplicationYmlWithProfile,
 } from '@site/src/components/docs/prior-recommended-knowledge/environments';
 
-Cuando desarrollás y deployás software como una aplicación Spring Boot, raramente hacés push del código directamente a los usuarios finales. En cambio, las aplicaciones típicamente pasan por varios **Entornos**. Entender estos entornos es crucial para flujos de trabajo de desarrollo seguros, confiables y eficientes.
+Cuando desarrollás y deployás software como una aplicación Spring Boot, raramente hacés push del código directamente a los usuarios finales. En cambio, las aplicaciones típicamente pasan por varios **Entornos**. Entender estos entornos es importante para flujos de trabajo de desarrollo seguros, confiables y eficientes.
 
-## ¿Qué Son los Entornos?
+## ¿Qué son los entornos?
 
 Los entornos son configuraciones distintas y aisladas donde corre tu aplicación. Cada entorno sirve a un propósito específico en el ciclo de vida del desarrollo de software. Los entornos más comunes son:
 
@@ -44,7 +44,7 @@ Los entornos son configuraciones distintas y aisladas donde corre tu aplicación
     └─────────────┘       └──────────────┘       └─────────────┘
 ```
 
-## ¿Por Qué Existen los Entornos?
+## ¿Por qué existen los entornos?
 
 Usar diferentes entornos es esencial por varias razones:
 
@@ -60,7 +60,7 @@ Usar diferentes entornos es esencial por varias razones:
 3. **Fidelidad de Testing**: Los entornos de test te permiten validar tu aplicación en una configuración que refleja de cerca la producción, aumentando la confianza de que va a funcionar correctamente cuando se deploye.
 4. **Rollouts Controlados**: Los features pueden habilitarse o testearse en staging antes de ser liberados a todos los usuarios en producción (a menudo usando feature flags).
 
-## Spring Boot Profiles
+## Spring Boot profiles
 
 Spring Boot provee una solución elegante para manejar configuraciones específicas de cada entorno usando [Profiles](https://docs.spring.io/spring-boot/reference/features/profiles.html). Un profile es esencialmente una etiqueta para un conjunto de configuraciones.
 
@@ -89,3 +89,7 @@ Así es como típicamente funciona:
        <ApplicationYmlWithProfile />
 
 Usando profiles y archivos de configuración separados, podés manejar los diferentes settings requeridos para tus entornos de dev, test y producción, asegurando que tu aplicación se comporte correcta y seguramente en cada contexto.
+
+## Resumen
+
+Los entornos proveen aislamiento entre las etapas de desarrollo, testing y producción de tu aplicación. Combinado con Spring Boot profiles, podés mantener una separación limpia de la configuración mientras mantenés tu codebase organizado. Cuando deployés tu aplicación, activá el profile apropiado para asegurarte de que se conecte a las bases de datos correctas, servicios y niveles de logging para ese entorno.

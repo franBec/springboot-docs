@@ -4,6 +4,8 @@ title: Deployment on a VPS
 ---
 
 import Admonition from '@theme/Admonition';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import Image from '@site/src/components/image';
 import {
   HostingLandscapeDiagram,
@@ -13,11 +15,16 @@ import {
   VerificationTerminal,
 } from '@site/src/components/docs/deployment/deployment-on-a-vps';
 import Youtube from '@site/src/components/youtube';
-import GithubTagInfo from '@site/src/components/github-tag-info';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 
-<GithubTagInfo tag="vps-coolify-deployment" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Coolify + GitHub Actions CI/CD Setup',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/d210b1837bd50df80c71bcf37f417555f9f6f7bc',
+    },
+  ]}
+/>
 
 Deploying to your own VPS with [Coolify](https://coolify.io/) gives you more control and avoids the cold start limitations of free PaaS tiers. However, this document won't go too deep about how to set up a VPS + domain + Coolify instance itself.
 
@@ -31,7 +38,7 @@ Once you have your Coolify instance up and running, let's deploy your Spring Boo
 
 ## Why a VPS?
 
-There are plenty of ways to host a web application in 2026. Managed Kubernetes clusters, serverless functions, PaaS providers with generous free tiers, you name it. Here's a rough map of the landscape:
+There are plenty of ways to host a web application in 2026. Managed Kubernetes clusters, serverless functions, PaaS providers with generous free tiers, you name it. Here's a rough map of your hosting options:
 
 <HostingLandscapeDiagram />
 
@@ -47,15 +54,15 @@ That simplicity comes with tradeoffs. By choosing a single VPS, you're giving up
 
 You don't need any of that right now. You're learning how deployment works, not architecting for millions of users. A single VPS with Docker Compose is more than enough, and when the time comes to scale, you'll understand the fundamentals well enough to know _what_ you're scaling away from.
 
-## Architecture Overview
+## Architecture overview
 
 Here's exactly what happens when you push code to the `main` branch:
 
 <DeploymentFlowDiagram />
 
-The key insight here is that **Coolify only deploys if GitHub Actions passes**. This prevents broken code from reaching production. GitHub Actions handles the heavy lifting of compiling and testing across all three language implementations, while Coolify focuses purely on the deployment orchestration.
+The important thing is that **Coolify only deploys if GitHub Actions passes**. This prevents broken code from reaching production. GitHub Actions handles the heavy lifting of compiling and testing across all three language implementations, while Coolify focuses purely on the deployment orchestration.
 
-## Alternative: Docker Registry Approach
+## Alternative: Docker registry approach
 
 The architecture above has Coolify building Docker images on the VPS itself. There's another common pattern where GitHub Actions builds the images, pushes them to a container registry (like [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry), [Docker Hub](https://hub.docker.com/), or [AWS ECR](https://aws.amazon.com/es/ecr/)), and Coolify just pulls the pre-built images:
 
@@ -82,7 +89,7 @@ Both approaches are valid. Here's how they compare:
 
 This guide uses the "Coolify builds" approach because it's simpler to set up and doesn't require managing registry credentials or image retention policies. For a small project or learning setup, the reduced complexity is worth the tradeoff.
 
-## Repository Setup
+## Repository setup
 
 <Admonition type="info" title="Monorepo Example">
   This guide demonstrates deploying a **monorepo containing three Spring Boot
@@ -178,7 +185,7 @@ Each module needs a standalone settings file for Docker builds:
 
 This minimal configuration tells Gradle to only build the specific module, avoiding unnecessary compilation of the entire monorepo during the Docker build phase.
 
-### Gradle Wrapper Exception in `.gitignore`
+### Gradle wrapper exception in `.gitignore`
 
 `gradle/wrapper/gradle-wrapper.jar` is currently needed for Docker Compose deployment because:
 
@@ -207,11 +214,11 @@ This workflow has two jobs:
 
 The workflow uses two secrets (`COOLIFY_DEPLOY_UUID` and `COOLIFY_API_TOKEN`) that you'll configure later in GitHub.
 
-## Coolify + GitHub Actions Setup
+## Coolify + GitHub Actions setup
 
 Now that your repository is ready, let's configure Coolify to work with GitHub Actions.
 
-### Step 1: Create the Coolify Resource
+### Step 1: Create the Coolify resource
 
 1. Go to your project in Coolify and click **+ Add Resource**.
 
@@ -270,9 +277,9 @@ Once created, go to the **Configuration** tab and set up your services:
    - `https://sakila-groovy.your-domain.com:8080`
 
    <Admonition type="caution" title="Port Configuration">
-     **This is crucial**: Each service is configured to expose port 8080.
-     Coolify's reverse proxy will handle routing traffic to each container based
-     on the domain name. If you run into routing issues, check [Coolify's
+     **Important**: Each service is configured to expose port 8080. Coolify's
+     reverse proxy will handle routing traffic to each container based on the
+     domain name. If you run into routing issues, check [Coolify's
      documentation](https://coolify.io/docs/knowledge-base/docker/compose#connect-to-predefined-networks)
      for more details.
    </Admonition>
@@ -303,7 +310,7 @@ Navigate to the **Advanced** tab and **uncheck Auto Deploy**.
   }
 />
 
-### Step 4: Get the Deploy Webhook URL
+### Step 4: Get the deploy webhook URL
 
 Navigate to the **Webhooks** tab to find your deployment trigger URL:
 
@@ -322,7 +329,7 @@ https://coolify.your-domain.com/api/v1/deploy?uuid=YOUR_UUID&force=false
 
 The `uuid` query parameter is the unique identifier for your Coolify resource. You will store this in GitHub as the `COOLIFY_DEPLOY_UUID` secret.
 
-### Step 5: Generate API Token
+### Step 5: Generate an API token
 
 1. Go to **Keys & Tokens** → **API Tokens** in the left sidebar.
 2. If API is disabled, enable it in **Settings** first.
@@ -344,7 +351,7 @@ The `uuid` query parameter is the unique identifier for your Coolify resource. Y
 
 4. Copy the generated token. You will store this in GitHub as the `COOLIFY_API_TOKEN` secret.
 
-### Step 6: Configure GitHub Secrets
+### Step 6: Configure GitHub secrets
 
 Go to your GitHub repository → **Settings** → **Secrets and variables** → **Actions**, and add these repository secrets:
 

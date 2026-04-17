@@ -1,7 +1,7 @@
 import CodeBlock from '@theme/CodeBlock';
+import Mermaid from '@theme/Mermaid';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 import ZoomContainer from '@site/src/components/zoom-container';
-import Mermaid from '@theme/Mermaid';
 
 export const FileTree = () => (
   <FileTreeInfo>

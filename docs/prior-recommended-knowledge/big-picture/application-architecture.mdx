@@ -1,9 +1,9 @@
 ---
 sidebar_position: 2
-title: Application Architecture
+title: Application architecture
 ---
 
-There are several ways to build applications, and each approach has its own style, benefits, and challenges.
+In the [previous document](./software-architecture) we looked at how architectural patterns like Clean and Hexagonal Architecture organize code. Now let's zoom out: there are several ways to structure an entire application, and each approach has its own style, benefits, and challenges.
 
 ## Monolith
 
@@ -34,7 +34,7 @@ In this analogy:
 - **Rooms**: Inside the house, you have different rooms, such as the living room, kitchen, bedrooms, and bathroom. These rooms represent the various features and components of the web application, like user login, product listing, shopping cart, and payment processing.
 - **Infrastructure**: The plumbing, electricity, and other essential systems that support the entire house are like the underlying code, database, and resources that make the web application work.
 
-### Key Points
+### Key points
 
 - **Everything in One Place**: Just like a house has everything under one roof, a monolith web application has all its code, functions, and data within a single codebase.
 - **Simplicity**: Building the whole house as one unit can be straightforward and easy to understand since everything is in one place.
@@ -46,7 +46,7 @@ In this analogy:
 - **Maintenance**: Imagine if there’s a problem with the plumbing in one room; it might affect the entire house. Similarly, if there’s a bug or issue in one part of the monolith code, it could impact the entire application.
 - **Development Speed**: In a monolith, when multiple teams work on different parts of the application, coordinating their efforts can be challenging. Changes in one area might require thorough testing and validation throughout the entire application.
 
-## Frontend + Backend
+## Frontend + backend
 
 Let’s go with the restaurant analogy for this one.
 
@@ -70,7 +70,7 @@ Imagine you have a restaurant. In the early days, your restaurant was small, and
 
 However, as your restaurant became more popular, you encountered some challenges:
 
-- **Scalability**: With increasing demand, it became harder to accommodate more customers, prepare food quickly, and manage the dining area simultaneously. You needed a way to expand without overcrowding the place.
+- Scalability: With increasing demand, it became harder to accommodate more customers, prepare food quickly, and manage the dining area simultaneously. You needed a way to expand without overcrowding the place.
 - **Specialization**: You noticed that your restaurant staff had diverse skills. Some were excellent cooks, while others were friendly and great at serving customers. But having everyone do everything caused inefficiencies.
 
 To overcome these challenges, you decided to split your restaurant into two distinct areas:
@@ -78,16 +78,16 @@ To overcome these challenges, you decided to split your restaurant into two dist
 - **Frontend**: This is the dining area, the part of the restaurant that customers interact with directly. It’s designed to be user-friendly and visually appealing. There are menus, waitstaff, and ambiance, all focused on creating a delightful experience for the customers.
 - **Backend**: This is the kitchen, the part of the restaurant hidden from the customers’ view. It’s where the chefs work efficiently to prepare the food, the inventory is managed, and orders are processed.
 
-### Why This Separation Makes Sense
+### Why this separation makes sense
 
-- **Improved Scalability**: With the frontend and backend separated, you can now expand either of them independently. If you want to accommodate more customers, you can focus on expanding the dining area (frontend) without affecting the kitchen’s operations (backend).
-- **Specialization and Efficiency**: Now that the kitchen staff can solely focus on cooking and inventory management, they become more efficient in their tasks. The waitstaff can concentrate on providing excellent service to customers without having to worry about food preparation.
+- Improved scalability: With the frontend and backend separated, you can now expand either of them independently. If you want to accommodate more customers, you can focus on expanding the dining area (frontend) without affecting the kitchen’s operations (backend).
+- Specialization and efficiency: Now that the kitchen staff can solely focus on cooking and inventory management, they become more efficient in their tasks. The waitstaff can concentrate on providing excellent service to customers without having to worry about food preparation.
 - **Flexibility**: With an independent frontend and backend, you have the flexibility to upgrade or replace one without necessarily touching the other. For example, you can revamp the menu and dining area (frontend) without changing the entire kitchen setup (backend).
 
 In web development terms:
 
-- **Frontend**: This is the user interface (UI) of a website or web application that users interact with directly. It’s responsible for the layout and overall user experience.
-- **Backend**: This is the server-side of the application, handling tasks like data storage, processing, and business logic.
+- Frontend: This is the user interface (UI) of a website or web application that users interact with directly. It’s responsible for the layout and overall user experience.
+- Backend: This is the server-side of the application, handling tasks like data storage, processing, and business logic.
 
 The split allows for a more efficient and flexible web development process, making it easier to manage complex projects and deliver a better user experience to visitors.
 
@@ -115,18 +115,18 @@ Now, let’s explore the pros and cons of transforming this monolith into **micr
 
 **Pros**:
 
-- **Scalability**: If a particular service (e.g., shopping, entertainment, transportation) experiences high demand, it can scale independently without affecting others.
-- **Flexibility**: Each service can be designed and upgraded independently. If a service needs a new feature or technology, it can be updated without affecting others. This allows staying up to date with the latest trends and advancements.
-- **Fault Isolation**: If a problem arises in one service, it can be contained to that specific service, reducing the risk of widespread disruption.
-- **Specialization**: Different services can specialize in what they do best. This allows each service to excel and deliver high-quality experiences.
-- **Development Speed**: Independent teams can work on different services simultaneously, speeding up the development process. Changes and updates can be implemented faster since they are confined and don’t require coordination across the entire board.
+- Scalability: If a particular service (e.g., shopping, entertainment, transportation) experiences high demand, it can scale independently without affecting others.
+- Flexibility: Each service can be designed and upgraded independently. If a service needs a new feature or technology, it can be updated without affecting others. This allows staying up to date with the latest trends and advancements.
+- Fault isolation: If a problem arises in one service, it can be contained to that specific service, reducing the risk of widespread disruption.
+- Specialization: Different services can specialize in what they do best. This allows each service to excel and deliver high-quality experiences.
+- Development speed: Independent teams can work on different services simultaneously, speeding up the development process. Changes and updates can be implemented faster since they are confined and don’t require coordination across the entire board.
 
 **Cons**:
 
-- **Complexity**: Managing many independent services requires coordination and communication. Microservices add complexity in terms of inter-service communication, deployment, and monitoring.
-- **Infrastructure Overhead**: Each service needs its own infrastructure and resources, which can result in higher maintenance and operational costs compared to a single monolith.
-- **Integration Challenges**: With many independent services, ensuring seamless integration between them can be more challenging than a monolith. Developers must implement robust communication protocols and handle potential issues arising from service interactions.
-- **Learning Curve**: Transitioning to a microservice architecture can be a significant shift for the development team, requiring them to learn new concepts and best practices.
+- Complexity: Managing many independent services requires coordination and communication. Microservices add complexity in terms of inter-service communication, deployment, and monitoring.
+- Infrastructure overhead: Each service needs its own infrastructure and resources, which can result in higher maintenance and operational costs compared to a single monolith.
+- Integration challenges: With many independent services, ensuring seamless integration between them can be more challenging than a monolith. Developers must implement robust communication protocols and handle potential issues arising from service interactions.
+- Learning curve: Transitioning to a microservice architecture can be a significant shift for the development team, requiring them to learn new concepts and best practices.
 
 ## Comparison
 

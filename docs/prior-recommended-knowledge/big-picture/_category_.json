@@ -3,6 +3,6 @@
   "position": 1,
   "link": {
     "type": "generated-index",
-    "description": "Understand the overarching ideas and structures behind software development."
+    "description": "Understand architectural patterns and structures, from Clean Architecture and Hexagonal patterns to Monolith and full-stack considerations."
   }
 }

@@ -1,22 +1,14 @@
 ---
 sidebar_position: 2
-title: Comunicación entre Sistemas
+title: Comunicación entre sistemas
 ---
 
+import {
+  SynchronousSequenceDiagram,
+  AsynchronousSequenceDiagram,
+} from '@site/src/components/docs/prior-recommended-knowledge/core-concepts/communication-between-systems';
+
 Cuando los sistemas necesitan hablar, tienen dos formas fundamentales de comunicarse: **sincrónicamente** (esperando respuestas inmediatas) o **asincrónicamente** (disparar y olvidar). Entender esta división te va a ayudar a debuggear problemas, elegir tecnologías y explicar decisiones arquitectónicas a tu equipo.
-
-```txt
-SÍNCRONO                            ASÍNCRONO
-
-Cliente     Servidor                Cliente     Broker      Servidor
-  │             │                     │           │           │
-  ├──petición──▶│                     ├──publicar▶│           │
-  │   ......    │                     │◀── ✓ ─────┤           │
-  │  (espera)   │                     │           │ (después) │
-  │   ......    │                     │           ├──consumir▶│
-  │◀─respuesta──┤                     │           │◀── ✓ ─────┤
-  │             │                     │           │           │
-```
 
 ## Sincrónico
 
@@ -69,3 +61,11 @@ La mayoría de los sistemas que te vas a encontrar usan una mezcla. Recordá:
 3. Cuando te sumes a un equipo, preguntá: _"¿Qué pasa cuando el Sistema A estornuda?"_ La respuesta revela la filosofía de comunicación de sus sistemas.
 
 Ahora que estás armado con este conocimiento, nunca vas a mirar un error de "Connection timed out" de la misma manera.
+
+### Comunicación sincrónica
+
+<SynchronousSequenceDiagram />
+
+### Comunicación asincrónica
+
+<AsynchronousSequenceDiagram />

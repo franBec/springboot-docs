@@ -1,10 +1,10 @@
 ---
 sidebar_position: 1
-title: Cross-Cutting Concerns
+title: Cross-cutting concerns
 ---
 
-import { RequestLifecycleDiagram } from '@site/src/components/docs/spring-boot-in-a-nutshell/cross-cutting-concerns';
 import Admonition from '@theme/Admonition';
+import { RequestLifecycleDiagram } from '@site/src/components/docs/spring-boot-in-a-nutshell/cross-cutting-concerns';
 
 Your main job is to write business logic (you know, the code that makes money or solves the problem your app was built for).
 
@@ -21,7 +21,7 @@ Spring Boot, being the opinionated framework that it is, gives you a few differe
 
 The three main ones you'll hear about are Filters, Interceptors, and Aspect-Oriented Programming (AOP).
 
-## The Toolkit: AOP vs. Filters vs. Interceptors
+## The toolkit: AOP vs. filters vs. interceptors
 
 Before we dive deep, here’s a quick overview of how they relate to an incoming HTTP request.
 
@@ -39,7 +39,7 @@ Now let's break down what each of these does and when you should (and shouldn't)
   - **CORS**: Adding headers like `Access-Control-Allow-Origin`.
 - **The Catch**: Filters are dumb. They have no idea what Spring is doing, which controller will handle the request, or even if a controller exists for that URL. They just see a request and a response.
 
-### Spring MVC Interceptors
+### Spring MVC interceptors
 
 - **What they are**: Interceptors are a Spring MVC concept, entirely managed by the `DispatcherServlet`, which is Spring's central hub for handling web requests.
 
@@ -57,7 +57,7 @@ Now let's break down what each of these does and when you should (and shouldn't)
   - `afterCompletion`: After the request is completely finished. Good for cleanup.
 - **The Catch**: They are tied to Spring MVC. If you're not using Spring for your web layer (e.g., you're using JAX-RS instead), these won't work. They also don't get triggered for requests that don't map to a handler.
 
-### Aspect-Oriented Programming (AOP)
+### Aspect-oriented programming (AOP)
 
 - **What it is**: AOP is the most powerful and the most dangerous tool in the box. It's not tied to the web layer at all. It lets you inject logic at specific points in your code's execution, known as "join points." In Spring, this is typically method execution.
 - **How it works**: Spring creates a proxy object that wraps your actual bean. When a method on your bean is called, the call is intercepted by the proxy, which executes the "advice" (your cross-cutting logic) before, after, or around the actual method call.
@@ -77,7 +77,7 @@ Now let's break down what each of these does and when you should (and shouldn't)
 | **Coupling** | Decoupled from Spring                                   | Coupled to Spring MVC                                      | Decoupled from the web layer, but uses Spring AOP         |
 | **Gotcha**   | "Dumb" - has no idea about the Spring context           | Only works for requests handled by Spring MVC              | Bypassed by internal `this.method()` calls                |
 
-## Which One Should I Use?
+## Which one should I use?
 
 Before you even think about slapping one of these on, ask yourself: "Do I _really_ need this?"
 

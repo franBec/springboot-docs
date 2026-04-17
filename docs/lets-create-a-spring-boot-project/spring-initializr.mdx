@@ -3,17 +3,17 @@ sidebar_position: 1
 title: Spring Initializr
 ---
 
-import Image from '@site/src/components/image';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+import Image from '@site/src/components/image';
 import {
   SpringBootInitializrProjectGraph,
   ConfigFormatProperties,
   ConfigFormatYaml,
 } from '@site/src/components/docs/lets-create-a-spring-boot-project/spring-initializr';
-import Admonition from '@theme/Admonition';
 
-Head to [Spring Initializr](https://start.spring.io/), the official Spring Boot project generator (honorable mention to [Bootify](https://bootify.io/), interesting alternative).
+Now that we're ready to create a Spring Boot project, head to [Spring Initializr](https://start.spring.io/), the official Spring Boot project generator (honorable mention to [Bootify](https://bootify.io/), interesting alternative).
 
 You'll see a form. Don't panic, we'll decode each option.
 
@@ -34,9 +34,9 @@ If you're looking for a "path of least resistance," here's how the pragmatics us
 - **For Groovy projects:** Use **Gradle Groovy**. Keeping your build logic and your application logic in the same language saves you from the mental context-switching tax.
 - **For Kotlin projects:** Go with **Gradle Kotlin**. Again, it's all about language synergy. If you're already writing Kotlin, you might as well enjoy the type-safety and IDE autocomplete in your build scripts too.
 
-The reality? **There is no "wrong" combination.**
+The reality? There is no "wrong" combination.
 
-## Spring Boot Versions
+## Spring Boot versions
 
 When selecting a Spring Boot version, you'll encounter three types of labels:
 
@@ -50,9 +50,9 @@ When selecting a Spring Boot version, you'll encounter three types of labels:
 - No Marker (**Stable Releases**)
   - These are stable releases, rigorously tested and production-ready.
 
-**Always opt for the highest stable version** (without SNAPSHOT/M labels) unless you explicitly need experimental features.
+Always opt for the highest stable version (without SNAPSHOT/M labels) unless you explicitly need experimental features.
 
-## Project Metadata
+## Project metadata
 
 The **Project Metadata** section defines your project's identity and structure. Here's a breakdown of each field and its recommended conventions:
 
@@ -68,16 +68,16 @@ The **Project Metadata** section defines your project's identity and structure. 
 
 ## Packaging: JAR vs WAR
 
-**Packaging** determines how your application is bundled into a single, shareable file, enabling it to run smoothly on any system without complex setup.
+**Packaging** determines how your application is bundled into a single, shareable file, and lets it run on any system without complex setup.
 
 | Format | Best For                                                                                                                                                         | Key Difference                                                                                     |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `JAR`  | Modern Spring Boot apps, microservices, cloud deployments                                                                                                        | Contains embedded server (e.g., [Tomcat](https://tomcat.apache.org/)) for self-contained execution |
 | `WAR`  | Legacy apps or deployments to external servers (e.g., traditional Tomcat, [JBoss](https://www.redhat.com/en/technologies/jboss-middleware/application-platform)) | Requires a separate server to run; no embedded server included                                     |
 
-**Use JAR unless you're bound to legacy infrastructure**. `JAR` is the default in Spring Boot. Spring Boot's embedded server makes `JAR` the lightweight, hassle-free choice for most projects today.
+Use JAR unless you're bound to legacy infrastructure. `JAR` is the default in Spring Boot. Spring Boot's embedded server makes `JAR` the lightweight, hassle-free choice for most projects today.
 
-## Configuration: Properties vs YAML
+## Configuration: properties vs YAML
 
 You're typically going to run into two main formats in Spring Boot: `application.properties` and `application.yml` (or `application.yaml`). Both do the same job, and they let you define key-value pairs to configure your application, database connections, server ports, and all that fun stuff.
 
@@ -108,11 +108,11 @@ You're typically going to run into two main formats in Spring Boot: `application
   </TabItem>
 </Tabs>
 
-**My personal preference is YAML.** Why? Because I find it significantly easier to read and organize, especially as configurations grow. Plus, most modern tools and APIs often lean into YAML for configuration these days.
+My personal preference is YAML. Why? Because I find it significantly easier to read and organize, especially as configurations grow. Plus, most modern tools and APIs often lean into YAML for configuration these days.
 
 Ultimately, both work perfectly fine. If your team has a standard, stick to it. If you're starting fresh, give YAML a shot.
 
-## Java Version
+## Java version
 
 - Stick with what your team uses.
   - If your team is using an old unsupported version, go for the lowest version Spring Initializr provides.

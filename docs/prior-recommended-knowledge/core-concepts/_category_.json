@@ -1,8 +1,8 @@
 {
-  "label": "Core Concepts",
+  "label": "Core concepts",
   "position": 2,
   "link": {
     "type": "generated-index",
-    "description": "Dive into the fundamental ideas and theories that underpin software development."
+    "description": "Explore the fundamental ideas and theories that underpin software development."
   }
 }

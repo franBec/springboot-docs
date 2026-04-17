@@ -1,11 +1,13 @@
 ---
 sidebar_position: 1
-title: Version Control
+title: Version control
 ---
+
+import { GitFourCommands } from '@site/src/components/docs/prior-recommended-knowledge/development-environment/version-control';
 
 You wouldn't build a house without a safety harness. Don't code without [version control](https://github.com/resources/articles/software-development/what-is-version-control).
 
-## Version Control Systems
+## Version control systems
 
 Git commands the VCS market, with others being relegated to legacy holdouts.
 
@@ -16,7 +18,7 @@ Git commands the VCS market, with others being relegated to legacy holdouts.
 | [Mercurial](https://www.mercurial-scm.org/) | Easier than Git              | Lost the VCS wars    |
 | [CVS](https://cvs.nongnu.org/)              | Pioneered versioning         | File-level tracking  |
 
-## Hosting Platforms
+## Hosting platforms
 
 This is where the code lives.
 
@@ -32,13 +34,10 @@ This is where the code lives.
 1. **Git first, code second**: Always `git init` before writing your first line of code.
 2. **Console > GUI**. Tools like [GitHub Desktop](https://desktop.github.com/download/) are great, but learn these four commands first:
 
-   ```bash
-   git add .
-   git commit -m "save point"
-   git push
-   git checkout -b
-   ```
+   <GitFourCommands />
 
    Why? Because when your IDE's Git plugin mysteriously breaks (it will), you'll need to debug like a pro.
 
 3. **Your team's rules > textbook gitflow**: You might love feature branches, but every company has their own "sacred" workflow. Observe first, then suggest improvements later.
+
+Pick a platform, initialize your repo, and start small. The best version control setup is the one you'll actually use.

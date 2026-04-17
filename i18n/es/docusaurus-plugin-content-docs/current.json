@@ -114,5 +114,21 @@
   "sidebar.tutorialSidebar.category.Persistence Integration.link.generated-index.description": {
     "message": "Aprendé cómo integrar bases de datos e implementar patrones de persistencia en Spring Boot.",
     "description": "The generated-index page description for category Persistence Integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Prior recommended knowledge": {
+    "message": "Conocimientos previos recomendados",
+    "description": "The label for category Prior recommended knowledge in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Prior recommended knowledge.link.generated-index.description": {
+    "message": "Antes de meterte de lleno en Spring Boot, repasemos algunos conceptos, herramientas y patrones del desarrollo backend.",
+    "description": "The generated-index page description for category Prior recommended knowledge in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.JVM": {
+    "message": "JVM",
+    "description": "The label for category JVM in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.JVM.link.generated-index.description": {
+    "message": "Cómo funciona la JVM, los lenguajes que soporta y herramientas para construir aplicaciones.",
+    "description": "The generated-index page description for category JVM in sidebar tutorialSidebar"
   }
 }

@@ -1,13 +1,11 @@
 ---
-sidebar_position: 4
-title: Continuous Integration Continuous Deployment
+sidebar_position: 3
+title: Continuous Integration and Continuous Deployment
 ---
 
 import Image from '@site/src/components/image';
 
-# Continuous Integration Continuous Deployment
-
-Getting your Spring Boot application running reliably for your users is the final, crucial step. Deployment strategies vary wildly depending on the team, the company's maturity, and the project's scale.
+Now that you understand the basics of [containers and orchestration](./docker), let's look at how modern teams actually get their code to production. Getting your Spring Boot application running reliably for your users is the final step. Deployment strategies vary significantly depending on the team, the company's maturity, and the project's scale.
 
 ## The "Old School" Manual Way
 
@@ -48,4 +46,4 @@ The modern way to deploy Spring Boot applications involves automation through a 
 7. **Operate**: Keep the application running, healthy, and responsive. Scale based on demand and handle incidents.
 8. **Measure**: Gather production data through logs, metrics, and traces. Feed insights back into planning. The loop continues.
 
-This automated approach offers huge advantages: consistency, reliability, speed, auditability, and automated rollbacks.
+This automated approach offers clear, measurable benefits: consistency across every deployment, reliability through automated testing, speed with push-button releases, complete auditability of who deployed what and when, and automated rollbacks when things go wrong.

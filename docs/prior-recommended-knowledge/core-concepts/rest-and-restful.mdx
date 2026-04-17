@@ -5,9 +5,11 @@ title: REST and RESTful
 
 import Youtube from '@site/src/components/youtube';
 
+So far in this section we've covered the foundations of API communication. Now let's look at the architectural style that underlies most modern web APIs: REST. Understanding REST helps you design predictable, scalable endpoints—and recognize when "RESTful" claims don't quite match reality.
+
 ## What's REST (and RESTful)?
 
-**REST** (Representational State Transfer) is an architectural style defined by [Roy Fielding](https://roy.gbiv.com/), emphasizing:
+**REST** (Representational State Transfer) is an architectural style defined by [Roy Fielding](https://roy.gbiv.com/), focusing on:
 
 1. Client-server separation
 2. Statelessness
@@ -55,7 +57,9 @@ As your API evolves, you may add RESTful features later if required.
 
 ### Tools for REST API Development
 
-- **[Postman](https://www.postman.com/)**: It's powerful, feature-rich, and ubiquitous. Everyone knows it. But honestly, it's getting a bit bloated. The forced account creation and cloud-syncing for basic functionality is annoying if you just want to quickly test an endpoint without selling your soul. It was my go-to for years, but I'm gradually exploring other options.
-- **[Insomnia](https://insomnia.rest/)**:If you're feeling the Postman bloat, Insomnia is a fantastic, lightweight alternative. It does pretty much everything you need for API testing without the extra baggage. Give it a shot.
+- **[Postman](https://www.postman.com/)**: The industry standard with extensive features. However, the forced account creation and cloud-syncing for basic functionality can be frustrating if you just want to quickly test an endpoint. It works well, but the bloat is noticeable.
+- **[Insomnia](https://insomnia.rest/)**: A lighter alternative to Postman. It handles most API testing needs without the extra baggage. Worth trying if you want something simpler.
 - **IDE's built-in REST clients**: Many modern IDEs (like IntelliJ IDEA, VS Code) have excellent plugins that let you test endpoints directly from your development environment. This keeps you in flow and avoids context switching.
-- **Command-line tools** like [curl](https://curl.se/), [jq](https://jqlang.org/), and [w3m](https://git.sr.ht/~rkta/w3m). They're simple, quick, and the output is just text. It's incredibly straightforward to copy-paste commands and their outputs, demonstrating exactly what's happening without relying on screenshots of a GUI tool. It makes the documentation much more actionable and less of a visual scavenger hunt.
+- **Command-line tools** like [curl](https://curl.se/), [jq](https://jqlang.org/), and [w3m](https://git.sr.ht/~rkta/w3m). They're simple, quick, and the output is just text. It's straightforward to copy-paste commands and their outputs, demonstrating exactly what's happening without relying on screenshots of a GUI tool. This makes documentation more actionable and easier to reproduce.
+
+REST gives you a solid foundation for API design, but don't get caught up in pedantic debates about whether your API is "truly RESTful." Focus on clear specifications, predictable behavior, and documentation that both humans and machines can consume. Pick tools that fit your workflow—whether that's a full-featured GUI client, IDE integration, or command-line utilities—and document your API decisions clearly so the next developer can understand your intent without guessing.

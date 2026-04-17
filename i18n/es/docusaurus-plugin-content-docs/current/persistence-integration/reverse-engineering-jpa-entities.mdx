@@ -3,12 +3,29 @@ sidebar_position: 2
 title: Ingeniería inversa de entidades JPA
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import { FileTree } from '@site/src/components/docs/persistence-integration/reverse-engineering-jpa-entities';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="persistence-integration" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Reverse Engineering JPA Entities (spring_groovy)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/66c833e262c22d4680841942a5d10407e8f2cfdb',
+    },
+    {
+      name: 'Reverse Engineering JPA Entities (spring_java)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/90328ae095a29bd4836acb6a1ba1be12d60baad8',
+    },
+    {
+      name: 'Reverse Engineering JPA Entities (spring_kotlin)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/4e76c9ec9ddd263e39428da82115a414304231c2',
+    },
+  ]}
+/>
+
+En el [documento anterior](./how-spring-talks-to-databases) vimos cómo Spring Boot se comunica con una base de datos a través de JDBC, Hibernate y Spring Data JPA. Ahora invertimos la dirección: en lugar de escribir las clases de entidad a mano y dejar que Hibernate genere el esquema, partimos de un esquema SQL existente y generamos las clases de entidad en tiempo de compilación.
 
 ## El Problema
 

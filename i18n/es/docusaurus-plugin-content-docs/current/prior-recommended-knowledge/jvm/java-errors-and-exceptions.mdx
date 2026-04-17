@@ -4,6 +4,13 @@ title: Errores y excepciones en Java
 ---
 
 import Admonition from '@theme/Admonition';
+import {
+  ThrowableHierarchy,
+  ErrorExamples,
+  ExceptionHandlingExample,
+  RuntimeExceptionExample,
+  CheckedExceptionExample,
+} from '@site/src/components/docs/prior-recommended-knowledge/jvm/java-errors-and-exceptions';
 
 Si llevas un tiempo escribiendo código en Java, probablemente ya viste tu buena dosis de errores y excepciones. Son parte del trato. Vamos a ver qué significa cada término en Java, porque no son intercambiables.
 
@@ -19,23 +26,7 @@ En Java, todo lo que se puede lanzar hereda de la clase `Throwable`. Esta jerarq
 - **Error** – representa problemas graves que las aplicaciones no deberían intentar capturar
 - **Exception** – representa condiciones que las aplicaciones podrían querer capturar y manejar
 
-```
-Throwable
-├── Error
-│   ├── OutOfMemoryError
-│   ├── StackOverflowError
-│   └── ... (other errors)
-└── Exception
-    ├── RuntimeException (unchecked)
-    │   ├── NullPointerException
-    │   ├── IllegalArgumentException
-    │   ├── IndexOutOfBoundsException
-    │   └── ... (other runtime exceptions)
-    └── Exception (checked)
-        ├── IOException
-        ├── SQLException
-        └── ... (other checked exceptions)
-```
+<ThrowableHierarchy />
 
 ## Errores: cuando las cosas salen muy mal
 
@@ -48,12 +39,7 @@ Puntos clave sobre los errores:
 - Generalmente **no se pueden recuperar**
 - Las aplicaciones **no deberían intentar capturarlos y manejarlos**
 
-```java
-// Examples of errors you'll rarely (hopefully) see
-new StackOverflowError();      // Too much recursion
-new OutOfMemoryError();        // JVM ran out of memory
-new NoClassDefFoundError();    // Class was available at compile time but not runtime
-```
+<ErrorExamples />
 
 Cuando se lanza un `OutOfMemoryError`, tu aplicación está en serios problemas. Intentar capturarlo y continuar como si nada hubiera pasado suele ser una mala idea. La JVM ya está en un estado inestable.
 
@@ -61,13 +47,7 @@ Cuando se lanza un `OutOfMemoryError`, tu aplicación está en serios problemas.
 
 Las **excepciones** son condiciones anormales que las aplicaciones podrían querer capturar y manejar. A diferencia de los errores, las excepciones a menudo se pueden recuperar, y pueden ocurrir tanto en tiempo de ejecución como en tiempo de compilación.
 
-```java
-try {
-    String result = fetchDataFromApi();
-} catch (ConnectionException e) {
-    // Handle gracefully - retry, fallback, log, etc.
-}
-```
+<ExceptionHandlingExample />
 
 La distinción clave aquí es que las excepciones representan condiciones que tu código puede anticipar y manejar razonablemente.
 
@@ -79,12 +59,7 @@ La distinción clave aquí es que las excepciones representan condiciones que tu
 - Pueden lanzarse en cualquier momento durante la ejecución del método
 - Se propagan automáticamente fuera del alcance del método
 
-```java
-public void processUser(String name) {
-    // NullPointerException can be thrown here but no 'throws' needed
-    System.out.println(name.toUpperCase());
-}
-```
+<RuntimeExceptionExample />
 
 Las excepciones comunes de tiempo de ejecución incluyen:
 
@@ -100,13 +75,7 @@ Todas las excepciones que **no** son subclases de `RuntimeException` son **excep
 - **Declaradas** en la firma del método usando la palabra clave `throws`
 - **Capturadas** o declaradas por el código que llama
 
-```java
-public String readFile(String path) throws IOException {
-    // This method can throw IOException
-    // Caller MUST handle or declare it
-    return Files.readString(Path.of(path));
-}
-```
+<CheckedExceptionExample />
 
 Las excepciones verificadas comunes incluyen:
 
@@ -128,3 +97,13 @@ En aplicaciones Spring Boot (y Java en general), vas a trabajar principalmente c
 
 - **Excepciones de tiempo de ejecución** para errores de programación (punteros nulos, argumentos incorrectos)
 - **Excepciones verificadas** para operaciones de E/S, especialmente al tratar con sistemas externos
+
+## Resumen
+
+Entender la diferencia entre errores y excepciones te ayuda a escribir aplicaciones Java más robustas. Acordate de esto:
+
+- **Errores** — para problemas graves a nivel del sistema que no deberías intentar capturar
+- **Excepciones de tiempo de ejecución** — para errores de programación que deberían corregirse en el código
+- **Excepciones verificadas** — para condiciones esperadas que el código que llama debería manejar
+
+En Spring Boot, vas a trabajar principalmente con excepciones de tiempo de ejecución. El framework envuelve muchas excepciones verificadas (como `IOException` de las llamadas HTTP) en excepciones de tiempo de ejecución, lo que te da código más limpio sin bloques try-catch excesivos.

@@ -97,7 +97,7 @@ title: <Sentence case title matching the topic>
 
 **Imports:** Use only the components needed for the content:
 
-- `GithubTagInfo` from `@site/src/components/github-tag-info` if a relevant git tag exists
+- `GithubCommitsInfo` from `@site/src/components/github-commits-info` if relevant commit(s) exist
 - `Tabs` from `@theme/Tabs` and `TabItem` from `@theme/TabItem` for multi-language code
 - `CodeBlock` from `@theme/CodeBlock` for terminal output
 - `Image` from `@site/src/components/image` for images

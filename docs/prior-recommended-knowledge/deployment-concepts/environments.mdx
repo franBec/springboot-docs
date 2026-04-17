@@ -10,7 +10,7 @@ import {
   ApplicationYmlWithProfile,
 } from '@site/src/components/docs/prior-recommended-knowledge/environments';
 
-When developing and deploying software like a Spring Boot application, you rarely just push code straight to live users. Instead, applications typically move through several **Environments**. Understanding these environments is crucial for safe, reliable, and efficient development workflows.
+When developing and deploying software like a Spring Boot application, you rarely just push code straight to live users. Instead, applications typically move through several **Environments**. Understanding these environments is important for safe, reliable, and efficient development workflows.
 
 ## What Are Environments?
 
@@ -46,7 +46,7 @@ Environments are distinct, isolated setups where your application runs. Each env
 
 Using different environments is essential for several reasons:
 
-1. **Isolation and Safety:** The most critical reason is to prevent untested or broken code from affecting real users. You wouldn't test experimental engine parts on a plane full of passengers; similarly, you don't test new code directly in production.
+1. **Isolation and Safety:** The primary reason is to prevent untested or broken code from affecting real users. You wouldn't test experimental engine parts on a plane full of passengers; similarly, you don't test new code directly in production.
 2. **Configuration Differences:** Each environment often needs different settings. For example:
    - **Databases:**
      - In **dev**, you might want a fast, disposable in-memory database like H2 for quick startups.
@@ -60,7 +60,7 @@ Using different environments is essential for several reasons:
 
 ## Spring Boot Profiles
 
-Spring Boot provides an elegant solution for managing environment-specific configurations using [Profiles](https://docs.spring.io/spring-boot/reference/features/profiles.html). A profile is essentially a label for a set of configuration settings.
+Spring Boot provides a mechanism for managing environment-specific configurations using [Profiles](https://docs.spring.io/spring-boot/reference/features/profiles.html). A profile is essentially a label for a set of configuration settings.
 
 Here's how it typically works:
 
@@ -87,3 +87,7 @@ Here's how it typically works:
        <ApplicationYmlWithProfile />
 
 By using profiles and separate configuration files, you can manage the different settings required for your dev, test, and production environments, ensuring your application behaves correctly and safely in each context.
+
+## Summary
+
+Environments provide isolation between development, testing, and production stages of your application. Combined with Spring Boot profiles, you can maintain clean separation of configuration while keeping your codebase organized. When you deploy your application, activate the appropriate profile to ensure it connects to the correct databases, services, and logging levels for that environment.

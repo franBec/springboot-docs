@@ -4,20 +4,27 @@ title: Observability
 ---
 
 import Admonition from '@theme/Admonition';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import Image from '@site/src/components/image';
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import {
   FileTree,
   ArchitectureFlowchart,
 } from '@site/src/components/docs/deployment/observability';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="observability" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Observability',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/93d608763b20eccdb830d715baa699ab7fd38b3d',
+    },
+  ]}
+/>
 
-Observability is about understanding what your application is doing in production without having to add print statements and redeploy. When something breaks at 3 AM, you need to trace requests across services, see error logs in context, and understand performance bottlenecks without guessing.
+In the previous document you deployed your Spring Boot applications to a VPS with Coolify. Now that the apps are running in production, you need to know what they are actually doing—without adding print statements and redeploying. Observability is about understanding your application in production: tracing requests across services, seeing error logs in context, and understanding performance bottlenecks without guessing.
 
-## How Instrumentation Works
+## How instrumentation works
 
 The process breaks down into three logical steps:
 
@@ -25,9 +32,9 @@ The process breaks down into three logical steps:
 
 2. **Data Storage (The Telemetry Backends)**: The collected data ships out of the application process and goes to corresponding, optimized telemetry backends, which are databases designed specifically for logs, metrics, or traces.
 
-3. **Visualization (The Dashboard)**: You use a powerful visualization tool (like Grafana) to pull the stored data from the backends and present it in cohesive, readable dashboards.
+3. **Visualization (The Dashboard)**: You use a visualization tool (like Grafana) to pull the stored data from the backends and present it in cohesive, readable dashboards.
 
-## The Three Pillars of Telemetry Data
+## The three pillars of telemetry data
 
 Instrumentation focuses on collecting three distinct kinds of data, often referred to as "The Three Pillars" of observability:
 
@@ -37,11 +44,11 @@ Instrumentation focuses on collecting three distinct kinds of data, often referr
 | **Metrics**  | Numerical, aggregate data points (e.g., CPU usage, request latency counts, memory consumption). | [Prometheus](https://prometheus.io/)            |
 | **Traces**   | The complete journey of a single request as it flows through the various parts of your system.  | [Tempo](https://grafana.com/docs/tempo/latest/) |
 
-**[Grafana](https://grafana.com/)** acts as the "single pane of glass" that unifies all three data types. It is a web-based visualization platform that connects to multiple telemetry backends simultaneously.
+**[Grafana](https://grafana.com/)** is the "single pane of glass" that unifies all three data types. It is a web-based visualization platform that connects to multiple telemetry backends simultaneously.
 
 These are the most common choices in the Grafana ecosystem, but they are not the only options. Alternatives include [Elasticsearch](https://www.elastic.co/elasticsearch) for logs, [InfluxDB](https://www.influxdata.com/) for metrics, and [Jaeger](https://www.jaegertracing.io/) for traces.
 
-## Observability Architecture Overview
+## Observability architecture overview
 
 Here's how the moving parts integrate with each other:
 
@@ -58,7 +65,7 @@ Here's a summary of the new and modified files:
 
 <FileTree />
 
-## Repository Setup
+## Repository setup
 
 ### Micrometer Registry Prometheus
 
@@ -89,7 +96,7 @@ Add `micrometer-registry-prometheus` to expose metrics in Prometheus format at `
 
 </Tabs>
 
-### Application Configuration
+### Application configuration
 
 Enable the observability endpoints and configure where to send traces.
 
@@ -123,9 +130,9 @@ Enable the observability endpoints and configure where to send traces.
 - **management.otlp.tracing.endpoint**: Sends traces to Tempo via OTLP HTTP protocol
 - **logging.pattern.level**: Embeds trace context (trace_id, span_id, trace_flags) in every log line
 
-## Observability Setup
+## Observability setup
 
-### Docker Compose Configuration
+### Docker Compose configuration
 
 Add the observability stack services to `docker-compose.yml`:
 
@@ -312,7 +319,7 @@ Enables automatic dashboard loading from `/var/lib/grafana/dashboards`.
   </p>
 </Admonition>
 
-## Production Deployment With Coolify
+## Production deployment with Coolify
 
 When deploying to Coolify, the platform automatically detects the new services defined in your `docker-compose.yml` and starts them alongside your Spring Boot applications. You do not need to manually configure the monitoring stack.
 
@@ -328,7 +335,7 @@ The only additional step is to assign a domain to Grafana so you can access the 
   them in your Coolify service configuration before starting the stack.
 </Admonition>
 
-## Grafana Access
+## Grafana access
 
 Once logged in, the pre-configured dashboards are available at:
 
@@ -340,6 +347,8 @@ You will find:
 
 - **JVM Micrometer**: JVM internals (memory pools, garbage collection, threads)
 - **Spring Boot Observability**: HTTP metrics, response times, error rates
+
+With the observability stack in place, you now have full visibility into your applications: metrics in Prometheus, traces in Tempo, and logs in Loki, all unified through Grafana dashboards. When something goes wrong in production, you can trace a request end-to-end, jump from a metric spike to the relevant logs, and pinpoint the root cause without guesswork.
 
 <Image
   src={

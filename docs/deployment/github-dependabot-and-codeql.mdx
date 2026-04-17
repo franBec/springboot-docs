@@ -4,11 +4,18 @@ title: GitHub Dependabot and CodeQL
 ---
 
 import { FileTree } from '@site/src/components/docs/deployment/github-dependabot-and-codeql';
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 
-<GithubTagInfo tag="dependabot-and-codeql" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Dependabot and CodeQL',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/f9fe91a726aebb00fe2d2bff1a0902a7a5110274',
+    },
+  ]}
+/>
 
-Your dependencies will get outdated. Your code will have security vulnerabilities you didn't know about. These aren't hypotheticals, they're certainties. The only question is whether you find out proactively or after something breaks.
+After setting up observability in the previous section, your deployment pipeline can tell you when something goes wrong. But prevention beats detection — and that's where dependency updates and security scanning come in. Your dependencies will get outdated. Your code will have security vulnerabilities you didn't know about. These aren't hypotheticals, they're certainties. The only question is whether you find out proactively or after something breaks.
 
 GitHub provides two free tools that handle this for you: **Dependabot** keeps your dependencies up to date, and **CodeQL** scans your code for security vulnerabilities on every push. Both run automatically with zero ongoing effort once configured.
 
@@ -20,8 +27,8 @@ Here's what you'll add to the repository:
 
 [Dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide) checks your dependency manifests for outdated packages and opens pull requests to update them. Instead of manually tracking which libraries have new versions, you get a PR with the update ready to review and merge.
 
-```yml reference title=".github/dependabot.yml"
-https://raw.githubusercontent.com/franBec/springboot-demo-projects/a569c6649baa2ff681d1bcc8c7caaf9a8d3d5363/.github/dependabot.yml
+```yml reference title=".github/workflows/codeql.yml"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/a569c6649baa2ff681d1bcc8c7caaf9a8d3d5363/.github/workflows/codeql.yml
 ```
 
 A few things worth noting about this configuration:
@@ -36,7 +43,7 @@ A few things worth noting about this configuration:
 
 [CodeQL](https://codeql.github.com/) is GitHub's static analysis engine. It builds your code, constructs a database of its structure, and runs queries against it to find patterns that indicate security vulnerabilities, bugs, or bad practices.
 
-```yml reference title=".github/dependabot.yml"
+```yml reference title=".github/workflows/codeql.yml"
 https://raw.githubusercontent.com/franBec/springboot-demo-projects/a569c6649baa2ff681d1bcc8c7caaf9a8d3d5363/.github/workflows/codeql.yml
 ```
 
@@ -50,3 +57,5 @@ Here's what each part does:
 - **Build with Gradle**: CodeQL instruments the build process to understand your code's structure. The `--no-daemon -x test` flags skip the Gradle daemon (unnecessary in CI) and tests (CodeQL only needs compiled classes, not test results)
 
 Once configured, CodeQL results appear in your repository's **Security** tab under **Code scanning alerts**. GitHub will also annotate pull requests with any findings, so you can catch issues before merging.
+
+With Dependabot handling updates and CodeQL handling security, your repository now has automated guardrails that run without any manual effort. Your deployment pipeline is complete.

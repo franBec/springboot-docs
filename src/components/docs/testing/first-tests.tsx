@@ -1,7 +1,7 @@
-import { JacocoCoverageTable } from '@site/src/components/jacoco-coverage-table';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
+import { JacocoCoverageTable } from '@site/src/components/jacoco-coverage-table';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 
 const FileTreeJava = () => (

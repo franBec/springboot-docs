@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: How Spring Talks to Databases
+title: How Spring talks to databases
 ---
 
 import Admonition from '@theme/Admonition';
@@ -9,11 +9,12 @@ import {
   HibernateEntityExample,
   EntityManagerExample,
   SpringDataJpaInterfaceExample,
+  StackDiagram,
 } from '@site/src/components/docs/persistence-integration/how-spring-talks-to-databases';
 
 Before writing repositories and entity classes, it helps to understand what's happening in the layers below. Spring Boot makes database access feel effortless, but there's a real stack underneath. Knowing it saves you when things go wrong, and they will.
 
-## JDBC: The Foundation
+## JDBC: the foundation
 
 [JDBC (Java Database Connectivity)](https://en.wikipedia.org/wiki/Java_Database_Connectivity) is the raw Java API for talking to a relational database. Here's what a basic query looks like in plain JDBC:
 
@@ -23,7 +24,7 @@ It works. But notice what you're managing yourself: the connection lifecycle, th
 
 This is the problem Hibernate was built to solve.
 
-## Hibernate: ORM on Top of JDBC
+## Hibernate: ORM on top of JDBC
 
 [Hibernate](https://hibernate.org/orm/) is an **ORM (Object-Relational Mapper)**. Its job is to bridge the gap between the relational world (tables, rows, foreign keys) and the object-oriented world (classes, instances, references). Instead of writing SQL and mapping `ResultSet` columns to fields yourself, you describe the mapping once with annotations, and Hibernate handles the rest.
 
@@ -51,7 +52,7 @@ Hibernate still uses JDBC under the hood. It manages connection pooling, transla
   them directly, Spring wraps them in a higher-level abstraction.
 </Admonition>
 
-## JPA: The Standard Specification
+## JPA: the standard specification
 
 Hibernate was so widely adopted that the Java community standardized its ideas into a specification: **[JPA (Jakarta Persistence API)](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-intro/persistence-intro.html)**. JPA defines the annotations (`@Entity`, `@Id`, `@Column`, and so on) and a core API — the `EntityManager` — that any compliant ORM must implement.
 
@@ -63,15 +64,15 @@ Hibernate is the most common JPA implementation, but others exist (EclipseLink, 
 
 No `ResultSet`, no connection management, no checked exceptions. But you're still writing repository classes by hand for every entity. Spring Data JPA eliminates that too.
 
-## Spring Data JPA: Repositories Without Boilerplate
+## Spring Data JPA: repositories without boilerplate
 
-### The Repository Pattern
+### The repository pattern
 
 The Repository Pattern is an abstraction layer that sits between your application and your data storage. Think of it as a translator. Your application asks for what it wants in its own language, like "give me all the films released in 2024," and the repository handles the messy details of turning that request into actual database operations.
 
 You don't need to know if the data lives in PostgreSQL, MongoDB, or some external API. The repository handles that complexity so your business logic stays clean and focused on what it does best.
 
-### Declaring a Repository
+### Declaring a repository
 
 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) sits on top of JPA and Hibernate. Instead of implementing a repository class yourself, you declare an interface and Spring generates the implementation at runtime.
 
@@ -79,7 +80,7 @@ You don't need to know if the data lives in PostgreSQL, MongoDB, or some externa
 
 No class, no `EntityManager`, no SQL. Spring sees the interface, wires up the implementation, and `findByReleaseYear` generates the correct query from the method name automatically.
 
-### Beyond the Basics
+### Beyond the basics
 
 `JpaRepository` provides more than simple CRUD operations:
 
@@ -88,17 +89,17 @@ No class, no `EntityManager`, no SQL. Spring sees the interface, wires up the im
 - **Custom query support:** Use the `@Query` annotation when you need complex operations that method names can't express.
 - **Transaction management:** Spring handles the begin/commit/rollback dance automatically.
 
-## Schema Migrations
+## Schema migrations
 
 Your schema will change. A new feature needs a column, a performance fix requires an index, a refactor renames a table. How you manage those changes matters as much as the code itself.
 
-### Code-First
+### Code-first
 
 The entity class is the source of truth. You add a field to the entity, and on next startup Hibernate reads it and issues the `ALTER TABLE` against the database, when `spring.jpa.hibernate.ddl-auto` is set to `update` or `create`.
 
 The schema follows the code. This works well when your team owns the database entirely and you're moving fast on a greenfield project. The downside: Hibernate's schema updates aren't always reversible, you get no migration history, and a bad `ddl-auto` setting in production can cause data loss.
 
-### Database-First
+### Database-first
 
 The database is the source of truth. Schema changes are explicit SQL scripts, written and reviewed before anything runs. A migration tool applies them in order and tracks what's already been applied, so the same script never runs twice.
 
@@ -122,24 +123,10 @@ The database is the source of truth. Schema changes are explicit SQL scripts, wr
   let Flyway or Liquibase own the actual migrations.
 </Admonition>
 
-## The Full Stack
+## The full stack
 
 Here's what sits between your business logic and the actual database:
 
-```
-Your Code  (Spring Data JPA — JpaRepository interfaces)
-     ↓
-Spring Data JPA  (generates repository implementations at runtime)
-     ↓
-JPA / jakarta.persistence  (EntityManager, @Entity, @Id, @Column…)
-     ↓
-Hibernate  (ORM — translates objects ↔ SQL)
-     ↓
-JDBC  (java.sql — raw database protocol)
-     ↓
-JDBC Driver  (PostgreSQL driver, H2 driver, MySQL driver…)
-     ↓
-Database
-```
+<StackDiagram />
 
-Each layer adds a level of abstraction. You almost always work at the top. When something breaks (a query performs badly, a mapping is wrong, a transaction doesn't behave as expected) knowing this stack tells you where to look.
+Each layer adds a level of abstraction. You almost always work at the top. When something breaks (a query performs badly, a mapping is wrong, a transaction doesn't behave as expected) knowing this stack tells you where to look. Next, we'll reverse-engineer JPA entities from an existing database schema.

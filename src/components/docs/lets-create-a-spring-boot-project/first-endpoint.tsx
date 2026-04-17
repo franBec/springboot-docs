@@ -1,9 +1,9 @@
 import CodeBlock from '@theme/CodeBlock';
-import { FileTreeInfo } from '@site/src/components/file-tree-info';
-import ZoomContainer from '@site/src/components/zoom-container';
 import Mermaid from '@theme/Mermaid';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import { FileTreeInfo } from '@site/src/components/file-tree-info';
+import ZoomContainer from '@site/src/components/zoom-container';
 
 export const FilmJson = () => (
   <CodeBlock language="json">

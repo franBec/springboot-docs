@@ -1,9 +1,9 @@
 import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Mermaid from '@theme/Mermaid';
 import { FileTreeInfo } from '@site/src/components/file-tree-info';
 import ZoomContainer from '@site/src/components/zoom-container';
-import Mermaid from '@theme/Mermaid';
 
 const FileTreeJava = () => (
   <CodeBlock language="log" title="File Tree">

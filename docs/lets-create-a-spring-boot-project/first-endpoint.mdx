@@ -1,19 +1,26 @@
 ---
 sidebar_position: 3
-title: First Endpoint
+title: First endpoint
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import {
   FilmJson,
   FileTree,
   Terminal,
   ApplicationSequenceDiagram,
 } from '@site/src/components/docs/lets-create-a-spring-boot-project/first-endpoint';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="first-endpoint" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'First Endpoint',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/0bc76fe622396c586cf98481c1e817bc24864d5a',
+    },
+  ]}
+/>
 
 The application now starts and responds with a 404 on every route. Time to give it something real to do. This document builds a single endpoint, `GET /api/films/{id}`, following hexagonal architecture from day one. The data is hardcoded for now; the goal is to establish the structure that the rest of the application will grow into.
 
@@ -21,13 +28,13 @@ The endpoint returns a film that looks like this:
 
 <FilmJson />
 
-## New Files
+## New files
 
 <FileTree />
 
 Everything new lives under the `film` feature. The domain layer defines the model and the port interface. The adapter layer handles HTTP concerns. Nothing in the domain knows that HTTP exists.
 
-## Set Up the Code Formatter
+## Set up the code formatter
 
 Before writing any code, set up [Spotless](https://github.com/diffplug/spotless) to enforce consistent formatting across the codebase. Running `./gradlew build` will automatically format your code before compiling.
 
@@ -92,11 +99,11 @@ Then update `build.gradle` (or `build.gradle.kts`) to register the Spotless plug
 
 With this in place, formatting is no longer a manual step or a code review concern. Every build produces consistently formatted code.
 
-## Domain Layer
+## Domain layer
 
 The domain layer is the heart of the application. It owns the business model and declares what operations are available, without knowing anything about databases, HTTP, or any other infrastructure detail.
 
-### Domain Model
+### Domain model
 
 `Film` is the central domain model. It represents a film as the application understands it: not as a database row, not as an HTTP response, just a plain data object.
 
@@ -125,7 +132,7 @@ The domain layer is the heart of the application. It owns the business model and
 
 </Tabs>
 
-### Primary Port
+### Primary port
 
 A port is a contract. The primary port (`FilmUseCases`) declares what the domain exposes to the outside world: given an ID, return a `Film`.
 
@@ -156,7 +163,7 @@ A port is a contract. The primary port (`FilmUseCases`) declares what the domain
 
 The interface lives in the domain layer. The REST controller will depend on this interface, not on any concrete implementation. That indirection is what makes the architecture flexible.
 
-### Primary Port Implementation
+### Primary port implementation
 
 `FilmUseCasesImpl` is the implementation of that contract. For now, it returns a hardcoded film regardless of the ID provided.
 
@@ -187,7 +194,7 @@ The interface lives in the domain layer. The REST controller will depend on this
 
 The hardcoded data is intentional. It lets you verify that the full request-response cycle works end-to-end before introducing any persistence complexity.
 
-## REST Adapter
+## REST adapter
 
 The adapter layer translates between the domain and the outside world. For an inbound REST adapter, that means receiving HTTP requests, calling the domain, and returning HTTP responses.
 
@@ -280,7 +287,7 @@ The adapter layer translates between the domain and the outside world. For an in
 
 The controller depends only on `FilmUseCases` (the interface) and `FilmRestMapper`. It has no knowledge of how `FilmUseCases` is implemented. Today it's hardcoded data; later it will be a database query. The controller won't change either way.
 
-## The Complete Flow
+## The complete flow
 
 Here's the full request lifecycle:
 

@@ -9,21 +9,30 @@ import {
   CurlRequest,
   FileTree,
 } from '@site/src/components/docs/cross-cutting-concerns/logs';
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import Admonition from '@theme/Admonition';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="logs" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Logs',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/4dfc5a8fce21376de1c26a5b7fed4f860a1e2e0b',
+    },
+  ]}
+/>
 
-## Cómo hace Spring Boot los Logs
+## Cómo hace Spring Boot los logs
+
+En la [sección de Cross-Cutting Concerns](/es/cross-cutting-concerns) se introdujo **logging** como un mecanismo fundamental para entender el comportamiento de tu aplicación. Ahora, vamos a profundizar en cómo Spring Boot maneja los logs internamente.
 
 En Spring Boot, [SLF4J](https://slf4j.org/) y [Logback](https://logback.qos.ch/) trabajan juntos para proveer una configuración de logging.
 
 - **SLF4J** = **S**imple **L**ogging **F**acade for **J**ava. Pensalo como una **API** de logging (una capa de abstracción). Tu código de aplicación habla con SLF4J, no directamente con una implementación específica de logging. Esto es brillante porque desacopla tu código de _cómo_ los logs se escriben.
 - **Logback** = La implementación de logging real (el motor que hace el trabajo pesado). Es el backend de logging por defecto que SLF4J usa en una aplicación Spring Boot.
 
-Aunque Spring Boot incluye SLF4J y Logback automáticamente y no se requiere configuración para tener logging básico funcionando, mejorar la experiencia de logging es altamente recomendado. Logging estructurado con trace IDs, enmascaramiento centralizado de datos sensibles, y logging consistente de request/response hacen que debuggear problemas de producción sea significativamente más fácil.
+Aunque Spring Boot incluye SLF4J y Logback automáticamente y no se requiere configuración para tener logging básico funcionando, mejorar la experiencia de logging es recomendable. Logging estructurado con trace IDs, enmascaramiento centralizado de datos sensibles, y logging consistente de request/response hacen que debuggear problemas de producción sea significativamente más fácil.
 
 ## Archivos modificados
 
@@ -65,7 +74,7 @@ Aunque Spring Boot incluye SLF4J y Logback automáticamente y no se requiere con
 
 </Tabs>
 
-### Evitar Publicación Local de Logs OTLP
+### Evitar publicación local de logs OTLP
 
 Cuando agregás [`spring-boot-starter-opentelemetry`](https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/) a tus dependencias, Spring Boot configura automáticamente exportadores de OpenTelemetry para publicar métricas y traces vía OTLP (OpenTelemetry Protocol).
 
@@ -104,7 +113,7 @@ De ahora en adelante, ejecutá la tarea Gradle `bootRun` con la variable de ento
 SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 ```
 
-## Log Aspect
+## Log aspect
 
 Usar un Aspect para logging es un ejemplo clásico de AOP en acción. En lugar de esparcir declaraciones de log por toda tu lógica de negocio (que ensucia el código y mezcla concerns), definís el comportamiento de logging una vez en un módulo separado. Este aspecto luego intercepta automáticamente llamadas a métodos que te importan y aplica la lógica de logging sin que el código objetivo se dé cuenta.
 
@@ -135,11 +144,11 @@ Para un análisis más profundo, chequeá la [sección de AOP en Cross-Cutting C
 
 </Tabs>
 
-## Log Filter
+## Log filter
 
 A veces, un request puede ni siquiera llegar a tus controladores Spring MVC. Al loguear a nivel de Servlet, te da visibilidad sobre cada request entrante y respuesta saliente, independientemente de si golpea los endpoints específicos de tu aplicación.
 
-Esto puede ser increíblemente útil para debuggear issues como fallos de autenticación, problemas de ruteo, o requests que son bloqueados más arriba en la cadena de filtros.
+Esto es útil para debuggear issues como fallos de autenticación, problemas de ruteo, o requests que son bloqueados más arriba en la cadena de filtros.
 
 <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
@@ -197,7 +206,7 @@ Acá es donde entra el tracing. Al asignar un ID único (un 'Trace ID') a cada r
 
 </Tabs>
 
-## Enmascarar Datos Sensibles en Logs con Logback
+## Enmascarar datos sensibles en logs con Logback
 
 Es importante enmascarar datos sensibles cuando logueamos (por ejemplo, contraseñas, SSN, etc.). Enmascará los logs de forma central configurando reglas de enmascaramiento para todas las entradas de log producidas por Logback.
 
@@ -261,7 +270,7 @@ Es importante enmascarar datos sensibles cuando logueamos (por ejemplo, contrase
   </li>
 </ol>
 
-## Ver Cómo Se Ven los Logs
+## Ver cómo se ven los logs
 
 Corré el siguiente comando `curl` (con valores placeholder) para ver todo funcionando: enmascaramiento de datos sensibles, el aspect interceptando invocaciones de métodos del controlador, cómo los logs contienen el trace, y el filtro imprimiendo el HTTP request y response.
 

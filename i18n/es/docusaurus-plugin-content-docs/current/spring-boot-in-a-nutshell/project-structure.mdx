@@ -50,7 +50,7 @@ Cuando generás un proyecto Spring Boot (más sobre cómo generar un proyecto en
 Imaginemos una aplicación simple que:
 
 1. Expone un endpoint REST API GET `/api/films/{filmId}`.
-2. Obtiene la información de películas de una base de datos [Sakila](/prior-recommended-knowledge/sakila-sample-database) [H2](https://h2database.com/html/main.html).
+2. Obtiene la información de películas de una base de datos [Sakila](/es/prior-recommended-knowledge/sakila-sample-database) [H2](https://h2database.com/html/main.html).
 3. Complementa esos datos con información de una API externa vía FeignClient.
 
 <Admonition type="info">
@@ -106,3 +106,5 @@ Siento que **Hexagonal Architecture hace que el código sea más fácil de enten
 - **Está bien doblar las reglas**: Los proyectos pequeños pueden combinar capas.
 - **Consistencia > perfección**: Ponganse de acuerdo con tu equipo en una estructura y mantenela. Refactorizá después si es necesario.
   - Si tu equipo usa términos diferentes (ej. `DataManager` en lugar de `Repository`), la consistencia importa más que el nombre en sí.
+
+Este documento cubrió la regla de la main class, la estructura por defecto que genera Spring Boot, y los patrones arquitectónicos comunes como Clean Architecture y Hexagonal Architecture. El siguiente paso es generar un proyecto real usando Spring Initializr.

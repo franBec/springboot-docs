@@ -3,7 +3,7 @@ sidebar_position: 5
 title: Query paginated results
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import {
   FileTree,
   PaginatedRequestSequenceDiagram,
@@ -13,6 +13,23 @@ import {
 } from '@site/src/components/docs/persistence-integration/query-paginated-results';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+
+<GithubCommitsInfo
+  commits={[
+    {
+      name: '/films endpoint (spring_java)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/86f37ad1eb61fced7890f89cb9ebe40a10cfe02e',
+    },
+    {
+      name: '/films endpoint (spring_kotlin)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/1429e90dd4b57f34ed455f94e7b40d948727c79e',
+    },
+    {
+      name: '/films endpoint (spring_groovy)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/345ba18c3f2062a4fcd44a1e32c171cac2b2ab83',
+    },
+  ]}
+/>
 
 In the [previous document](./jpa-repository-usage) we wired a single-film lookup through the hexagonal architecture, from controller to JPA repository and back. This document adds pagination to the `/films` endpoint so clients can request pages of results instead of loading everything at once.
 

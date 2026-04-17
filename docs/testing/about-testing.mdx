@@ -1,14 +1,11 @@
 ---
 sidebar_position: 1
-title: About Testing
+title: About testing
 ---
 
-- In Theory, testing should be the very first thing.
-- In Practice, it's more engaging to start with a practical scenario.
+In theory, testing should be the very first thing you reach for. In practice, it's more engaging to start with a practical scenario and let the need for tests emerge from real problems. Why the gap?
 
-Why does this happen?
-
-## Why Testing
+## Why testing
 
 Most people will say:
 
@@ -26,7 +23,7 @@ For me though, the real value in testing goes deeper than feedback or documentat
 
 Testing makes you practice good software design whether you want to or not.
 
-## The Testing Pyramid
+## The testing pyramid
 
 [Mike Cohn](https://en.wikipedia.org/wiki/Mike_Cohn), one of the signatories of the [Agile Manifesto](https://agilemanifesto.org/), introduced the **Test Pyramid** in his 2009 book "Succeeding with Agile" as a way to demonstrate the ideal distribution of test types in a healthy test suite.
 
@@ -47,9 +44,9 @@ The pyramid has three tiers:
 - **Integration tests (Service)** sit in the middle. These verify that components work together by checking database interactions, API calls between services, or how your service layer talks to repositories. They're slower and more complex than unit tests but catch a different class of bugs.
 - **End-to-end tests (E2E / UI)** are the tippy top. These simulate real user journeys through your entire application, often through the UI. They're slow, brittle, and expensive to maintain, so you keep them few and focused.
 
-## The Testing Spectrum
+## The testing spectrum
 
-Understanding where each test lives on this spectrum is crucial because it directly impacts your feedback loop and CI pipeline execution time.
+Understanding where each test lives on this spectrum directly impacts your feedback loop and CI pipeline execution time.
 
 ```txt
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -83,7 +80,7 @@ As a Spring Boot developer, these are the three you'll encounter most often:
 | **Failure Localization**  | Precise                    | Component-level           | System-level                    |
 | **Parallel Execution**    | Excellent                  | Good                      | Limited                         |
 
-## Avoid Testing Paralysis
+## Avoid testing paralysis
 
 There's a purist approach to testing that advocates _If a line of code can be executed, it must be tested._
 
@@ -101,4 +98,4 @@ Even with a reasonable coverage requirement, we still face delivery challenges. 
 - Side effects are common and unpredictable.
 - Documentation is sparse or outdated.
 
-In these situations, refactoring might be necessary before effective testing can begin, which further highlights how **testing encourages better code design**.
+In these situations, refactoring might be necessary before effective testing can begin, which further highlights how **testing encourages better code design**. The next sections walk through the concrete testing strategies you'll use in a Spring Boot project.

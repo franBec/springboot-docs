@@ -1,8 +1,8 @@
 {
-  "label": "OpenAPI Spec First Development",
+  "label": "OpenAPI spec first development",
   "position": 6,
   "link": {
     "type": "generated-index",
-    "description": "Usually when developing, we make our endpoint first, then we write documentation in an OpenAPI Specification. The problem appears later, when somebody else modifies the endpoint and now the documentation doesn’t reflect it. This can go unnoticed. Worse than no documentation, is wrong documentation. What if we wrote documentation first, and the code is generated from it? Let me introduce you to OpenAPI Spec First Development."
+    "description": "Write OpenAPI specifications first, then generate Spring Boot controllers and models automatically. This section covers the envelope pattern for consistent API responses and using openapi-generator to keep code and documentation in sync."
   }
 }

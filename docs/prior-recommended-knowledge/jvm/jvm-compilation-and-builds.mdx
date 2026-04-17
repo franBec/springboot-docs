@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: JVM Compilation and Builds
+title: JVM compilation and builds
 ---
 
 import {
@@ -10,7 +10,7 @@ import {
 
 If you're going to build anything serious in the Java ecosystem, it helps to understand what happens to your code after you hit save. You know the languages (Java, Kotlin, Groovy) and you know they all compile to bytecode that runs on the JVM. But what happens in between? That's where build tools and the compilation process come in.
 
-## Build Tools
+## Build tools
 
 Build tools are project managers. They handle the heavy lifting:
 
@@ -28,7 +28,7 @@ You'll typically encounter [Maven](https://maven.apache.org/) or [Gradle](https:
 
 Both download from [Maven Central](https://mvnrepository.com/), both compile the same way, both produce the same JARs.
 
-### The Build Folder
+### The build folder
 
 Maven calls it `target/`, Gradle calls it `build/`. Doesn't matter. It's your build output directory, and it contains:
 
@@ -47,7 +47,7 @@ The build folder exists, but for day-to-day development, you rarely need to go t
 3. **Investigating mysterious CI failures**: Verify the build folder contains exactly what you expect
 4. **Running manual tests**: You can directly run `java -jar build/my-app.jar` without build tools
 
-### JAR
+### JAR files
 
 Your production JAR doesn't have fingerprints for Maven or Gradle. They're identical from the JVM's perspective.
 
@@ -74,7 +74,7 @@ Even though Java, Kotlin, and Groovy all compile to JVM bytecode, the _quality_ 
 | Bytecode Size  | Compact              | Compact                            | Bulky (extra frames, checks, proxies)           |
 | Visibility     | Clear in IDE         | Clear in IDE                       | Often invisible (generated code)                |
 
-### What Are AST Transformations?
+### What are AST transformations?
 
 [AST (Abstract Syntax Tree) transformations](https://github.com/ellegonzalez/52-technologies-in-2025/blob/master/32-groovy-ast-transformations/README.md) are compile-time code generation mechanisms that modify your source code before it becomes bytecode. They're powerful features that generate boilerplate code for you.
 
@@ -85,3 +85,9 @@ Even though Java, Kotlin, and Groovy all compile to JVM bytecode, the _quality_ 
 - `@Slf4j` → generates a logger instance for logging
 
 These transformations generate actual Java code that gets compiled alongside your source files. You can't see it in your editor, but it exists in the build folder.
+
+## Build workflow
+
+<RuntimeFlowSequence />
+
+Understanding the build process gives you the foundation to diagnose issues when builds fail, optimize your development workflow, and reason about what's happening behind the scenes when you press the run button.

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-title: Entendiendo Un Diagrama de Secuencia Simple de Spring Boot
+title: Entendiendo un diagrama de secuencia simple de Spring Boot
 ---
 
 import { RequestFlowSequenceDiagramES } from '@site/src/components/docs/spring-boot-in-a-nutshell/understanding-a-simple-spring-boot-app-sequence-diagram';
@@ -20,8 +20,10 @@ Este diagrama muestra la vida de un único request en una aplicación Spring Boo
   - El `FilmController` vive dentro de la caja "Spring MVC" porque es parte de la capa web. Su trabajo es manejar requests HTTP.
   - Escucha requests entrantes en endpoints específicos (como `/api/films/{filmId}`). Valida el request, lo desempaqueta, y luego delega el _trabajo real_ a la capa de servicio. Debería mantenerse liviano; su rol principal es manejar tráfico web, no contener lógica de negocio.
 
-- **Spring Container (`FilmService` & `FilmRepository`):** El [Spring Container](/spring-boot-in-a-nutshell/spring-ioc-container) es el corazón de tu app, manejando el ciclo de vida de tus beans.
+- **Spring Container (`FilmService` & `FilmRepository`):** El [Contenedor de Spring](/es/spring-boot-in-a-nutshell/spring-ioc-container) es el corazón de tu app, manejando el ciclo de vida de tus beans.
   - **`FilmService`:** Este es tu caballo de batalla. Contiene la lógica de negocio central. Toma el request del controller, orquesta los pasos necesarios para cumplirlo (como obtener datos), y puede realizar alguna lógica (como chequear permisos o transformar datos).
   - **`FilmRepository`:** El único trabajo de este componente es hablar con la base de datos. Obtiene datos crudos y los devuelve. Separando esto, podrías cambiar tu base de datos de Postgres a MongoDB y solo tendrías que cambiar el repository, no tu lógica de negocio.
 
 - **Database:** La bóveda donde está toda tu data. Solo almacena y recupera datos cuando el `FilmRepository` se lo pide.
+
+Esta arquitectura en capas—Controller, Service, Repository—es la base de la mayoría de las aplicaciones Spring Boot. Cada capa tiene una única responsabilidad y delega el trabajo a la siguiente.

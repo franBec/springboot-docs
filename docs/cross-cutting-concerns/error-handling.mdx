@@ -1,9 +1,11 @@
 ---
 sidebar_position: 4
-title: Error Handling
+title: Error handling
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 
 import {
   FileTree,
@@ -12,12 +14,17 @@ import {
   NotFoundErrorTerminal,
   NotFoundErrorSequenceDiagram,
 } from '@site/src/components/docs/cross-cutting-concerns/error-handling';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-<GithubTagInfo tag="normalize-errors" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Controller Advice',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/2277a0fe0b15ca696f2fc7ee069cfdefe872fad4',
+    },
+  ]}
+/>
 
-Out there you are gonna come across plenty of scenarios like the following:
+Now that we've got logging in place, let's tackle another cross-cutting concern. Out there you are gonna come across plenty of scenarios like the following:
 
 - `service.com/users/-1` returns:
 
@@ -29,7 +36,7 @@ Out there you are gonna come across plenty of scenarios like the following:
 
 Consistency just flew out of the window there, and it gets worse with errors inside `200 OK`. We don’t want to be that kind of dev: we are going to do proper error handling.
 
-## Error Handling
+## Error handling
 
 [`@RestControllerAdvice`](https://www.bezkoder.com/spring-boot-restcontrolleradvice/) acts like a central "error coordinator" for your application.
 
@@ -81,7 +88,7 @@ Here's what happens under the hood:
 
 <NotFoundErrorSequenceDiagram />
 
-## Common Handlers You May Need
+## Common handlers you may need
 
 If an exception occurs that isn't handled by any specific `@ExceptionHandler` in your `@RestControllerAdvice`, it will fall through to the default `@ExceptionHandler(Exception.class)` which returns a generic 500 Internal Server Error response.
 
@@ -94,3 +101,5 @@ Here are the most common exceptions you'll want to handle explicitly:
 | `NoResourceFoundException`            | Request accesses non-existent Spring MVC resource                           | Accessing an undefined endpoint                    |                                          |
 | `NoSuchElementException`              | `Optional.get()` called on empty `Optional`                                 | Looking for non-existent user by ID                |                                          |
 | `PropertyReferenceException`          | Invalid property used in Spring Data repository query                       | Sorting by non-existent field                      | Requires Spring Data (to be added later) |
+
+As your app grows, keep this table handy — you'll likely come back to it each time you add a new endpoint or domain model.

@@ -1,8 +1,8 @@
 {
-  "label": "Persistence Integration",
+  "label": "Persistence integration",
   "position": 9,
   "link": {
     "type": "generated-index",
-    "description": "Learn how to integrate databases and implement persistence patterns in Spring Boot."
+    "description": "Connect Spring Boot to databases, reverse engineer entities from existing schemas, and implement efficient data access with JPA repositories and pagination."
   }
 }

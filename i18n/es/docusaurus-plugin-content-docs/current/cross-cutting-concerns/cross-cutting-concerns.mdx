@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: Cross-Cutting Concerns
+title: Cross-cutting concerns
 ---
 
 import { RequestLifecycleDiagramES } from '@site/src/components/docs/spring-boot-in-a-nutshell/cross-cutting-concerns';
@@ -21,7 +21,7 @@ Spring Boot, siendo el framework opinionado que es, te da diferentes herramienta
 
 Las tres principales de las que vas a escuchar son Filters, Interceptors y Aspect-Oriented Programming (AOP).
 
-## El Toolkit: AOP vs. Filters vs. Interceptors
+## El toolkit: AOP vs. Filters vs. Interceptors
 
 Antes de meternos en detalles, acá va un overview rápido de cómo se relacionan con un request HTTP entrante.
 
@@ -81,7 +81,7 @@ Ahora vamos a ver qué hace cada una de estas y cuándo deberías (y no debería
 
 Antes de siquiera pensar en poner una de estas, preguntate: "¿_Realmente_ necesito esto?"
 
-Por su naturaleza, estas herramientas esconden lógica, haciendo más difícil seguir el flujo de ejecución. Eso es genial para mantener tu lógica de negocio central limpia, pero también es una forma fantástica de introducir bugs que son una pesadilla de rastrear.
+Por su naturaleza, estas herramientas esconden lógica, haciendo más difícil seguir el flujo de ejecución. Eso es genial para mantener tu lógica de negocio central limpia, pero también es una forma fantástica de introducir bugs que son difíciles de rastrear.
 
 A menos que tengas una necesidad clara e innegable, no las uses.
 

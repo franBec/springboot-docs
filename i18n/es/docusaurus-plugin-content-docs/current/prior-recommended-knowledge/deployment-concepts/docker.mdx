@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 title: Docker
 ---
 
@@ -28,6 +28,13 @@ Pensá en Docker como crear una caja completa y autocontenida que tiene todo lo 
 - Configuración.
 
 Esta "caja" (llamada contenedor) puede después moverse y correr consistentemente en cualquier sistema que soporte Docker, desde la laptop de un developer hasta un entorno de test hasta un server de producción.
+
+## Qué vas a aprender
+
+- Por qué Docker es esencial para deployments modernos de Spring Boot.
+- La estructura de un Dockerfile y cómo funcionan los multi-stage builds.
+- Cuándo buildear contenedores localmente versus usar pipelines de CI/CD.
+- Por qué el conocimiento de Docker importa incluso si no buildeás vos mismo las imágenes.
 
 ## ¿Por qué dockerizar aplicaciones Spring Boot?
 
@@ -112,7 +119,7 @@ Estos obstáculos de setup pueden distraerte de tu trabajo principal: escribir c
 
 ### Aprovechando pipelines existentes
 
-La mayoría de los proyectos establecidos ya tienen [pipelines CI/CD](/prior-recommended-knowledge/deployment-concepts/ci-cd.mdx) configurados:
+La mayoría de los proyectos establecidos ya tienen [pipelines CI/CD](/es/prior-recommended-knowledge/deployment-concepts/ci-cd) configurados:
 
 - Cuando hacés push de código al repositorio, procesos automatizados buildea, testean y deployan tus cambios.
 - Los entornos de development y test se actualizan automáticamente con tus cambios.
@@ -142,3 +149,7 @@ Entender Docker ayuda a cerrar la brecha entre "funciona en mi máquina" y "func
 **Te recomiendo mucho** el video de KodeKloud "Learn Docker in 2 Hours—A Full Tutorial (2025)".
 
 <Youtube id="zJ6WbK9zFpI" />
+
+## Próximos pasos
+
+Ahora entendés los conceptos básicos de Docker y cómo se aplican a las aplicaciones Spring Boot. Con esta base, estás listo para containerizar tus propios proyectos Spring Boot o colaborar efectivamente con equipos que usan Docker en sus pipelines de deployment.

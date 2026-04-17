@@ -1,8 +1,8 @@
 {
-  "label": "Cross-Cutting Concerns",
+  "label": "Cross-cutting concerns",
   "position": 5,
   "link": {
     "type": "generated-index",
-    "description": "Master logging, error handling, and request mapping patterns that apply across your entire application"
+    "description": "Logging, error handling, request mapping, and other patterns like filters, interceptors, and AOP that apply across your application"
   }
 }

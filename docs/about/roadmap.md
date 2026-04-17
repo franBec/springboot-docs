@@ -3,7 +3,7 @@ sidebar_position: 3
 title: Roadmap
 ---
 
-While direct contributions to this demo repository are not actively sought, **feedback on the guide itself is always welcome**. If you find issues, have suggestions for improvement, or want to report inaccuracies, please feel free to open an issue or contact me on [LinkedIn](https://linkedin.com/in/franco-becvort/).
+This page outlines planned content and future improvements. While direct contributions to this demo repository are not actively sought, **feedback on the guide itself is always welcome**. If you find issues, have suggestions for improvement, or want to report inaccuracies, please feel free to open an issue or contact me on [LinkedIn](https://linkedin.com/in/franco-becvort/).
 
 ## Things I have in mind
 
@@ -12,10 +12,12 @@ While direct contributions to this demo repository are not actively sought, **fe
 - **Ukrainian and Russian**: My partner is native in both languages
 - **Portuguese**: I need to ask a Portuguese friend to help with this
 
-### New Content
+### New content
 
 - **Persistence Integration**:
   - **CRUD**: Create a new document doing whole CRUD of films.
+
+- **Spring History**: Brief "Spring history lesson" — either inside "What is Spring?" or as its own document.
 
 - "About" section:
   - Create a FAQ document
@@ -26,10 +28,10 @@ While direct contributions to this demo repository are not actively sought, **fe
 
 - **Spring Security Section**: Create a dedicated section covering authentication, authorization, and security best practices in Spring Boot applications.
 
-### Future Improvements
+- **Template Engines Section**: Huge maybe, just for fun, create some basic views (login, table with pagination, forms) using [Thymeleaf](https://www.thymeleaf.org/) (templating) + [HTMX](https://htmx.org/) (server interactions) + [Alpine.js](https://alpinejs.dev/) (UI state) + [Tailwind CSS](https://tailwindcss.com/) (styling). This would be a "modern vintage" approach, server-side rendering with a touch of modern interactivity.
+
+### Future improvements
 
 - **AI Search Feature**: Currently the search bar has an [AI feature](https://github.com/easyops-cn/docusaurus-search-local?tab=readme-ov-file#-ask-ai-support) that is disabled. Need to check how expensive and exploitable activating this could be. Probably an overkill but would be fancy.
 
-### Huge Maybe
-
-- **Template Engines Section**: Just for fun, create some basic views (login, table with pagination, forms) using [Thymeleaf](https://www.thymeleaf.org/) (templating) + [HTMX](https://htmx.org/) (server interactions) + [Alpine.js](https://alpinejs.dev/) (UI state) + [Tailwind CSS](https://tailwindcss.com/) (styling). This would be a "modern vintage" approach, server-side rendering with a touch of modern interactivity.
+Stay tuned for updates as these items get picked up.

@@ -3,25 +3,32 @@ sidebar_position: 1
 title: OpenAPI Specification
 ---
 
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import {
   FilmStructureJson,
   FileTree,
   EnvelopePatternJson,
   ResponseMetadataSchemaYaml,
-} from '@site/src/components/docs/contract-driven-development/openapi-spec.tsx';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+} from '@site/src/components/docs/openapi-spec-first-development/openapi-spec.tsx';
 
-<GithubTagInfo tag="openapi-spec" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'OpenAPI Specifications',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/2cce680239480e99bb910b5864ba3699f2ef4b20',
+    },
+  ]}
+/>
 
-Given a Film with the following structure:
+Now we need an OpenAPI specification that describes the API contract before we write any implementation code. Given a Film with the following structure:
 
 <FilmStructureJson />
 
 We want our Spring Boot application to expose [CRUD endpoints](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 
-## Changed Files
+## Changed files
 
 <FileTree />
 
@@ -57,13 +64,13 @@ We want our Spring Boot application to expose [CRUD endpoints](https://en.wikipe
 For better visualization you can copy-paste the OpenAPI Specification YAML file from the codebase into [Swagger Editor](https://editor.swagger.io/) or use [OpenAPI (Swagger) Editor
 in IntelliJ IDEA](https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor).
 
-## The Envelope Pattern
+## The envelope pattern
 
 You might be looking at the response examples and thinking, "What's with all that extra fluff? Why wrap the actual film data inside a `data` object?"
 
 <EnvelopePatternJson />
 
-That is a deliberate choice called the **Envelope Pattern**. And once you start using it, you'll never go back.
+That is a deliberate choice called the **Envelope Pattern**. And once you start using it, you won't want to go back.
 
 Think of it like physical mail. Every piece of mail you get, whether it's a birthday card or a bill, comes in an envelope. The envelope has standard information on it: a return address, a destination address, a stamp. The actual message is _inside_.
 
@@ -87,3 +94,5 @@ Consistency, that's the whole game.
 ## Pagination
 
 TODO: explain pagination
+
+With the OpenAPI specification and the envelope pattern in place, the API contract is fully defined. The next step is to generate Spring Boot code from this spec so the implementation matches the contract exactly.

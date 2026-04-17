@@ -12,10 +12,25 @@ import {
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Admonition from '@theme/Admonition';
-import GithubTagInfo from '@site/src/components/github-tag-info';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import Image from '@site/src/components/image';
 
-<GithubTagInfo tag="testing" />
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'Testing Java',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/3b4c04b36a87398fca60070b739fa0cbe726f741',
+    },
+    {
+      name: 'Testing Kotlin',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/a07c08c8b118befaefc3bc55190571b60adef72e',
+    },
+    {
+      name: 'Testing Groovy',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/b4e267f0954cdce21179845cb8385f74852de9a7',
+    },
+  ]}
+/>
 
 ## Estrategia de testing
 
@@ -23,7 +38,7 @@ import Image from '@site/src/components/image';
 
 - Para la aplicación **Java** Spring Boot vamos a elegir **JUnit + Mockito**: es el estándar de facto, el que siempre preguntan en entrevistas, y el que se espera que conozcas.
 - Para la aplicación **Kotlin** Spring Boot vamos a elegir **JUnit + MockK**: herramientas nativas de kotlin + mocking pensado para kotlin.
-- Para el proyecto **Groovy** Spring Boot vamos a elegir **Spock**, ya que es la elección natural con menos fricción.
+- Para el proyecto **Groovy** Spring Boot vamos a elegir **Spock**, ya que es la elección natural con menos esfuerzo.
 
 ### JaCoCo
 
@@ -115,7 +130,7 @@ AISLADO                                               CONECTADO
 
 </Tabs>
 
-## Unit Tests
+## Tests unitarios
 
 Los tests unitarios no involucran a Spring en absoluto. Estos son más rápidos de correr y perfectos para testear lógica de negocio en completo aislamiento.
 
@@ -349,3 +364,5 @@ Acá está lo que significa cada columna en un reporte de cobertura de JaCoCo:
 | **Total Methods**        | Número total de métodos                                                 | Incluye constructores y lambdas                    |
 | **Missed Classes**       | Clases nunca cargadas durante tests                                     | Indicador de completitud de tests de alto nivel    |
 | **Total Classes**        | Número total de clases                                                  | Incluye clases internas y anónimas                 |
+
+Ahora tenemos tests unitarios para lógica de dominio y utilidades enum, tests de segmento para la capa web, y seguimiento de cobertura con JaCoCo en cada build.
