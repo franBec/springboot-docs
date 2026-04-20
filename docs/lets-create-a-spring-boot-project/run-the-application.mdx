@@ -3,17 +3,18 @@ sidebar_position: 2
 title: Run the application
 ---
 
-import Admonition from '@theme/Admonition';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
 import Image from '@site/src/components/image';
 import { WhitelabelErrorPage } from '@site/src/components/docs/lets-create-a-spring-boot-project/run-the-application';
 
-<Admonition type="info">
-  For this document, we assume that you created a Spring Boot project using
-  [Spring Initializr](https://start.spring.io/). If you didn't, you can clone
-  the monorepo I've prepared at
-  [https://github.com/franBec/springboot-demo-projects](https://github.com/franBec/springboot-demo-projects)
-  branch `feature/initial-commit`.
-</Admonition>
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'README.md',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/8270d8f2b91e954ee0a13dfa55e7f2311ae11f01',
+    },
+  ]}
+/>
 
 1. **Open IntelliJ IDEA** → File → Open → Select the unzipped project folder.
 2. **First-time JDK setup** (if prompted):
