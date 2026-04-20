@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 title: Roadmap
 ---
 
@@ -18,13 +18,6 @@ This page outlines planned content and future improvements. While direct contrib
   - **CRUD**: Create a new document doing whole CRUD of films.
 
 - **Spring History**: Brief "Spring history lesson" — either inside "What is Spring?" or as its own document.
-
-- "About" section:
-  - Create a FAQ document
-    - what's your spring boot background?
-    - will I come across codebases similar to the one explained by these docs?
-    - do I really need to know this much spring boot to get things done?
-    - are these docs and/or code examples AI generated?
 
 - **Spring Security Section**: Create a dedicated section covering authentication, authorization, and security best practices in Spring Boot applications.
 

@@ -96,7 +96,7 @@
     "description": "The label for category About in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.About.link.generated-index.description": {
-    "message": "Acerca del autor de esta página (Pollito) y agradecimientos especiales.",
+    "message": "Acerca del autor, preguntas frecuentes, agradecimientos, hoja de ruta y licencia.",
     "description": "The generated-index page description for category About in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Licenses": {

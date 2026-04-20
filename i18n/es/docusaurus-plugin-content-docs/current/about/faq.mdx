@@ -1,0 +1,54 @@
+---
+sidebar_position: 2
+title: Preguntas frecuentes
+---
+
+Acá van algunas preguntas que nadie hizo todavía.
+
+<details>
+<summary>¿Cuál es tu experiencia con Spring Boot?</summary>
+
+Vengo trabajando con Java y Spring Boot de forma profesional desde fines de 2022. Mis dos roles más relevantes:
+
+- **Applica Solutions** (Nov 2022 – Abr 2023): Estandaricé las APIs REST del backend para el primer sistema de pagos con QR de Argentina.
+- **Devsu** (May 2023 – Oct 2025): Integré proveedores de identidad con páginas y aplicaciones orientadas al cliente del banco privado más grande de Ecuador, trabajando con Google Cloud y Microsoft Azure.
+
+Antes de todo eso, hice un curso de fundamentos de Spring Framework en UTN Buenos Aires, que fue mi punto de partida. Para ver la línea de tiempo completa, mirá [Acerca del autor](/es/docs/about/about-the-author).
+
+</details>
+
+<details>
+<summary>¿Me voy a encontrar con codebases parecidos a los que explican estos documentos?</summary>
+
+No realmente. Las codebases de la vida real son un desastre. Tienen años de decisiones acumuladas, workarounds, refactors a medio hacer y comentarios que nadie recuerda haber escrito.
+
+La codebase que acompaña estos documentos está pensada para ser limpia y directa. Es una decisión educativa — la idea es mostrar cómo las cosas _deberían_ funcionar sin el ruido, para que puedas reconocer los patrones cuando te los encuentres en la vida real.
+
+</details>
+
+<details>
+<summary>¿Realmente necesito saber tanto Spring Boot para hacer algo?</summary>
+
+Más o menos, pero tampoco tanto.
+
+Tomó alrededor de 20 documentos llegar a un endpoint GET funcionando. Suena a mucho, y lo es. Pero la idea es tomarse el tiempo de asentar bien las bases, para que después agregar features sea trivial. Si te salteás el trabajo previo, tarde o temprano vas a chocar contra una pared donde cada nueva feature requiere pelear con el framework en lugar de usarlo.
+
+Pensalo como una inversión: pagás ahora, ahorrás después.
+
+</details>
+
+<details>
+<summary>¿Estos documentos y/o ejemplos de código son generados por IA?</summary>
+
+Más o menos, sí. El proceso es más o menos así:
+
+1. Armo una nueva feature en la [monorepo de gradle](https://github.com/franBec/springboot-demo-projects) (también uso IA acá — al momento de escribir esto no tengo un workflow definido, es básicamente planificar, hacer prompts y revisar manualmente). Después pusheo.
+2. Corro el comando [`doc-from-commit`](https://github.com/franBec/springboot-docs/blob/main/.opencode/commands/doc-from-commit.md) de opencode que creé, que genera una nueva página de documentación de Docusaurus a partir de un tema y link(s) de commits de GitHub.
+3. Reviso manualmente lo que produjo la IA. Suele estar medio verde, pero da una primera versión sólida.
+4. Corro el comando [`review-doc`](https://github.com/franBec/springboot-docs/blob/main/.opencode/commands/review-doc.md) de opencode que creé, que revisa una página de documentación y su companion TSX por problemas de estilo y cumplimiento (bueno para doble check).
+5. Hago la versión en español usando un comando [`translate-doc`](https://github.com/franBec/springboot-docs/blob/main/.opencode/commands/translate-doc.md) de opencode custom. Después reviso manualmente buscando frases raras — soy hablante nativo de español, así que con una lectura rápida alcanza para detectar las raras.
+6. Pusheo. Este proyecto tiene un GitHub Action que hace un build check rápido y después notifica a una instancia de Coolify para el despliegue.
+
+Así que sí, la IA está involucrada en varios pasos, pero todo pasa por revisión humana antes de salir.
+
+</details>

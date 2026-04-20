@@ -1,0 +1,54 @@
+---
+sidebar_position: 2
+title: FAQ
+---
+
+Here are some questions no one asked yet.
+
+<details>
+<summary>What's your Spring Boot background?</summary>
+
+I've been working with Java and Spring Boot professionally since late 2022. My two most relevant roles:
+
+- **Applica Solutions** (Nov 2022 – Apr 2023): Standardized the backend REST APIs for Argentina's first QR-based payment system.
+- **Devsu** (May 2023 – Oct 2025): Integrated identity providers with customer-facing pages and applications for Ecuador's largest private bank, working with Google Cloud and Microsoft Azure.
+
+Before any of that, I took a Spring Framework fundamentals course at UTN Buenos Aires, which got me started. For the full timeline, see [About the author](./about-the-author).
+
+</details>
+
+<details>
+<summary>Will I come across codebases similar to the one explained by these docs?</summary>
+
+Not really. Real-life codebases are messy. They have years of accumulated decisions, workarounds, half-finished refactors, and comments nobody remembers writing.
+
+The codebase alongside these documents is intentionally kept clean and straightforward. That's an educational choice — the goal is to show how things _should_ work without the noise, so you can recognize the patterns when you encounter them in the wild.
+
+</details>
+
+<details>
+<summary>Do I really need to know this much Spring Boot to get things done?</summary>
+
+Kinda, but not really.
+
+It took around 20 documents to get just a working GET endpoint. That sounds like a lot, and it is. But the point is taking the time to get the foundations right, so that adding features later becomes trivial. If you skip the groundwork, you'll eventually hit a wall where every new feature requires fighting the framework instead of using it.
+
+Think of it as paying upfront: invest now, save later.
+
+</details>
+
+<details>
+<summary>Are these docs and/or code examples AI generated?</summary>
+
+Kinda yeah. The process roughly goes like this:
+
+1. I build a new feature in the [gradle monorepo](https://github.com/franBec/springboot-demo-projects) (I use AI here too — at the time of writing I don't have a predefined workflow, it's mostly planning, prompting, and manually reviewing). Then I push it.
+2. I run the [`doc-from-commit`](https://github.com/franBec/springboot-docs/blob/main/.opencode/commands/doc-from-commit.md) opencode command I created, which generates a new Docusaurus doc page from a topic and GitHub commit link(s).
+3. I manually review what the AI produced. It's usually rough around the edges, but it gives a solid first version.
+4. I run the [`review-doc`](https://github.com/franBec/springboot-docs/blob/main/.opencode/commands/review-doc.md) opencode command I created, which reviews a doc page and its TSX companion for style and compliance issues (good for double-checking).
+5. I do the Spanish version using a custom [`translate-doc`](https://github.com/franBec/springboot-docs/blob/main/.opencode/commands/translate-doc.md) opencode command. Then I manually check for weird translated phrases — I'm a native Spanish speaker, so a quick read is enough to catch the odd ones.
+6. I push. This project has a GitHub Action that does a quick build check, then notifies a Coolify instance for deployment.
+
+So yeah, AI is involved at multiple steps, but everything gets human review before it ships.
+
+</details>
