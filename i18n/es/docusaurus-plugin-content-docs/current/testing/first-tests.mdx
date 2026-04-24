@@ -135,6 +135,15 @@ AISLADO                                               CONECTADO
 
 Los tests unitarios no involucran a Spring en absoluto. Estos son más rápidos de correr y perfectos para testear lógica de negocio en completo aislamiento.
 
+<Admonition type="warning" title="Manténlo real">
+  Los tests mostrados aquí son intencionalmente simples. Demuestran el cableado
+  y aserciones básicas, no una validación exhaustiva. Qué tan profundo vas con
+  el testing es, en última instancia, una filosofía de equipo (y de cada
+  desarrollador). Es muy fácil escribir tests triviales que pinten cada línea de
+  verde en un reporte de JaCoCo sin realmente probar nada significativo. Trata
+  la cobertura como una guía, no como un objetivo.
+</Admonition>
+
 ### Test de la implementación de los casos de uso
 
 `FilmUseCasesImpl.getFilm()` actualmente solo devuelve una película hardcodeada. No tiene mucho sentido hacer testing profundo acá todavía, pero al menos verifiquemos que el servicio se instancie y devuelva algo:

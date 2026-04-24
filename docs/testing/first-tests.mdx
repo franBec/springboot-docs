@@ -137,6 +137,14 @@ ISOLATED                                              CONNECTED
 
 Unit tests don't involve Spring at all. These are faster to run and perfect for testing business logic in complete isolation.
 
+<Admonition type="warning" title="Keep It Real">
+  The tests shown here are intentionally simple. They demonstrate wiring and
+  basic assertions, not exhaustive validation. How deep you go with testing is
+  ultimately a team (and developer) philosophy. It is very easy to write trivial
+  tests that paint every line green in a JaCoCo report without actually testing
+  anything meaningful. Treat coverage as a guide, not a goal.
+</Admonition>
+
 ### Use cases implementation test
 
 `FilmUseCasesImpl.getFilm()` is currently just returning a hardcoded film. There's not much point in doing deep testing here yet, but let's at least verify the service instantiates and returns something.
