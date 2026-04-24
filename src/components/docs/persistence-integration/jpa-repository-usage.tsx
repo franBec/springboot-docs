@@ -222,57 +222,57 @@ export const RequestFlowSequenceDiagram = () => (
   <ZoomContainer>
     <Mermaid
       value={`sequenceDiagram
-        participant Client
-        box Adapter In
-            participant FilmRestController
-            participant FilmRestMapper
-        end
-        box Domain
-            participant FilmUseCasesImpl
-        end
-        box Adapter Out
-            participant FilmRepositoryImpl
-            participant FilmJpaRepository
-            participant FilmJpaMapper
-        end
-        participant H2 Database
+  participant Client
+  box Adapter In
+    participant FilmRestController
+    participant FilmRestMapper
+  end
+  box Domain
+    participant FilmUseCasesImpl
+  end
+  box Adapter Out
+    participant FilmRepositoryImpl
+    participant FilmJpaRepository
+    participant FilmJpaMapper
+  end
+  participant H2 Database
 
-        Client->>FilmRestController: GET /api/films/1
-        activate FilmRestController
+  Client->>FilmRestController: GET /api/films/1
+  activate FilmRestController
 
-        FilmRestController->>FilmUseCasesImpl: getFilm(1)
-        activate FilmUseCasesImpl
+  FilmRestController->>FilmUseCasesImpl: useCases.getFilm(1)
+  activate FilmUseCasesImpl
 
-        FilmUseCasesImpl->>FilmRepositoryImpl: getFilm(1)
-        activate FilmRepositoryImpl
+  FilmUseCasesImpl->>FilmRepositoryImpl: repository.getFilm(1)
+  activate FilmRepositoryImpl
 
-        FilmRepositoryImpl->>FilmJpaRepository: findById(1)
-        activate FilmJpaRepository
+  FilmRepositoryImpl->>FilmJpaRepository: repository.findById(1)
+  activate FilmJpaRepository
 
-        FilmJpaRepository->>H2 Database: SELECT * FROM FILM WHERE FILM_ID = 1
-        H2 Database-->>FilmJpaRepository: Row data
-        
-        FilmJpaRepository-->>FilmRepositoryImpl: FilmEntity
-        deactivate FilmJpaRepository
+  FilmJpaRepository->>H2 Database: SELECT * FROM FILM WHERE FILM_ID = 1
+  H2 Database-->>FilmJpaRepository: Row data
 
-        FilmRepositoryImpl->>FilmJpaMapper: convert(entity)
-        activate FilmJpaMapper
-        FilmJpaMapper-->>FilmRepositoryImpl: Domain Film
-        deactivate FilmJpaMapper
+  FilmJpaRepository-->>FilmRepositoryImpl: FilmEntity
+  deactivate FilmJpaRepository
 
-        FilmRepositoryImpl-->>FilmUseCasesImpl: Domain Film
-        deactivate FilmRepositoryImpl
+  FilmRepositoryImpl->>FilmJpaMapper: mapper.map(entity)
+  activate FilmJpaMapper
+  FilmJpaMapper-->>FilmRepositoryImpl: Domain Film
+  deactivate FilmJpaMapper
 
-        FilmUseCasesImpl-->>FilmRestController: Domain Film
-        deactivate FilmUseCasesImpl
+  FilmRepositoryImpl-->>FilmUseCasesImpl: Domain Film
+  deactivate FilmRepositoryImpl
 
-        FilmRestController->>FilmRestMapper: convert(domain)
-        activate FilmRestMapper
-        FilmRestMapper-->>FilmRestController: REST DTO Film
-        deactivate FilmRestMapper
+  FilmUseCasesImpl-->>FilmRestController: Domain Film
+  deactivate FilmUseCasesImpl
 
-        FilmRestController-->>Client: HTTP 200 OK + JSON body
-        deactivate FilmRestController`}
+  FilmRestController->>FilmRestMapper: mapper.map(domain)
+  activate FilmRestMapper
+  FilmRestMapper-->>FilmRestController: REST DTO Film
+  deactivate FilmRestMapper
+
+  FilmRestController-->>Client: HTTP 200 OK + JSON body
+  deactivate FilmRestController`}
     />
   </ZoomContainer>
 );
