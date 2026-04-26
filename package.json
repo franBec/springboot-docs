@@ -25,8 +25,8 @@
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
     "prism-react-renderer": "^2.3.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "react-zoom-pan-pinch": "^3.7.0",
     "unist-util-visit": "^5.1.0"
   },
@@ -35,7 +35,7 @@
     "@docusaurus/tsconfig": "3.10.0",
     "@docusaurus/types": "3.10.0",
     "@types/mdast": "^4.0.4",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.3",
     "typescript": "~5.9.3",
     "unified": "^11.0.5"
   },
