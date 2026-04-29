@@ -148,16 +148,66 @@ export const FileTree = () => (
 export const TerminalCurl = () => (
   <CodeBlock language="log" title="Terminal">
     {`# Create a new film
+
 curl -s -X POST https://sakila-java.pollito.tech/api/films \\
   -H "Content-Type: application/json" \\
   -d '{"title":"NEW FILM","language":"English","rentalDuration":3,"rentalRate":4.99,"replacementCost":20.99}' | jq
 
+{
+  "instance": "/api/films",
+  "status": 201,
+  "timestamp": "2026-04-29T11:05:41.803702787Z",
+  "trace": "65c2da37361f6d669884f7caf6ed2a93",
+  "data": {
+    "title": "NEW FILM",
+    "language": "English",
+    "rentalDuration": 3,
+    "rentalRate": 4.99,
+    "replacementCost": 20.99,
+    "id": 1001,
+    "lastUpdate": "2026-04-29T11:05:41.738848092Z",
+    "description": null,
+    "length": null,
+    "originalLanguage": null,
+    "rating": null,
+    "releaseYear": null,
+    "specialFeatures": null
+  }
+}
+
 # Update an existing film
-curl -s -X PUT https://sakila-java.pollito.tech/api/films/1 \\
+
+curl -s -X PUT https://sakila-java.pollito.tech/api/films/1001 \\
   -H "Content-Type: application/json" \\
   -d '{"title":"UPDATED FILM","language":"English","rentalDuration":3,"rentalRate":4.99,"replacementCost":20.99}' | jq
+  
+{
+  "instance": "/api/films/1001",
+  "status": 200,
+  "timestamp": "2026-04-29T11:39:44.242877421Z",
+  "trace": "1ff671817013fd4896e987c81994b685",
+  "data": {
+    "title": "UPDATED FILM",
+    "language": "English",
+    "rentalDuration": 3,
+    "rentalRate": 4.99,
+    "replacementCost": 20.99,
+    "id": 1001,
+    "lastUpdate": "2026-04-29T11:39:44.236617507Z",
+    "description": null,
+    "length": null,
+    "originalLanguage": null,
+    "rating": null,
+    "releaseYear": null,
+    "specialFeatures": null
+  }
+}
 
 # Delete a film
-curl -s -X DELETE https://sakila-java.pollito.tech/api/films/1 -w "\\n%{http_code}\\n"`}
+
+curl -s -X DELETE https://sakila-java.pollito.tech/api/films/1001 -w "\\n%{http_code}\\n"
+
+204
+`}
   </CodeBlock>
 );

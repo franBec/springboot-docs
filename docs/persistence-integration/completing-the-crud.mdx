@@ -39,31 +39,29 @@ No new dependencies are needed. The existing stack (Spring Data JPA, MapStruct /
 
 The changes span all three layers of the hexagonal architecture: the inbound REST adapter, the domain ports and service, and the outbound JPA adapter. Tests are updated in parallel to cover the new behavior.
 
-## Creating a film
+## Define the domain ports
 
-### Define the domain ports
-
-Start with the contracts. `FilmUseCases` (primary port in) gets a `createFilm` method, and `FilmRepository` (secondary port out) gets the matching signature.
+Start with the contracts. Both the primary port (`FilmUseCases`) and the secondary port (`FilmRepository`) grow new method signatures for `createFilm`, `updateFilm`, and `deleteFilm`.
 
 <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
 
         ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java
         ```
 
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
 
         ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt
         ```
 
     </TabItem>
     <TabItem value="groovy" label="Groovy">
 
         ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy
         ```
 
     </TabItem>
@@ -74,28 +72,28 @@ Start with the contracts. `FilmUseCases` (primary port in) gets a `createFilm` m
     <TabItem value="java" label="Java" default>
 
         ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java
         ```
 
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
 
         ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt
         ```
 
     </TabItem>
     <TabItem value="groovy" label="Groovy">
 
         ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy
         ```
 
     </TabItem>
 
 </Tabs>
 
-### Wire the service
+## Wire the service
 
 `FilmUseCasesImpl` delegates to the secondary port. No business rules yet, just pass-through.
 
@@ -103,30 +101,32 @@ Start with the contracts. `FilmUseCases` (primary port in) gets a `createFilm` m
     <TabItem value="java" label="Java" default>
 
         ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java
         ```
 
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
 
         ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt
         ```
 
     </TabItem>
     <TabItem value="groovy" label="Groovy">
 
         ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy
         ```
 
     </TabItem>
 
 </Tabs>
 
-### Implement the repository
+## Implement the repository
 
-The repository implementation looks up the language entities, maps the domain model to a JPA entity, saves it, and maps the result back.
+The repository implementation looks up language entities, maps the domain model to a JPA entity, saves it, and maps the result back.
+
+### Creating a film
 
 <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
@@ -146,18 +146,82 @@ The repository implementation looks up the language entities, maps the domain mo
     <TabItem value="groovy" label="Groovy">
 
         ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy#L25-L33
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy#L24-L31
         ```
 
     </TabItem>
 
 </Tabs>
 
-Notice the language lookup. `FilmFields` comes in as a string like `"English"`, but the database stores languages as a separate table. The repository queries `LanguageJpaRepository` by name, maps the domain model to the JPA entity using the resolved language references, and sets `lastUpdate` before saving.
+Notice the language lookup. `FilmFields` has `"English"` as a string, but the database stores languages as a separate table. The repository queries `LanguageJpaRepository` by name, maps the domain model to the JPA entity using the resolved language references, and sets `lastUpdate` before saving.
 
-### Expose the endpoint
+### Updating a film
 
-The REST controller maps the incoming `FilmFields` DTO to a domain model, calls the use case, and wraps the result in a `201 CREATED` response.
+Update follows the same pattern as create, except the repository sets the film ID explicitly before saving so JPA treats it as an existing row.
+
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java#L40-L52
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt#L32-L44
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy#L43-L54
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+The critical difference from create: `entity.setFilmId(id)` (or `entity.filmId = id`). Without this, JPA would insert a new row instead of updating the existing one.
+
+### Deleting a film
+
+Delete is simpler. The repository checks that the film exists, then removes it. If the ID doesn't exist, `findById(...).orElseThrow()` raises `NoSuchElementException`, which the global `ControllerAdvice` already maps to `404 NOT_FOUND`.
+
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java#L53-L57
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt#L45-L48
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy#L53-L57
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+## Expose the endpoint
+
+The REST controller maps the incoming DTO to a domain model, calls the use case, and wraps the result in the appropriate HTTP response.
+
+### Creating a film
+
+The controller returns `201 CREATED` with the newly created film in the body.
 
 <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
@@ -177,130 +241,20 @@ The REST controller maps the incoming `FilmFields` DTO to a domain model, calls 
     <TabItem value="groovy" label="Groovy">
 
         ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy#L35-L45
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/9273e31465e31edaaa6da16da0eb3d603688cabd/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy#L34-L45
         ```
 
     </TabItem>
 
 </Tabs>
 
-## Updating a film
-
-Update follows the same pattern as create, except the repository sets the film ID explicitly before saving so JPA treats it as an existing row.
-
-### Update the domain ports
-
-<Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-
-        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java#L14-L15
-        ```
-
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-
-        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt#L14-L15
-        ```
-
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-
-        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy#L14-L15
-        ```
-
-    </TabItem>
-
-</Tabs>
-
-<Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-
-        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java#L14-L15
-        ```
-
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-
-        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt#L14-L15
-        ```
-
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-
-        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy#L14-L15
-        ```
-
-    </TabItem>
-
-</Tabs>
-
-### Service and repository
-
-<Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-
-        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java#L32-L34
-        ```
-
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-
-        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt#L18
-        ```
-
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-
-        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy#L36-L38
-        ```
-
-    </TabItem>
-
-</Tabs>
-
-<Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-
-        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java#L41-L52
-        ```
-
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-
-        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt#L32-L44
-        ```
-
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-
-        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy#L44-L54
-        ```
-
-    </TabItem>
-
-</Tabs>
-
-The critical difference from create: `entity.setFilmId(id)` (or `entity.filmId = id`). Without this, JPA would insert a new row instead of updating the existing one.
-
-### REST controller
+### Updating a film
 
 <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
 
         ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java#L68-L76
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java#L67-L76
         ```
 
     </TabItem>
@@ -314,147 +268,41 @@ The critical difference from create: `entity.setFilmId(id)` (or `entity.filmId =
     <TabItem value="groovy" label="Groovy">
 
         ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy#L77-L86
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/cf0554d60a8fe4b36a1cc494641fa418d0215aa9/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy#L76-L86
         ```
 
     </TabItem>
 
 </Tabs>
 
-## Deleting a film
+### Deleting a film
 
-Delete is simpler. The repository checks that the film exists, then removes it. If the ID doesn't exist, `findById(...).orElseThrow()` raises `NoSuchElementException`, which the global `ControllerAdvice` already maps to `404 NOT_FOUND`.
-
-### Domain ports
-
-<Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-
-        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/in/FilmUseCases.java#L16-L17
-        ```
-
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-
-        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/in/FilmUseCases.kt#L16-L17
-        ```
-
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-
-        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/in/FilmUseCases.groovy#L16-L17
-        ```
-
-    </TabItem>
-
-</Tabs>
-
-<Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-
-        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/port/out/FilmRepository.java#L16-L17
-        ```
-
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-
-        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/port/out/FilmRepository.kt#L16-L17
-        ```
-
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-
-        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/port/out/FilmRepository.groovy#L16-L17
-        ```
-
-    </TabItem>
-
-</Tabs>
-
-### Service, repository, and controller
-
-<Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-
-        ```java reference title="java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/domain/service/FilmUseCasesImpl.java#L37-L39
-        ```
-
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-
-        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/domain/service/FilmUseCasesImpl.kt#L20
-        ```
-
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-
-        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/domain/service/FilmUseCasesImpl.groovy#L41-L43
-        ```
-
-    </TabItem>
-
-</Tabs>
-
-<Tabs groupId="language" queryString>
-    <TabItem value="java" label="Java" default>
-
-        ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/out/jpa/FilmRepositoryImpl.java#L54-L58
-        ```
-
-    </TabItem>
-    <TabItem value="kotlin" label="Kotlin">
-
-        ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/out/jpa/FilmRepositoryImpl.kt#L45-L49
-        ```
-
-    </TabItem>
-    <TabItem value="groovy" label="Groovy">
-
-        ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/out/jpa/FilmRepositoryImpl.groovy#L54-L59
-        ```
-
-    </TabItem>
-
-</Tabs>
+The controller returns `204 NO_CONTENT` on success. No body, just the status. And if the film doesn't exist, the `findById` check throws before the delete happens, so you never accidentally delete the wrong thing or silently succeed.
 
 <Tabs groupId="language" queryString>
     <TabItem value="java" label="Java" default>
 
         ```java reference title="java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java#L41-L43
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_java/src/main/java/dev/pollito/spring_java/sakila/film/adapter/in/rest/FilmRestController.java#L40-L44
         ```
 
     </TabItem>
     <TabItem value="kotlin" label="Kotlin">
 
         ```kt reference title="kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt#L39-L41
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/film/adapter/in/rest/FilmRestController.kt#L39-L42
         ```
 
     </TabItem>
     <TabItem value="groovy" label="Groovy">
 
         ```groovy reference title="groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy"
-        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy#L48-L50
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3b5cd0423c61f486217462d2f24aaba598e16413/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/film/adapter/in/rest/FilmRestController.groovy#L47-L51
         ```
 
     </TabItem>
 
 </Tabs>
-
-The controller returns `204 NO_CONTENT` on success. No body, just the status. And if the film doesn't exist, the `findById` check throws before the delete happens, so you never accidentally delete the wrong thing or silently succeed.
 
 ## Testing the new operations
 
@@ -462,11 +310,10 @@ Each commit adds tests at three levels:
 
 - **MockMvc tests** verify the REST adapter: correct HTTP status, response body shape, and error handling.
 - **Data JPA tests** verify the repository implementation against a real database.
+  - For create and update, the Data JPA tests assert that the returned domain model has the expected title and ID.
+  - For delete, they assert that the entity is removed and that calling `getFilm` afterward throws `NoSuchElementException`.
+  - Not-found case for delete: passing a non-existent ID triggers the same `NoSuchElementException` path that the global `ControllerAdvice` turns into a `404`.
 - **Unit tests** verify the domain service in isolation with mocked repositories.
-
-For create and update, the Data JPA tests assert that the returned domain model has the expected title and ID. For delete, they assert that the entity is removed and that calling `getFilm` afterwards throws `NoSuchElementException`.
-
-The tests also cover the not-found case for delete: passing a non-existent ID triggers the same `NoSuchElementException` path that the global `ControllerAdvice` turns into a `404`.
 
 ## Try it
 
