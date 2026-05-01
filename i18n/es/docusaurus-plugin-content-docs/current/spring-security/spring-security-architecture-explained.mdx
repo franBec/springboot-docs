@@ -1,0 +1,212 @@
+---
+sidebar_position: 2
+title: Arquitectura de Spring Security explicada
+description: Cómo funciona Spring Security por debajo — cadenas de filtros, autenticación, autorización y SecurityContext — explicado con diagramas en lugar de ceremonia.
+---
+
+import Admonition from '@theme/Admonition';
+import Youtube from '@site/src/components/youtube';
+import {
+  FilterChainDiagram,
+  AuthenticationFlowDiagram,
+  FullLifecycleDiagram,
+} from '@site/src/components/docs/spring-security/spring-security-architecture-explained';
+
+El [documento anterior](/es/spring-security/the-state-of-auth-in-modern-web) cubrió qué maneja Spring Security (verificación) y qué no (almacenamiento de usuarios, UI). Ahora abramos el capó y veamos cómo funciona la maquinaria en realidad.
+
+Este documento está fuertemente inspirado en el video [Spring Security Architecture Explained](https://youtu.be/h-9vhFeM3MY?si=dG0GCUz303v9IcYD) de [Amigoscode](https://www.youtube.com/@amigoscode). Si aprendés mejor con video, andá a verlo — los diagramas son excelentes.
+
+<Youtube id="h-9vhFeM3MY" />
+
+## Todo es un filtro
+
+<Admonition type="tip" title="¿No estás seguro de cómo funcionan los filtros?">
+  El documento de [cross-cutting concerns](/es/cross-cutting-concerns) cubre los
+  filtros servlet y cómo interceptan requests antes de que lleguen a tu
+  controller.
+</Admonition>
+
+Cuando un cliente envía un request HTTP a tu API, no llega al controller directamente. El request pasa por una cadena de filtros servlet, y cada filtro realiza un chequeo de seguridad basado en tu configuración.
+
+<FilterChainDiagram />
+
+Si algún filtro rechaza el request (token faltante, rol incorrecto, sesión expirada), la cadena se interrumpe temprano y devuelve un 401 (no autorizado) o 403 (prohibido). El controller nunca lo ve.
+
+Spring Security usa `DelegatingFilterProxy` para unir el contenedor Servlet y el contexto de Spring. El contenedor Servlet no sabe nada sobre los beans de Spring; `DelegatingFilterProxy` delega a un filtro gestionado por Spring que hace el trabajo real.
+
+## SecurityFilterChain
+
+No todo request debería pasar por los mismos filtros. Las llamadas API que usan JWT no necesitan manejo de sesiones, y las rutas web que usan form login no necesitan CSRF deshabilitado. Spring Security resuelve esto con `SecurityFilterChain`: podés definir múltiples cadenas, cada una asociada a un patrón de URL.
+
+En la práctica, configurás esto con el bean `SecurityFilterChain`:
+
+```java
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+            .build();
+    }
+
+    // ...
+}
+```
+
+Cada bean `SecurityFilterChain` define qué filtros corren para qué URLs. Los filtros se ejecutan en orden, y los métodos `addFilterBefore` / `addFilterAfter` te permiten controlar dónde se ubica tu filtro personalizado en ese orden.
+
+## Flujo de autenticación
+
+Ahora metámonos en lo que pasa cuando un filtro necesita autenticar un request. El filtro de autenticación JWT es un buen ejemplo: extrae el token del header `Authorization`, crea un objeto `Authentication` y lo pasa por la cadena.
+
+<AuthenticationFlowDiagram />
+
+Acá te digo qué hace cada pieza:
+
+1. **JWT Auth Filter** intercepta el request, extrae el Bearer token y crea un `UsernamePasswordAuthenticationToken` con las credenciales.
+2. **AuthenticationManager** es la interfaz con un único método: `authenticate()`. Delega a la siguiente capa.
+3. **ProviderManager** es la implementación más común. Itera sobre una lista de `AuthenticationProvider`s hasta que alguno puede manejar el tipo de token.
+4. **DaoAuthenticationProvider** maneja la autenticación de usuario/contraseña. Necesita dos colaboradores:
+   - **UserDetailsService** carga el usuario desde la base de datos y devuelve un objeto `UserDetails`.
+   - **PasswordEncoder** compara la contraseña cruda del request contra la contraseña hasheada de la base de datos.
+5. Si tiene éxito, el provider devuelve un objeto `Authentication` completamente poblado. Si falla, lanza un `AuthenticationException`.
+
+Acá tenés el filtro JWT personalizado en forma simplificada:
+
+```java
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private final AuthenticationManager authenticationManager;
+
+    // ...
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = authHeader.substring(7);
+
+        // ... validate and parse the JWT ...
+        String username = /* extract from token */;
+
+        UsernamePasswordAuthenticationToken authToken =
+            new UsernamePasswordAuthenticationToken(username, null, authorities);
+
+        // ... set details ...
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
+Fijate en las últimas dos líneas. Después de parsear el token y construir el objeto `Authentication`, el filtro lo guarda en `SecurityContextHolder` y después llama al siguiente filtro. Ese es todo el propósito del filtro: leer el token, autenticar, guardar el resultado y seguir.
+
+Si falta el token, el filtro simplemente llama a `filterChain.doFilter(request, response)` sin setear el contexto. Más adelante, Spring Security va a ver que no existe autenticación y va a devolver un 401 o 403.
+
+## UserDetails
+
+La interfaz `UserDetails` es lo que usa Spring Security para representar un usuario cargado. Tu `UserDetailsService` lo devuelve, y los filtros posteriores y los chequeos de autorización leen de ahí.
+
+```java
+public interface UserDetails extends Serializable {
+
+    Collection<? extends GrantedAuthority> getAuthorities();  // roles & permissions
+    String getPassword();                                      // hashed password
+    String getUsername();                                      // unique identifier
+    boolean isAccountNonExpired();
+    boolean isAccountNonLocked();
+    boolean isCredentialsNonExpired();
+    boolean isEnabled();
+}
+```
+
+El método `getAuthorities()` devuelve los roles y permisos del usuario. Podés proteger un endpoint para que solo los admins accedan, o darle a un "admin trainee" un subconjunto de permisos de admin. Los booleanos `isAccountNonExpired`, `isAccountNonLocked`, `isCredentialsNonExpired` e `isEnabled` te permiten controlar cosas como la rotación forzada de contraseñas y el deshabilitado suave de usuarios sin eliminarlos.
+
+La contraseña nunca debería guardarse en texto plano. Siempre hasheala con un `PasswordEncoder` como `BCryptPasswordEncoder`.
+
+## SecurityContext
+
+Una vez que la autenticación tiene éxito, Spring Security necesita algún lugar para guardar el resultado durante el resto del request. Ese lugar es `SecurityContextHolder` → `SecurityContext` → `Authentication`.
+
+```java
+// On successful authentication:
+SecurityContextHolder.getContext().setAuthentication(authentication);
+
+// To read the current user anywhere in the request:
+Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+String username = auth.getName();
+```
+
+`SecurityContextHolder` usa `ThreadLocal` por debajo, así que la identidad autenticada está disponible para cualquier código que corra en el mismo thread del request sin pasarla explícitamente. Cuando el request termina, el contexto se limpia.
+
+Si la autenticación falla, el filtro limpia el contexto:
+
+```java
+SecurityContextHolder.clearContext();
+```
+
+## Juntando todo
+
+Acá tenés el ciclo de vida completo de un request autenticado, desde el momento en que golpea el servidor hasta que el controller lo procesa:
+
+<FullLifecycleDiagram />
+
+Y acá tenés cómo se conectan todas las piezas en una clase `SecurityConfig`:
+
+```java
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationProvider authenticationProvider) {
+        return new ProviderManager(authenticationProvider);
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
+    }
+
+    // ...
+}
+```
+
+Un request entra, pasa por la cadena de filtros, se autentica con el `ProviderManager` y el `DaoAuthenticationProvider`, y el resultado se guarda en `SecurityContextHolder`. Cuando el request llega al controller, Spring Security ya sabe quién es el usuario y si tiene permitido estar ahí. Esa es toda la arquitectura: filtros, autenticación, contexto y autorización, conectados en una sola clase de configuración.

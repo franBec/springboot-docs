@@ -1,0 +1,152 @@
+---
+sidebar_position: 1
+title: El estado del auth en la web moderna
+description: Una mirada pragmática a la autenticación moderna — por qué no deberías hacer la tuya propia, qué le acertó el ecosistema JavaScript, y dónde encaja Spring Boot.
+---
+
+import Admonition from '@theme/Admonition';
+import {
+  AccessRefreshTokenFlow,
+  JwtFlow,
+} from '@site/src/components/docs/spring-security/the-state-of-auth-in-modern-web';
+import Youtube from '@site/src/components/youtube';
+
+La autenticación se ve simple desde afuera. Un nombre de usuario, una contraseña, tal vez un botón de "iniciar sesión con Google". Pero la superficie de cosas que pueden salir mal es enorme, y el panorama moderno es un campo minado de términos sobrecargados, protocolos medio entendidos e implementaciones copiadas sin criterio. Antes de escribir una sola línea de código de seguridad, necesitás saber qué es lo que estás construyendo.
+
+## Experiencia personal
+
+Pasé dos años y medio en el equipo de "Customer Security and Onboarding" de un banco. Era una persona entre diez manteniendo alrededor de treinta microservicios Java — la mayoría Spring Boot, gracias a dios — más toda la infraestructura cloud que venía con ellos, y toda la deuda técnica que naturalmente se acumula.
+
+Ese equipo le costaba al banco mucho más que nuestros salarios. Había capacitaciones, licencias, facturas de cloud y tiempo. El tiempo era lo que más dolía. Nos sentíamos quemados por eso, constantemente. No porque el trabajo fuera difícil, sino porque no podíamos mover rápido.
+
+Si cagás un sistema de auth, seis millones de personas no pueden iniciar sesión. Esa es mucha presión. Pero acá está el truco: tampoco podés innovar, porque estás atado por preocupaciones que, una vez más, afectarían el acceso al dinero de esas seis millones de personas. Estás atrapado entre "no rompas nada" y "necesitamos shippear esta feature", y el margen de error es cero.
+
+Esa es la realidad del auth a escala. No es solo un problema técnico. Es uno humano.
+
+## Cómo entender el auth
+
+El mejor lugar para entender el auth moderno no es Java. Es JavaScript.
+
+El ecosistema de JS reinventó la rueda del auth tantas veces que, de entre todos los intentos malos, finalmente aparecieron cosas buenas. Todo el mundo puede aprender de ellas. Por eso este documento está fuertemente inspirado en dos videos de grandes creadores de contenido que no tienen absolutamente nada que ver con el mundo de Spring Boot.
+
+Si tenés tiempo, miralos. Explican la taxonomía mejor que cualquier libro de texto:
+
+<Youtube id="lxslnp-ZEMw" />
+
+<Youtube id="ViWcOJkQsHI" />
+
+## Piezas de la autenticación
+
+Hay tres piezas en la autenticación, y mantenerlas claras hace que todo lo demás sea más fácil.
+
+- **Verificación** es probar que el usuario es quien dice ser.
+- **Información del usuario** es quién es el usuario, qué puede hacer, su email, su foto de perfil, sus permisos.
+- **UI/UX de autenticación** es el botón de iniciar sesión, el de cerrar sesión, la página de "administrar mi perfil", y sí, incluso el botón de "iniciar sesión con Google" que tiene que seguir las reglas de branding de Google o te bloquean la app.
+
+Cumplir con todo esto es un bardo. Por eso existen las bibliotecas y los proveedores.
+
+### Verificación
+
+La verificación tiene dos partes: cómo el usuario inicia sesión, y cómo recordás que inició sesión.
+
+**Métodos de inicio de sesión:**
+
+- **Usuario/contraseña** — Debería evitarse si es posible. Las contraseñas son mala UX, implementarlas puede "malir sal", y son una fuente interminable de problemas de seguridad.
+- **Passkey** — Basado en el estándar [FIDO2](https://fidoalliance.org/passkeys/) / [WebAuthn](https://www.passkeys.com/what-is-webauthn). En lugar de un secreto compartido, tu dispositivo genera un par de claves pública-privada. La clave privada nunca sale del dispositivo; el servidor solo almacena la clave pública. Resistente a phishing por diseño porque la credencial está atada al origen. La UX está mejorando pero todavía es medio torpe entre dispositivos.
+- **OAuth** — "Iniciar sesión con Google", "Iniciar sesión con GitHub". Delegado a un proveedor que ya verificó al usuario.
+- **Magic link** — El servidor envía una URL de un solo uso al email del usuario. Hacer clic inicia sesión, no hace falta contraseña. Lo suficientemente seguro para muchos casos, pero depende enteramente de la entregabilidad del email y la seguridad de la bandeja de entrada. Si el email se demora o va a spam, el usuario está trabado.
+
+**Métodos de almacenamiento de estado y verificación:**
+
+No querés que el usuario tenga que volver a tipear su contraseña cada vez que hace clic en algo. Así que almacenás estado. Generalmente como:
+
+- **Access/refresh tokens** — Cookies seteadas por el servidor que le dicen a tu servicio quién es esta persona. El access token es de corta duración; el refresh token genera uno nuevo cuando expira.
+  <AccessRefreshTokenFlow />
+- **JWT (JSON Web Token)** — Un objeto JSON almacenado en el localStorage del navegador. Contiene claims sobre el usuario y una firma para verificarlos. Es stateless, pero la revocación es difícil porque el token es válido hasta que expira.
+  <JwtFlow />
+
+### Información del usuario
+
+El usuario necesita vivir en una base de datos en algún lado. Tus opciones:
+
+- **Propiedad de un proveedor externo** — Ellos almacenan la tabla de usuarios. Rápido de configurar, pero no podés consultarla directamente ni hacer join con tus propios datos.
+- **Propiedad tuya** — Vos almacenás la tabla de usuarios en tu propia base de datos. Controlás el esquema, podés hacer join con tus propias tablas, pero sos responsable de backups, migraciones y cumplimiento de GDPR.
+- **No persistida en absoluto** — Mantenerlo en la sesión o token solamente. Limitado, pero simple.
+
+Ser dueño de la tabla de usuarios te da libertad. Podés hacer join de `users` contra `orders`, `friends`, o lo que necesite tu dominio. Pero también te da responsabilidad. Vos manejás los resets de contraseña, la eliminación de cuentas, los pedidos de exportación de datos, y los cambios de esquema. Si el proveedor es dueño de la tabla, ellos manejan la carga operacional, pero cada consulta que cruza la frontera se convierte en una llamada a API en lugar de un join de SQL.
+
+Si necesitás mezclar la identidad del usuario con tus datos de dominio, probablemente quieras ser dueño de la tabla.
+
+## Soluciones de auth
+
+<Admonition type="info" title="Estas son soluciones del mundo JavaScript">
+  La tabla de abajo cubre proveedores y bibliotecas de auth del ecosistema
+  JavaScript. Las miramos porque el mundo de JS iteró sobre auth más que ningún
+  otro, y las lecciones aplican en todos lados — incluyendo Spring Boot. Las
+  implementaciones específicas de Spring vienen más adelante en esta sección.
+</Admonition>
+
+Acá te muestro cómo se mapean las soluciones principales a las tres piezas, y qué te cuesta adoptarlas.
+
+| Solución                                                             | Verificación | Info del usuario            | UI/UX de auth                      | Lock-in y precios                                                                                                          |
+| -------------------------------------------------------------------- | ------------ | --------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **[OpenAuth](https://openauth.js.org/)**                             | Sí           | No                          | Plantilla mínima                   | Bajo. Self-hosted, pero tenés que pegar todo lo demás vos mismo.                                                           |
+| **[BetterAuth](https://better-auth.com/)**                           | Sí           | En tu DB                    | Componentes copy-paste             | Medio. El sistema de plugins es genial, pero ensamblás las piezas vos. Absorbió el proyecto [AuthJS](https://authjs.dev/). |
+| **[Clerk](https://clerk.com/)**                                      | Sí           | Hosteado por Clerk          | Biblioteca completa de componentes | Alto. El setup más rápido, funciona en todos lados, pero cuesta $25/mes después de 10k MAU. Difícil de migrar.             |
+| **[StackAuth](https://stack-auth.com/)**                             | Sí           | En tu DB o hosteado         | Componentes completos              | Medio. Totalmente open source, podés hacer self-host después. Buena estrategia de salida.                                  |
+| **[Passport](https://www.passportjs.org/)**                          | Sí           | Vos traés el almacenamiento | Ninguno                            | Bajo, pero básicamente abandonado. La última actualización meaningful fue hace años.                                       |
+| **[WorkOS](https://workos.com/)**                                    | Sí           | Hosteado                    | Componentes AuthKit                | Muy alto. Precios enterprise ($100+/mes para dominios custom, $125/conexión para SSO).                                     |
+| **[Firebase Authentication](https://firebase.google.com/docs/auth)** | Sí           | Hosteado por Google         | Básico                             | Medio. Barato, pero es notoriamente fácil de configurar mal. Las historias de terror de seguridad existen por una razón.   |
+| **[Supabase Auth](https://supabase.com/docs/guides/auth)**           | Sí           | Atado a Postgres/RLS        | Básico                             | Medio. El auth está ahí porque su producto lo requiere, no porque quieran competir con Clerk.                              |
+
+No hay una única respuesta correcta. La pregunta es: cuánto querés ser dueño, cuánto querés pagar, y qué tan atrapado estás dispuesto a estar.
+
+## Protocolos de auth
+
+Por debajo, la mayoría de estas soluciones hablan protocolos estándar. No necesitás implementarlos desde cero, pero deberías saber qué son para poder elegir la configuración correcta de Spring Security.
+
+**OAuth 2.0** es un framework de autorización, no un protocolo de autenticación. Te permite que un usuario otorgue a tu app acceso limitado a sus datos en otro servicio — por ejemplo, permitir que tu app lea sus repos de GitHub. Cuando la gente dice "iniciar sesión con Google", lo que suele significar es OAuth 2.0 más una capa de identidad. La web moderna usa el authorization code flow con PKCE (Proof Key for Code Exchange), que previene ataques de interceptación en mobile y SPAs.
+
+**OpenID Connect (OIDC)** es la capa de identidad construida sobre OAuth 2.0. Mientras OAuth dice "sí, este usuario otorgó permiso", OIDC dice "acá te digo quién es el usuario". Agrega un ID token — un JWT que contiene claims como `sub` (identificador de sujeto), `email` y `name`. Si estás haciendo "iniciar sesión con Google", estás usando OIDC.
+
+**SAML (Security Assertion Markup Language)** es el veterano enterprise. Basado en XML, más viejo y más complejo que OAuth/OIDC. Lo vas a encontrar cuando integres con proveedores de identidad corporativos como Active Directory Federation Services (AD FS) u Okta en organizaciones grandes. Spring Security lo soporta, pero la configuración es más pesada.
+
+**LDAP (Lightweight Directory Access Protocol)** no es un protocolo de auth en sí mismo, sino un servicio de directorio. Las organizaciones lo usan para almacenar cuentas de usuario, grupos y credenciales en un árbol central. Spring Security puede autenticar contra LDAP directamente, lo cual es común en aplicaciones de intranet donde la empresa ya tiene un servidor Active Directory u OpenLDAP.
+
+No necesitás memorizar las especificaciones. El punto es: cuando alguien pide "integración SAML", sabés que significa dolor de XML enterprise. Cuando piden "login OAuth2", sabés que significa redirigir a Google y recibir un ID token de vuelta. Spring Security tiene módulos para todos ellos.
+
+## No hagas tu propio auth
+
+Hay muchos problemas de nicho y molestos que te vas a encontrar al hacer tu propio auth. Cosas que podés hacer mal — porque los errores pasan — y cosas que simplemente te sacan demasiado tiempo de entregar valor real.
+
+- Flujos de recuperación de contraseña.
+- Rate limiting para frenar credential stuffing.
+- Manejar la eliminación de cuentas para GDPR.
+- Reconciliar envíos de email fallidos.
+- Invalidación de tokens entre dispositivos.
+- Auth en mobile sin cookies.
+- ...
+
+La lista no termina.
+
+[Dreams of Code](https://www.youtube.com/@dreamsofcode) lo enmarca bien con lo que él llama **core versus context versus compromise**.
+
+- **Core** es lo que tu producto realmente hace. El curso que estás vendiendo, la app bancaria que estás construyendo, la API que estás exponiendo.
+- **Context** es todo lo que lo sostiene. Auth, pagos, analytics, email.
+- **Compromise** es aceptar que no podés hacer todo perfecto a la vez. Si estás pasando semanas en flujos de reset de contraseña en lugar de tu producto core, estás comprometiéndote en la dirección equivocada.
+
+Usá una biblioteca. Como mínimo. Preferiblemente un servicio. Tu tiempo vale más que $25 al mes.
+
+## Cómo encaja Spring Boot en todo esto
+
+Spring Security es potente. Puede manejar form login, OAuth2, SAML, LDAP y más. Pero es importante ser honesto sobre qué es y qué no es.
+
+Spring Security te da la capa de **verificación**. Va a chequear tokens, validar sesiones y enforcear reglas de acceso. Pero:
+
+- No te da una base de datos de usuarios out of the box — vos la traés.
+- No te da componentes de UI de auth — vos los construís.
+- No maneja las particularidades de los proveedores OAuth por vos — vos los configurás.
+
+En el mundo de JavaScript, Clerk te da las tres piezas en cinco minutos. En el mundo de Spring, Spring Security te da una pieza muy bien, y vos ensamblás el resto. Eso no es una debilidad; es una filosofía diferente. Pero significa que necesitás saber qué estás construyendo antes de empezar a cablear anotaciones.
+
+Los próximos documentos de esta sección te van a mostrar cómo implementar estos patrones sin reinventar la rueda. Pero ahora, al menos, sabés cómo se ve la rueda.

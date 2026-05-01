@@ -130,5 +130,13 @@
   "sidebar.tutorialSidebar.category.JVM.link.generated-index.description": {
     "message": "Cómo funciona la JVM, los lenguajes que soporta y herramientas para construir aplicaciones.",
     "description": "The generated-index page description for category JVM in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Spring Security": {
+    "message": "Spring Security",
+    "description": "The label for category Spring Security in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Spring Security.link.generated-index.description": {
+    "message": "Autenticación, autorización y mejores prácticas de seguridad en aplicaciones Spring Boot.",
+    "description": "The generated-index page description for category Spring Security in sidebar tutorialSidebar"
   }
 }

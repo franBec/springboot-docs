@@ -1,0 +1,8 @@
+{
+  "label": "Spring Security",
+  "position": 10,
+  "link": {
+    "type": "generated-index",
+    "description": "Authentication, authorization, and security best practices in Spring Boot applications."
+  }
+}
