@@ -1,0 +1,563 @@
+---
+sidebar_position: 3
+title: JWT authentication
+description: Implement stateless JWT authentication with Spring Security so your API can distinguish between anonymous readers and authenticated staff members.
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+import GithubCommitsInfo from '@site/src/components/github-commits-info';
+
+import {
+  FileTree,
+  AuthenticationExampleTerminal,
+  AuthenticationExampleDiagram,
+  AuthorizedExampleTerminal,
+  AuthorizedExampleDiagram,
+  UnauthorizedMissingHeaderTerminal,
+  UnauthorizedMissingHeaderDiagram,
+  UnauthorizedInvalidTokenTerminal,
+  UnauthorizedInvalidTokenDiagram,
+} from '@site/src/components/docs/spring-security/jwt-authentication';
+
+<GithubCommitsInfo
+  commits={[
+    {
+      name: 'JWT authentication (Java)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53',
+    },
+    {
+      name: 'JWT authentication (Kotlin)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2',
+    },
+    {
+      name: 'JWT authentication (Groovy)',
+      url: 'https://github.com/franBec/springboot-demo-projects/commit/ef8688657aa0daa70ef28972b618c5a69d70870c',
+    },
+  ]}
+/>
+
+In the previous documents we covered what Spring Security handles, what it does not, and how the filter chain architecture works under the hood. Now let's put that theory into practice by adding stateless JWT authentication so the API can tell the difference between anonymous readers and authenticated staff members.
+
+## File overview
+
+<FileTree />
+
+<Admonition type="info">
+  This document will not go deep into how the `Staff` slice (entity, repository,
+  mapper, and domain model) is built. It follows the same pattern used for the
+  `Film` slice in the [persistence
+  integration](/category/persistence-integration) documents.
+</Admonition>
+
+## Dependencies
+
+We need Spring Security for the filter chain and JJWT for token generation and validation. The dependencies are added to the build file:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```groovy reference title="build.gradle"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/22458243f475119ef3a88503d22249be8281deda/spring_java/build.gradle#L72-L77
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kotlin reference title="build.gradle.kts"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/22458243f475119ef3a88503d22249be8281deda/spring_kotlin/build.gradle.kts#L75-L81
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="build.gradle"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/22458243f475119ef3a88503d22249be8281deda/spring_groovy/build.gradle#L71-L76
+    ```
+
+  </TabItem>
+</Tabs>
+
+- `spring-boot-starter-security` brings in Spring Security and its filter chain.
+- `jjwt-api`, `jjwt-impl`, and `jjwt-jackson` handle token creation and parsing.
+- `spring-security-test` gives us helpers for testing secured endpoints.
+
+## Password storage compatibility
+
+The original Sakila sample database stores staff passwords using MD5/SHA1 hashes. Spring Security 6.x does not support these algorithms out of the box, so we migrated them to BCrypt using a Flyway migration:
+
+```sql reference title="V5__migrate_staff_passwords_to_bcrypt.sql"
+https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/database/flyway/migrations/V5__migrate_staff_passwords_to_bcrypt.sql
+```
+
+<Admonition type="caution">
+  If you maintain separate data and schema scripts for development and testing
+  (for example, `sakila-data.sql` and `sakila-schema.sql`), make sure you update
+  them with BCrypt-encoded passwords as well. Otherwise, integration tests and
+  local runs will fail during authentication.
+</Admonition>
+
+## JWT configuration
+
+We externalize the secret and expiration into `application.yaml` so we can rotate keys without recompiling:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```yaml reference title="resources/application.yaml"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/6ec2f6a211d4d090943e39ae8029d55a2016949f/spring_java/src/main/resources/application.yaml#L55-L57
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```yaml reference title="resources/application.yaml"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/6ec2f6a211d4d090943e39ae8029d55a2016949f/spring_kotlin/src/main/resources/application.yaml#L56-L58
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```yaml reference title="resources/application.yaml"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/6ec2f6a211d4d090943e39ae8029d55a2016949f/spring_groovy/src/main/resources/application.yaml#L55-L57
+    ```
+
+  </TabItem>
+</Tabs>
+
+A typed properties object binds those values at runtime:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/jwt/JwtProperties.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/main/java/dev/pollito/spring_java/config/security/jwt/JwtProperties.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/jwt/JwtProperties.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/security/jwt/JwtProperties.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/jwt/JwtProperties.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/security/jwt/JwtProperties.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+<Admonition type="tip" title="How to create a secure JWT secret">
+
+In production, your `JWT_SECRET` should be a cryptographically secure random string of at least 256 bits (32 bytes).
+
+**Best practices**
+
+| Aspect     | Recommendation                                                                                                                          |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Length     | At least 32 bytes (256 bits). For HS256/HS512, longer is fine but 32+ is the minimum.                                                   |
+| Generation | Use a cryptographically secure random generator. Examples: `openssl rand -hex 32` or `openssl rand -base64 32`                          |
+| Storage    | Store it as an environment variable (which your project already does via `${JWT_SECRET}`) — never commit it to Git.                     |
+| Rotation   | Have a strategy to rotate it periodically without invalidating all active sessions immediately (e.g., support key IDs / `kid` headers). |
+| Uniqueness | Use a different secret per environment (dev, staging, prod).                                                                            |
+
+**Quick generation commands**
+
+```bash
+# 32 bytes as hex (64 hex chars)
+openssl rand -hex 32
+
+# 32 bytes as base64
+openssl rand -base64 32
+```
+
+</Admonition>
+
+## Security configuration
+
+`SecurityConfig` is the heart of the setup. It disables CSRF (we are stateless), sets session management to `STATELESS`, and defines authorization rules:
+
+- `GET /api/films/**` is public.
+- `POST /api/auth/login` is public.
+- `requestMatchers("/actuator/**")` is public.
+- `requestMatchers("/h2-console/**")` is public.
+- `requestMatchers("/error")` is public.
+- Everything else requires authentication.
+
+It also wires the `JwtAuthenticationFilter` before Spring's `UsernamePasswordAuthenticationFilter` so every incoming request gets its token inspected first.
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/SecurityConfig.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_java/src/main/java/dev/pollito/spring_java/config/security/SecurityConfig.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/SecurityConfig.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/security/SecurityConfig.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/SecurityConfig.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/security/SecurityConfig.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+## JWT service
+
+`JwtService` handles token creation, username extraction, and validation. It uses the JJWT builder API to sign tokens with an HMAC key derived from the configured secret:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/jwt/JwtService.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/main/java/dev/pollito/spring_java/config/security/jwt/JwtService.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/jwt/JwtService.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/security/jwt/JwtService.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/jwt/JwtService.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/security/jwt/JwtService.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Authentication filter
+
+`JwtAuthenticationFilter` is a servlet filter that runs once per request. It looks for an `Authorization` header starting with `Bearer `, extracts the token, validates it against the user details service, and populates the security context if everything checks out:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/jwt/JwtAuthenticationFilter.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_java/src/main/java/dev/pollito/spring_java/config/security/jwt/JwtAuthenticationFilter.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/jwt/JwtAuthenticationFilter.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/security/jwt/JwtAuthenticationFilter.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/jwt/JwtAuthenticationFilter.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/security/jwt/JwtAuthenticationFilter.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+## User details
+
+Spring Security needs a `UserDetailsService` to look up users by username. We implemented `SakilaUserDetailsService` backed by a `StaffRepository`, and `SakilaUserDetails` adapts the `Staff` domain model to Spring's `UserDetails` contract:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/userdetails/SakilaUserDetails.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/main/java/dev/pollito/spring_java/config/security/userdetails/SakilaUserDetails.java
+    ```
+
+    ```java reference title="config/security/userdetails/SakilaUserDetailsService.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/main/java/dev/pollito/spring_java/config/security/userdetails/SakilaUserDetailsService.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/userdetails/SakilaUserDetails.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/security/userdetails/SakilaUserDetails.kt
+    ```
+
+    ```kt reference title="config/security/userdetails/SakilaUserDetailsService.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/security/userdetails/SakilaUserDetailsService.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/userdetails/SakilaUserDetails.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/security/userdetails/SakilaUserDetails.groovy
+    ```
+
+    ```groovy reference title="config/security/userdetails/SakilaUserDetailsService.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/security/userdetails/SakilaUserDetailsService.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Auth endpoints
+
+The `AuthRestController` exposes two endpoints: `POST /api/auth/login` to authenticate and receive a token, and `GET /api/auth/me` to retrieve the current user's details. It implements the `AuthApi` interface generated from the OpenAPI spec.
+
+We also updated `openapi.yaml` with a `bearerAuth` security scheme and applied it to the mutating film endpoints (`POST`, `PUT`, `DELETE`). The `GET` endpoints remain open:
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="sakila/auth/adapter/in/rest/AuthRestController.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/main/java/dev/pollito/spring_java/sakila/auth/adapter/in/rest/AuthRestController.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="sakila/auth/adapter/in/rest/AuthRestController.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/sakila/auth/adapter/in/rest/AuthRestController.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="sakila/auth/adapter/in/rest/AuthRestController.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/sakila/auth/adapter/in/rest/AuthRestController.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Error handling for auth failures
+
+To keep error responses consistent with the rest of the API, we added an `@ExceptionHandler(AuthenticationException.class)` to the existing `ControllerAdvice` and wired custom `AuthenticationEntryPoint` and `AccessDeniedHandler` implementations. They reuse the same Problem Details JSON format that error handling introduced.
+
+<Tabs groupId="language" queryString>
+    <TabItem value="java" label="Java" default>
+
+        ```java reference title="config/web/ControllerAdvice.java"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/main/java/dev/pollito/spring_java/config/web/ControllerAdvice.java#L76-L79
+        ```
+
+    </TabItem>
+    <TabItem value="kotlin" label="Kotlin">
+
+        ```kt reference title="config/web/ControllerAdvice.kt"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/main/kotlin/dev/pollito/spring_kotlin/config/web/ControllerAdvice.kt#L75-L78
+        ```
+
+    </TabItem>
+    <TabItem value="groovy" label="Groovy">
+
+        ```groovy reference title="config/web/ControllerAdvice.groovy"
+        https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/main/groovy/dev/pollito/spring_groovy/config/web/ControllerAdvice.groovy#L89-L92
+        ```
+
+    </TabItem>
+
+</Tabs>
+
+## Testing
+
+Every component introduced in this document has a corresponding test class. The suite covers unit tests for the JWT service, the authentication filter, the user-details loader, and the security rules, plus MockMvc-based integration tests for the REST controller and the security configuration.
+
+<Admonition type="tip">
+  Pre-existing `@WebMvcTest` classes that do not exercise the security filter
+  chain should be annotated with `@AutoConfigureMockMvc(addFilters = false)` so
+  that `JwtAuthenticationFilter` does not interfere with the test setup.
+</Admonition>
+
+### `JwtAuthenticationFilter`
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/jwt/JwtAuthenticationFilterTest.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_java/src/test/java/dev/pollito/spring_java/config/security/jwt/JwtAuthenticationFilterTest.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/jwt/JwtAuthenticationFilterTest.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/config/security/jwt/JwtAuthenticationFilterTest.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/jwt/JwtAuthenticationFilterSpec.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/config/security/jwt/JwtAuthenticationFilterSpec.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+### `JwtService`
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/jwt/JwtServiceTest.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/test/java/dev/pollito/spring_java/config/security/jwt/JwtServiceTest.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/jwt/JwtServiceTest.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/config/security/jwt/JwtServiceTest.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/jwt/JwtServiceSpec.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/config/security/jwt/JwtServiceSpec.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+### `SakilaUserDetailsService`
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/userdetails/SakilaUserDetailsServiceTest.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/test/java/dev/pollito/spring_java/config/security/userdetails/SakilaUserDetailsServiceTest.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/userdetails/SakilaUserDetailsServiceTest.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/config/security/userdetails/SakilaUserDetailsServiceTest.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/userdetails/SakilaUserDetailsServiceSpec.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/config/security/userdetails/SakilaUserDetailsServiceSpec.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+### `SecurityConfig`
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="config/security/SecurityConfigMockMvcTest.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_java/src/test/java/dev/pollito/spring_java/config/security/SecurityConfigMockMvcTest.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="config/security/SecurityConfigMockMvcTest.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/config/security/SecurityConfigMockMvcTest.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="config/security/SecurityConfigMockMvcSpec.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/b08a0857270833be00657ad940aad89f29640e50/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/config/security/SecurityConfigMockMvcSpec.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+### `AuthRestController`
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="sakila/auth/adapter/in/rest/AuthRestControllerMockMvcTest.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/test/java/dev/pollito/spring_java/sakila/auth/adapter/in/rest/AuthRestControllerMockMvcTest.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="sakila/auth/adapter/in/rest/AuthRestControllerMockMvcTest.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/auth/adapter/in/rest/AuthRestControllerMockMvcTest.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="sakila/auth/adapter/in/rest/AuthRestControllerMockMvcSpec.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/auth/adapter/in/rest/AuthRestControllerMockMvcSpec.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+### `AuthUseCasesImpl`
+
+<Tabs groupId="language" queryString>
+  <TabItem value="java" label="Java" default>
+
+    ```java reference title="sakila/auth/domain/service/AuthUseCasesImplTest.java"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/86a2d8f7263b7b2225a229fcd1ff28f27b8daa53/spring_java/src/test/java/dev/pollito/spring_java/sakila/auth/domain/service/AuthUseCasesImplTest.java
+    ```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin">
+
+    ```kt reference title="sakila/auth/domain/service/AuthUseCasesImplTest.kt"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/3e0ad157bc69810d7bf85b3bfadd10848bd11dc2/spring_kotlin/src/test/kotlin/dev/pollito/spring_kotlin/sakila/auth/domain/service/AuthUseCasesImplTest.kt
+    ```
+
+  </TabItem>
+  <TabItem value="groovy" label="Groovy">
+
+    ```groovy reference title="sakila/auth/domain/service/AuthUseCasesImplSpec.groovy"
+    https://raw.githubusercontent.com/franBec/springboot-demo-projects/ef8688657aa0daa70ef28972b618c5a69d70870c/spring_groovy/src/test/groovy/dev/pollito/spring_groovy/sakila/auth/domain/service/AuthUseCasesImplSpec.groovy
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Try it out
+
+### Authentication example
+
+<AuthenticationExampleTerminal />
+<AuthenticationExampleDiagram />
+
+### Authorized example
+
+#### Retrieve current authenticated user
+
+<AuthorizedExampleTerminal />
+<AuthorizedExampleDiagram />
+
+### Unauthorized example
+
+#### Missing Authorization header
+
+<UnauthorizedMissingHeaderTerminal />
+<UnauthorizedMissingHeaderDiagram />
+
+#### Invalid Authorization token
+
+<UnauthorizedInvalidTokenTerminal />
+<UnauthorizedInvalidTokenDiagram />
